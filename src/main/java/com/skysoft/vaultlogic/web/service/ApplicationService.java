@@ -11,7 +11,7 @@ public interface ApplicationService {
 
     Application findByName(String name);
 
-    SmartContractApplication findSCProjectionByName(String name);
+    SmartContractApplication findSmartContractApplicationByName(String name);
 
     URI getApplicationUriIfEnabled(Long appId);
 
