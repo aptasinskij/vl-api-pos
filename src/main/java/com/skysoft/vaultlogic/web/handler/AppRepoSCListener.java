@@ -1,6 +1,6 @@
 package com.skysoft.vaultlogic.web.handler;
 
-import com.skysoft.vaultlogic.blockchain.contracts.ApplicationRepository;
+import com.skysoft.vaultlogic.blockchain.contracts.wrappers.ApplicationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

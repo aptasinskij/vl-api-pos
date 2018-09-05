@@ -1,11 +1,10 @@
 package com.skysoft.vaultlogic.blockchain.configuration;
 
-import com.skysoft.vaultlogic.blockchain.contracts.ApplicationRepository;
-import com.skysoft.vaultlogic.blockchain.contracts.ApplicationServiceApi;
+import com.skysoft.vaultlogic.blockchain.contracts.wrappers.ApplicationRepository;
+import com.skysoft.vaultlogic.blockchain.contracts.wrappers.ApplicationServiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;

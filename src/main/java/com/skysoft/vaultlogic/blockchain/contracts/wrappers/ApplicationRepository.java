@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.contracts;
+package com.skysoft.vaultlogic.blockchain.contracts.wrappers;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

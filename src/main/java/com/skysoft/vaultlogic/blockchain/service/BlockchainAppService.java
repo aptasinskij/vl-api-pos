@@ -1,6 +1,6 @@
 package com.skysoft.vaultlogic.blockchain.service;
 
-import com.skysoft.vaultlogic.blockchain.contracts.ApplicationServiceApi;
+import com.skysoft.vaultlogic.blockchain.contracts.wrappers.ApplicationServiceApi;
 import com.skysoft.vaultlogic.common.domain.application.projections.SmartContractApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
