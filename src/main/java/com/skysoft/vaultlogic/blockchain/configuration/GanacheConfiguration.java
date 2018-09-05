@@ -66,4 +66,10 @@ public class GanacheConfiguration {
         return SessionStorage.load(SESSION_STORAGE_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
+    @Bean
+    @Autowired
+    public SessionServiceApi sessionServiceApi(Web3j web3j, Credentials credentials) {
+        return SessionServiceApi.load(SESSION_SERVICE, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    }
+
 }
