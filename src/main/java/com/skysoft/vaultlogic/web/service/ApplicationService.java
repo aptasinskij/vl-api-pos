@@ -13,6 +13,6 @@ public interface ApplicationService {
 
     SmartContractApplication findSmartContractApplicationByName(String name);
 
-    URI getApplicationUriIfEnabled(Long appId);
+    URI getApplicationUri(Long appId);
 
 }

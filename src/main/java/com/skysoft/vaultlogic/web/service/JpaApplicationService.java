@@ -35,15 +35,14 @@ public class JpaApplicationService implements ApplicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public SmartContractApplication findSCProjectionByName(String name) {
+    public SmartContractApplication findSmartContractApplicationByName(String name) {
         return applicationRepository.findSmartContractApplicationByName(name);
         //TODO create meaningful exception
     }
 
     @Override
-    public URI getApplicationUriIfEnabled(Long appId) {
+    public URI getApplicationUri(Long appId) {
         return applicationRepository.findAppUriStatusById(appId)
-                /*.filter(AppUriStatus.enabled())*/ //TODO no need for now
                 .map(AppUriStatus::getUri)
                 .map(URI::create)
                 .orElseThrow(RuntimeException::new);

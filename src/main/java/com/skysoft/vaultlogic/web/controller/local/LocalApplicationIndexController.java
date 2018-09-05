@@ -34,7 +34,7 @@ public class LocalApplicationIndexController {
 
     @GetMapping
     public ResponseEntity<String> getApplicationIndexPage(@PathVariable Long appId, @RequestParam("token") String xToken) {
-        URI appIndexUri = applicationService.getApplicationUriIfEnabled(appId);
+        URI appIndexUri = applicationService.getApplicationUri(appId);
         Session session = sessionService.createApplicationSession(appId, xToken);
         RequestEntity<Void> request = buildRequest(appIndexUri, String.valueOf(session.getId()));
         return restTemplate.exchange(request, String.class);
