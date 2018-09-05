@@ -2,6 +2,7 @@ package com.skysoft.vaultlogic.blockchain.configuration;
 
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationServiceApi;
+import com.skysoft.vaultlogic.blockchain.contracts.SessionServiceApi;
 import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,9 +28,10 @@ public class GanacheConfiguration {
 
     private static final String NETWORK_ID  = "5777";
 
-    private static final String APPLICATION_SERVICE_ADDRESS = ApplicationServiceApi.getPreviouslyDeployedAddress(NETWORK_ID);
+    private static final String APPLICATION_SERVICE_ADDRESS = "0x1b57bdacba1101f936dd52826f0a3550b15aad2b";
     private static final String APPLICATION_STORAGE_ADDRESS = ApplicationStorage.getPreviouslyDeployedAddress(NETWORK_ID);
     private static final String SESSION_STORAGE_ADDRESS = SessionStorage.getPreviouslyDeployedAddress(NETWORK_ID);
+    private static final String SESSION_SERVICE = "0x9d40ad39b007bfc5fb739f0a5f1489b370ddef04";
 
     @Bean
     public ScheduledExecutorService scheduledExecutorService() {
