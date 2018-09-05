@@ -43,7 +43,7 @@ public class JpaApplicationService implements ApplicationService {
     @Override
     public URI getApplicationUriIfEnabled(Long appId) {
         return applicationRepository.findAppUriStatusById(appId)
-                .filter(AppUriStatus.enabled())
+                /*.filter(AppUriStatus.enabled())*/ //TODO no need for now
                 .map(AppUriStatus::getUri)
                 .map(URI::create)
                 .orElseThrow(RuntimeException::new);
