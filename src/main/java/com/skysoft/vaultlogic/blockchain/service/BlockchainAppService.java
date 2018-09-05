@@ -33,7 +33,7 @@ public class BlockchainAppService {
     }
 
     private void logSuccessSave(TransactionReceipt tx) {
-        log.info("[x] --> Application registered. TX: {}", tx);
+        log.info("[x] --> Application registered. TX: {}", tx.getTransactionHash());
     }
 
 }
