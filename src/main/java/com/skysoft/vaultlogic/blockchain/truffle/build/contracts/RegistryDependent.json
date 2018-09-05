@@ -13,14 +13,14 @@
       "type": "constructor"
     }
   ],
-  "bytecode": "0x6080604052348015600f57600080fd5b5060405160208060b483398101806040528101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050603580607f6000396000f3006080604052600080fd00a165627a7a72305820f07f487453191b21a1d1d67e4fd7b09eee4bfd9d50ae093521caa1385eabeda60029",
-  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820f07f487453191b21a1d1d67e4fd7b09eee4bfd9d50ae093521caa1385eabeda60029",
+  "bytecode": "0x6080604052348015600f57600080fd5b5060405160208060b483398101806040528101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050603580607f6000396000f3006080604052600080fd00a165627a7a72305820397cd3009673d1890676054e9d4eece73f3b644838d5d25474fe22afd0e85b160029",
+  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820397cd3009673d1890676054e9d4eece73f3b644838d5d25474fe22afd0e85b160029",
   "sourceMap": "64:299:3:-;;;129:71;8:9:-1;5:2;;;30:1;27;20:12;5:2;129:71:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;186:7;175:8;;:18;;;;;;;;;;;;;;;;;;129:71;64:299;;;;;;",
   "deployedSourceMap": "64:299:3:-;;;;;",
   "source": "pragma solidity 0.4.24;\n\nimport \"../registry/RegistryApi.sol\";\n\ncontract RegistryDependent {\n\n    address private registry;\n\n    constructor(address regAddr) public {\n        registry = regAddr;\n    }\n\n    function componentForName(string name) internal view returns(address componentAddress) {\n        componentAddress = RegistryApi(registry).get(name);\n    }\n\n}",
-  "sourcePath": "/home/andrew/vault-logic-project/Development/Platfrom Contracts/contracts/application/RegistryDependent.sol",
+  "sourcePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/application/RegistryDependent.sol",
   "ast": {
-    "absolutePath": "/home/andrew/vault-logic-project/Development/Platfrom Contracts/contracts/application/RegistryDependent.sol",
+    "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/application/RegistryDependent.sol",
     "exportedSymbols": {
       "RegistryDependent": [
         305
@@ -40,7 +40,7 @@
         "src": "0:23:3"
       },
       {
-        "absolutePath": "/home/andrew/vault-logic-project/Development/Platfrom Contracts/contracts/registry/RegistryApi.sol",
+        "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/registry/RegistryApi.sol",
         "file": "../registry/RegistryApi.sol",
         "id": 275,
         "nodeType": "ImportDirective",
@@ -428,7 +428,7 @@
     "src": "0:363:3"
   },
   "legacyAST": {
-    "absolutePath": "/home/andrew/vault-logic-project/Development/Platfrom Contracts/contracts/application/RegistryDependent.sol",
+    "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/application/RegistryDependent.sol",
     "exportedSymbols": {
       "RegistryDependent": [
         305
@@ -448,7 +448,7 @@
         "src": "0:23:3"
       },
       {
-        "absolutePath": "/home/andrew/vault-logic-project/Development/Platfrom Contracts/contracts/registry/RegistryApi.sol",
+        "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/registry/RegistryApi.sol",
         "file": "../registry/RegistryApi.sol",
         "id": 275,
         "nodeType": "ImportDirective",
@@ -841,5 +841,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-04T07:54:09.967Z"
+  "updatedAt": "2018-09-05T09:54:15.070Z"
 }
