@@ -1,13 +1,13 @@
 pragma solidity 0.4.24;
 
 import "../registry/RegistryComponent.sol";
-import "../services/CashChannelsManagerApi.sol";
+import "../services/ICashChannelsManager.sol";
 
-contract CashAcceptorOracle is RegistryComponent {
+contract CashInOracle is RegistryComponent {
 
-    string constant CASH_ACCEPTOR_ORACLE = "cash-acceptor-oracle";
+    string constant COMPONENT_NAME = "cash-in-oracle";
 
-    string constant CASH_CHANNELS_SERVICE = "cash-channels-service";
+    string constant CASH_CHANNELS_MANAGER = "cash-channels-manager";
     
     event OpenCashAcceptor(string xToken, uint256 sessionId, uint256 channelId);
     event CloseCashAcceptor(string xToken, uint256 index, uint256 channelId);
@@ -15,7 +15,7 @@ contract CashAcceptorOracle is RegistryComponent {
     constructor(address regAddr) RegistryComponent(regAddr) public {}
 
     function getName() internal pure returns(string name) {
-        return CASH_ACCEPTOR_ORACLE;
+        return COMPONENT_NAME;
     }
 
     function open(string xToken, uint256 sessionId, uint256 channelId) external {
@@ -27,11 +27,11 @@ contract CashAcceptorOracle is RegistryComponent {
     }
 
     function confirmOpen(uint256 channelId) external {
-        CashChannelsOperatorApi(lookup(CASH_CHANNELS_SERVICE)).confirmOpen(channelId);
+        ICashChannelsManager(lookup(CASH_CHANNELS_MANAGER)).confirmOpen(channelId);
     }
 
     function confirmClose(uint256 channelId) external {
-        CashChannelsOperatorApi(lookup(CASH_CHANNELS_SERVICE)).confirmClose(channelId);
+        ICashChannelsManager(lookup(CASH_CHANNELS_MANAGER)).confirmClose(channelId);
     }
 
 }

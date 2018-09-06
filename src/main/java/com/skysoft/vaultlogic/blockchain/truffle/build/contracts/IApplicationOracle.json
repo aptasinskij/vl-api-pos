@@ -1,11 +1,11 @@
 {
-  "contractName": "ApplicationServiceApi",
+  "contractName": "IApplicationOracle",
   "abi": [
     {
       "constant": false,
       "inputs": [
         {
-          "name": "appId",
+          "name": "index",
           "type": "uint256"
         },
         {
@@ -23,23 +23,13 @@
         {
           "name": "appAddr",
           "type": "address"
-        }
-      ],
-      "name": "registerApplication",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
+        },
         {
-          "name": "appId",
+          "name": "status",
           "type": "uint256"
         }
       ],
-      "name": "enableApplication",
+      "name": "register",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
@@ -50,27 +40,27 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity 0.4.24;\n\ninterface ApplicationServiceApi {\n    \n    function registerApplication(uint256 appId, string name, address owner, string url, address appAddr) external;\n\n    function enableApplication(uint256 appId) external;\n\n}",
-  "sourcePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/services/ApplicationServiceApi.sol",
+  "source": "pragma solidity 0.4.24;\n\ninterface IApplicationOracle {\n    \n    function register(uint256 index, string name, address owner, string url, address appAddr, uint256 status) external;\n\n}",
+  "sourcePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/oracles/IApplicationOracle.sol",
   "ast": {
-    "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/services/ApplicationServiceApi.sol",
+    "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/oracles/IApplicationOracle.sol",
     "exportedSymbols": {
-      "ApplicationServiceApi": [
-        2984
+      "IApplicationOracle": [
+        503
       ]
     },
-    "id": 2985,
+    "id": 504,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2965,
+        "id": 487,
         "literals": [
           "solidity",
           "0.4",
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:23"
+        "src": "0:23:6"
       },
       {
         "baseContracts": [],
@@ -78,34 +68,34 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2984,
+        "id": 503,
         "linearizedBaseContracts": [
-          2984
+          503
         ],
-        "name": "ApplicationServiceApi",
+        "name": "IApplicationOracle",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": null,
             "documentation": null,
-            "id": 2978,
+            "id": 502,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "registerApplication",
+            "name": "register",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2976,
+              "id": 500,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2967,
-                  "name": "appId",
+                  "id": 489,
+                  "name": "index",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2978,
-                  "src": "97:13:23",
+                  "scope": 502,
+                  "src": "83:13:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -113,10 +103,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2966,
+                    "id": 488,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "97:7:23",
+                    "src": "83:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -127,11 +117,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2969,
+                  "id": 491,
                   "name": "name",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2978,
-                  "src": "112:11:23",
+                  "scope": 502,
+                  "src": "98:11:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -139,10 +129,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 2968,
+                    "id": 490,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "112:6:23",
+                    "src": "98:6:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -153,11 +143,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2971,
+                  "id": 493,
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2978,
-                  "src": "125:13:23",
+                  "scope": 502,
+                  "src": "111:13:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -165,10 +155,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2970,
+                    "id": 492,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "125:7:23",
+                    "src": "111:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -179,11 +169,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2973,
+                  "id": 495,
                   "name": "url",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2978,
-                  "src": "140:10:23",
+                  "scope": 502,
+                  "src": "126:10:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -191,10 +181,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 2972,
+                    "id": 494,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "140:6:23",
+                    "src": "126:6:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -205,11 +195,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2975,
+                  "id": 497,
                   "name": "appAddr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2978,
-                  "src": "152:15:23",
+                  "scope": 502,
+                  "src": "138:15:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -217,10 +207,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2974,
+                    "id": 496,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "152:7:23",
+                    "src": "138:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -228,44 +218,14 @@
                   },
                   "value": null,
                   "visibility": "internal"
-                }
-              ],
-              "src": "96:72:23"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 2977,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "177:0:23"
-            },
-            "scope": 2984,
-            "src": "68:110:23",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "external"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 2983,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": false,
-            "modifiers": [],
-            "name": "enableApplication",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 2981,
-              "nodeType": "ParameterList",
-              "parameters": [
+                },
                 {
                   "constant": false,
-                  "id": 2980,
-                  "name": "appId",
+                  "id": 499,
+                  "name": "status",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2983,
-                  "src": "211:13:23",
+                  "scope": 502,
+                  "src": "155:14:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -273,10 +233,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2979,
+                    "id": 498,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "211:7:23",
+                    "src": "155:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -286,47 +246,47 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "210:15:23"
+              "src": "82:88:6"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2982,
+              "id": 501,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "234:0:23"
+              "src": "179:0:6"
             },
-            "scope": 2984,
-            "src": "184:51:23",
+            "scope": 503,
+            "src": "65:115:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 2985,
-        "src": "25:213:23"
+        "scope": 504,
+        "src": "25:158:6"
       }
     ],
-    "src": "0:238:23"
+    "src": "0:183:6"
   },
   "legacyAST": {
-    "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/services/ApplicationServiceApi.sol",
+    "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/contracts/oracles/IApplicationOracle.sol",
     "exportedSymbols": {
-      "ApplicationServiceApi": [
-        2984
+      "IApplicationOracle": [
+        503
       ]
     },
-    "id": 2985,
+    "id": 504,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2965,
+        "id": 487,
         "literals": [
           "solidity",
           "0.4",
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:23"
+        "src": "0:23:6"
       },
       {
         "baseContracts": [],
@@ -334,34 +294,34 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2984,
+        "id": 503,
         "linearizedBaseContracts": [
-          2984
+          503
         ],
-        "name": "ApplicationServiceApi",
+        "name": "IApplicationOracle",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": null,
             "documentation": null,
-            "id": 2978,
+            "id": 502,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "registerApplication",
+            "name": "register",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2976,
+              "id": 500,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2967,
-                  "name": "appId",
+                  "id": 489,
+                  "name": "index",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2978,
-                  "src": "97:13:23",
+                  "scope": 502,
+                  "src": "83:13:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -369,10 +329,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2966,
+                    "id": 488,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "97:7:23",
+                    "src": "83:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -383,11 +343,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2969,
+                  "id": 491,
                   "name": "name",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2978,
-                  "src": "112:11:23",
+                  "scope": 502,
+                  "src": "98:11:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -395,10 +355,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 2968,
+                    "id": 490,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "112:6:23",
+                    "src": "98:6:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -409,11 +369,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2971,
+                  "id": 493,
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2978,
-                  "src": "125:13:23",
+                  "scope": 502,
+                  "src": "111:13:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -421,10 +381,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2970,
+                    "id": 492,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "125:7:23",
+                    "src": "111:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -435,11 +395,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2973,
+                  "id": 495,
                   "name": "url",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2978,
-                  "src": "140:10:23",
+                  "scope": 502,
+                  "src": "126:10:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -447,10 +407,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 2972,
+                    "id": 494,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "140:6:23",
+                    "src": "126:6:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -461,11 +421,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2975,
+                  "id": 497,
                   "name": "appAddr",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2978,
-                  "src": "152:15:23",
+                  "scope": 502,
+                  "src": "138:15:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -473,10 +433,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2974,
+                    "id": 496,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "152:7:23",
+                    "src": "138:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -484,44 +444,14 @@
                   },
                   "value": null,
                   "visibility": "internal"
-                }
-              ],
-              "src": "96:72:23"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 2977,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "177:0:23"
-            },
-            "scope": 2984,
-            "src": "68:110:23",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "external"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 2983,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": false,
-            "modifiers": [],
-            "name": "enableApplication",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 2981,
-              "nodeType": "ParameterList",
-              "parameters": [
+                },
                 {
                   "constant": false,
-                  "id": 2980,
-                  "name": "appId",
+                  "id": 499,
+                  "name": "status",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2983,
-                  "src": "211:13:23",
+                  "scope": 502,
+                  "src": "155:14:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -529,10 +459,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2979,
+                    "id": 498,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "211:7:23",
+                    "src": "155:7:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -542,27 +472,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "210:15:23"
+              "src": "82:88:6"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2982,
+              "id": 501,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "234:0:23"
+              "src": "179:0:6"
             },
-            "scope": 2984,
-            "src": "184:51:23",
+            "scope": 503,
+            "src": "65:115:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 2985,
-        "src": "25:213:23"
+        "scope": 504,
+        "src": "25:158:6"
       }
     ],
-    "src": "0:238:23"
+    "src": "0:183:6"
   },
   "compiler": {
     "name": "solc",
@@ -570,5 +500,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-05T09:54:15.100Z"
+  "updatedAt": "2018-09-06T11:53:01.209Z"
 }

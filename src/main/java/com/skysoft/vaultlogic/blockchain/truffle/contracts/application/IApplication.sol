@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-interface ApplicationApi {
+interface IApplication {
     
     function openCashInChannel(uint256 sessionId) external;
 

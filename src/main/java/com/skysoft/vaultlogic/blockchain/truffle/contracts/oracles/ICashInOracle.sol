@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-interface CashAcceptorOracleApi {
+interface ICashInOracle {
     
     function open(string xToken, uint256 sessionId, uint256 channelId) external;
 

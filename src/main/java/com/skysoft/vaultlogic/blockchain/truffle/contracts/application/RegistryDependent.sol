@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../registry/RegistryApi.sol";
+import "../registry/IRegistry.sol";
 
 contract RegistryDependent {
 
@@ -11,7 +11,7 @@ contract RegistryDependent {
     }
 
     function componentForName(string name) internal view returns(address componentAddress) {
-        componentAddress = RegistryApi(registry).get(name);
+        componentAddress = IRegistry(registry).get(name);
         require(componentAddress != 0x0, "Registry returned 0x0");
     }
 

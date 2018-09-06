@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-interface CashChannelsOperatorApi {
+interface ICashChannelsManager {
     
     function openCashInChannel(uint256 sessionId) external returns(uint256);
 

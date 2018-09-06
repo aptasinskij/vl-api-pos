@@ -1,7 +1,7 @@
 var ContractRegistry = artifacts.require("./ContractRegistry.sol");
 var CashInLib = artifacts.require("./CashInLib.sol");
 var CashInStorage = artifacts.require("./CashInStorage.sol");
-var CashAcceptorOracle = artifacts.require("./CashAcceptorOracle.sol");
+var CashAcceptorOracle = artifacts.require("./CashInOracle.sol");
 var CashChannelsManager = artifacts.require("./CashChannelsManager.sol");
 
 module.exports = function (deployer) {
