@@ -12,6 +12,7 @@ contract RegistryDependent {
 
     function componentForName(string name) internal view returns(address componentAddress) {
         componentAddress = RegistryApi(registry).get(name);
+        require(componentAddress != 0x0, "Registry returned 0x0");
     }
 
 }

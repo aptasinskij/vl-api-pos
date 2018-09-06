@@ -2,12 +2,12 @@ pragma solidity 0.4.24;
 
 import "./ApplicationApi.sol";
 import "./RegistryDependent.sol";
-import "../services/CashChannelsServiceApi.sol";
+import "../services/CashChannelsManagerApi.sol";
 import "../services/SessionServiceApi.sol";
 
 contract CapitalHero is ApplicationApi, RegistryDependent {
 
-    string constant CASH_CHANNELS_SERVICE = "cash-channels-service";
+    string constant CASH_CHANNELS_SERVICE = "cash-channels-manager";
     string constant SESSION_SERVICE = "session-service";
 
     event CashInOpened(uint256 channelId, uint256 sessionId);
@@ -19,11 +19,11 @@ contract CapitalHero is ApplicationApi, RegistryDependent {
     constructor(address regAddr) RegistryDependent(regAddr) public {}
 
     function openCashInChannel(uint256 sessionId) external {
-        CashChannelsServiceApi(componentForName(CASH_CHANNELS_SERVICE)).openCashInChannel(sessionId);
+        CashChannelsOperatorApi(componentForName(CASH_CHANNELS_SERVICE)).openCashInChannel(sessionId);
     }
 
     function closeCashInChannel(uint256 sessionId, uint256 channelId) external {
-        CashChannelsServiceApi(componentForName(CASH_CHANNELS_SERVICE)).closeCashInChannel(sessionId, channelId);
+        CashChannelsOperatorApi(componentForName(CASH_CHANNELS_SERVICE)).closeCashInChannel(sessionId, channelId);
     }
 
     function cashInChannelOpened(uint256 channelId, uint256 sessionId) external {

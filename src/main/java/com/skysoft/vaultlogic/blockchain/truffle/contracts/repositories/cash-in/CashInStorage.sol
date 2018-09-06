@@ -5,7 +5,7 @@ import "../../registry/RegistryComponent.sol";
 
 contract CashInRepository is RegistryComponent {
 
-    string constant COMPONENT_NAME = "cash-in-repository";
+    string constant COMPONENT_NAME = "cash-in-storage";
     string constant DATABASE = "database";
 
     event CashInSaved(uint256 sessionId, address application, uint256 status, uint256 index);

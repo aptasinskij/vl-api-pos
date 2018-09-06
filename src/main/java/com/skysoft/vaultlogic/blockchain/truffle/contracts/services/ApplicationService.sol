@@ -8,7 +8,7 @@ contract ApplicationService is RegistryComponent {
 
     enum ApplicationStatus { PENDING, ENABLED, DISABLED }
 
-    string constant COMPONENT_NAME = "cash-channels-service";
+    string constant COMPONENT_NAME = "application-service";
 
     string constant APPLICATION_REPOSITORY = "application-repository";
     string constant APPLICATION_ORACLE = "application-oracle";

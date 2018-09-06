@@ -1,7 +1,7 @@
 pragma solidity 0.4.24;
 
 import "../registry/RegistryComponent.sol";
-import "../services/CashChannelsServiceApi.sol";
+import "../services/CashChannelsManagerApi.sol";
 
 contract CashAcceptorOracle is RegistryComponent {
 
@@ -27,11 +27,11 @@ contract CashAcceptorOracle is RegistryComponent {
     }
 
     function confirmOpen(uint256 channelId) external {
-        CashChannelsServiceApi(lookup(CASH_CHANNELS_SERVICE)).confirmOpen(channelId);
+        CashChannelsOperatorApi(lookup(CASH_CHANNELS_SERVICE)).confirmOpen(channelId);
     }
 
     function confirmClose(uint256 channelId) external {
-        CashChannelsServiceApi(lookup(CASH_CHANNELS_SERVICE)).confirmClose(channelId);
+        CashChannelsOperatorApi(lookup(CASH_CHANNELS_SERVICE)).confirmClose(channelId);
     }
 
 }
