@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 import "../registry/RegistryComponent.sol";
 import "../repositories/cash-in/ICashInStorage.sol";
 import "../repositories/session/ISessionStorage.sol";
-import "../repositories/application/ApplicationRepositoryApi.sol";
+import "../repositories/application/IApplicationStorage.sol";
 import "../application/ApplicationApi.sol";
 import "../oracles/CashAcceptorOracleApi.sol";
 
@@ -16,7 +16,7 @@ contract CashChannelsManager is RegistryComponent {
     string constant CASH_IN_STORAGE = "cash-in-storage";
     string constant CASH_ACCEPTOR_ORACLE = "cash-acceptor-oracle";
     string constant SESSION_STORAGE = "session-storage";
-    string constant APPLICATION_REPOSITORY = "application-repository";
+    string constant APPLICATION_STORAGE = "application-storage";
 
     constructor(address regAddr) RegistryComponent(regAddr) public {}
 
@@ -26,7 +26,7 @@ contract CashChannelsManager is RegistryComponent {
 
     function openCashInChannel(uint256 sessionId) external returns(uint256) {
         (uint256 appId, string memory xToken) = ISessionStorage(lookup(SESSION_STORAGE)).getAppIdAndXToken(sessionId);
-        address application = ApplicationRepositoryApi(lookup(APPLICATION_REPOSITORY)).getApplicationAddress(appId);
+        address application = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(appId);
         uint256 channelId = ICashInStorage(lookup(CASH_IN_STORAGE)).save(sessionId, application, uint256(CashInStatus.PENDING));
         CashAcceptorOracleApi(lookup(CASH_ACCEPTOR_ORACLE)).open(xToken, sessionId, channelId);
         return channelId;

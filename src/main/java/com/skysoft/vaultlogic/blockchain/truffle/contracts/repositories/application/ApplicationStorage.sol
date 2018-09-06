@@ -3,9 +3,9 @@ pragma solidity 0.4.24;
 import "./ApplicationLib.sol";
 import "../../registry/RegistryComponent.sol";
 
-contract ApplicationRepository is RegistryComponent {
+contract ApplicationStorage is RegistryComponent {
 
-    string constant COMPONENT_NAME = "application-repository";
+    string constant COMPONENT_NAME = "application-storage";
     string constant DATABASE = "database";
 
     event ApplicationSaved(uint256 appId, string name, address owner, string url, address appAddr, uint256 status);

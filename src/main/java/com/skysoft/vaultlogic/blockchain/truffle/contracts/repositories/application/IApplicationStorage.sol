@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-interface ApplicationRepositoryApi {
+interface IApplicationStorage {
     
     function save(uint256 appId, string name, address owner, string url, address appAddr, uint256 status) external;
 

@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-interface ApplicationServiceApi {
+interface IApplicationManager {
     
     function registerApplication(uint256 appId, string name, address owner, string url, address appAddr) external;
 
