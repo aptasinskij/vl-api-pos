@@ -1,5 +1,6 @@
 package com.skysoft.vaultlogic.web.dbdata;
 
+import com.skysoft.vaultlogic.blockchain.contracts.CapitalHero;
 import com.skysoft.vaultlogic.common.domain.application.Application;
 import com.skysoft.vaultlogic.common.domain.user.User;
 import com.skysoft.vaultlogic.common.domain.user.UserRepository;
@@ -13,11 +14,16 @@ public class DatabaseData implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final ApplicationService applicationService;
+    private final CapitalHero capitalHero;
+
+    private static final String APPLICATION_NAME = "CapitalHero";
+    private static final String APPLICATION_URL = "http://localhost.com";
 
     @Autowired
-    public DatabaseData(UserRepository userRepository, ApplicationService applicationService) {
+    public DatabaseData(UserRepository userRepository, ApplicationService applicationService, CapitalHero capitalHero) {
         this.userRepository = userRepository;
         this.applicationService = applicationService;
+        this.capitalHero = capitalHero;
     }
 
     @Override
@@ -28,7 +34,7 @@ public class DatabaseData implements CommandLineRunner {
     }
 
     private Application getApplication(User appOwner) {
-        return Application.newApplication("CapitalHero", "http://localhost.com", appOwner, "0x04d3d07229557903459acadd33f5e505f928bd3c");
+        return Application.newApplication(APPLICATION_NAME, APPLICATION_URL, appOwner, capitalHero.getContractAddress());
     }
 
     private User getStubUser() {

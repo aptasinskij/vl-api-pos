@@ -1,6 +1,6 @@
 package com.skysoft.vaultlogic.blockchain.service;
 
-import com.skysoft.vaultlogic.blockchain.contracts.ApplicationServiceApi;
+import com.skysoft.vaultlogic.blockchain.contracts.IApplicationManager;
 import com.skysoft.vaultlogic.common.domain.application.projections.SmartContractApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +13,10 @@ import java.math.BigInteger;
 @Service
 public class BlockchainAppService {
 
-    private final ApplicationServiceApi appService;
+    private final IApplicationManager appService;
 
     @Autowired
-    public BlockchainAppService(ApplicationServiceApi appService) {
+    public BlockchainAppService(IApplicationManager appService) {
         this.appService = appService;
     }
 

@@ -23,7 +23,7 @@ import org.web3j.tx.TransactionManager;
  *
  * <p>Generated with web3j version 3.5.0.
  */
-public class SessionServiceApi extends Contract {
+public class ISessionManager extends Contract {
     private static final String BINARY = "0x";
 
     public static final String FUNC_CREATESESSION = "createSession";
@@ -36,11 +36,11 @@ public class SessionServiceApi extends Contract {
         _addresses = new HashMap<String, String>();
     }
 
-    protected SessionServiceApi(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+    protected ISessionManager(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
         super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
     }
 
-    protected SessionServiceApi(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+    protected ISessionManager(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
         super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
@@ -62,20 +62,20 @@ public class SessionServiceApi extends Contract {
         return executeRemoteCallTransaction(function);
     }
 
-    public static RemoteCall<SessionServiceApi> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(SessionServiceApi.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
+    public static RemoteCall<ISessionManager> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        return deployRemoteCall(ISessionManager.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
     }
 
-    public static RemoteCall<SessionServiceApi> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(SessionServiceApi.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
+    public static RemoteCall<ISessionManager> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return deployRemoteCall(ISessionManager.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
     }
 
-    public static SessionServiceApi load(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return new SessionServiceApi(contractAddress, web3j, credentials, gasPrice, gasLimit);
+    public static ISessionManager load(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        return new ISessionManager(contractAddress, web3j, credentials, gasPrice, gasLimit);
     }
 
-    public static SessionServiceApi load(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return new SessionServiceApi(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+    public static ISessionManager load(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return new ISessionManager(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
     protected String getStaticDeployedAddress(String networkId) {
