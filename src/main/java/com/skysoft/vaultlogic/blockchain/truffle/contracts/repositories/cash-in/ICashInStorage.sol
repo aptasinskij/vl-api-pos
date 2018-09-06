@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-interface CashInStorageApi {
+interface ICashInStorage {
     
     function save(uint256 sessionId, address application, uint256 status) external returns(uint256);
 

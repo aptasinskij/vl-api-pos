@@ -3,9 +3,9 @@ pragma solidity 0.4.24;
 import "./SessionLib.sol";
 import "../../registry/RegistryComponent.sol";
 
-contract SessionRepository is RegistryComponent {
+contract SessionStorage is RegistryComponent {
     
-    string constant COMPONENT_NAME = "session-repository";
+    string constant COMPONENT_NAME = "session-storage";
     string constant DATABASE = "database";
 
     event Saved(uint256 sessionId, uint256 appId, string xToken, uint256 status);

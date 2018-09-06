@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 import "./CashInLib.sol";
 import "../../registry/RegistryComponent.sol";
 
-contract CashInRepository is RegistryComponent {
+contract CashInStorage is RegistryComponent {
 
     string constant COMPONENT_NAME = "cash-in-storage";
     string constant DATABASE = "database";

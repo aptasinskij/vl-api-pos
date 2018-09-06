@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-interface SessionRepositoryApi {
+interface ISessionStorage {
     
     function getAppId(uint256 index) external view returns (uint256);
 
