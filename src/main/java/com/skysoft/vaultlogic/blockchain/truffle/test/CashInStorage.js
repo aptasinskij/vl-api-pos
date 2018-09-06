@@ -114,7 +114,7 @@ contract('CashInStorage', () => {
         });
         it('getSplitSize', () => {
             assert.strictEqual(resGetSplitSize1, 1, 'split1: split size is not equal');
-            assert.strictEqual(resGetSplitSize2, 5, 'split1: split size is not equal');
+            assert.strictEqual(resGetSplitSize2, 5, 'split2: split size is not equal');
         });
         it('getSplit', () => {
             assert.strictEqual(resGetSplit1[0], 10, 'split 1, subSplit 0: party is not equal');

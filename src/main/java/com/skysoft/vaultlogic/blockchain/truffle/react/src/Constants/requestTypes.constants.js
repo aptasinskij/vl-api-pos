@@ -1,0 +1,5 @@
+export const requestTypes = {
+    INSERT_MONEY: 'INSERT_MONEY',
+    OPEN_CASH_CHANNEL: 'OPEN_CASH_CHANNEL',
+    CLOSE_CASH_CHANNEL: 'CLOSE_CASH_CHANNEL',
+};
