@@ -1,14 +1,14 @@
 pragma solidity 0.4.24;
 
-import "./ApplicationApi.sol";
+import "./IApplication.sol";
 import "./RegistryDependent.sol";
-import "../services/CashChannelsServiceApi.sol";
-import "../services/SessionServiceApi.sol";
+import "../services/ICashChannelsManager.sol";
+import "../services/ISessionManager.sol";
 
-contract CapitalHero is ApplicationApi, RegistryDependent {
+contract CapitalHero is IApplication, RegistryDependent {
 
-    string constant CASH_CHANNELS_SERVICE = "cash-channels-service";
-    string constant SESSION_SERVICE = "session-service";
+    string constant CASH_CHANNELS_MANAGER = "cash-channels-manager";
+    string constant SESSION_MANAGER = "session-manager";
 
     event CashInOpened(uint256 channelId, uint256 sessionId);
     event CashInClosed(uint256 channelId, uint256 sessionId);
@@ -19,11 +19,11 @@ contract CapitalHero is ApplicationApi, RegistryDependent {
     constructor(address regAddr) RegistryDependent(regAddr) public {}
 
     function openCashInChannel(uint256 sessionId) external {
-        CashChannelsServiceApi(componentForName(CASH_CHANNELS_SERVICE)).openCashInChannel(sessionId);
+        ICashChannelsManager(componentForName(CASH_CHANNELS_MANAGER)).openCashInChannel(sessionId);
     }
 
     function closeCashInChannel(uint256 sessionId, uint256 channelId) external {
-        CashChannelsServiceApi(componentForName(CASH_CHANNELS_SERVICE)).closeCashInChannel(sessionId, channelId);
+        ICashChannelsManager(componentForName(CASH_CHANNELS_MANAGER)).closeCashInChannel(sessionId, channelId);
     }
 
     function cashInChannelOpened(uint256 channelId, uint256 sessionId) external {
@@ -43,7 +43,7 @@ contract CapitalHero is ApplicationApi, RegistryDependent {
     }
 
     function closeSession(uint256 sessionId) external {
-        SessionServiceApi(componentForName(SESSION_SERVICE)).closeSession(sessionId);
+        ISessionManager(componentForName(SESSION_MANAGER)).closeSession(sessionId);
     }
 
     function sessionClosed(uint256 sessionId) external {

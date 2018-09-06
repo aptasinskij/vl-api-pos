@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "./RegistryApi.sol";
+import "./IRegistry.sol";
 
 ///@dev base contract for all registry components
 contract RegistryComponent {
@@ -13,14 +13,14 @@ contract RegistryComponent {
     constructor(address addr) public {
         require(addr != 0x0, "System state violation");
         registry = addr;
-        RegistryApi(registry).register(getName(), address(this));
+        IRegistry(registry).register(getName(), address(this));
     }
 
     ///@dev method will be accessed in each component to lookup for dependent components
     ///@param componentName - name of component to lookup for
     ///@return address of registered component or 0x0 if component is not registered
     function lookup(string componentName) internal view returns(address componentAddress) {
-        componentAddress = RegistryApi(registry).get(componentName);
+        componentAddress = IRegistry(registry).get(componentName);
         require(componentAddress != 0x0, "System state violation");
     }
 
