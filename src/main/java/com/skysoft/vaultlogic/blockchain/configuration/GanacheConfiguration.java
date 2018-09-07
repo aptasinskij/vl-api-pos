@@ -1,9 +1,6 @@
 package com.skysoft.vaultlogic.blockchain.configuration;
 
-import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
-import com.skysoft.vaultlogic.blockchain.contracts.ApplicationServiceApi;
-import com.skysoft.vaultlogic.blockchain.contracts.SessionServiceApi;
-import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage;
+import com.skysoft.vaultlogic.blockchain.contracts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +25,15 @@ public class GanacheConfiguration {
 
     private static final String NETWORK_ID  = "5777";
 
-    private static final String APPLICATION_SERVICE_ADDRESS = "0x1b57bdacba1101f936dd52826f0a3550b15aad2b";
+    private static final String APPLICATION_SERVICE_ADDRESS = "0xe58dad58ccb22b9b1de9f2e3edea7681bdacd773";
     private static final String APPLICATION_STORAGE_ADDRESS = ApplicationStorage.getPreviouslyDeployedAddress(NETWORK_ID);
+
+    private static final String SESSION_SERVICE = "0x2c4b289749361521c9f238e76993ea9024f23d23";
     private static final String SESSION_STORAGE_ADDRESS = SessionStorage.getPreviouslyDeployedAddress(NETWORK_ID);
-    private static final String SESSION_SERVICE = "0x9d40ad39b007bfc5fb739f0a5f1489b370ddef04";
+
+    private static final String CAPITAL_HERO_ADDRESS = CapitalHero.getPreviouslyDeployedAddress(NETWORK_ID);
+
+    private static final String CASH_ACCEPTOR_ORACLE_ADDRESS = CashInOracle.getPreviouslyDeployedAddress(NETWORK_ID);
 
     @Bean
     public ScheduledExecutorService scheduledExecutorService() {
@@ -50,8 +52,8 @@ public class GanacheConfiguration {
 
     @Bean
     @Autowired
-    public ApplicationServiceApi applicationServiceApi(Web3j web3j, Credentials credentials) {
-        return ApplicationServiceApi.load(APPLICATION_SERVICE_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    public IApplicationManager applicationServiceApi(Web3j web3j, Credentials credentials) {
+        return IApplicationManager.load(APPLICATION_SERVICE_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
     @Bean
@@ -68,8 +70,26 @@ public class GanacheConfiguration {
 
     @Bean
     @Autowired
-    public SessionServiceApi sessionServiceApi(Web3j web3j, Credentials credentials) {
-        return SessionServiceApi.load(SESSION_SERVICE, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    public ISessionManager sessionServiceApi(Web3j web3j, Credentials credentials) {
+        return ISessionManager.load(SESSION_SERVICE, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    }
+
+    @Bean
+    @Autowired
+    public CashInOracle cashAcceptorOracle(Web3j web3j, Credentials credentials) {
+        return CashInOracle.load(CASH_ACCEPTOR_ORACLE_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    }
+
+    @Bean
+    @Autowired
+    public SessionOracle sessionOracle(Web3j web3j, Credentials credentials) {
+        return SessionOracle.load(SessionOracle.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    }
+
+    @Bean
+    @Autowired
+    public CapitalHero capitalHero(Web3j web3j, Credentials credentials) {
+        return CapitalHero.load(CAPITAL_HERO_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
 }

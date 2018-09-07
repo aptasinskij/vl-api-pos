@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 interface ICashInOracle {
     
-    function open(string xToken, uint256 sessionId, uint256 channelId) external;
+    function open(uint256 sessionId, uint256 channelId, uint256 channelStatus) external;
 
     function close(string xToken, uint256 sessionId, uint256 channelId) external;
 

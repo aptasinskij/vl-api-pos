@@ -3,7 +3,6 @@ package com.skysoft.vaultlogic.common.domain.application;
 import com.skysoft.vaultlogic.common.domain.application.events.AppRegistered;
 import com.skysoft.vaultlogic.common.domain.user.User;
 import lombok.Getter;
-import lombok.Value;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.AbstractAggregateRoot;
 

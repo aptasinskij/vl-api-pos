@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.application;
+package com.skysoft.vaultlogic.blockchain.handlers.storage;
 
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.ApplicationUrlUpdatedEventResponse;

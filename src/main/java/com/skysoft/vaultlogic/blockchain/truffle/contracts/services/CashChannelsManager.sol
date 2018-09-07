@@ -25,10 +25,10 @@ contract CashChannelsManager is RegistryComponent {
     }
 
     function openCashInChannel(uint256 sessionId) external returns(uint256) {
-        (uint256 appId, string memory xToken) = ISessionStorage(lookup(SESSION_STORAGE)).getAppIdAndXToken(sessionId);
+        uint256 appId = ISessionStorage(lookup(SESSION_STORAGE)).getAppId(sessionId);
         address application = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(appId);
         uint256 channelId = ICashInStorage(lookup(CASH_IN_STORAGE)).save(sessionId, application, uint256(CashInStatus.PENDING));
-        ICashInOracle(lookup(CASH_IN_ORACLE)).open(xToken, sessionId, channelId);
+        ICashInOracle(lookup(CASH_IN_ORACLE)).open(sessionId, channelId, uint256(CashInStatus.PENDING));
         return channelId;
     }
 

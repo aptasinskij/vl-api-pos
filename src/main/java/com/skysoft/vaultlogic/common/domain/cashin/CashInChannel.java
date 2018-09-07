@@ -24,7 +24,6 @@ public class CashInChannel {
     private BigInteger balance = BigInteger.ZERO;
 
     @ElementCollection
-    /*@CollectionTable("")*/
     private Set<Split> splits = new HashSet<>();
 
     @Override
@@ -39,4 +38,5 @@ public class CashInChannel {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

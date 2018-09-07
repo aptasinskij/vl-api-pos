@@ -23,7 +23,7 @@ import org.web3j.tx.TransactionManager;
  *
  * <p>Generated with web3j version 3.5.0.
  */
-public class ApplicationServiceApi extends Contract {
+public class IApplicationManager extends Contract {
     private static final String BINARY = "0x";
 
     public static final String FUNC_REGISTERAPPLICATION = "registerApplication";
@@ -36,11 +36,11 @@ public class ApplicationServiceApi extends Contract {
         _addresses = new HashMap<String, String>();
     }
 
-    protected ApplicationServiceApi(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+    protected IApplicationManager(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
         super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
     }
 
-    protected ApplicationServiceApi(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+    protected IApplicationManager(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
         super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
@@ -64,20 +64,20 @@ public class ApplicationServiceApi extends Contract {
         return executeRemoteCallTransaction(function);
     }
 
-    public static RemoteCall<ApplicationServiceApi> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(ApplicationServiceApi.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
+    public static RemoteCall<IApplicationManager> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        return deployRemoteCall(IApplicationManager.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
     }
 
-    public static RemoteCall<ApplicationServiceApi> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(ApplicationServiceApi.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
+    public static RemoteCall<IApplicationManager> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return deployRemoteCall(IApplicationManager.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
     }
 
-    public static ApplicationServiceApi load(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return new ApplicationServiceApi(contractAddress, web3j, credentials, gasPrice, gasLimit);
+    public static IApplicationManager load(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        return new IApplicationManager(contractAddress, web3j, credentials, gasPrice, gasLimit);
     }
 
-    public static ApplicationServiceApi load(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return new ApplicationServiceApi(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+    public static IApplicationManager load(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return new IApplicationManager(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
     protected String getStaticDeployedAddress(String networkId) {

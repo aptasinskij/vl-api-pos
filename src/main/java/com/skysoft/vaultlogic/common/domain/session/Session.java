@@ -69,7 +69,7 @@ public class Session extends AbstractAggregateRoot<Session> {
         return Objects.hash(xToken);
     }
 
-    enum Status {
+    public enum Status {
 
         ACTIVE(1), CLOSE_REQUESTED(2), CLOSED(3);
 

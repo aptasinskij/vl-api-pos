@@ -37,6 +37,7 @@ public class LocalApplicationIndexController {
         URI appIndexUri = applicationService.getApplicationUri(appId);
         Session session = sessionService.createApplicationSession(appId, xToken);
         RequestEntity<Void> request = buildRequest(appIndexUri, String.valueOf(session.getId()));
+        /*return ResponseEntity.ok(appIndexUri.toString());*/
         return restTemplate.exchange(request, String.class);
     }
 
