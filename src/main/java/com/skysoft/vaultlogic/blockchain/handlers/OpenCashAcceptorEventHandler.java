@@ -29,7 +29,7 @@ public class OpenCashAcceptorEventHandler {
     }
 
     private void onNext(OpenCashAcceptorEventResponse event) {
-        log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, XToken: {}", event.channelId, event.sessionId, event.xToken);
+        log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, Status: {}", event.channelId, event.sessionId, event.channelStatus);
         cashInOracle.confirmOpen(event.channelId).sendAsync()
                 .thenAccept(tx -> log.info("[x] Success confirm. TX: {}", tx.getTransactionHash()))
                 .exceptionally(tr -> {
