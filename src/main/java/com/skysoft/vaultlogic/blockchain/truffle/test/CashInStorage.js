@@ -1,5 +1,6 @@
 const assert = require('chai').assert;
 const CashInStorage = artifacts.require('./repositories/cash-in/CashInStorage.sol');
+const convertToNumber = require('./helpers').convertToNumber;
 
 contract('CashInStorage', () => {
 
@@ -20,6 +21,7 @@ contract('CashInStorage', () => {
         let resGetSplit1;
         let resGetSplit2;
         let resGetSplit3;
+        let resGetAfterAll;
 
         before(async () => {
             const instance = await CashInStorage.deployed();
@@ -67,6 +69,9 @@ contract('CashInStorage', () => {
             resGetSplit2 = convertToNumber(resGetSplit2);
             resGetSplit3 = await instance.getSplit(8, 4);
             resGetSplit3 = convertToNumber(resGetSplit3);
+            /* get (after all) */
+            resGetAfterAll = await instance.get(0);
+            resGetAfterAll = convertToNumber(resGetAfterAll);
         });
 
         it('save', () => {
@@ -81,6 +86,12 @@ contract('CashInStorage', () => {
             assert.strictEqual(resGet[2], 0, 'balance is not equal');
             assert.strictEqual(resGet[3], 3, 'status is not equal');
             assert.strictEqual(resGet[4], 0, 'index is not equal');
+            /* after all */
+            assert.strictEqual(resGetAfterAll[0], 1, 'sessionId is not equal (after all)');
+            assert.strictEqual(resGetAfterAll[1], 2, 'application address is not equal (after all)');
+            assert.strictEqual(resGetAfterAll[2], 500, 'balance is not equal (after all)');
+            assert.strictEqual(resGetAfterAll[3], 5, 'status is not equal (after all)');
+            assert.strictEqual(resGetAfterAll[4], 1, 'index is not equal (after all)');
         });
         it('getSessionId', () => {
             assert.strictEqual(resGetSessionID, 1, 'sessionId is not equal');
@@ -126,16 +137,3 @@ contract('CashInStorage', () => {
         });
     })
 });
-
-function convertToNumber(structure) { // convert props/elements no number
-    if (structure instanceof Object && !Array.isArray(structure)) { // if Object
-        for (let key in structure) {
-            if (structure.hasOwnProperty(key)) {
-                structure[key] = Number(structure[key]);
-            }
-        }
-    } else if (Array.isArray(structure)) { // if Array
-        structure = structure.map(item => Number(item));
-    }
-    return structure;
-}
