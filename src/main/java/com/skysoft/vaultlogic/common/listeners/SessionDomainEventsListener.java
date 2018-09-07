@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.common.domain.session.listeners;
+package com.skysoft.vaultlogic.common.listeners;
 
 import com.skysoft.vaultlogic.blockchain.contracts.ISessionManager;
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;

@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.common.domain.support.converters;
+package com.skysoft.vaultlogic.common.domain;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

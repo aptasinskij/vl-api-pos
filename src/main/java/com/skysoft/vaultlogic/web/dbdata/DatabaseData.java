@@ -17,7 +17,7 @@ public class DatabaseData implements CommandLineRunner {
     private final CapitalHero capitalHero;
 
     private static final String APPLICATION_NAME = "CapitalHero";
-    private static final String APPLICATION_URL = "http://localhost.com";
+    private static final String APPLICATION_URL = "http://localhost:9090/index";
 
     @Autowired
     public DatabaseData(UserRepository userRepository, ApplicationService applicationService, CapitalHero capitalHero) {

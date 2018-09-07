@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.common.domain.application.listeners;
+package com.skysoft.vaultlogic.common.listeners;
 
 import com.skysoft.vaultlogic.blockchain.service.BlockchainAppService;
 import com.skysoft.vaultlogic.common.domain.application.ApplicationRepository;

@@ -82,6 +82,12 @@ public class GanacheConfiguration {
 
     @Bean
     @Autowired
+    public SessionOracle sessionOracle(Web3j web3j, Credentials credentials) {
+        return SessionOracle.load(SessionOracle.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    }
+
+    @Bean
+    @Autowired
     public CapitalHero capitalHero(Web3j web3j, Credentials credentials) {
         return CapitalHero.load(CAPITAL_HERO_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }

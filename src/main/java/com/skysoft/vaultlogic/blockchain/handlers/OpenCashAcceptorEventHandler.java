@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.oracle.cashin;
+package com.skysoft.vaultlogic.blockchain.handlers;
 
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.OpenCashAcceptorEventResponse;
@@ -14,8 +14,11 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 @Component
 public class OpenCashAcceptorEventHandler {
 
+    private final CashInOracle cashInOracle;
+
     @Autowired
     public OpenCashAcceptorEventHandler(CashInOracle cashInOracle) {
+        this.cashInOracle = cashInOracle;
         cashInOracle.openCashAcceptorEventObservable(buildFilter(cashInOracle))
                 .subscribe(this::onNext, this::onError);
     }
@@ -27,6 +30,12 @@ public class OpenCashAcceptorEventHandler {
 
     private void onNext(OpenCashAcceptorEventResponse event) {
         log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, XToken: {}", event.channelId, event.sessionId, event.xToken);
+        cashInOracle.confirmOpen(event.channelId).sendAsync()
+                .thenAccept(tx -> log.info("[x] Success confirm. TX: {}", tx.getTransactionHash()))
+                .exceptionally(tr -> {
+                    log.error("[x] Couldn't confirm");
+                    return null;
+                });
     }
 
     private void onError(Throwable throwable) {

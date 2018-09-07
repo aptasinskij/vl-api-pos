@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.common.domain.support.converters;
+package com.skysoft.vaultlogic.common.domain;
 
 import org.web3j.abi.datatypes.Address;
 
