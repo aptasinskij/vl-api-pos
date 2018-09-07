@@ -41,7 +41,7 @@ public class Application extends AbstractAggregateRoot<Application> {
     private String address;
 
     @Enumerated(STRING)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private Status status;
 
     public Application() {

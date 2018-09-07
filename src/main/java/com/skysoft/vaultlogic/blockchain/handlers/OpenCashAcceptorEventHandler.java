@@ -2,6 +2,7 @@ package com.skysoft.vaultlogic.blockchain.handlers;
 
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.OpenCashAcceptorEventResponse;
+import com.skysoft.vaultlogic.web.service.CashInService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,11 +15,11 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 @Component
 public class OpenCashAcceptorEventHandler {
 
-    private final CashInOracle cashInOracle;
+    private final CashInService cashInService;
 
     @Autowired
-    public OpenCashAcceptorEventHandler(CashInOracle cashInOracle) {
-        this.cashInOracle = cashInOracle;
+    public OpenCashAcceptorEventHandler(CashInOracle cashInOracle, CashInService cashInService) {
+        this.cashInService = cashInService;
         cashInOracle.openCashAcceptorEventObservable(buildFilter(cashInOracle))
                 .subscribe(this::onNext, this::onError);
     }
@@ -30,12 +31,7 @@ public class OpenCashAcceptorEventHandler {
 
     private void onNext(OpenCashAcceptorEventResponse event) {
         log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, Status: {}", event.channelId, event.sessionId, event.channelStatus);
-        cashInOracle.confirmOpen(event.channelId).sendAsync()
-                .thenAccept(tx -> log.info("[x] Success confirm. TX: {}", tx.getTransactionHash()))
-                .exceptionally(tr -> {
-                    log.error("[x] Couldn't confirm");
-                    return null;
-                });
+        cashInService.createCashInChannel(event.channelId, event.sessionId, event.channelStatus);
     }
 
     private void onError(Throwable throwable) {
