@@ -2,6 +2,7 @@ package com.skysoft.vaultlogic.blockchain.handlers;
 
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.CloseCashAcceptorEventResponse;
+import com.skysoft.vaultlogic.web.service.CashInService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,10 +16,12 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 public class CloseCashAcceptorEventHandler {
 
     private final CashInOracle cashInOracle;
+    private final CashInService cashInService;
 
     @Autowired
-    public CloseCashAcceptorEventHandler(CashInOracle cashInOracle) {
+    public CloseCashAcceptorEventHandler(CashInOracle cashInOracle, CashInService cashInService) {
         this.cashInOracle = cashInOracle;
+        this.cashInService = cashInService;
         cashInOracle.closeCashAcceptorEventObservable(buildFilter(cashInOracle))
                 .subscribe(this::onNext, this::onError);
     }
@@ -30,12 +33,7 @@ public class CloseCashAcceptorEventHandler {
 
     private void onNext(CloseCashAcceptorEventResponse event) {
         log.info("[x] CLOSE CASH ACCEPTOR: Channel: {}, XToken: {}", event.channelId, event.xToken);
-        cashInOracle.confirmClose(event.channelId).sendAsync()
-                .thenAccept(tx -> log.info("[x] Success close. TX: {}", tx.getTransactionHash()))
-                .exceptionally(th -> {
-                    log.error("[x] Fail to confirm close", th);
-                    return null;
-                });
+        cashInService.closeCashInChannel(event.channelId, event.xToken);
     }
 
     private void onError(Throwable throwable) {
