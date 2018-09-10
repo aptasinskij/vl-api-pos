@@ -1,10 +1,11 @@
-package com.skysoft.vaultlogic.blockchain.handlers.storage;
+package com.skysoft.vaultlogic.blockchain.handlers.cloud.storage;
 
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.ApplicationStatusUpdatedEventResponse;
 import com.skysoft.vaultlogic.common.domain.application.Application.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.EventEncoder;
 import org.web3j.protocol.core.methods.request.EthFilter;
@@ -14,6 +15,7 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
+@Profile("cloud-quorum")
 public class StatusUpdatedEventHandler {
 
     @Autowired
@@ -23,7 +25,7 @@ public class StatusUpdatedEventHandler {
     }
 
     private EthFilter buildFilter(ApplicationStorage applicationStorage) {
-        return new EthFilter(LATEST, LATEST, applicationStorage.getContractAddress().substring(2))
+        return new EthFilter(LATEST, LATEST, applicationStorage.getContractAddress())
                 .addSingleTopic(EventEncoder.encode(APPLICATIONSTATUSUPDATED_EVENT));
     }
 

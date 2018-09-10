@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers;
+package com.skysoft.vaultlogic.blockchain.handlers.local;
 
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.OpenCashAcceptorEventResponse;

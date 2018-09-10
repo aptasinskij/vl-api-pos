@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.storage;
+package com.skysoft.vaultlogic.blockchain.handlers.local.storage;
 
 import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage.StatusUpdatedEventResponse;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.web3j.abi.EventEncoder;
 import org.web3j.protocol.core.methods.request.EthFilter;
 
-import static com.skysoft.vaultlogic.blockchain.contracts.SessionStorage.SAVED_EVENT;
 import static com.skysoft.vaultlogic.blockchain.contracts.SessionStorage.STATUSUPDATED_EVENT;
 import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 

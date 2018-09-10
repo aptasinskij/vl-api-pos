@@ -1,9 +1,10 @@
-package com.skysoft.vaultlogic.blockchain.handlers.storage;
+package com.skysoft.vaultlogic.blockchain.handlers.cloud.storage;
 
 import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage.SavedEventResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.EventEncoder;
 import org.web3j.protocol.core.methods.request.EthFilter;
@@ -13,6 +14,7 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
+@Profile("cloud-quorum")
 public class SessionSavedEventHandler {
 
     @Autowired
@@ -22,7 +24,7 @@ public class SessionSavedEventHandler {
     }
 
     private EthFilter buildFilter(SessionStorage sessionStorage) {
-        return new EthFilter(LATEST, LATEST, sessionStorage.getContractAddress().substring(2))
+        return new EthFilter(LATEST, LATEST, sessionStorage.getContractAddress())
                 .addSingleTopic(EventEncoder.encode(SAVED_EVENT));
     }
 
