@@ -4,6 +4,7 @@ import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage.SavedEventResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.EventEncoder;
 import org.web3j.protocol.core.methods.request.EthFilter;
@@ -13,6 +14,7 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
+@Profile("ganache")
 public class SessionSavedEventHandler {
 
     @Autowired

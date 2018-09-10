@@ -3,6 +3,7 @@ package com.skysoft.vaultlogic.blockchain.handlers.local;
 import com.skysoft.vaultlogic.blockchain.contracts.SessionOracle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.EventEncoder;
 import org.web3j.protocol.core.methods.request.EthFilter;
@@ -11,6 +12,7 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
+@Profile("ganache")
 public class CloseSessionEventHandler {
 
     @Autowired
