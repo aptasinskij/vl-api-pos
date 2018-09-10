@@ -4,6 +4,7 @@ import com.skysoft.vaultlogic.blockchain.contracts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
@@ -15,6 +16,7 @@ import static org.web3j.tx.gas.DefaultGasProvider.GAS_LIMIT;
 import static org.web3j.tx.gas.DefaultGasProvider.GAS_PRICE;
 
 @Configuration
+@Profile("ganache")
 public class GanacheConfiguration {
 
     private static final String CLIENT_HOST = "http://localhost:7545";

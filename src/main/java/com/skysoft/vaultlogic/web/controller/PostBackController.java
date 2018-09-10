@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.web.controller.local;
+package com.skysoft.vaultlogic.web.controller;
 
 import com.skysoft.vaultlogic.web.postback.api.Event;
 import com.skysoft.vaultlogic.web.postback.api.EventResponse;
@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/post-back")
-public class LocalPostBackController {
+public class PostBackController {
 
     private final RootPostBackRouter postBackRouter;
     private static final String X_TOKEN = "X-Token";
 
     @Autowired
-    public LocalPostBackController(RootPostBackRouter postBackRouter) {
+    public PostBackController(RootPostBackRouter postBackRouter) {
         this.postBackRouter = postBackRouter;
     }
 
