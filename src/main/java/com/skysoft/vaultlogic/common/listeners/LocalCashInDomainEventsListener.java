@@ -14,13 +14,13 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
 @Component
-public class CashInDomainEventsListener {
+public class LocalCashInDomainEventsListener {
 
     private final CashInService cashInService;
     private final CashInOracle cashInOracle;
 
     @Autowired
-    public CashInDomainEventsListener(CashInService cashInService, CashInOracle cashInOracle) {
+    public LocalCashInDomainEventsListener(CashInService cashInService, CashInOracle cashInOracle) {
         this.cashInService = cashInService;
         this.cashInOracle = cashInOracle;
     }
