@@ -3,6 +3,7 @@ package com.skysoft.vaultlogic.web.controller.local;
 import com.skysoft.vaultlogic.web.postback.impl.protocol.data.CashInsert;
 import com.skysoft.vaultlogic.web.service.CashInService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 
 @RestController
+@Profile("ganache")
 @RequestMapping("/cash-in/increase-balance")
 public class CashInController {
 
