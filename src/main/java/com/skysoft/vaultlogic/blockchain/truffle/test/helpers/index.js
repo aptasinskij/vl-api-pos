@@ -37,4 +37,11 @@ const convertToNumber = (structure, disableAddressConvert) => { // convert props
     return structure;
 };
 
+const sleep = millis => {
+    const t = (new Date()).getTime();
+    let i = 0;
+    while (((new Date()).getTime() - t) < millis) i++;
+};
+
 exports.convertToNumber = convertToNumber;
+exports.sleep = sleep;
