@@ -81,9 +81,9 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
         return andEvent(CashInClosed.of(this.channelId));
     }
 
-    public CashInChannel updateBalance(BigInteger amount) {
-        this.balance = this.balance.add(amount);
-        return andEvent(CashInBalanceUpdate.of(this.channelId, amount));
+    public <T extends Number> CashInChannel updateBalance(T amount) {
+        this.balance = this.balance.add(BigInteger.valueOf(amount.longValue()));
+        return andEvent(CashInBalanceUpdate.of(this.channelId, BigInteger.valueOf(amount.longValue())));
     }
 
     public void setStatus(Status status) {
