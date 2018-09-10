@@ -1,9 +1,6 @@
 package com.skysoft.vaultlogic.common.domain.cashin;
 
-import com.skysoft.vaultlogic.common.domain.cashin.events.CashInCloseRequested;
-import com.skysoft.vaultlogic.common.domain.cashin.events.CashInClosed;
-import com.skysoft.vaultlogic.common.domain.cashin.events.CashInCreated;
-import com.skysoft.vaultlogic.common.domain.cashin.events.CashInOpened;
+import com.skysoft.vaultlogic.common.domain.cashin.events.*;
 import com.skysoft.vaultlogic.common.domain.session.Session;
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
@@ -82,6 +79,11 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
     public CashInChannel markClosed() {
         this.status = Status.CLOSED;
         return andEvent(CashInClosed.of(this.channelId));
+    }
+
+    public CashInChannel updateBalance(BigInteger amount) {
+        this.balance = this.balance.add(amount);
+        return andEvent(CashInBalanceUpdate.of(this.channelId, amount));
     }
 
     public void setStatus(Status status) {

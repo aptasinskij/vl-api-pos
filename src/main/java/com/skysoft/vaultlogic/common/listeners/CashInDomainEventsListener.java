@@ -1,10 +1,7 @@
 package com.skysoft.vaultlogic.common.listeners;
 
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
-import com.skysoft.vaultlogic.common.domain.cashin.events.CashInCloseRequested;
-import com.skysoft.vaultlogic.common.domain.cashin.events.CashInClosed;
-import com.skysoft.vaultlogic.common.domain.cashin.events.CashInCreated;
-import com.skysoft.vaultlogic.common.domain.cashin.events.CashInOpened;
+import com.skysoft.vaultlogic.common.domain.cashin.events.*;
 import com.skysoft.vaultlogic.web.service.CashInService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +68,18 @@ public class CashInDomainEventsListener {
     public void closed(CashInClosed event) {
         log.info("[x]---> CASH IN CLOSED EVENT. ID: {} ", event.getChannelId());
         cashInOracle.confirmClose(event.getChannelId()).sendAsync()
+                .thenAccept(tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()))
+                .exceptionally(th -> {
+                    log.error("[x] Error during confirmation", th);
+                    return null;
+                });
+    }
+
+    @Async
+    @TransactionalEventListener
+    public void balanceUpdate(CashInBalanceUpdate event) {
+        log.info("[x]---> UPDATE CASH IN BALANCE EVENT. ID: {} ", event.getChannelId());
+        cashInOracle.increaseBalance(event.getChannelId(), event.getAmount()).sendAsync()
                 .thenAccept(tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()))
                 .exceptionally(th -> {
                     log.error("[x] Error during confirmation", th);
