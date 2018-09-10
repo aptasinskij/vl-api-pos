@@ -1,6 +1,7 @@
 package com.skysoft.vaultlogic.web.controller.local;
 
-import com.skysoft.vaultlogic.common.domain.cashin.CashInRepository;
+import com.skysoft.vaultlogic.web.postback.impl.protocol.data.CashInsert;
+import com.skysoft.vaultlogic.web.service.CashInService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,25 +9,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/cash-in/increase-balance")
 public class CashInController {
 
-    private final CashInRepository cashInRepository;
+    private final CashInService cashInService;
 
     @Autowired
-    public CashInController(CashInRepository cashInRepository) {
-        this.cashInRepository = cashInRepository;
+    public CashInController(CashInService cashInService) {
+        this.cashInService = cashInService;
     }
 
     @GetMapping
-    public ResponseEntity<Void> increaseBalance(@RequestParam BigInteger channelId, @RequestParam BigInteger amount) {
-        cashInRepository.findByChannelId(channelId).ifPresent(channel -> {
-            channel.updateBalance(amount);
-            cashInRepository.save(channel);
-        });
+    public ResponseEntity<Void> increaseBalance(@RequestParam String xToken, @RequestParam BigDecimal amount) {
+        CashInsert event = new CashInsert();
+        event.setCurrentAmount(amount);
+        cashInService.updateBalance(event, xToken);
         return ResponseEntity.ok().build();
     }
 
