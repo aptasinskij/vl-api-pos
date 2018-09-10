@@ -34,4 +34,8 @@ contract CashInOracle is RegistryComponent {
         ICashChannelsManager(lookup(CASH_CHANNELS_MANAGER)).confirmClose(channelId);
     }
 
+    function increaseBalance(uint256 channelId, uint256 amount) external {
+        ICashChannelsManager(lookup(CASH_CHANNELS_MANAGER)).updateCashInBalance(channelId, amount);
+    }
+
 }

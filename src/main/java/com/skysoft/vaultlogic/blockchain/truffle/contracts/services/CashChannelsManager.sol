@@ -32,6 +32,14 @@ contract CashChannelsManager is RegistryComponent {
         return channelId;
     }
 
+    function updateCashInBalance(uint256 channelId, uint256 amount) external {
+        ICashInStorage cashInStorage = ICashInStorage(lookup(CASH_IN_STORAGE));
+        uint256 currentBalance = cashInStorage.getBalance(channelId);
+        cashInStorage.setBalance(channelId, currentBalance + amount);
+        (address application, uint256 sessionId) = cashInStorage.getApplicationAndSessionId(channelId);
+        IApplication(application).cashInBalanceUpdate(channelId, sessionId, amount);
+    }
+
     function closeCashInChannel(uint256 sessionId, uint256 channelId) external {
         string memory xToken = ISessionStorage(lookup(SESSION_STORAGE)).getXToken(sessionId);
         ICashInStorage(lookup(CASH_IN_STORAGE)).setStatus(channelId, uint256(CashInStatus.HALF_CLOSED));

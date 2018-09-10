@@ -10,4 +10,6 @@ interface ICashChannelsManager {
 
     function confirmClose(uint256 channelId) external;
 
+    function updateCashInBalance(uint256 channelId, uint256 amount) external;
+
 }
