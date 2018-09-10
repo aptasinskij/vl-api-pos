@@ -1,0 +1,10 @@
+package com.skysoft.vaultlogic.web.postback.api.factory;
+
+import com.skysoft.vaultlogic.web.postback.api.Event;
+import com.skysoft.vaultlogic.web.postback.api.Handler;
+
+public interface HandlerFactory<T extends Handler> {
+
+    T getHandler(final Event<?> postBackEvent);
+
+}
