@@ -4,6 +4,7 @@ const SessionManager = artifacts.require('./services/SessionManager.sol');
 const ApplicationManager = artifacts.require('./services/ApplicationManager.sol');
 const CapitalHero = artifacts.require('./application/CapitalHero.sol');
 const convertToNumber = require('./helpers').convertToNumber;
+const sleep = require('./helpers').sleep;
 
 contract('SessionManager', () => {
 
@@ -15,13 +16,22 @@ contract('SessionManager', () => {
         let resConfirmClose;
         let resGetStatus2;
 
+        let SavedEvents = [];
+        let StatusUpdatedEvents = [];
+
         before(async () => {
             /* get instances */
             const sessionStorageInstance = await SessionStorage.deployed();
             const sessionManagerInstance = await SessionManager.deployed();
             const applicationManagerInstance = await ApplicationManager.deployed();
             const capitalHeroInstance = await CapitalHero.deployed();
-
+            /* watch events */
+            sessionStorageInstance.Saved().watch((err, response) => {
+                SavedEvents.push(convertToNumber(response.args, true));
+            });
+            sessionStorageInstance.StatusUpdated().watch((err, response) => {
+                StatusUpdatedEvents.push(convertToNumber(response.args, true));
+            });
             /* registerApplication Capital Hero */
             applicationManagerInstance.registerApplication(2, 'capital-hero', 235, 'http://capital-hero', capitalHeroInstance.address);
             /* createSession */
@@ -36,13 +46,20 @@ contract('SessionManager', () => {
             resConfirmClose = await sessionManagerInstance.confirmClose(1);
             resGetStatus2 = await sessionStorageInstance.getStatus(1);
             resGetStatus2 = Number(resGetStatus2);
+
+         /*   sleep(5000); // for make sure events handles*/
         });
 
         it('createSession', () => {
-            /* from SessionManager event */
+            /* from SessionManager logs */
             assert.isAbove(resCreateSession.receipt.logs.length, 0, 'transaction logs are empty');
             assert.notEqual(resCreateSession.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resCreateSession.receipt.gasUsed, 0, 'gasUsed is 0');
+            /* from SessionStorage event */
+            assert.strictEqual(SavedEvents[0].sessionId, 1, 'session id is not equal');
+            assert.strictEqual(SavedEvents[0].appId, 2, 'application id is not equal');
+            assert.strictEqual(SavedEvents[0].xToken, '1a2b3c', 'xToken is not equal');
+            assert.strictEqual(SavedEvents[0].status, 0, 'channel status is not equal');
             /* from SessionStorage method */
             assert.strictEqual(resGetSession[0], 2, 'session id is not equal');
             assert.strictEqual(resGetSession[1], '1a2b3c', 'xToken is not equal');
@@ -53,6 +70,9 @@ contract('SessionManager', () => {
             assert.isAbove(resCloseSession.receipt.logs.length, 0, 'transaction logs are empty');
             assert.notEqual(resCloseSession.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resCloseSession.receipt.gasUsed, 0, 'gasUsed is 0');
+            /* from SessionStorage event */
+            assert.strictEqual(StatusUpdatedEvents[0].index, 1, 'index is not equal');
+            assert.strictEqual(StatusUpdatedEvents[0].status, 1, 'status is not equal');
             /* from SessionStorage method */
             assert.strictEqual(resGetStatus1, 1, 'session status is not equal');
         });
@@ -61,6 +81,9 @@ contract('SessionManager', () => {
             assert.isAbove(resConfirmClose.receipt.logs.length, 0, 'transaction logs are empty');
             assert.notEqual(resConfirmClose.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resConfirmClose.receipt.gasUsed, 0, 'gasUsed is 0');
+            /* from SessionStorage event */
+            assert.strictEqual(StatusUpdatedEvents[1].index, 1, 'index is not equal');
+            assert.strictEqual(StatusUpdatedEvents[1].status, 2, 'status is not equal');
             /* from SessionStorage method */
             assert.strictEqual(resGetStatus2, 2, 'session status is not equal');
         });
