@@ -28,7 +28,6 @@ public class CloudApplicationIndexController {
     private static final String LAUNCH_APPLICATION_URL = "https://api-staging.maya.tech/open/application/launch";
     private static final String X_TOKEN = "X-Token";
     private static final String X_NONCE = "x-Nonce";
-    private static final String APP_ID = "App-Id";
 
     private final SessionService sessionService;
     private final ApplicationService applicationService;
@@ -45,43 +44,40 @@ public class CloudApplicationIndexController {
     public ResponseEntity<String> getApplicationIndexPage(@PathVariable Long appId, @RequestParam("token") String xToken) {
         URI appIndexUri = applicationService.getApplicationUri(appId);
         Session session = sessionService.createApplicationSession(appId, xToken);
-        ResponseEntity<String> responseEntity = getIndexPage(appIndexUri, valueOf(session.getId()), appId, xToken);
-        launchApplication(appId, xToken);
+        ResponseEntity<String> responseEntity = getIndexPage(appIndexUri, session.getId());
+        launchApplication(xToken);
         return responseEntity;
     }
 
-    private ResponseEntity<String> getIndexPage(URI appIndexUri, String token, Long appId, String xToken) {
+    private ResponseEntity<String> getIndexPage(URI appIndexUri, Long sessionId) {
         try {
-            return oAuth2RestTemplate.exchange(getApplicationIndexRequestEntity(appIndexUri, token, appId, xToken), String.class);
+            return oAuth2RestTemplate.exchange(getApplicationIndexRequestEntity(appIndexUri, sessionId), String.class);
         } catch (Exception e) {
             log.error("[x] ---> Failed to get application index page. Reason: {}", e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
 
-    private ResponseEntity<String> launchApplication(Long appId, String xToken) {
+    private ResponseEntity<String> launchApplication(String xToken) {
         try {
-            return oAuth2RestTemplate.exchange(getLaunchApplicationRequestEntity(appId, xToken), String.class);
+            return oAuth2RestTemplate.exchange(getLaunchApplicationRequestEntity(xToken), String.class);
         } catch (Exception e) {
             log.error("[x] ---> Failed to launch application. Reason: {}", e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
 
-    private RequestEntity<Void> getApplicationIndexRequestEntity(URI appIndexUri, String token, Long appId, String xToken) {
+    private RequestEntity<Void> getApplicationIndexRequestEntity(URI appIndexUri, Long sessionId) {
         return RequestEntity.get(appIndexUri)
                 .accept(MediaType.TEXT_HTML)
-                .header(X_TOKEN, xToken)
-                .header(VL_TOKEN, token)
-                .header(APP_ID, valueOf(appId))
+                .header(VL_TOKEN, valueOf(sessionId))
                 .build();
     }
 
-    private RequestEntity<Void> getLaunchApplicationRequestEntity(Long appId, String xToken) {
+    private RequestEntity<Void> getLaunchApplicationRequestEntity(String xToken) {
         return RequestEntity.post(URI.create(LAUNCH_APPLICATION_URL))
                 .header(X_TOKEN, xToken)
                 .header(X_NONCE, valueOf(currentTimeMillis()))
-                .header(APP_ID, valueOf(appId))
                 .build();
     }
 
