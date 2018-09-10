@@ -11,8 +11,13 @@ contract('CashChannelsManager', () => {
     describe('tests for all methods', () => {
         let resOpenCashInChannel;
         let resGet;
+        let resConfirmOpen;
+        let resGetStatus1;
+        let capitalHeroInstance;
+        let resGetStatus2;
         let resCloseCashInChannel;
-        let resGetStatus;
+        let resConfirmClose;
+        let resGetStatus3;
 
         before(async () => {
             /* get instances */
@@ -20,8 +25,7 @@ contract('CashChannelsManager', () => {
             const cashInStorageInstance = await CashInStorage.deployed();
             const sessionManagerInstance = await SessionManager.deployed();
             const applicationManagerInstance = await ApplicationManager.deployed();
-            const capitalHeroInstance = await CapitalHero.deployed();
-
+            capitalHeroInstance = await CapitalHero.deployed();
             /* registerApplication Capital Hero */
             await applicationManagerInstance.registerApplication(2, 'capital-hero', 235, 'http://capital-hero', capitalHeroInstance.address);
             /* createSession for Capital Hero */
@@ -30,12 +34,18 @@ contract('CashChannelsManager', () => {
             resOpenCashInChannel = await cashChannelsManagerInstance.openCashInChannel(1);
             resGet = await cashInStorageInstance.get(0);
             resGet = convertToNumber(resGet, true);
-            /* confirmOpe  */
-            resCloseCashInChannel = await cashChannelsManagerInstance.confirmOpen(0);
-            resGetStatus = await cashInStorageInstance.getStatus(0);
-            resGetStatus = Number(resGetStatus);
-
-            console.log('resGetStatus',resGetStatus);
+            /* confirmOpen  */
+            resConfirmOpen = await cashChannelsManagerInstance.confirmOpen(0);
+            resGetStatus1 = await cashInStorageInstance.getStatus(0);
+            resGetStatus1 = Number(resGetStatus1);
+            /* closeCashInChannel */
+            resCloseCashInChannel = await cashChannelsManagerInstance.closeCashInChannel(1, 0);
+            resGetStatus2 = await cashInStorageInstance.getStatus(0);
+            resGetStatus2 = Number(resGetStatus2);
+            /* confirmClose */
+            resConfirmClose = await cashChannelsManagerInstance.confirmClose(0);
+            resGetStatus3 = await cashInStorageInstance.getStatus(0);
+            resGetStatus3 = Number(resGetStatus3);
         });
 
         it('openCashInChannel', () => {
@@ -43,19 +53,34 @@ contract('CashChannelsManager', () => {
             assert.isAbove(resOpenCashInChannel.receipt.logs.length, 0, 'transaction logs are empty');
             assert.notEqual(resOpenCashInChannel.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resOpenCashInChannel.receipt.gasUsed, 0, 'gasUsed is 0');
-            /* from CashChannelsManager method */
+            /* from cashInStorage method */
             assert.strictEqual(resGet[0], 1, 'channel id is not equal');
-            assert.notEqual(resGet[1], '', 'channel address is empty');
+            assert.strictEqual(resGet[1], capitalHeroInstance.address, 'channel address is not equal');
             assert.strictEqual(resGet[4], 0, 'channel status is not equal');
         });
         it('confirmOpen', () => {
             /* from CashChannelsManager event */
+            assert.isAbove(resConfirmOpen.receipt.logs.length, 0, 'transaction logs are empty');
+            assert.notEqual(resConfirmOpen.receipt.transactionHash, '', 'transaction hash is empty');
+            assert.isAbove(resConfirmOpen.receipt.gasUsed, 0, 'gasUsed is 0');
+            /* from cashInStorage method */
+            assert.strictEqual(resGetStatus1, 1, 'channel status is not equal');
+        });
+        it('closeCashInChannel', () => {
+            /* from CashChannelsManager event */
             assert.isAbove(resCloseCashInChannel.receipt.logs.length, 0, 'transaction logs are empty');
             assert.notEqual(resCloseCashInChannel.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resCloseCashInChannel.receipt.gasUsed, 0, 'gasUsed is 0');
-            /* from CashChannelsManager method */
-            assert.strictEqual(resGetStatus, 1, 'channel status is not equal');
+            /* from cashInStorage method */
+            assert.strictEqual(resGetStatus2, 2, 'channel status is not equal');
         });
-
+        it('confirmClose', () => {
+            /* from CashChannelsManager event */
+            assert.isAbove(resConfirmClose.receipt.logs.length, 0, 'transaction logs are empty');
+            assert.notEqual(resConfirmClose.receipt.transactionHash, '', 'transaction hash is empty');
+            assert.isAbove(resConfirmClose.receipt.gasUsed, 0, 'gasUsed is 0');
+            /* from cashInStorage method */
+            assert.strictEqual(resGetStatus3, 3, 'channel status is not equal');
+        });
     });
 });
