@@ -18,6 +18,8 @@ contract('CashChannelsManager', () => {
         let resCloseCashInChannel;
         let resConfirmClose;
         let resGetStatus3;
+        let resUpdateCashInBalance;
+        let resGetBalance;
 
         before(async () => {
             /* get instances */
@@ -38,6 +40,10 @@ contract('CashChannelsManager', () => {
             resConfirmOpen = await cashChannelsManagerInstance.confirmOpen(0);
             resGetStatus1 = await cashInStorageInstance.getStatus(0);
             resGetStatus1 = Number(resGetStatus1);
+            /* updateCashInBalance */
+            resUpdateCashInBalance = await cashChannelsManagerInstance.updateCashInBalance(0, 100);
+            resGetBalance = await cashInStorageInstance.getBalance(0);
+            resGetBalance = Number(resGetBalance);
             /* closeCashInChannel */
             resCloseCashInChannel = await cashChannelsManagerInstance.closeCashInChannel(1, 0);
             resGetStatus2 = await cashInStorageInstance.getStatus(0);
@@ -65,6 +71,14 @@ contract('CashChannelsManager', () => {
             assert.isAbove(resConfirmOpen.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from cashInStorage method */
             assert.strictEqual(resGetStatus1, 1, 'channel status is not equal');
+        });
+        it('updateCashInBalance', () => {
+            /* from CashChannelsManager event */
+            assert.isAbove(resUpdateCashInBalance.receipt.logs.length, 0, 'transaction logs are empty');
+            assert.notEqual(resUpdateCashInBalance.receipt.transactionHash, '', 'transaction hash is empty');
+            assert.isAbove(resUpdateCashInBalance.receipt.gasUsed, 0, 'gasUsed is 0');
+            /* from cashInStorage method */
+            assert.strictEqual(resGetBalance, 100, 'channel balance is not equal');
         });
         it('closeCashInChannel', () => {
             /* from CashChannelsManager event */
