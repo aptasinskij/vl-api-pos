@@ -28,16 +28,16 @@ public class CloudQuorumConfiguration {
     private static final Long POLLING_INTERVAL = 100L;
     private static final Integer POOL_SIZE = 100;
 
-    private static final String APPLICATION_MANAGER = "0xe58dad58ccb22b9b1de9f2e3edea7681bdacd773";
-    private static final String APPLICATION_STORAGE = "0xe5854bbbb4f1447c839f57420c44ca7d56eb53d4";
+    private static final String APPLICATION_MANAGER = "0xc15a329d04d06a7dc6f1d4b7d5799ed662e3d123";
+    private static final String APPLICATION_STORAGE = "0xb7812457238a8304ae0b55c9fcef072476a86a85";
 
-    private static final String SESSION_MANAGER = "0x2c4b289749361521c9f238e76993ea9024f23d23";
-    private static final String SESSION_STORAGE = "0x9d40ad39b007bfc5fb739f0a5f1489b370ddef04";
-    private static final String SESSION_ORACLE = "0x45fc7653901d481a75e9ecbb6fcd250dedc68dc9";
+    private static final String SESSION_MANAGER = "0xebd7470a50719a983541ba3985f88fc8a589b117";
+    private static final String SESSION_STORAGE = "0xf72542c0450f03d4e7707f126a2c7e68f5a38185";
+    private static final String SESSION_ORACLE = "0xcff2f2094f5e81ed56558adebbbf2e997559c5de";
 
-    private static final String CAPITAL_HERO_ADDRESS = "0x04d3d07229557903459acadd33f5e505f928bd3c";
+    private static final String CAPITAL_HERO_ADDRESS = "0xe2233d836993ebe096d5d57003f66786141a04c1";
 
-    private static final String CASH_ACCEPTOR_ORACLE_ADDRESS = "0x71c539c871e81f6b5c034ecc159d11837f21d845";
+    private static final String CASH_ACCEPTOR_ORACLE_ADDRESS = "0xc6d951a64ef1b5152e38117f13d02beb889124b0";
 
     @Bean
     public ScheduledExecutorService scheduledExecutorService() {
