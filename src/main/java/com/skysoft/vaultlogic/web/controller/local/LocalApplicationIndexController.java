@@ -4,6 +4,7 @@ import com.skysoft.vaultlogic.common.domain.session.Session;
 import com.skysoft.vaultlogic.web.service.ApplicationService;
 import com.skysoft.vaultlogic.web.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.net.URI;
 import static org.springframework.http.MediaType.TEXT_HTML;
 
 @RestController
+@Profile("ganache")
 @RequestMapping("/index/{appId}")
 public class LocalApplicationIndexController {
 

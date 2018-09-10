@@ -11,4 +11,6 @@ public interface CashInRepository extends JpaRepository<CashInChannel, Long> {
 
     Optional<CashInChannel> findByChannelId(BigInteger channelId);
 
+    Optional<CashInChannel> findBySession_xTokenAndStatus(String xToken, CashInChannel.Status status);
+
 }

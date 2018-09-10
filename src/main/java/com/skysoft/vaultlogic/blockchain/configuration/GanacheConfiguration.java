@@ -4,6 +4,7 @@ import com.skysoft.vaultlogic.blockchain.contracts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
@@ -15,26 +16,27 @@ import static org.web3j.tx.gas.DefaultGasProvider.GAS_LIMIT;
 import static org.web3j.tx.gas.DefaultGasProvider.GAS_PRICE;
 
 @Configuration
+@Profile("ganache")
 public class GanacheConfiguration {
 
     private static final String CLIENT_HOST = "http://localhost:7545";
     private static final Long POLLING_INTERVAL = 100L;
     private static final Integer POOL_SIZE = 100;
 
-    private static final String ACCOUNT_PRIVATE_KEY = "fd6e21e4d9329f8499dc2a8446527fa8f63cd7b5a7ae2f6c7b01b5d203cf9c88";
+    private static final String ACCOUNT_PRIVATE_KEY = "c8ccf0a4cdf6db90aafa63c7be4ddd003efcf66155b33eb3d9b0214aa2b5eb09";
 
     private static final String NETWORK_ID  = "5777";
 
-    private static final String APPLICATION_MANAGER = "0x8d87a816eaffcc65f672f7336d7efd1f8237d94c";
-    private static final String APPLICATION_STORAGE = "0x489f07014c8d98ebf6932273728ebb92c79abd61";
+    private static final String APPLICATION_MANAGER = "0xe58dad58ccb22b9b1de9f2e3edea7681bdacd773";
+    private static final String APPLICATION_STORAGE = "0xe5854bbbb4f1447c839f57420c44ca7d56eb53d4";
 
-    private static final String SESSION_MANAGER = "0x365e4d1ee07377b14550b775aeb6eb452bac323e";
-    private static final String SESSION_STORAGE = "0x1cb53752950d0354f82460918b029f61ac10e5c6";
-    private static final String SESSION_ORACLE = "0x4e253145ad7c34b351becbec5ef69d901d2abaed";
+    private static final String SESSION_MANAGER = "0x2c4b289749361521c9f238e76993ea9024f23d23";
+    private static final String SESSION_STORAGE = "0x9d40ad39b007bfc5fb739f0a5f1489b370ddef04";
+    private static final String SESSION_ORACLE = "0x45fc7653901d481a75e9ecbb6fcd250dedc68dc9";
 
-    private static final String CAPITAL_HERO_ADDRESS = "0x6c5f8e1ac9af21e200850e1dcb9f2b19aeb7c4f4";
+    private static final String CAPITAL_HERO_ADDRESS = "0x04d3d07229557903459acadd33f5e505f928bd3c";
 
-    private static final String CASH_ACCEPTOR_ORACLE_ADDRESS = "0x6afad92a7f3ba6b0e88241f11b83ddfa8dfa6e0f";
+    private static final String CASH_ACCEPTOR_ORACLE_ADDRESS = "0x71c539c871e81f6b5c034ecc159d11837f21d845";
 
     @Bean
     public ScheduledExecutorService scheduledExecutorService() {

@@ -3,6 +3,7 @@ package com.skysoft.vaultlogic.web.service;
 import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel.Status;
 import com.skysoft.vaultlogic.common.domain.cashin.CashInRepository;
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
+import com.skysoft.vaultlogic.web.postback.impl.protocol.data.CashInsert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,15 @@ public class JpaCashInService implements CashInService {
     public void confirmOpened(BigInteger channelId) {
         cashInRepository.findByChannelId(channelId)
                 .ifPresent(channel -> cashInRepository.save(channel.markOpened()));
+    }
+
+    @Override
+    @Transactional
+    public void updateBalance(CashInsert event, String xToken) {
+        cashInRepository.findBySession_xTokenAndStatus(xToken, Status.OPENED).ifPresent(channel -> {
+            channel.updateBalance(event.getCurrentAmount());
+            cashInRepository.save(channel);
+        });
     }
 
     @Override
