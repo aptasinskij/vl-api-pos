@@ -1,12 +1,9 @@
 package com.skysoft.vaultlogic.blockchain.configuration;
 
 import com.skysoft.vaultlogic.blockchain.contracts.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.web3j.crypto.Credentials;
-import org.web3j.protocol.Web3j;
 import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.quorum.JsonRpc2_0Quorum;
@@ -14,11 +11,11 @@ import org.web3j.quorum.Quorum;
 import org.web3j.quorum.tx.ClientTransactionManager;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import static org.web3j.tx.gas.DefaultGasProvider.GAS_LIMIT;
-import static org.web3j.tx.gas.DefaultGasProvider.GAS_PRICE;
 
 @Configuration
 @Profile("cloud-quorum")
@@ -62,37 +59,37 @@ public class CloudQuorumConfiguration {
 
     @Bean
     public IApplicationManager applicationServiceApi(Quorum quorum, ClientTransactionManager clientTransactionManager) {
-        return IApplicationManager.load(APPLICATION_MANAGER, quorum, clientTransactionManager, GAS_PRICE, GAS_LIMIT);
+        return IApplicationManager.load(APPLICATION_MANAGER, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
     }
 
     @Bean
     public ApplicationStorage applicationStorage(Quorum quorum, ClientTransactionManager clientTransactionManager) {
-        return ApplicationStorage.load(APPLICATION_STORAGE, quorum, clientTransactionManager, GAS_PRICE, GAS_LIMIT);
+        return ApplicationStorage.load(APPLICATION_STORAGE, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
     }
 
     @Bean
     public SessionStorage sessionStorage(Quorum quorum, ClientTransactionManager clientTransactionManager) {
-        return SessionStorage.load(SESSION_STORAGE, quorum, clientTransactionManager, GAS_PRICE, GAS_LIMIT);
+        return SessionStorage.load(SESSION_STORAGE, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
     }
 
     @Bean
     public ISessionManager iSessionManager(Quorum quorum, ClientTransactionManager clientTransactionManager) {
-        return ISessionManager.load(SESSION_MANAGER, quorum, clientTransactionManager, GAS_PRICE, GAS_LIMIT);
+        return ISessionManager.load(SESSION_MANAGER, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
     }
 
     @Bean
     public CashInOracle cashAcceptorOracle(Quorum quorum, ClientTransactionManager clientTransactionManager) {
-        return CashInOracle.load(CASH_ACCEPTOR_ORACLE_ADDRESS, quorum, clientTransactionManager, GAS_PRICE, GAS_LIMIT);
+        return CashInOracle.load(CASH_ACCEPTOR_ORACLE_ADDRESS, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
     }
 
     @Bean
     public SessionOracle sessionOracle(Quorum quorum, ClientTransactionManager clientTransactionManager) {
-        return SessionOracle.load(SESSION_ORACLE, quorum, clientTransactionManager, GAS_PRICE, GAS_LIMIT);
+        return SessionOracle.load(SESSION_ORACLE, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
     }
 
     @Bean
     public CapitalHero capitalHero(Quorum quorum, ClientTransactionManager clientTransactionManager) {
-        return CapitalHero.load(CAPITAL_HERO_ADDRESS, quorum, clientTransactionManager, GAS_PRICE, GAS_LIMIT);
+        return CapitalHero.load(CAPITAL_HERO_ADDRESS, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
     }
 
 }
