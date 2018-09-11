@@ -6,4 +6,6 @@ public interface SessionService {
 
     Session createApplicationSession(Long appId, String xToken);
 
+    void closeSession(String xToken);
+
 }
