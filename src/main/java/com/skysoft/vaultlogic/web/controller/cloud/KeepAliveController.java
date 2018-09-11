@@ -2,6 +2,7 @@ package com.skysoft.vaultlogic.web.controller.cloud;
 
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
 import com.skysoft.vaultlogic.web.service.SessionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.RequestEntity;
@@ -16,6 +17,7 @@ import java.net.URI;
 import static java.lang.String.valueOf;
 import static java.lang.System.currentTimeMillis;
 
+@Slf4j
 @RestController
 @Profile("cloud-quorum")
 @RequestMapping("/keep-alive")
@@ -42,6 +44,7 @@ public class KeepAliveController {
 
     @PostMapping
     private void keepAlive(@RequestHeader(KEEP_ALIVE_TOKEN) String keepAliveToken, @RequestHeader(VAULT_LOGIC_TOKEN) String sessionId) {
+        log.info("[x]---> Keep Alive request. Token: {}, Session: {}", keepAliveToken, sessionId);
         String xToken = sessionRepository.findById(Long.valueOf(sessionId))
                 .orElseThrow(RuntimeException::new)
                 .getXToken();
