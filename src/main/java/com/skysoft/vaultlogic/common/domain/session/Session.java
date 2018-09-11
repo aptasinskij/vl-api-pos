@@ -2,6 +2,8 @@ package com.skysoft.vaultlogic.common.domain.session;
 
 import com.skysoft.vaultlogic.common.domain.application.Application;
 import com.skysoft.vaultlogic.common.domain.session.events.SessionActivated;
+import com.skysoft.vaultlogic.common.domain.session.events.SessionCloseRequested;
+import com.skysoft.vaultlogic.common.domain.session.events.SessionClosed;
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.AbstractAggregateRoot;
@@ -54,6 +56,16 @@ public class Session extends AbstractAggregateRoot<Session> {
         this.status = Status.ACTIVE;
         registerEvent(SessionActivated.of(this.xToken));
         return this;
+    }
+
+    public Session markCloseRequested() {
+        this.status = Status.CLOSE_REQUESTED;
+        return andEvent(SessionCloseRequested.withXToken(this.xToken));
+    }
+
+    public Session markClosed() {
+        this.status = Status.CLOSED;
+        return andEvent(SessionClosed.withXToken(this.xToken));
     }
 
     @Override
