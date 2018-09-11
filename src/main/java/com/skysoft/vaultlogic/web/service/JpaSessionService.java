@@ -28,4 +28,12 @@ public class JpaSessionService implements SessionService{
         return sessionRepo.save(session);
     }
 
+    @Override
+    @Transactional
+    public void closeSession(String xToken) {
+        sessionRepo.findByXToken(xToken)
+                .map(Session::markCloseRequested)
+                .ifPresent(sessionRepo::save);
+    }
+
 }
