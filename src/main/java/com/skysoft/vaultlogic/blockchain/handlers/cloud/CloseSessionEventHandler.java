@@ -1,6 +1,7 @@
 package com.skysoft.vaultlogic.blockchain.handlers.cloud;
 
 import com.skysoft.vaultlogic.blockchain.contracts.SessionOracle;
+import com.skysoft.vaultlogic.web.service.SessionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -15,8 +16,11 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 @Profile("cloud-quorum")
 public class CloseSessionEventHandler {
 
+    private final SessionService sessionService;
+
     @Autowired
-    public CloseSessionEventHandler(SessionOracle sessionOracle) {
+    public CloseSessionEventHandler(SessionOracle sessionOracle, SessionService sessionService) {
+        this.sessionService = sessionService;
         sessionOracle.closeSessionEventObservable(buildFilter(sessionOracle))
                 .subscribe(this::onNext, this::onError);
     }
@@ -28,7 +32,7 @@ public class CloseSessionEventHandler {
 
     private void onNext(SessionOracle.CloseSessionEventResponse event) {
         log.info("[x] CLOSE SESSION EVENT: XToken: {}", event.xToken);
-        log.info("[x] Here can be logic to send close application request to MAYA");
+        sessionService.closeSession(event.xToken);
     }
 
     private void onError(Throwable throwable) {
