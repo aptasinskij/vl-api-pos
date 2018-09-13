@@ -1,7 +1,8 @@
-package com.skysoft.vaultlogic.blockchain.handlers.local.storage;
+package com.skysoft.vaultlogic.blockchain.handlers.local.storage.application;
 
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.ApplicationUrlUpdatedEventResponse;
+import com.skysoft.vaultlogic.blockchain.handlers.api.ApplicationStorageEventObserver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -15,10 +16,10 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 @Slf4j
 @Component
 @Profile("ganache")
-public class UrlUpdatedEventHandler {
+public class UrlUpdatedEventObserver implements ApplicationStorageEventObserver<ApplicationUrlUpdatedEventResponse> {
 
     @Autowired
-    public UrlUpdatedEventHandler(ApplicationStorage repository) {
+    public UrlUpdatedEventObserver(ApplicationStorage repository) {
         repository.applicationUrlUpdatedEventObservable(filter(repository)).subscribe(this::onNext, this::onError);
     }
 
@@ -27,11 +28,16 @@ public class UrlUpdatedEventHandler {
                 .addSingleTopic(EventEncoder.encode(APPLICATIONURLUPDATED_EVENT));
     }
 
-    private void onNext(ApplicationUrlUpdatedEventResponse event) {
+    public void onNext(ApplicationUrlUpdatedEventResponse event) {
         log.info("[x] Application url updated event. {}, {}", event.appId, event.url);
     }
 
-    private void onError(Throwable throwable) {
+    @Override
+    public void onCompleted() {
+
+    }
+
+    public void onError(Throwable throwable) {
         log.error("[x] Error handle ApplicationUrlUpdated event", throwable);
     }
 

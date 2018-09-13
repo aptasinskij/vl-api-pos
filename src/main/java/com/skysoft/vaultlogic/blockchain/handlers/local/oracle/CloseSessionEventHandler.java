@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.local;
+package com.skysoft.vaultlogic.blockchain.handlers.local.oracle;
 
 import com.skysoft.vaultlogic.blockchain.contracts.SessionOracle;
 import lombok.extern.slf4j.Slf4j;
