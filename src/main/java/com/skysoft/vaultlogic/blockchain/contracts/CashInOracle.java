@@ -14,6 +14,7 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.contracts.SmartContractEvent;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -60,8 +61,6 @@ public class CashInOracle extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("5777", "0x71c539c871e81f6b5c034ecc159d11837f21d845");
-        _addresses.put("4447", "0xbc168cb4cbbbc85dd949dc15104bbc5ff4f1445d");
     }
 
     protected CashInOracle(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -213,7 +212,10 @@ public class CashInOracle extends Contract {
         return _addresses.get(networkId);
     }
 
-    public static class OpenCashAcceptorEventResponse {
+    public interface CashInOracleEvent extends SmartContractEvent {
+    }
+
+    public static class OpenCashAcceptorEventResponse implements CashInOracleEvent {
         public Log log;
 
         public BigInteger sessionId;
@@ -223,7 +225,7 @@ public class CashInOracle extends Contract {
         public BigInteger channelStatus;
     }
 
-    public static class CloseCashAcceptorEventResponse {
+    public static class CloseCashAcceptorEventResponse implements CashInOracleEvent {
         public Log log;
 
         public String xToken;
