@@ -3,8 +3,8 @@ package com.skysoft.vaultlogic.common.domain.session.events;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-public class SessionCloseRequested {
+public class SessionCreateFail {
 
-    String xToken;
+    public String xToken;
 
 }
