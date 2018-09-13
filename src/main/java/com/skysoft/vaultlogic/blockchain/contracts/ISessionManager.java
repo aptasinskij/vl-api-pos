@@ -7,6 +7,7 @@ import java.util.HashMap;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
+import org.web3j.contracts.SmartContractEvent;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
@@ -84,5 +85,8 @@ public class ISessionManager extends Contract {
 
     public static String getPreviouslyDeployedAddress(String networkId) {
         return _addresses.get(networkId);
+    }
+
+    public interface ISessionManagerEvent extends SmartContractEvent {
     }
 }

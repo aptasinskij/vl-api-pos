@@ -16,6 +16,7 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.contracts.SmartContractEvent;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -81,7 +82,6 @@ public class ApplicationStorage extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("5777", "0xe5854bbbb4f1447c839f57420c44ca7d56eb53d4");
     }
 
     protected ApplicationStorage(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -352,7 +352,10 @@ public class ApplicationStorage extends Contract {
         return _addresses.get(networkId);
     }
 
-    public static class ApplicationSavedEventResponse {
+    public interface ApplicationStorageEvent extends SmartContractEvent {
+    }
+
+    public static class ApplicationSavedEventResponse implements ApplicationStorageEvent {
         public Log log;
 
         public BigInteger appId;
@@ -368,7 +371,7 @@ public class ApplicationStorage extends Contract {
         public BigInteger status;
     }
 
-    public static class ApplicationUrlUpdatedEventResponse {
+    public static class ApplicationUrlUpdatedEventResponse implements ApplicationStorageEvent {
         public Log log;
 
         public BigInteger appId;
@@ -376,7 +379,7 @@ public class ApplicationStorage extends Contract {
         public String url;
     }
 
-    public static class ApplicationAddressUpdatedEventResponse {
+    public static class ApplicationAddressUpdatedEventResponse implements ApplicationStorageEvent {
         public Log log;
 
         public BigInteger appId;
@@ -384,7 +387,7 @@ public class ApplicationStorage extends Contract {
         public String appAddr;
     }
 
-    public static class ApplicationStatusUpdatedEventResponse {
+    public static class ApplicationStatusUpdatedEventResponse implements ApplicationStorageEvent {
         public Log log;
 
         public BigInteger appId;

@@ -15,6 +15,7 @@ import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.contracts.SmartContractEvent;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -87,7 +88,6 @@ public class CashInStorage extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("5777", "0x1b57bdacba1101f936dd52826f0a3550b15aad2b");
     }
 
     protected CashInStorage(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -399,7 +399,10 @@ public class CashInStorage extends Contract {
         return _addresses.get(networkId);
     }
 
-    public static class CashInSavedEventResponse {
+    public interface CashInStorageEvent extends SmartContractEvent {
+    }
+
+    public static class CashInSavedEventResponse implements CashInStorageEvent {
         public Log log;
 
         public BigInteger sessionId;
@@ -411,7 +414,7 @@ public class CashInStorage extends Contract {
         public BigInteger index;
     }
 
-    public static class CashInBalanceUpdatedEventResponse {
+    public static class CashInBalanceUpdatedEventResponse implements CashInStorageEvent {
         public Log log;
 
         public BigInteger index;
@@ -419,7 +422,7 @@ public class CashInStorage extends Contract {
         public BigInteger amount;
     }
 
-    public static class CashInStatusUpdatedEventResponse {
+    public static class CashInStatusUpdatedEventResponse implements CashInStorageEvent {
         public Log log;
 
         public BigInteger index;
@@ -427,7 +430,7 @@ public class CashInStorage extends Contract {
         public BigInteger status;
     }
 
-    public static class CahsInSplitAddedEventResponse {
+    public static class CahsInSplitAddedEventResponse implements CashInStorageEvent {
         public Log log;
 
         public BigInteger index;

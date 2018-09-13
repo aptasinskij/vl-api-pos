@@ -13,6 +13,7 @@ import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.contracts.SmartContractEvent;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -47,7 +48,6 @@ public class SessionOracle extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("5777", "0x45fc7653901d481a75e9ecbb6fcd250dedc68dc9");
     }
 
     protected SessionOracle(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -123,7 +123,10 @@ public class SessionOracle extends Contract {
         return _addresses.get(networkId);
     }
 
-    public static class CloseSessionEventResponse {
+    public interface SessionOracleEvent extends SmartContractEvent {
+    }
+
+    public static class CloseSessionEventResponse implements SessionOracleEvent {
         public Log log;
 
         public String xToken;
