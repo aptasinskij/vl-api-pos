@@ -60,9 +60,9 @@ public class Session extends AbstractAggregateRoot<Session> {
         return andEvent(SessionActivated.of(this.xToken));
     }
 
-    public Session markCreateFail() {
+    public Session markFailedToCreate() {
         this.status = Status.FAILED_TO_CREATE;
-        return andEvent(SessionCreateFail.of(this.xToken));
+        return andEvent(SessionFailedToCreate.of(this.xToken));
     }
 
     public Session markCloseRequested() {
@@ -75,9 +75,9 @@ public class Session extends AbstractAggregateRoot<Session> {
         return andEvent(SessionClosed.of(this.xToken));
     }
 
-    public Session markCloseFail() {
+    public Session markFailedToClose() {
         this.status = Status.FAILED_TO_CLOSE;
-        return andEvent(SessionCloseFail.of(this.xToken));
+        return andEvent(SessionFailedToClose.of(this.xToken));
     }
 
     @Override
