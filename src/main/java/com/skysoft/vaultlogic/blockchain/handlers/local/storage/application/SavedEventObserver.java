@@ -20,8 +20,7 @@ public class SavedEventObserver implements ApplicationStorageEventObserver<Appli
 
     @Autowired
     public SavedEventObserver(ApplicationStorage applicationStorage) {
-        applicationStorage.applicationSavedEventObservable(buildFilter(applicationStorage))
-                .subscribe(this::onNext, this::onError);
+        applicationStorage.applicationSavedEventObservable(buildFilter(applicationStorage)).subscribe(this);
     }
 
     private EthFilter buildFilter(ApplicationStorage applicationStorage) {
@@ -29,15 +28,17 @@ public class SavedEventObserver implements ApplicationStorageEventObserver<Appli
                 .addSingleTopic(EventEncoder.encode(APPLICATIONSAVED_EVENT));
     }
 
+    @Override
     public void onNext(ApplicationSavedEventResponse event) {
         log.info("[x] Application saved : {}", event.appId);
     }
 
     @Override
     public void onCompleted() {
-
+        log.info("[x] Application saved events completed");
     }
 
+    @Override
     public void onError(Throwable throwable) {
         log.error("[x] Error handler ApplicationSaved event", throwable);
     }

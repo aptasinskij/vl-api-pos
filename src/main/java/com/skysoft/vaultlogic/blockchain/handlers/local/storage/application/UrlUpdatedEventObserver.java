@@ -20,7 +20,7 @@ public class UrlUpdatedEventObserver implements ApplicationStorageEventObserver<
 
     @Autowired
     public UrlUpdatedEventObserver(ApplicationStorage repository) {
-        repository.applicationUrlUpdatedEventObservable(filter(repository)).subscribe(this::onNext, this::onError);
+        repository.applicationUrlUpdatedEventObservable(filter(repository)).subscribe(this);
     }
 
     private EthFilter filter(ApplicationStorage repo) {
@@ -28,15 +28,17 @@ public class UrlUpdatedEventObserver implements ApplicationStorageEventObserver<
                 .addSingleTopic(EventEncoder.encode(APPLICATIONURLUPDATED_EVENT));
     }
 
+    @Override
     public void onNext(ApplicationUrlUpdatedEventResponse event) {
         log.info("[x] Application url updated event. {}, {}", event.appId, event.url);
     }
 
     @Override
     public void onCompleted() {
-
+        log.info("[x] Application URL updated events completed");
     }
 
+    @Override
     public void onError(Throwable throwable) {
         log.error("[x] Error handle ApplicationUrlUpdated event", throwable);
     }

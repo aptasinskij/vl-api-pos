@@ -21,8 +21,7 @@ public class StatusUpdatedEventObserver implements ApplicationStorageEventObserv
 
     @Autowired
     protected StatusUpdatedEventObserver(ApplicationStorage applicationStorage) {
-        applicationStorage.applicationStatusUpdatedEventObservable(buildFilter(applicationStorage))
-                .subscribe(this::onNext, this::onError);
+        applicationStorage.applicationStatusUpdatedEventObservable(buildFilter(applicationStorage)).subscribe(this);
     }
 
     private EthFilter buildFilter(ApplicationStorage applicationStorage) {
@@ -30,15 +29,17 @@ public class StatusUpdatedEventObserver implements ApplicationStorageEventObserv
                 .addSingleTopic(EventEncoder.encode(APPLICATIONSTATUSUPDATED_EVENT));
     }
 
+    @Override
     public void onNext(ApplicationStatusUpdatedEventResponse event) {
         log.info("[x] Application status updated: {}, {}", event.appId, Status.from(event.status.intValue()));
     }
 
     @Override
     public void onCompleted() {
-
+        log.info("[x] Application status updated events completed");
     }
 
+    @Override
     public void onError(Throwable throwable) {
         log.error("[x] Error handler ApplicationStatusUpdated event", throwable);
     }
