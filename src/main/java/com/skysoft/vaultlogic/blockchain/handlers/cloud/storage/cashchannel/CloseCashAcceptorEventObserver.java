@@ -58,8 +58,8 @@ public class CloseCashAcceptorEventObserver extends AbstractContractEventObserve
 
     @Override
     public void onNext(CloseCashAcceptorEventResponse event) {
-        log.info("[x] CLOSE CASH ACCEPTOR: Channel: {}, XToken: {}", event.channelId, event.xToken);
-        cashInService.closeCashInChannel(event.channelId, event.xToken);
+        log.info("[x] CLOSE CASH ACCEPTOR: Channel: {}, XToken: {}", event.channelId, event.sessionId);
+        cashInService.closeCashInChannel(event.channelId, event.sessionId);
     }
 
     @Override

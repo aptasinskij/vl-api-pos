@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
+
 @Service
 public class JpaSessionService implements SessionService{
 
@@ -30,10 +32,10 @@ public class JpaSessionService implements SessionService{
 
     @Override
     @Transactional
-    public void closeSession(String xToken) {
-        sessionRepo.findByXToken(xToken)
-                .map(Session::markCloseRequested)
-                .ifPresent(sessionRepo::save);
+    public void closeSession(BigInteger sessionId) {
+        Session session = sessionRepo.getOne(sessionId.longValue());
+        session.markCloseRequested();
+        sessionRepo.save(session);
     }
 
 }

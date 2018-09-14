@@ -12,7 +12,7 @@ public interface CashInService {
 
     void updateBalance(CashInsert event, String xToken);
 
-    void closeCashInChannel(BigInteger channelId, String xToken);
+    void closeCashInChannel(BigInteger channelId, BigInteger sessionId);
 
     void confirmClosed(BigInteger channelId);
 

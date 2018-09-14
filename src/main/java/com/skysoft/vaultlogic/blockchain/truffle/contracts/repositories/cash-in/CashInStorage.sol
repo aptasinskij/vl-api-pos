@@ -8,10 +8,10 @@ contract CashInStorage is RegistryComponent {
     string constant COMPONENT_NAME = "cash-in-storage";
     string constant DATABASE = "database";
 
-    event CashInSaved(uint256 sessionId, address application, uint256 status, uint256 index);
-    event CashInBalanceUpdated(uint256 index, uint256 amount);
-    event CashInStatusUpdated(uint256 index, uint256 status);
-    event CashInSplitAdded(uint256 index, address party, uint256 amount);
+    event CashInSaved(uint256 channelId, uint256 sessionId, address application, uint256 status);
+    event CashInBalanceUpdated(uint256 channelId, uint256 amount);
+    event CashInStatusUpdated(uint256 channelId, uint256 status);
+    event CashInSplitAdded(uint256 channelId, address party, uint256 amount);
 
     using CashInLib for address;
 
@@ -21,9 +21,9 @@ contract CashInStorage is RegistryComponent {
         return COMPONENT_NAME;
     }
 
-    function save(uint256 sessionId, address application, uint256 status) external returns(uint256 index) {
-        index = lookup(DATABASE).save(sessionId, application, status);
-        emit CashInSaved(sessionId, application, status, index);
+    function save(uint256 sessionId, address application, uint256 status) external returns(uint256 channelId) {
+        channelId = lookup(DATABASE).save(sessionId, application, status);
+        emit CashInSaved(channelId, sessionId, application, status);
     }
 
     function get(uint256 channelId) external view

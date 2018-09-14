@@ -34,8 +34,8 @@ public class CloseCashAcceptorEventHandler {
     }
 
     private void onNext(CloseCashAcceptorEventResponse event) {
-        log.info("[x] CLOSE CASH ACCEPTOR: Channel: {}, XToken: {}", event.channelId, event.xToken);
-        cashInService.closeCashInChannel(event.channelId, event.xToken);
+        log.info("[x] CLOSE CASH ACCEPTOR: Channel: {}, XToken: {}", event.channelId, event.sessionId);
+        cashInService.closeCashInChannel(event.channelId, event.sessionId);
     }
 
     private void onError(Throwable throwable) {
