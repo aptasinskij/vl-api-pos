@@ -11,7 +11,7 @@ library ApplicationLib {
     string constant ADDRESS = "application_address";
     string constant STATUS = "application status";
 
-    function save(address self, uint256 appId, string name, address owner, string url, address appAddr, uint256 status) internal {
+    function save(address self, uint256 appId, string name, address owner, string url, address appAddr, uint256 status) public {
         Database(self).setUintValue(string256(ID, appId), appId);
         Database(self).setStringValue(string256(NAME, appId), name);
         Database(self).setAddressValue(string256(OWNER, appId), owner);
@@ -20,7 +20,7 @@ library ApplicationLib {
         Database(self).setUintValue(string256(STATUS, appId), status);
     }
 
-    function get(address self, uint256 appId) internal view returns(string name, address owner, string url, address appAddr, uint256 status) {
+    function get(address self, uint256 appId) public view returns(string name, address owner, string url, address appAddr, uint256 status) {
         name = Database(self).getStringValue(string256(NAME, appId));
         owner = Database(self).getAddressValue(string256(OWNER, appId));
         url = Database(self).getStringValue(string256(URL, appId));
@@ -28,35 +28,35 @@ library ApplicationLib {
         status = Database(self).getUintValue(string256(STATUS, appId));
     }
 
-    function getName(address self, uint256 appId) internal view returns(string) {
+    function getName(address self, uint256 appId) public view returns(string) {
         return Database(self).getStringValue(string256(NAME, appId));
     }
 
-    function getOwner(address self, uint256 appId) internal view returns(address) {
+    function getOwner(address self, uint256 appId) public view returns(address) {
         return Database(self).getAddressValue(string256(OWNER, appId));
     }
 
-    function getUrl(address self, uint256 appId) internal view returns(string) {
+    function getUrl(address self, uint256 appId) public view returns(string) {
         return Database(self).getStringValue(string256(URL, appId));
     }
 
-    function setUrl(address self, uint256 appId, string url) internal {
+    function setUrl(address self, uint256 appId, string url) public {
         Database(self).setStringValue(string256(URL, appId), url);
     }
 
-    function getAddress(address self, uint256 appId) internal view returns(address) {
+    function getAddress(address self, uint256 appId) public view returns(address) {
         return Database(self).getAddressValue(string256(ADDRESS, appId));
     }
 
-    function setAddress(address self, uint256 appId, address appAddr) internal {
+    function setAddress(address self, uint256 appId, address appAddr) public {
         Database(self).setAddressValue(string256(ADDRESS, appId), appAddr);
     }
 
-    function getStatus(address self, uint256 appId) internal view returns(uint256) {
+    function getStatus(address self, uint256 appId) public view returns(uint256) {
         return Database(self).getUintValue(string256(STATUS, appId));
     }
 
-    function setStatus(address self, uint256 appId, uint256 status) internal {
+    function setStatus(address self, uint256 appId, uint256 status) public {
         Database(self).setUintValue(string256(STATUS, appId), status);
     }
 

@@ -1,0 +1,276 @@
+<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of CashInStorage.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">const assert = require(&#39;chai&#39;).assert;
+const CashInStorage = artifacts.require(&#39;CashInStorage.sol&#39;);
+const convertToNumber = require(&#39;..&#47;helpers&#39;).convertToNumber;
+
+&#47;*\
+* CashInStorage
+\*&#47;
+
+contract(&#39;CashInStorage&#39;, () =&#62; {
+
+    describe(&#39;tests for all methods&#39;, () =&#62; {
+        let resSave;
+        let resGet;
+        let resGetSessionID;
+        let resGetApplication;
+        let resGetApplicationAndSessionId;
+        let resSetBalance;
+        let resGetBalance;
+        let resSetStatus;
+        let resGetStatus;
+        let resAddSplit;
+        let resAddSplits;
+        let resGetSplitSize1;
+        let resGetSplitSize2;
+        let resGetSplit1;
+        let resGetSplit2;
+        let resGetSplit3;
+        let resGetAfterAll;
+
+        before(async () =&#62; {
+            const instance = await CashInStorage.deployed();
+            &#47;* save *&#47;
+            resSave = await instance.save(1, 2, 3);
+            resSave = convertToNumber(resSave.logs[0].args);
+            &#47;* get *&#47;
+            resGet = await instance.get(0);
+            resGet = convertToNumber(resGet);
+            &#47;* getSessionId *&#47;
+            resGetSessionID = await instance.getSessionId(0);
+            resGetSessionID = Number(resGetSessionID);
+            &#47;* getApplication *&#47;
+            resGetApplication = await instance.getApplication(0);
+            resGetApplication = Number(resGetApplication);
+            &#47;* getApplicationAndSessionId *&#47;
+            resGetApplicationAndSessionId = await instance.getApplicationAndSessionId(0);
+            resGetApplicationAndSessionId = convertToNumber(resGetApplicationAndSessionId);
+            &#47;* setBalance *&#47;
+            resSetBalance = await instance.setBalance(0, 500);
+            resSetBalance = convertToNumber(resSetBalance.logs[0].args);
+            &#47;* getBalance *&#47;
+            resGetBalance = await instance.getBalance(0);
+            resGetBalance = Number(resGetBalance);
+            &#47;* setStatus *&#47;
+            resSetStatus = await instance.setStatus(0, 5);
+            resSetStatus = convertToNumber(resSetStatus.logs[0].args);
+            &#47;* getStatus *&#47;
+            resGetStatus = await instance.getStatus(0);
+            resGetStatus = Number(resGetStatus);
+            &#47;* addSplit *&#47;
+            resAddSplit = await instance.addSplit(0, 10, 20);
+            resAddSplit = convertToNumber(resAddSplit.logs[0].args);
+            &#47;* addSplits *&#47;
+            resAddSplits = await instance.addSplits(8, [1,2,3,4,5], [10,20,30,40,50]);
+            &#47;* getSplitSize *&#47;
+            resGetSplitSize1 = await instance.getSplitSize(0);
+            resGetSplitSize1 = Number(resGetSplitSize1);
+            resGetSplitSize2 = await instance.getSplitSize(8);
+            resGetSplitSize2 = Number(resGetSplitSize2);
+            &#47;* getSplit *&#47;
+            resGetSplit1 = await instance.getSplit(0, 0);
+            resGetSplit1 = convertToNumber(resGetSplit1);
+            resGetSplit2 = await instance.getSplit(8, 0);
+            resGetSplit2 = convertToNumber(resGetSplit2);
+            resGetSplit3 = await instance.getSplit(8, 4);
+            resGetSplit3 = convertToNumber(resGetSplit3);
+            &#47;* get (after all) *&#47;
+            resGetAfterAll = await instance.get(0);
+            resGetAfterAll = convertToNumber(resGetAfterAll);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; save(sessionId, application, status) &#60;&#47;h4&#62;
+         # Description: use to save new cashInChannel
+         &#62; Arguments
+         - (uint256) sessionId - session id
+         - (address) application - application address
+         - (uint256) status - session status
+         &#62; Returns
+         - (event) CashInSaved
+        \*&#47;
+        it(&#39;save&#39;, () =&#62; {
+            assert.strictEqual(resSave.sessionId, 1, &#39;sessionId is not equal&#39;);
+            assert.strictEqual(resSave.application, 2, &#39;application address is not equal&#39;);
+            assert.strictEqual(resSave.status, 3, &#39;status is not equal&#39;);
+            assert.strictEqual(resSave.index, 0, &#39;index is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; get(index) &#60;&#47;h4&#62;
+         # Description: use to get all cashInChannel info
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+         &#62; Returns
+         - (uint256) sessionId - session id
+         - (address) application - application address
+         - (uint256) balance - cashInChannel balance
+         - (uint256) status - cashInChannel status
+         - (uint256) splitSize - cashInChannel splitSize
+        \*&#47;
+        it(&#39;get&#39;, () =&#62; {
+            assert.strictEqual(resGet[0], 1, &#39;sessionId is not equal&#39;);
+            assert.strictEqual(resGet[1], 2, &#39;application address is not equal&#39;);
+            assert.strictEqual(resGet[2], 0, &#39;balance is not equal&#39;);
+            assert.strictEqual(resGet[3], 3, &#39;status is not equal&#39;);
+            assert.strictEqual(resGet[4], 0, &#39;index is not equal&#39;);
+            &#47;* after all *&#47;
+            assert.strictEqual(resGetAfterAll[0], 1, &#39;sessionId is not equal (after all)&#39;);
+            assert.strictEqual(resGetAfterAll[1], 2, &#39;application address is not equal (after all)&#39;);
+            assert.strictEqual(resGetAfterAll[2], 500, &#39;balance is not equal (after all)&#39;);
+            assert.strictEqual(resGetAfterAll[3], 5, &#39;status is not equal (after all)&#39;);
+            assert.strictEqual(resGetAfterAll[4], 1, &#39;index is not equal (after all)&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getSessionId(index) &#60;&#47;h4&#62;
+         # Description: use to get session id of cashInChannel
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+         &#62; Returns
+         - (uint256) sessionId - session id
+        \*&#47;
+        it(&#39;getSessionId&#39;, () =&#62; {
+            assert.strictEqual(resGetSessionID, 1, &#39;sessionId is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getApplicationAddress(index) &#60;&#47;h4&#62;
+         # Description: use to get application address of cashInChannel
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+         &#62; Returns
+         - (address) application - application address
+        \*&#47;
+        it(&#39;getApplicationAddress&#39;, () =&#62; {
+            assert.strictEqual(resGetApplication, 2, &#39;application address is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getApplicationAndSessionId(index) &#60;&#47;h4&#62;
+         # Description: use to get application address and session id of cashInChannel
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+         &#62; Returns
+         - (address) application - application address
+         - (uint256) sessionId - session id
+        \*&#47;
+        it(&#39;getApplicationAndSessionId&#39;, () =&#62; {
+            assert.strictEqual(resGetApplicationAndSessionId[0], 2, &#39;application address is not equal&#39;);
+            assert.strictEqual(resGetApplicationAndSessionId[1], 1, &#39;sessionId is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; setBalance(index, amount) &#60;&#47;h4&#62;
+         # Description: use to save set balance of cashInChannel
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+         - (address) amount - cashInChannel money to insert amount
+         &#62; Returns
+         - (event) CashInBalanceUpdated
+        \*&#47;
+        it(&#39;setBalance&#39;, () =&#62; {
+            assert.strictEqual(resSetBalance.index, 0, &#39;index is not equal&#39;);
+            assert.strictEqual(resSetBalance.amount, 500, &#39;amount is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getBalance(index) &#60;&#47;h4&#62;
+         # Description: use to get balance of cashInChannel
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+         - (address) amount - cashInChannel amount
+         &#62; Returns
+         - (event) CashInBalanceUpdated
+        \*&#47;
+        it(&#39;getBalance&#39;, () =&#62; {
+            assert.strictEqual(resGetBalance, 500, &#39;amount is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; setStatus(index) &#60;&#47;h4&#62;
+         # Description: use to set status of cashInChannel
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+         - (uint256) status - cashInChannel status
+         &#62; Returns
+         - (event) CashInStatusUpdated
+        \*&#47;
+        it(&#39;setStatus&#39;, () =&#62; {
+            assert.strictEqual(resSetStatus.index, 0, &#39;index is not equal&#39;);
+            assert.strictEqual(resSetStatus.status, 5, &#39;status is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; addSplit(index, party, amount) &#60;&#47;h4&#62;
+         # Description: use to add split to cashInChannel
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+         - (address) party - cashInChannel party
+         - (uint256) amount - cashInChannel amount
+         &#62; Returns
+         - (event) CashInSplitAdded
+        \*&#47;
+        it(&#39;addSplit&#39;, () =&#62; {
+            assert.strictEqual(resAddSplit.index, 0, &#39;index is not equal&#39;);
+            assert.strictEqual(resAddSplit.party, 10, &#39;party is not equal&#39;);
+            assert.strictEqual(resAddSplit.amount, 20, &#39;amount is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; addSplit(index, parties, amounts) &#60;&#47;h4&#62;
+         # Description: use to get status of cashInChannel
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+         - (address[]) parties - array of cashInChannel parties
+         - (uint256[]) amounts - array of cashInChannel amounts
+        \*&#47;
+        it(&#39;addSplits&#39;, () =&#62; {
+            assert.notEqual(resAddSplits.receipt.transactionHash, &#39;&#39;, &#39;transactionHash is empty&#39;);
+            assert.isAbove(resAddSplits.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getSplitSize(index) &#60;&#47;h4&#62;
+         # Description: use to get split size of cashInChannel
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+          &#62; Returns
+         - (uint256) splitSize - cashInChannel split size
+        \*&#47;
+        it(&#39;getSplitSize&#39;, () =&#62; {
+            assert.strictEqual(resGetSplitSize1, 1, &#39;split1: split size is not equal&#39;);
+            assert.strictEqual(resGetSplitSize2, 5, &#39;split2: split size is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getSplit(index, subIndex) &#60;&#47;h4&#62;
+         # Description: use to get split size of cashInChannel
+         &#62; Arguments
+         - (uint256) index - cashInChannel id
+         - (uint256) subIndex - cashInChannel split index in array
+         &#62; Returns
+         - (address) party - cashInChannel party
+         - (uint256) subIndex - cashInChannel split index in array
+        \*&#47;
+        it(&#39;getSplit&#39;, () =&#62; {
+            assert.strictEqual(resGetSplit1[0], 10, &#39;split 1, subSplit 0: party is not equal&#39;);
+            assert.strictEqual(resGetSplit1[1], 20, &#39;split 1, subSplit 0: amount is not equal&#39;);
+            assert.strictEqual(resGetSplit2[0], 1, &#39;split 8, subSplit 0: party is not equal&#39;);
+            assert.strictEqual(resGetSplit2[1], 10, &#39;split 8, subSplit 0: amount is not equal&#39;);
+            assert.strictEqual(resGetSplit3[0], 5, &#39;split 8, subSplit 4: party is not equal&#39;);
+            assert.strictEqual(resGetSplit3[1], 50, &#39;split 8, subSplit 0: amount is not equal&#39;);
+        });
+    })
+});</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>

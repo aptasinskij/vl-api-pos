@@ -1,11 +1,10 @@
 const assert = require('chai').assert;
-const CashChannelsManager = artifacts.require('./services/CashChannelsManager.sol');
-const CashInStorage = artifacts.require('./repositories/cash-in/CashInStorage.sol');
-const SessionManager = artifacts.require('./services/SessionManager.sol');
-const ApplicationManager = artifacts.require('./services/ApplicationManager.sol');
-const CapitalHero = artifacts.require('./application/CapitalHero.sol');
-const convertToNumber = require('./helpers').convertToNumber;
-const sleep = require('./helpers').sleep;
+const CashChannelsManager = artifacts.require('CashChannelsManager.sol');
+const CashInStorage = artifacts.require('CashInStorage.sol');
+const SessionManager = artifacts.require('SessionManager.sol');
+const ApplicationManager = artifacts.require('ApplicationManager.sol');
+const CapitalHero = artifacts.require('CapitalHero.sol');
+const {convertToNumber, sleep} = require('../helpers');
 
 contract('CashChannelsManager', () => {
 
@@ -69,7 +68,7 @@ contract('CashChannelsManager', () => {
             resGetStatus3 = await cashInStorageInstance.getStatus(0);
             resGetStatus3 = Number(resGetStatus3);
 
-           /* sleep(3000); // for make sure events handles*/
+            sleep(3000); // for make sure events handles
         });
 
         it('openCashInChannel', () => {

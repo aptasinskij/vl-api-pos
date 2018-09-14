@@ -1,6 +1,10 @@
 const assert = require('chai').assert;
-const ApplicationStorage = artifacts.require('./repositories/cash-in/ApplicationStorage.sol');
-const convertToNumber = require('./helpers').convertToNumber;
+const ApplicationStorage = artifacts.require('ApplicationStorage.sol');
+const convertToNumber = require('../helpers').convertToNumber;
+
+/*\
+* ApplicationStorage
+\*/
 
 contract('ApplicationStorage', () => {
 
@@ -52,6 +56,20 @@ contract('ApplicationStorage', () => {
             resGetAfterAll = convertToNumber(resGetAfterAll);
         });
 
+        /*\
+         # <hr>
+         # <h4> save(appId, name, owner, url, appAddr, status) </h4>
+         # Description: use to save new application
+         > Arguments
+         - (uint256) appId - application id
+         - (string) name - application name
+         - (address) owner - application owner
+         - (string) url - application url
+         - (address) appAddr - application address
+         - (uint256) status - application status
+         > Returns
+         - (event) ApplicationSaved
+        \*/
         it('save', () => {
             assert.strictEqual(resSave.appId, 1, 'application Id is not equal');
             assert.strictEqual(resSave.name, 'app name', 'application name is not equal');
@@ -60,6 +78,20 @@ contract('ApplicationStorage', () => {
             assert.strictEqual(resSave.appAddr, 456, 'application address is not equal');
             assert.strictEqual(resSave.status, 4, 'application status is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> get(appId) </h4>
+         # Description: use to get all application info
+         > Arguments
+         - (uint256) appId - application id
+         > Returns
+         - (string) name - application name
+         - (address) owner - application owner
+         - (string) url - application url
+         - (address) appAddr - application address
+         - (uint256) status - application status
+        \*/
         it('get', () => {
             assert.strictEqual(resGet[0], 'app name', 'application name is not equal');
             assert.strictEqual(resGet[1], 235, 'application owner is not equal');
@@ -73,30 +105,112 @@ contract('ApplicationStorage', () => {
             assert.strictEqual(resGetAfterAll[3], 999, 'application address is not equal (after all)');
             assert.strictEqual(resGetAfterAll[4], 8, 'application status is not equal (after all)');
         });
+
+        /*\
+         # <hr>
+         # <h4> getApplicationName(appId) </h4>
+         # Description: use to get application name
+         > Arguments
+         - (uint256) appId - application id
+         > Returns
+         - (string) name - application name
+        \*/
         it('getApplicationName', () => {
             assert.strictEqual(resGetApplicationName, 'app name', 'application name is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> getApplicationOwner(appId) </h4>
+         # Description: use to get application owner
+         > Arguments
+         - (uint256) appId - application id
+         > Returns
+         - (address) owner - application owner
+        \*/
         it('getApplicationOwner', () => {
             assert.strictEqual(resGetApplicationOwner, 235, 'application owner is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> setApplicationUrl(appId, url) </h4>
+         # Description: use to set application url
+         > Arguments
+         - (uint256) appId - application id
+         - (string) url - application url
+         > Returns
+         - (event) ApplicationUrlUpdated
+        \*/
         it('setApplicationUrl', () => {
             assert.strictEqual(resSetApplicationUrl.appId, 1, 'application Id is not equal');
             assert.strictEqual(resSetApplicationUrl.url, 'http://new-url', 'application url is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> getApplicationUrl(appId) </h4>
+         # Description: use to get application url
+         > Arguments
+         - (uint256) appId - application id
+         > Returns
+         - (string) url - application url
+        \*/
         it('getApplicationUrl', () => {
             assert.strictEqual(resGetApplicationUrl, 'http://new-url', 'application url is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> setApplicationAddress(appId, appAddr) </h4>
+         # Description: use to set application address
+         > Arguments
+         - (uint256) appId - application id
+         - (address) appAddr - application address
+         > Returns
+         - (event) ApplicationAddressUpdated
+        \*/
         it('setApplicationAddress', () => {
             assert.strictEqual(resSetApplicationAddress.appId, 1, 'application Id is not equal');
             assert.strictEqual(resSetApplicationAddress.appAddr, 999, 'application address is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> getApplicationAddress(appId) </h4>
+         # Description: use to get application address
+         > Arguments
+         - (uint256) appId - application id
+         > Returns
+         - (address) appAddr - application address
+        \*/
         it('getApplicationAddress', () => {
             assert.strictEqual(resGetApplicationAddress, 999, 'application url is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> setApplicationStatus(appId) </h4>
+         # Description: use to set application status
+         > Arguments
+         - (uint256) appId - application id
+         > Returns
+         - (event) ApplicationStatusUpdated
+        \*/
         it('setApplicationStatus', () => {
             assert.strictEqual(resSetApplicationStatus.appId, 1, 'application Id is not equal');
             assert.strictEqual(resSetApplicationStatus.status, 8, 'application status is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> getApplicationStatus(appId) </h4>
+         # Description: use to get application status
+         > Arguments
+         - (uint256) appId - application id
+         > Returns
+         - (uint256) status - application status
+        \*/
         it('getApplicationStatus', () => {
             assert.strictEqual(resGetApplicationStatus, 8, 'application status is not equal');
         });
