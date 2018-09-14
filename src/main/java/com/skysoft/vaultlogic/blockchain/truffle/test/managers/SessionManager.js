@@ -1,10 +1,9 @@
 const assert = require('chai').assert;
-const SessionStorage = artifacts.require('./repositories/cash-in/SessionStorage.sol');
-const SessionManager = artifacts.require('./services/SessionManager.sol');
-const ApplicationManager = artifacts.require('./services/ApplicationManager.sol');
-const CapitalHero = artifacts.require('./application/CapitalHero.sol');
-const convertToNumber = require('./helpers').convertToNumber;
-const sleep = require('./helpers').sleep;
+const SessionStorage = artifacts.require('SessionStorage.sol');
+const SessionManager = artifacts.require('SessionManager.sol');
+const ApplicationManager = artifacts.require('ApplicationManager.sol');
+const CapitalHero = artifacts.require('CapitalHero.sol');
+const {convertToNumber, sleep} = require('../helpers');
 
 contract('SessionManager', () => {
 
@@ -47,7 +46,7 @@ contract('SessionManager', () => {
             resGetStatus2 = await sessionStorageInstance.getStatus(1);
             resGetStatus2 = Number(resGetStatus2);
 
-         /*   sleep(5000); // for make sure events handles*/
+            sleep(3000); // for make sure events handles
         });
 
         it('createSession', () => {

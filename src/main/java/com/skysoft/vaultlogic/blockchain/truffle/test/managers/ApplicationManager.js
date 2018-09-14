@@ -1,8 +1,7 @@
 const assert = require('chai').assert;
-const ApplicationStorage = artifacts.require('./repositories/cash-in/ApplicationStorage.sol');
-const ApplicationManager = artifacts.require('./services/ApplicationManager.sol');
-const convertToNumber = require('./helpers').convertToNumber;
-const sleep = require('./helpers').sleep;
+const ApplicationStorage = artifacts.require('ApplicationStorage.sol');
+const ApplicationManager = artifacts.require('ApplicationManager.sol');
+const {convertToNumber, sleep} = require('../helpers');
 
 contract('ApplicationManager', () => {
 
@@ -34,7 +33,7 @@ contract('ApplicationManager', () => {
             resGetApplicationStatus = await storageInstance.getApplicationStatus(1);
             resGetApplicationStatus = Number(resGetApplicationStatus);
 
-       /*     sleep(5000);*/
+            sleep(3000);
         });
 
         it('registerApplication', () => {
