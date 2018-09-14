@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.local.storage.application;
+package com.skysoft.vaultlogic.blockchain.handlers.cloud.storage.application;
 
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.ApplicationUrlUpdatedEventResponse;
@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.tx.Contract;
 
 import java.util.function.Function;
 
@@ -18,7 +19,7 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
-@Profile("ganache")
+@Profile("cloud-quorum")
 public class UrlUpdatedEventObserver extends AbstractContractEventObserver<ApplicationUrlUpdatedEventResponse, ApplicationStorage> {
 
     @Autowired
@@ -48,7 +49,7 @@ public class UrlUpdatedEventObserver extends AbstractContractEventObserver<Appli
 
     @Override
     protected Function<ApplicationStorage, String> getAddressFunction() {
-        return contract -> contract.getContractAddress().substring(2);
+        return Contract::getContractAddress;
     }
 
     @Override
@@ -58,7 +59,7 @@ public class UrlUpdatedEventObserver extends AbstractContractEventObserver<Appli
 
     @Override
     public void onCompleted() {
-        log.info("[x] Application URL updated events completed");
+        log.info("[x] Application url update completed.");
     }
 
     @Override

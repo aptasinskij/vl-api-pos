@@ -8,11 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.web3j.abi.EventEncoder;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.EthFilter;
-import rx.Observable;
 
 import java.util.function.Function;
 
@@ -27,10 +24,7 @@ public class AddressUpdatedObserver extends AbstractContractEventObserver<Applic
     @Autowired
     public AddressUpdatedObserver(ApplicationStorage applicationStorage) {
         super(applicationStorage);
-        applicationStorage.applicationAddressUpdatedEventObservable(buildFilter(applicationStorage)).subscribe(this);
     }
-
-    //TODO accomplish abstraction
 
     @Override
     protected Event getEvent() {
@@ -52,9 +46,9 @@ public class AddressUpdatedObserver extends AbstractContractEventObserver<Applic
         return LATEST;
     }
 
-    private EthFilter buildFilter(ApplicationStorage applicationStorage) {
-        return new EthFilter(LATEST, LATEST, applicationStorage.getContractAddress().substring(2))
-                .addSingleTopic(EventEncoder.encode(APPLICATIONADDRESSUPDATED_EVENT));
+    @Override
+    protected Function<ApplicationStorage, String> getAddressFunction() {
+        return contract -> contract.getContractAddress().substring(2);
     }
 
     @Override
