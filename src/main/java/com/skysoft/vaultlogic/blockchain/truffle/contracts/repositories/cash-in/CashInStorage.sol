@@ -11,7 +11,7 @@ contract CashInStorage is RegistryComponent {
     event CashInSaved(uint256 sessionId, address application, uint256 status, uint256 index);
     event CashInBalanceUpdated(uint256 index, uint256 amount);
     event CashInStatusUpdated(uint256 index, uint256 status);
-    event CahsInSplitAdded(uint256 index, address party, uint256 amount);
+    event CashInSplitAdded(uint256 index, address party, uint256 amount);
 
     using CashInLib for address;
 
@@ -26,7 +26,7 @@ contract CashInStorage is RegistryComponent {
         emit CashInSaved(sessionId, application, status, index);
     }
 
-    function get(uint256 index) external view 
+    function get(uint256 channelId) external view
     returns(
         uint256 sessionId,
         address application,
@@ -34,55 +34,55 @@ contract CashInStorage is RegistryComponent {
         uint256 status,
         uint256 splitSize
     ) {
-        return lookup(DATABASE).get(index);
+        return lookup(DATABASE).get(channelId);
     }
 
-    function getSessionId(uint256 index) external view returns(uint256) {
-        return lookup(DATABASE).getSessionId(index);
+    function getSessionId(uint256 channelId) external view returns(uint256) {
+        return lookup(DATABASE).getSessionId(channelId);
     }
 
-    function getApplication(uint256 index) external view returns(address) {
-        return lookup(DATABASE).getApplication(index);
+    function getApplication(uint256 channelId) external view returns(address) {
+        return lookup(DATABASE).getApplication(channelId);
     }
 
-    function getApplicationAndSessionId(uint256 index) external view returns(address application, uint256 sessionId) {
-        application = lookup(DATABASE).getApplication(index);
-        sessionId = lookup(DATABASE).getSessionId(index);
+    function getApplicationAndSessionId(uint256 channelId) external view returns(address application, uint256 sessionId) {
+        application = lookup(DATABASE).getApplication(channelId);
+        sessionId = lookup(DATABASE).getSessionId(channelId);
     }
 
-    function setBalance(uint256 index, uint256 amount) external {
-        lookup(DATABASE).setBalance(index, amount);
-        emit CashInBalanceUpdated(index, amount);
+    function setBalance(uint256 channelId, uint256 amount) external {
+        lookup(DATABASE).setBalance(channelId, amount);
+        emit CashInBalanceUpdated(channelId, amount);
     }
 
-    function getBalance(uint256 index) external view returns(uint256) {
-        return lookup(DATABASE).getBalance(index);
+    function getBalance(uint256 channelId) external view returns(uint256) {
+        return lookup(DATABASE).getBalance(channelId);
     }
 
-    function setStatus(uint256 index, uint256 status) external {
-        lookup(DATABASE).setStatus(index, status);
-        emit CashInStatusUpdated(index, status);
+    function setStatus(uint256 channelId, uint256 status) external {
+        lookup(DATABASE).setStatus(channelId, status);
+        emit CashInStatusUpdated(channelId, status);
     }
 
-    function getStatus(uint256 index) external view returns(uint256) {
-        return lookup(DATABASE).getStatus(index);
+    function getStatus(uint256 channelId) external view returns(uint256) {
+        return lookup(DATABASE).getStatus(channelId);
     }
 
-    function addSplit(uint256 index, address party, uint256 amount) external {
-        lookup(DATABASE).addSplit(index, party, amount);
-        emit CahsInSplitAdded(index, party, amount);
+    function addSplit(uint256 channelId, address party, uint256 amount) external {
+        lookup(DATABASE).addSplit(channelId, party, amount);
+        emit CashInSplitAdded(channelId, party, amount);
     }
 
-    function addSplits(uint256 index, address[] parties, uint256[] amounts) external {
-        lookup(DATABASE).addSplits(index, parties, amounts);
+    function addSplits(uint256 channelId, address[] parties, uint256[] amounts) external {
+        lookup(DATABASE).addSplits(channelId, parties, amounts);
     }
 
-    function getSplitSize(uint256 index) external view returns(uint256) {
-        return lookup(DATABASE).getSplitSize(index);
+    function getSplitSize(uint256 channelId) external view returns(uint256) {
+        return lookup(DATABASE).getSplitSize(channelId);
     }
 
-    function getSplit(uint256 index, uint256 subIndex) external view returns(address, uint256) {
-        return lookup(DATABASE).getSplit(index, subIndex);
+    function getSplit(uint256 channelId, uint256 subIndex) external view returns(address, uint256) {
+        return lookup(DATABASE).getSplit(channelId, subIndex);
     }
 
 }
