@@ -1,7 +1,7 @@
-package com.skysoft.vaultlogic.blockchain.handlers.cloud;
+package com.skysoft.vaultlogic.blockchain.handlers.local.oracle;
 
 import com.skysoft.vaultlogic.blockchain.contracts.SessionOracle;
-import com.skysoft.vaultlogic.web.service.SessionService;
+import com.skysoft.vaultlogic.blockchain.contracts.SessionOracle.CloseSessionEventResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -13,26 +13,23 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
-@Profile("cloud-quorum")
+@Profile("ganache")
 public class CloseSessionEventHandler {
 
-    private final SessionService sessionService;
-
     @Autowired
-    public CloseSessionEventHandler(SessionOracle sessionOracle, SessionService sessionService) {
-        this.sessionService = sessionService;
+    public CloseSessionEventHandler(SessionOracle sessionOracle) {
         sessionOracle.closeSessionEventObservable(buildFilter(sessionOracle))
                 .subscribe(this::onNext, this::onError);
     }
 
     private EthFilter buildFilter(SessionOracle oracle) {
-        return new EthFilter(LATEST, LATEST, oracle.getContractAddress())
+        return new EthFilter(LATEST, LATEST, oracle.getContractAddress().substring(2))
                 .addSingleTopic(EventEncoder.encode(SessionOracle.CLOSESESSION_EVENT));
     }
 
-    private void onNext(SessionOracle.CloseSessionEventResponse event) {
-        log.info("[x] CLOSE SESSION EVENT: XToken: {}", event.xToken);
-        sessionService.closeSession(event.xToken);
+    private void onNext(CloseSessionEventResponse event) {
+        log.info("[x] CLOSE SESSION EVENT: XToken: {}", event.sessionId);
+        log.info("[x] Here can be logic to send close application request to MAYA");
     }
 
     private void onError(Throwable throwable) {

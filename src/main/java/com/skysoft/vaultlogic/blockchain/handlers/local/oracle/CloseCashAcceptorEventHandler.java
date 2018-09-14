@@ -1,7 +1,7 @@
-package com.skysoft.vaultlogic.blockchain.handlers.local;
+package com.skysoft.vaultlogic.blockchain.handlers.local.oracle;
 
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
-import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.OpenCashAcceptorEventResponse;
+import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.CloseCashAcceptorEventResponse;
 import com.skysoft.vaultlogic.web.service.CashInService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,29 +15,31 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 @Slf4j
 @Component
 @Profile("ganache")
-public class OpenCashAcceptorEventHandler {
+public class CloseCashAcceptorEventHandler {
 
+    private final CashInOracle cashInOracle;
     private final CashInService cashInService;
 
     @Autowired
-    public OpenCashAcceptorEventHandler(CashInOracle cashInOracle, CashInService cashInService) {
+    public CloseCashAcceptorEventHandler(CashInOracle cashInOracle, CashInService cashInService) {
+        this.cashInOracle = cashInOracle;
         this.cashInService = cashInService;
-        cashInOracle.openCashAcceptorEventObservable(buildFilter(cashInOracle))
+        cashInOracle.closeCashAcceptorEventObservable(buildFilter(cashInOracle))
                 .subscribe(this::onNext, this::onError);
     }
 
     private EthFilter buildFilter(CashInOracle oracle) {
         return new EthFilter(LATEST, LATEST, oracle.getContractAddress().substring(2))
-                .addSingleTopic(EventEncoder.encode(CashInOracle.OPENCASHACCEPTOR_EVENT));
+                .addSingleTopic(EventEncoder.encode(CashInOracle.CLOSECASHACCEPTOR_EVENT));
     }
 
-    private void onNext(OpenCashAcceptorEventResponse event) {
-        log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, Status: {}", event.channelId, event.sessionId, event.channelStatus);
-        cashInService.createCashInChannel(event.channelId, event.sessionId, event.channelStatus);
+    private void onNext(CloseCashAcceptorEventResponse event) {
+        log.info("[x] CLOSE CASH ACCEPTOR: Channel: {}, XToken: {}", event.channelId, event.sessionId);
+        cashInService.closeCashInChannel(event.channelId, event.sessionId);
     }
 
     private void onError(Throwable throwable) {
-        log.error("[x] Error filtering for open cash acceptor event", throwable);
+        log.error("[x] Error: CLOSE CASH ACCEPTOR", throwable);
     }
 
 }

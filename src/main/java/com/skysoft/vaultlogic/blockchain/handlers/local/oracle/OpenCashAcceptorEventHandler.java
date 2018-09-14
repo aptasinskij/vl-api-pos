@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.cloud;
+package com.skysoft.vaultlogic.blockchain.handlers.local.oracle;
 
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.OpenCashAcceptorEventResponse;
@@ -14,7 +14,7 @@ import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
-@Profile("cloud-quorum")
+@Profile("ganache")
 public class OpenCashAcceptorEventHandler {
 
     private final CashInService cashInService;
@@ -27,7 +27,7 @@ public class OpenCashAcceptorEventHandler {
     }
 
     private EthFilter buildFilter(CashInOracle oracle) {
-        return new EthFilter(LATEST, LATEST, oracle.getContractAddress())
+        return new EthFilter(LATEST, LATEST, oracle.getContractAddress().substring(2))
                 .addSingleTopic(EventEncoder.encode(CashInOracle.OPENCASHACCEPTOR_EVENT));
     }
 

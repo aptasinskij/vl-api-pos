@@ -15,6 +15,7 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.contracts.SmartContractEvent;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -69,7 +70,7 @@ public class SessionStorage extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("5777", "0x9d40ad39b007bfc5fb739f0a5f1489b370ddef04");
+        _addresses.put("5777", "0xaefe33efa6248c1ee3494fefdd3a744ecaf1c59b");
     }
 
     protected SessionStorage(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -266,7 +267,10 @@ public class SessionStorage extends Contract {
         return _addresses.get(networkId);
     }
 
-    public static class SavedEventResponse {
+    public interface SessionStorageEvent extends SmartContractEvent {
+    }
+
+    public static class SavedEventResponse implements SessionStorageEvent {
         public Log log;
 
         public BigInteger sessionId;
@@ -278,7 +282,7 @@ public class SessionStorage extends Contract {
         public BigInteger status;
     }
 
-    public static class StatusUpdatedEventResponse {
+    public static class StatusUpdatedEventResponse implements SessionStorageEvent {
         public Log log;
 
         public BigInteger index;

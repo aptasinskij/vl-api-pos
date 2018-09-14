@@ -1,9 +1,7 @@
 package com.skysoft.vaultlogic.common.domain.session;
 
 import com.skysoft.vaultlogic.common.domain.application.Application;
-import com.skysoft.vaultlogic.common.domain.session.events.SessionActivated;
-import com.skysoft.vaultlogic.common.domain.session.events.SessionCloseRequested;
-import com.skysoft.vaultlogic.common.domain.session.events.SessionClosed;
+import com.skysoft.vaultlogic.common.domain.session.events.*;
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.AbstractAggregateRoot;
@@ -52,20 +50,34 @@ public class Session extends AbstractAggregateRoot<Session> {
         return new Session(requireNonNull(application), requireNonNull(xToken));
     }
 
+    public Session markCreating() {
+        this.status = Status.CREATING;
+        return andEvent(SessionCreating.of(this.xToken));
+    }
+
     public Session markActive() {
         this.status = Status.ACTIVE;
-        registerEvent(SessionActivated.of(this.xToken));
-        return this;
+        return andEvent(SessionActivated.of(this.xToken));
+    }
+
+    public Session markFailedToCreate() {
+        this.status = Status.FAILED_TO_CREATE;
+        return andEvent(SessionFailedToCreate.of(this.xToken));
     }
 
     public Session markCloseRequested() {
         this.status = Status.CLOSE_REQUESTED;
-        return andEvent(SessionCloseRequested.withXToken(this.xToken));
+        return andEvent(SessionCloseRequested.of(this.xToken));
     }
 
     public Session markClosed() {
         this.status = Status.CLOSED;
-        return andEvent(SessionClosed.withXToken(this.xToken));
+        return andEvent(SessionClosed.of(this.xToken));
+    }
+
+    public Session markFailedToClose() {
+        this.status = Status.FAILED_TO_CLOSE;
+        return andEvent(SessionFailedToClose.of(this.xToken));
     }
 
     @Override
@@ -83,7 +95,7 @@ public class Session extends AbstractAggregateRoot<Session> {
 
     public enum Status {
 
-        ACTIVE(1), CLOSE_REQUESTED(2), CLOSED(3);
+        CREATING(1), ACTIVE(2), FAILED_TO_CREATE(3), CLOSE_REQUESTED(4), CLOSED(5), FAILED_TO_CLOSE(6);
 
         private final int value;
 
