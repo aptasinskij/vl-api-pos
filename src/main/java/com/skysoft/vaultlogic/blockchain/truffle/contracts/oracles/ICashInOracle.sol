@@ -4,7 +4,7 @@ interface ICashInOracle {
     
     function open(uint256 sessionId, uint256 channelId, uint256 channelStatus) external;
 
-    function close(string xToken, uint256 sessionId, uint256 channelId) external;
+    function close(uint256 sessionId, uint256 channelId) external;
 
     function confirmOpen(uint256 channelId) external;
 

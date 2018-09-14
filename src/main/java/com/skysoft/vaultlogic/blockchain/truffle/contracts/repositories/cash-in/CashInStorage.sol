@@ -11,7 +11,7 @@ contract CashInStorage is RegistryComponent {
     event CashInSaved(uint256 sessionId, address application, uint256 status, uint256 index);
     event CashInBalanceUpdated(uint256 index, uint256 amount);
     event CashInStatusUpdated(uint256 index, uint256 status);
-    event CahsInSplitAdded(uint256 index, address party, uint256 amount);
+    event CashInSplitAdded(uint256 index, address party, uint256 amount);
 
     using CashInLib for address;
 
@@ -70,7 +70,7 @@ contract CashInStorage is RegistryComponent {
 
     function addSplit(uint256 index, address party, uint256 amount) external {
         lookup(DATABASE).addSplit(index, party, amount);
-        emit CahsInSplitAdded(index, party, amount);
+        emit CashInSplitAdded(index, party, amount);
     }
 
     function addSplits(uint256 index, address[] parties, uint256[] amounts) external {

@@ -9,12 +9,14 @@ import "../repositories/application/IApplicationStorage.sol";
 
 contract SessionManager is RegistryComponent {
     
-    enum SessionStatus { ACTIVE, CLOSE_REQUESTED, CLOSED }
+    enum SessionStatus { CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED }
 
     string constant COMPONENT_NAME = "session-manager";
 
     string constant SESSION_STORAGE = "session-storage";
     string constant APPLICATION_STORAGE = "application-storage";
+
+    string constant SESSION_ORACLE = "session-oracle";
 
     constructor(address regAddr) RegistryComponent(regAddr) public {}
 
@@ -22,24 +24,24 @@ contract SessionManager is RegistryComponent {
         return COMPONENT_NAME;
     }
 
-    function createSession(uint256 id, uint256 appId, string xToken) external {
-        ISessionStorage(lookup(SESSION_STORAGE)).save(id, appId, xToken, uint256(SessionStatus.ACTIVE));
+    function createSession(uint256 sessionId, uint256 appId, string xToken) external {
+        ISessionStorage(lookup(SESSION_STORAGE)).save(sessionId, appId, xToken, uint256(SessionStatus.ACTIVE));
         address appAddress = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(appId);
         IApplication(appAddress).newSessionCreated();
     }
 
-    function closeSession(uint256 id) external {
-        (uint256 status, string memory xToken) = ISessionStorage(lookup(SESSION_STORAGE)).getStatusAndXToken(id);
+    function closeSession(uint256 sessionId) external {
+        (uint256 status, string memory xToken) = ISessionStorage(lookup(SESSION_STORAGE)).getStatusAndXToken(sessionId);
         require(status == uint256(SessionStatus.ACTIVE), "Illegal state modification");
-        ISessionStorage(lookup(SESSION_STORAGE)).setStatus(id, uint256(SessionStatus.CLOSE_REQUESTED));
-        ISessionOracle(lookup("session-oracle")).closeSession(xToken);
+        ISessionStorage(lookup(SESSION_STORAGE)).setStatus(sessionId, uint256(SessionStatus.CLOSE_REQUESTED));
+        ISessionOracle(lookup(SESSION_ORACLE)).closeSession(sessionId);
     }
 
-    function confirmClose(uint256 id) external {
+    function confirmClose(uint256 sessionId) external {
         ISessionStorage sessionStorage = ISessionStorage(lookup(SESSION_STORAGE));
-        sessionStorage.setStatus(id, uint256(SessionStatus.CLOSED));
-        address appAddress = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(sessionStorage.getAppId(id));
-        IApplication(appAddress).sessionClosed(id);
+        sessionStorage.setStatus(sessionId, uint256(SessionStatus.CLOSED));
+        address appAddress = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(sessionStorage.getAppId(sessionId));
+        IApplication(appAddress).sessionClosed(sessionId);
     }
 
 }
