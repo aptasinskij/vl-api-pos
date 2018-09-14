@@ -3,6 +3,7 @@ package com.skysoft.vaultlogic.blockchain.handlers.local.storage.application;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.ApplicationAddressUpdatedEventResponse;
 import com.skysoft.vaultlogic.blockchain.handlers.api.AbstractContractEventObserver;
+import com.skysoft.vaultlogic.blockchain.handlers.api.EventObservable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -37,7 +38,7 @@ public class AddressUpdatedObserver extends AbstractContractEventObserver<Applic
     }
 
     @Override
-    protected Function<EthFilter, Observable<ApplicationAddressUpdatedEventResponse>> getObservable() {
+    protected EventObservable<ApplicationAddressUpdatedEventResponse> getObservable() {
         return contract::applicationAddressUpdatedEventObservable;
     }
 

@@ -6,9 +6,6 @@ import org.web3j.contracts.SmartContractEvent;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.tx.Contract;
-import rx.Observable;
-
-import java.util.function.Function;
 
 public abstract class AbstractContractEventObserver<E extends SmartContractEvent, C extends Contract> implements SmartContractEventObserver<E> {
 
@@ -27,7 +24,7 @@ public abstract class AbstractContractEventObserver<E extends SmartContractEvent
 
     protected abstract Event getEvent();
 
-    protected abstract Function<EthFilter, Observable<E>> getObservable();
+    protected abstract EventObservable<E> getObservable();
 
     protected abstract DefaultBlockParameterName getFromBlock();
 
