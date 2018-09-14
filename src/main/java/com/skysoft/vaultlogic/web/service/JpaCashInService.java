@@ -49,9 +49,10 @@ public class JpaCashInService implements CashInService {
 
     @Override
     @Transactional
-    public void closeCashInChannel(BigInteger channelId, String xToken) {
-        cashInRepository.findByChannelId(channelId)
-                .ifPresent(channel -> cashInRepository.save(channel.markHalfClosed(xToken)));
+    public void closeCashInChannel(BigInteger channelId, BigInteger sessionId) {
+        //TODO update logic
+        /*cashInRepository.findByChannelId(channelId)
+                .ifPresent(channel -> cashInRepository.save(channel.markHalfClosed(xToken)));*/
     }
 
     @Override

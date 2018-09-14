@@ -1,6 +1,7 @@
 package com.skysoft.vaultlogic.blockchain.handlers.local.oracle;
 
 import com.skysoft.vaultlogic.blockchain.contracts.SessionOracle;
+import com.skysoft.vaultlogic.blockchain.contracts.SessionOracle.CloseSessionEventResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -26,8 +27,8 @@ public class CloseSessionEventHandler {
                 .addSingleTopic(EventEncoder.encode(SessionOracle.CLOSESESSION_EVENT));
     }
 
-    private void onNext(SessionOracle.CloseSessionEventResponse event) {
-        log.info("[x] CLOSE SESSION EVENT: XToken: {}", event.xToken);
+    private void onNext(CloseSessionEventResponse event) {
+        log.info("[x] CLOSE SESSION EVENT: XToken: {}", event.sessionId);
         log.info("[x] Here can be logic to send close application request to MAYA");
     }
 

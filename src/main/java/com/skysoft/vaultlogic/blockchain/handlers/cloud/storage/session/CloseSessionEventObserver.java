@@ -58,8 +58,8 @@ public class CloseSessionEventObserver extends AbstractContractEventObserver<Clo
 
     @Override
     public void onNext(CloseSessionEventResponse event) {
-        log.info("[x] CLOSE SESSION EVENT: XToken: {}", event.xToken);
-        sessionService.closeSession(event.xToken);
+        log.info("[x] CLOSE SESSION EVENT: XToken: {}", event.sessionId);
+        sessionService.closeSession(event.sessionId);
     }
 
     @Override
