@@ -13,6 +13,7 @@ import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.contracts.SmartContractEvent;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -77,8 +78,6 @@ public class CapitalHero extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("5777", "0x04d3d07229557903459acadd33f5e505f928bd3c");
-        _addresses.put("4447", "0xb33d8395557533c57a265c975554ecf165c42ca1");
     }
 
     protected CapitalHero(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -349,7 +348,10 @@ public class CapitalHero extends Contract {
         return _addresses.get(networkId);
     }
 
-    public static class CashInOpenedEventResponse {
+    public interface CapitalHeroEvent extends SmartContractEvent {
+    }
+
+    public static class CashInOpenedEventResponse implements CapitalHeroEvent {
         public Log log;
 
         public BigInteger channelId;
@@ -357,7 +359,7 @@ public class CapitalHero extends Contract {
         public BigInteger sessionId;
     }
 
-    public static class CashInClosedEventResponse {
+    public static class CashInClosedEventResponse implements CapitalHeroEvent {
         public Log log;
 
         public BigInteger channelId;
@@ -365,7 +367,7 @@ public class CapitalHero extends Contract {
         public BigInteger sessionId;
     }
 
-    public static class CashInBalanceUpdatedEventResponse {
+    public static class CashInBalanceUpdatedEventResponse implements CapitalHeroEvent {
         public Log log;
 
         public BigInteger channelId;
@@ -375,13 +377,13 @@ public class CapitalHero extends Contract {
         public BigInteger sessionId;
     }
 
-    public static class SessionCreatedEventResponse {
+    public static class SessionCreatedEventResponse implements CapitalHeroEvent {
         public Log log;
 
         public BigInteger timestamp;
     }
 
-    public static class SessionClosedEventResponse {
+    public static class SessionClosedEventResponse implements CapitalHeroEvent {
         public Log log;
 
         public BigInteger timestamp;

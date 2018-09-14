@@ -10,7 +10,7 @@ contract CashInOracle is RegistryComponent {
     string constant CASH_CHANNELS_MANAGER = "cash-channels-manager";
     
     event OpenCashAcceptor(uint256 sessionId, uint256 channelId, uint256 channelStatus);
-    event CloseCashAcceptor(string xToken, uint256 index, uint256 channelId);
+    event CloseCashAcceptor(uint256 sessionId, uint256 channelId);
 
     constructor(address regAddr) RegistryComponent(regAddr) public {}
 
@@ -22,8 +22,8 @@ contract CashInOracle is RegistryComponent {
         emit OpenCashAcceptor(sessionId, channelId, channelStatus);
     }
 
-    function close(string xToken, uint256 sessionId, uint256 channelId) external {
-        emit CloseCashAcceptor(xToken, sessionId, channelId);
+    function close(uint256 sessionId, uint256 channelId) external {
+        emit CloseCashAcceptor(sessionId, channelId);
     }
 
     function confirmOpen(uint256 channelId) external {

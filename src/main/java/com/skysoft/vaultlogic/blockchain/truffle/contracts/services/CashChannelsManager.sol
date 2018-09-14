@@ -41,9 +41,8 @@ contract CashChannelsManager is RegistryComponent {
     }
 
     function closeCashInChannel(uint256 sessionId, uint256 channelId) external {
-        string memory xToken = ISessionStorage(lookup(SESSION_STORAGE)).getXToken(sessionId);
         ICashInStorage(lookup(CASH_IN_STORAGE)).setStatus(channelId, uint256(CashInStatus.HALF_CLOSED));
-        ICashInOracle(lookup(CASH_IN_ORACLE)).close(xToken, sessionId, channelId);
+        ICashInOracle(lookup(CASH_IN_ORACLE)).close(sessionId, channelId);
     }
 
     function confirmOpen(uint256 channelId) external {

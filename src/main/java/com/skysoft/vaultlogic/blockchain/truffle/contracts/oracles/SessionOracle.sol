@@ -6,7 +6,7 @@ contract SessionOracle is RegistryComponent {
 
     string constant COMPONENT_NAME = "session-oracle";
 
-    event CloseSession(string xToken);
+    event CloseSession(uint256 sessionId);
 
     constructor(address regAddr) RegistryComponent(regAddr) public {}
 
@@ -14,8 +14,8 @@ contract SessionOracle is RegistryComponent {
         return COMPONENT_NAME;
     }
 
-    function closeSession(string xToken) external {
-        emit CloseSession(xToken);
+    function closeSession(uint256 sessionId) external {
+        emit CloseSession(sessionId);
     }
 
 }
