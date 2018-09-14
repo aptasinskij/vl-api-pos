@@ -31,7 +31,7 @@ contract SessionManager is RegistryComponent {
     }
 
     function closeSession(uint256 sessionId) external {
-        (uint256 status, string memory xToken) = ISessionStorage(lookup(SESSION_STORAGE)).getStatusAndXToken(sessionId);
+        uint256 status = ISessionStorage(lookup(SESSION_STORAGE)).getStatus(sessionId);
         require(status == uint256(SessionStatus.ACTIVE), "Illegal state modification");
         ISessionStorage(lookup(SESSION_STORAGE)).setStatus(sessionId, uint256(SessionStatus.CLOSE_REQUESTED));
         ISessionOracle(lookup(SESSION_ORACLE)).closeSession(sessionId);
