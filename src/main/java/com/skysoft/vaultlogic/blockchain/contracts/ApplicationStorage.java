@@ -82,6 +82,7 @@ public class ApplicationStorage extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
+        _addresses.put("5777", "0x096317c5181cc5892b079367cd7f1a3f2fecc36c");
     }
 
     protected ApplicationStorage(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
