@@ -10,30 +10,38 @@ import rx.Subscription;
 
 import java.util.function.Function;
 
+import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
+
 public abstract class AbstractContractEventObserver<E extends SmartContractEvent, C extends Contract> implements SmartContractEventObserver<E> {
 
     protected final C contract;
-    protected final EthFilter ethFilter;
-    protected final Subscription subscription;
+    private final EthFilter ethFilter;
+    private final Subscription subscription;
 
     public AbstractContractEventObserver(C contract) {
         this.contract = contract;
         this.ethFilter = getEthFilter(contract);
-        this.subscription = getObservable().apply(this.ethFilter).subscribe(this);
+        this.subscription = getEventObservable().apply(this.ethFilter).subscribe(this);
     }
 
     private EthFilter getEthFilter(C contract) {
-        return new EthFilter(getFromBlock(), getToBlock(), getAddressFunction().apply(contract)).addSingleTopic(EventEncoder.encode(getEvent()));
+        return new EthFilter(getFromBlock(), getToBlock(), getAddress().apply(contract)).addSingleTopic(EventEncoder.encode(eventToFilterFor()));
     }
 
-    protected abstract Event getEvent();
+    protected abstract Event eventToFilterFor();
 
-    protected abstract EventObservable<E> getObservable();
+    protected abstract EventObservable<E> getEventObservable();
 
-    protected abstract DefaultBlockParameterName getFromBlock();
+    protected DefaultBlockParameterName getFromBlock() {
+        return LATEST;
+    }
 
-    protected abstract DefaultBlockParameterName getToBlock();
+    protected DefaultBlockParameterName getToBlock() {
+        return LATEST;
+    }
 
-    protected abstract Function<C, String> getAddressFunction();
+    protected Function<C, String> getAddress() {
+        return C::getContractAddress;
+    }
 
 }

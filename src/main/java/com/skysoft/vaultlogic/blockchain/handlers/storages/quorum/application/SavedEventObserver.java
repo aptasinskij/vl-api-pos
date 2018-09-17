@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.cloud.storage.application;
+package com.skysoft.vaultlogic.blockchain.handlers.storages.quorum.application;
 
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.ApplicationSavedEventResponse;
@@ -9,13 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.tx.Contract;
-
-import java.util.function.Function;
 
 import static com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.APPLICATIONSAVED_EVENT;
-import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
@@ -28,28 +23,13 @@ public class SavedEventObserver extends AbstractContractEventObserver<Applicatio
     }
 
     @Override
-    protected Event getEvent() {
+    protected Event eventToFilterFor() {
         return APPLICATIONSAVED_EVENT;
     }
 
     @Override
-    protected EventObservable<ApplicationSavedEventResponse> getObservable() {
+    protected EventObservable<ApplicationSavedEventResponse> getEventObservable() {
         return contract::applicationSavedEventObservable;
-    }
-
-    @Override
-    protected DefaultBlockParameterName getFromBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected DefaultBlockParameterName getToBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected Function<ApplicationStorage, String> getAddressFunction() {
-        return Contract::getContractAddress;
     }
 
     @Override
@@ -58,13 +38,8 @@ public class SavedEventObserver extends AbstractContractEventObserver<Applicatio
     }
 
     @Override
-    public void onCompleted() {
-        log.info("[x] Application save completed.");
-    }
-
-    @Override
     public void onError(Throwable throwable) {
-        log.error("[x] Error handler ApplicationSaved event", throwable);
+        log.error("[x] Error handler ApplicationSaved event: {}", throwable.getMessage());
     }
 
 }

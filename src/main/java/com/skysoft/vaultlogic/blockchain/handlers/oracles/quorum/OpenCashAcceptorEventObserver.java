@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.cloud.storage.cashchannel;
+package com.skysoft.vaultlogic.blockchain.handlers.oracles.quorum;
 
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.OpenCashAcceptorEventResponse;
@@ -10,13 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.tx.Contract;
-
-import java.util.function.Function;
 
 import static com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.OPENCASHACCEPTOR_EVENT;
-import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
@@ -32,39 +27,19 @@ public class OpenCashAcceptorEventObserver extends AbstractContractEventObserver
     }
 
     @Override
-    protected Event getEvent() {
+    protected Event eventToFilterFor() {
         return OPENCASHACCEPTOR_EVENT;
     }
 
     @Override
-    protected EventObservable<OpenCashAcceptorEventResponse> getObservable() {
+    protected EventObservable<OpenCashAcceptorEventResponse> getEventObservable() {
         return contract::openCashAcceptorEventObservable;
-    }
-
-    @Override
-    protected DefaultBlockParameterName getFromBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected DefaultBlockParameterName getToBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected Function<CashInOracle, String> getAddressFunction() {
-        return Contract::getContractAddress;
     }
 
     @Override
     public void onNext(OpenCashAcceptorEventResponse event) {
         log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, Status: {}", event.channelId, event.sessionId, event.channelStatus);
         cashInService.createCashInChannel(event.channelId, event.sessionId, event.channelStatus);
-    }
-
-    @Override
-    public void onCompleted() {
-        log.info("[x] Cash acceptor open completed.");
     }
 
     @Override
