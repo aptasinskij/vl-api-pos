@@ -54,7 +54,7 @@ public class LocalCashInDomainEventsListener {
     @Async
     @TransactionalEventListener
     public void closeRequested(CashInCloseRequested event) {
-        log.info("[x]---> CASH IN CLOSE REQUESTED. ID: {}, X-TOKEN: {} ", event.getChannelId(), event.getXToken());
+        log.info("[x]---> CASH IN CLOSE REQUESTED. ID: {}, X-TOKEN: {} ", event.getChannelId(), event.getSessionId());
         try {
             log.info("[x] Sending: CLOSE CASH ACCEPTOR");
             Thread.sleep(1000);

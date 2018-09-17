@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 
 @Service
-public class JpaSessionService implements SessionService{
+public class JpaSessionService implements SessionService {
 
     private final SessionRepository sessionRepo;
     private final ApplicationRepository applicationRepo;
@@ -33,9 +33,13 @@ public class JpaSessionService implements SessionService{
     @Override
     @Transactional
     public void closeSession(BigInteger sessionId) {
-        Session session = sessionRepo.getOne(sessionId.longValue());
-        session.markCloseRequested();
-        sessionRepo.save(session);
+        sessionRepo.findById(sessionId).map(Session::markCloseRequested).ifPresent(sessionRepo::save);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String getSessionXToken(BigInteger sessionId) {
+        return sessionRepo.findSessionXTokenById(sessionId).getXToken();
     }
 
 }
