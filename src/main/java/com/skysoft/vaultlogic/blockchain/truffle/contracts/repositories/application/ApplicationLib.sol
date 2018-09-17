@@ -9,7 +9,7 @@ library ApplicationLib {
     string constant OWNER = "application_owner";
     string constant URL = "application_url";
     string constant ADDRESS = "application_address";
-    string constant STATUS = "application status";
+    string constant STATUS = "application_status";
 
     function save(address self, uint256 appId, string name, address owner, string url, address appAddr, uint256 status) public {
         Database(self).setUintValue(string256(ID, appId), appId);

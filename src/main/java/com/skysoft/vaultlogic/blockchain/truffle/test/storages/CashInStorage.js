@@ -93,7 +93,7 @@ contract('CashInStorage', () => {
             assert.strictEqual(resSave.sessionId, 1, 'sessionId is not equal');
             assert.strictEqual(resSave.application, 2, 'application address is not equal');
             assert.strictEqual(resSave.status, 3, 'status is not equal');
-            assert.strictEqual(resSave.index, 0, 'index is not equal');
+            assert.strictEqual(resSave.channelId, 0, 'index is not equal');
         });
 
         /*\
@@ -175,7 +175,7 @@ contract('CashInStorage', () => {
          - (event) CashInBalanceUpdated
         \*/
         it('setBalance', () => {
-            assert.strictEqual(resSetBalance.index, 0, 'index is not equal');
+            assert.strictEqual(resSetBalance.channelId, 0, 'index is not equal');
             assert.strictEqual(resSetBalance.amount, 500, 'amount is not equal');
         });
 
@@ -204,7 +204,7 @@ contract('CashInStorage', () => {
          - (event) CashInStatusUpdated
         \*/
         it('setStatus', () => {
-            assert.strictEqual(resSetStatus.index, 0, 'index is not equal');
+            assert.strictEqual(resSetStatus.channelId, 0, 'index is not equal');
             assert.strictEqual(resSetStatus.status, 5, 'status is not equal');
         });
 
@@ -220,7 +220,7 @@ contract('CashInStorage', () => {
          - (event) CashInSplitAdded
         \*/
         it('addSplit', () => {
-            assert.strictEqual(resAddSplit.index, 0, 'index is not equal');
+            assert.strictEqual(resAddSplit.channelId, 0, 'index is not equal');
             assert.strictEqual(resAddSplit.party, 10, 'party is not equal');
             assert.strictEqual(resAddSplit.amount, 20, 'amount is not equal');
         });
