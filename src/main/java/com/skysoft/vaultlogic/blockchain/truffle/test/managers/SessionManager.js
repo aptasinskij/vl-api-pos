@@ -58,11 +58,11 @@ contract('SessionManager', () => {
             assert.strictEqual(SavedEvents[0].sessionId, 1, 'session id is not equal');
             assert.strictEqual(SavedEvents[0].appId, 2, 'application id is not equal');
             assert.strictEqual(SavedEvents[0].xToken, '1a2b3c', 'xToken is not equal');
-            assert.strictEqual(SavedEvents[0].status, 0, 'channel status is not equal');
+            assert.strictEqual(SavedEvents[0].status, 1, 'channel status is not equal');
             /* from SessionStorage method */
             assert.strictEqual(resGetSession[0], 2, 'session id is not equal');
             assert.strictEqual(resGetSession[1], '1a2b3c', 'xToken is not equal');
-            assert.strictEqual(resGetSession[2], 0, 'session status is not equal');
+            assert.strictEqual(resGetSession[2], 1, 'session status is not equal');
         });
         it('closeSession', () => {
             /* from SessionManager event */
@@ -71,9 +71,9 @@ contract('SessionManager', () => {
             assert.isAbove(resCloseSession.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from SessionStorage event */
             assert.strictEqual(StatusUpdatedEvents[0].index, 1, 'index is not equal');
-            assert.strictEqual(StatusUpdatedEvents[0].status, 1, 'status is not equal');
+            assert.strictEqual(StatusUpdatedEvents[0].status, 3, 'status is not equal');
             /* from SessionStorage method */
-            assert.strictEqual(resGetStatus1, 1, 'session status is not equal');
+            assert.strictEqual(resGetStatus1, 3, 'session status is not equal');
         });
         it('confirmClose', () => {
             /* from SessionManager event */
@@ -82,9 +82,9 @@ contract('SessionManager', () => {
             assert.isAbove(resConfirmClose.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from SessionStorage event */
             assert.strictEqual(StatusUpdatedEvents[1].index, 1, 'index is not equal');
-            assert.strictEqual(StatusUpdatedEvents[1].status, 2, 'status is not equal');
+            assert.strictEqual(StatusUpdatedEvents[1].status, 4, 'status is not equal');
             /* from SessionStorage method */
-            assert.strictEqual(resGetStatus2, 2, 'session status is not equal');
+            assert.strictEqual(resGetStatus2, 4, 'session status is not equal');
         });
     });
 });

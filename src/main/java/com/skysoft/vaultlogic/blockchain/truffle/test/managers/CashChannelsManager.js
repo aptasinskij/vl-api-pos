@@ -48,7 +48,6 @@ contract('CashChannelsManager', () => {
             await sessionManagerInstance.createSession(1, 2, '1a2b3c');
             /* openCashInChannel */
             resOpenCashInChannel = await cashChannelsManagerInstance.openCashInChannel(1);
-
             resGet = await cashInStorageInstance.get(0);
             resGet = convertToNumber(resGet, true);
             /* confirmOpen  */
@@ -77,7 +76,7 @@ contract('CashChannelsManager', () => {
             assert.notEqual(resOpenCashInChannel.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resOpenCashInChannel.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from cashInStorage event */
-            assert.strictEqual(CashInSavedEvents[0].index, 0, 'channel id is not equal');
+            assert.strictEqual(CashInSavedEvents[0].channelId, 0, 'channel id is not equal');
             assert.strictEqual(CashInSavedEvents[0].sessionId, 1, 'session id is not equal');
             assert.strictEqual(CashInSavedEvents[0].application, capitalHeroInstance.address, 'application address is not equal');
             assert.strictEqual(CashInSavedEvents[0].status, 0, 'channel status is not equal');
@@ -92,7 +91,7 @@ contract('CashChannelsManager', () => {
             assert.notEqual(resConfirmOpen.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resConfirmOpen.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from cashInStorage event */
-            assert.strictEqual(CashInStatusUpdatedEvents[0].index, 0, 'channel id is not equal');
+            assert.strictEqual(CashInStatusUpdatedEvents[0].channelId, 0, 'channel id is not equal');
             assert.strictEqual(CashInStatusUpdatedEvents[0].status, 1, 'channel status is not equal');
             /* from cashInStorage method */
             assert.strictEqual(resGetStatus1, 1, 'channel status is not equal');
@@ -103,7 +102,7 @@ contract('CashChannelsManager', () => {
             assert.notEqual(resUpdateCashInBalance.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resUpdateCashInBalance.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from cashInStorage event */
-            assert.strictEqual(CashInBalanceUpdatedEvents[0].index, 0, 'channel id is not equal');
+            assert.strictEqual(CashInBalanceUpdatedEvents[0].channelId, 0, 'channel id is not equal');
             assert.strictEqual(CashInBalanceUpdatedEvents[0].amount, 100, 'channel amount is not equal');
             /* from cashInStorage method */
             assert.strictEqual(resGetBalance, 100, 'channel balance is not equal');
@@ -114,7 +113,7 @@ contract('CashChannelsManager', () => {
             assert.notEqual(resCloseCashInChannel.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resCloseCashInChannel.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from cashInStorage event */
-            assert.strictEqual(CashInStatusUpdatedEvents[1].index, 0, 'channel id is not equal');
+            assert.strictEqual(CashInStatusUpdatedEvents[1].channelId, 0, 'channel id is not equal');
             assert.strictEqual(CashInStatusUpdatedEvents[1].status, 2, 'channel status is not equal');
             /* from cashInStorage method */
             assert.strictEqual(resGetStatus2, 2, 'channel status is not equal');
@@ -125,7 +124,7 @@ contract('CashChannelsManager', () => {
             assert.notEqual(resConfirmClose.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resConfirmClose.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from cashInStorage event */
-            assert.strictEqual(CashInStatusUpdatedEvents[2].index, 0, 'channel id is not equal');
+            assert.strictEqual(CashInStatusUpdatedEvents[2].channelId, 0, 'channel id is not equal');
             assert.strictEqual(CashInStatusUpdatedEvents[2].status, 3, 'channel status is not equal');
             /* from cashInStorage method */
             assert.strictEqual(resGetStatus3, 3, 'channel status is not equal');
