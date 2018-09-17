@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.local.storage.application;
+package com.skysoft.vaultlogic.blockchain.handlers.storages.local.application;
 
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.ApplicationStatusUpdatedEventResponse;
@@ -10,12 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
-import org.web3j.protocol.core.DefaultBlockParameterName;
 
 import java.util.function.Function;
 
 import static com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.APPLICATIONSTATUSUPDATED_EVENT;
-import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
@@ -25,41 +23,27 @@ public class StatusUpdatedEventObserver extends AbstractContractEventObserver<Ap
     @Autowired
     protected StatusUpdatedEventObserver(ApplicationStorage applicationStorage) {
         super(applicationStorage);
+        subscribe();
     }
 
     @Override
-    protected Event getEvent() {
+    protected Event eventToFilterFor() {
         return APPLICATIONSTATUSUPDATED_EVENT;
     }
 
     @Override
-    protected EventObservable<ApplicationStatusUpdatedEventResponse> getObservable() {
+    protected EventObservable<ApplicationStatusUpdatedEventResponse> getEventObservable() {
         return contract::applicationStatusUpdatedEventObservable;
     }
 
     @Override
-    protected DefaultBlockParameterName getFromBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected DefaultBlockParameterName getToBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected Function<ApplicationStorage, String> getAddressFunction() {
+    protected Function<ApplicationStorage, String> getAddress() {
         return contract -> contract.getContractAddress().substring(2);
     }
 
     @Override
     public void onNext(ApplicationStatusUpdatedEventResponse event) {
         log.info("[x] Application status updated: {}, {}", event.appId, Status.from(event.status.intValue()));
-    }
-
-    @Override
-    public void onCompleted() {
-        log.info("[x] Application status updated events completed");
     }
 
     @Override

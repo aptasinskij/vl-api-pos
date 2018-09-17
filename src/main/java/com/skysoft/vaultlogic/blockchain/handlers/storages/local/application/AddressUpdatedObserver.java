@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.cloud.storage.application;
+package com.skysoft.vaultlogic.blockchain.handlers.storages.local.application;
 
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.ApplicationAddressUpdatedEventResponse;
@@ -9,47 +9,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.tx.Contract;
 
 import java.util.function.Function;
 
 import static com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.APPLICATIONADDRESSUPDATED_EVENT;
-import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
-@Profile("cloud-quorum")
-public class AddressUpdatedEventObserver extends AbstractContractEventObserver<ApplicationAddressUpdatedEventResponse, ApplicationStorage> {
+@Profile("ganache")
+public class AddressUpdatedObserver extends AbstractContractEventObserver<ApplicationAddressUpdatedEventResponse, ApplicationStorage> {
 
     @Autowired
-    public AddressUpdatedEventObserver(ApplicationStorage applicationStorage) {
+    public AddressUpdatedObserver(ApplicationStorage applicationStorage) {
         super(applicationStorage);
+        subscribe();
     }
 
     @Override
-    protected Event getEvent() {
+    protected Event eventToFilterFor() {
         return APPLICATIONADDRESSUPDATED_EVENT;
     }
 
     @Override
-    protected EventObservable<ApplicationAddressUpdatedEventResponse> getObservable() {
+    protected EventObservable<ApplicationAddressUpdatedEventResponse> getEventObservable() {
         return contract::applicationAddressUpdatedEventObservable;
     }
 
     @Override
-    protected DefaultBlockParameterName getFromBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected DefaultBlockParameterName getToBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected Function<ApplicationStorage, String> getAddressFunction() {
-        return Contract::getContractAddress;
+    protected Function<ApplicationStorage, String> getAddress() {
+        return contract -> contract.getContractAddress().substring(2);
     }
 
     @Override
@@ -58,13 +46,8 @@ public class AddressUpdatedEventObserver extends AbstractContractEventObserver<A
     }
 
     @Override
-    public void onCompleted() {
-        log.info("[x] Application update completed.");
-    }
-
-    @Override
     public void onError(Throwable throwable) {
-        log.error("[x] Error handler ApplicationSaved event", throwable);
+        log.error("[x] Error handler ApplicationSaved event: {}", throwable.getMessage());
     }
 
 }

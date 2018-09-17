@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.cloud.storage.cashchannel;
+package com.skysoft.vaultlogic.blockchain.handlers.oracles.ganache;
 
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.CloseCashAcceptorEventResponse;
@@ -10,17 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.tx.Contract;
 
 import java.util.function.Function;
 
 import static com.skysoft.vaultlogic.blockchain.contracts.CashInOracle.CLOSECASHACCEPTOR_EVENT;
-import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
-@Profile("cloud-quorum")
+@Profile("ganache")
 public class CloseCashAcceptorEventObserver extends AbstractContractEventObserver<CloseCashAcceptorEventResponse, CashInOracle> {
 
     private final CashInService cashInService;
@@ -29,31 +26,22 @@ public class CloseCashAcceptorEventObserver extends AbstractContractEventObserve
     public CloseCashAcceptorEventObserver(CashInOracle cashInOracle, CashInService cashInService) {
         super(cashInOracle);
         this.cashInService = cashInService;
+        subscribe();
     }
 
     @Override
-    protected Event getEvent() {
+    protected Event eventToFilterFor() {
         return CLOSECASHACCEPTOR_EVENT;
     }
 
     @Override
-    protected EventObservable<CloseCashAcceptorEventResponse> getObservable() {
+    protected EventObservable<CloseCashAcceptorEventResponse> getEventObservable() {
         return contract::closeCashAcceptorEventObservable;
     }
 
     @Override
-    protected DefaultBlockParameterName getFromBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected DefaultBlockParameterName getToBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected Function<CashInOracle, String> getAddressFunction() {
-        return Contract::getContractAddress;
+    protected Function<CashInOracle, String> getAddress() {
+        return contract -> contract.getContractAddress().substring(2);
     }
 
     @Override
@@ -63,13 +51,8 @@ public class CloseCashAcceptorEventObserver extends AbstractContractEventObserve
     }
 
     @Override
-    public void onCompleted() {
-        log.info("[x] Close cash acceptor completed.");
-    }
-
-    @Override
     public void onError(Throwable throwable) {
-        log.error("[x] Error: CLOSE CASH ACCEPTOR", throwable);
+        log.error("[x] Error: CLOSE CASH ACCEPTOR:", throwable);
     }
 
 }
