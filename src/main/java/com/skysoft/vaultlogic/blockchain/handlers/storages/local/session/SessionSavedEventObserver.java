@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.local.storage.session;
+package com.skysoft.vaultlogic.blockchain.handlers.storages.local.session;
 
 import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage.SavedEventResponse;
@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
-import org.web3j.protocol.core.DefaultBlockParameterName;
 
 import java.util.function.Function;
 
 import static com.skysoft.vaultlogic.blockchain.contracts.SessionStorage.SAVED_EVENT;
-import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
 @Slf4j
 @Component
@@ -27,37 +25,22 @@ public class SessionSavedEventObserver extends AbstractContractEventObserver<Sav
     }
 
     @Override
-    protected Event getEvent() {
+    protected Event eventToFilterFor() {
         return SAVED_EVENT;
     }
 
     @Override
-    protected EventObservable<SavedEventResponse> getObservable() {
+    protected EventObservable<SavedEventResponse> getEventObservable() {
         return contract::savedEventObservable;
     }
 
     @Override
-    protected DefaultBlockParameterName getFromBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected DefaultBlockParameterName getToBlock() {
-        return LATEST;
-    }
-
-    @Override
-    protected Function<SessionStorage, String> getAddressFunction() {
+    protected Function<SessionStorage, String> getAddress() {
         return contract -> contract.getContractAddress().substring(2);
     }
 
     public void onNext(SavedEventResponse event) {
         log.info("[x] Session saved: {}, {}", event.sessionId, event.xToken);
-    }
-
-    @Override
-    public void onCompleted() {
-        log.info("[x] Session save completed.");
     }
 
     public void onError(Throwable throwable) {
