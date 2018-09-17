@@ -27,16 +27,16 @@ public class GanacheConfiguration {
 
     private static final String NETWORK_ID  = "5777";
 
-    private static final String APPLICATION_MANAGER = "0xe58dad58ccb22b9b1de9f2e3edea7681bdacd773";
-    private static final String APPLICATION_STORAGE = "0xe5854bbbb4f1447c839f57420c44ca7d56eb53d4";
+    private static final String APPLICATION_MANAGER = "0x1d09293ce251a746693828fb51a324502422b61e";
+    private static final String APPLICATION_STORAGE = "0x096317c5181cc5892b079367cd7f1a3f2fecc36c";
 
-    private static final String SESSION_MANAGER = "0x2c4b289749361521c9f238e76993ea9024f23d23";
-    private static final String SESSION_STORAGE = "0x9d40ad39b007bfc5fb739f0a5f1489b370ddef04";
-    private static final String SESSION_ORACLE = "0x45fc7653901d481a75e9ecbb6fcd250dedc68dc9";
+    private static final String SESSION_MANAGER = "0x0ad328ffe4e36f8aa533898dbd93e9c07e5e5670";
+    private static final String SESSION_STORAGE = "0xaefe33efa6248c1ee3494fefdd3a744ecaf1c59b";
+    private static final String SESSION_ORACLE = "0xd6dc964864c7f01d2d3f45684942b530a612e713";
 
-    private static final String CAPITAL_HERO_ADDRESS = "0x04d3d07229557903459acadd33f5e505f928bd3c";
+    private static final String CAPITAL_HERO_ADDRESS = "0x52071509e918601e7ef456252a1c94a63a8408b3";
 
-    private static final String CASH_ACCEPTOR_ORACLE_ADDRESS = "0x71c539c871e81f6b5c034ecc159d11837f21d845";
+    private static final String CASH_ACCEPTOR_ORACLE_ADDRESS = "0x34653005dc3f732e97f24101c842d634a1bb3c0c";
 
     @Bean
     public ScheduledExecutorService scheduledExecutorService() {

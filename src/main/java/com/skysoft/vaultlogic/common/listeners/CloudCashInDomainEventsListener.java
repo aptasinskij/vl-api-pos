@@ -4,6 +4,7 @@ import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
 import com.skysoft.vaultlogic.common.domain.cashin.events.*;
 import com.skysoft.vaultlogic.common.request.EnableCashAcceptorRequest;
 import com.skysoft.vaultlogic.web.service.CashInService;
+import com.skysoft.vaultlogic.web.service.SessionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -29,12 +30,17 @@ public class CloudCashInDomainEventsListener {
     private static final String X_NONCE_HEADER = "X-Nonce";
     private static final String X_TOKEN_HEADER = "X-Token";
 
+    private final SessionService sessionService;
     private final CashInService cashInService;
     private final CashInOracle cashInOracle;
     private final OAuth2RestTemplate oAuth2RestTemplate;
 
     @Autowired
-    public CloudCashInDomainEventsListener(CashInService cashInService, CashInOracle cashInOracle, OAuth2RestTemplate oAuth2RestTemplate) {
+    public CloudCashInDomainEventsListener(SessionService sessionService,
+                                           CashInService cashInService,
+                                           CashInOracle cashInOracle,
+                                           OAuth2RestTemplate oAuth2RestTemplate) {
+        this.sessionService = sessionService;
         this.cashInService = cashInService;
         this.cashInOracle = cashInOracle;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
@@ -76,12 +82,12 @@ public class CloudCashInDomainEventsListener {
     @Async
     @TransactionalEventListener
     public void closeRequested(CashInCloseRequested event) {
-        log.info("[x]---> CASH IN CLOSE REQUESTED. ID: {}, X-TOKEN: {} ", event.getChannelId(), event.getXToken());
-
+        log.info("[x]---> CASH IN CLOSE REQUESTED. ID: {}, X-TOKEN: {} ", event.getChannelId(), event.getSessionId());
+        String xToken = sessionService.getSessionXToken(event.getSessionId());
         log.info("[x] ---> handling close cash in channel event. Data: {}", event);
         RequestEntity<Void> requestEntity = RequestEntity.post(create(DISABLE_CASH_ACCEPTOR_URL))
                 .header(X_NONCE_HEADER, valueOf(currentTimeMillis()))
-                .header(X_TOKEN_HEADER, event.getXToken())
+                .header(X_TOKEN_HEADER, xToken)
                 .build();
         try {
             log.info("[x] ---> Sending DISABLE CASH ACCEPTOR maya request...");
@@ -89,7 +95,6 @@ public class CloudCashInDomainEventsListener {
             log.info("[x] ---> Response: {}", response);
         } catch (Throwable e) {
             log.error("[x] ---> Failed to send request. Reason: {}", e.getMessage());
-//            failed to close cash in channel
         }
         cashInService.confirmClosed(event.getChannelId());
     }
