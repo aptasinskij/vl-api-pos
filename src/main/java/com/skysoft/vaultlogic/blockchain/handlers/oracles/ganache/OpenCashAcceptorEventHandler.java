@@ -26,6 +26,7 @@ public class OpenCashAcceptorEventHandler extends AbstractContractEventObserver<
     public OpenCashAcceptorEventHandler(CashInOracle cashInOracle, CashInService cashInService) {
         super(cashInOracle);
         this.cashInService = cashInService;
+        subscribe();
     }
 
     @Override

@@ -21,6 +21,7 @@ public class StatusUpdatedEventObserver extends AbstractContractEventObserver<Ap
     @Autowired
     protected StatusUpdatedEventObserver(ApplicationStorage applicationStorage) {
         super(applicationStorage);
+        subscribe();
     }
 
     @Override

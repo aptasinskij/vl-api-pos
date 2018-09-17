@@ -24,6 +24,7 @@ public class CloseCashAcceptorEventObserver extends AbstractContractEventObserve
     public CloseCashAcceptorEventObserver(CashInOracle cashInOracle, CashInService cashInService) {
         super(cashInOracle);
         this.cashInService = cashInService;
+        subscribe();
     }
 
     @Override

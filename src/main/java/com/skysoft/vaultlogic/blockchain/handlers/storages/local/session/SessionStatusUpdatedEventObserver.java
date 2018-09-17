@@ -22,6 +22,7 @@ public class SessionStatusUpdatedEventObserver extends AbstractContractEventObse
     @Autowired
     public SessionStatusUpdatedEventObserver(SessionStorage sessionStorage) {
         super(sessionStorage);
+        subscribe();
     }
 
     @Override

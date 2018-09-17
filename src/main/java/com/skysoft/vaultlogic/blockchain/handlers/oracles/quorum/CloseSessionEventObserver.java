@@ -24,6 +24,7 @@ public class CloseSessionEventObserver extends AbstractContractEventObserver<Clo
     public CloseSessionEventObserver(SessionOracle sessionOracle, SessionService sessionService) {
         super(sessionOracle);
         this.sessionService = sessionService;
+        subscribe();
     }
 
     @Override

@@ -20,6 +20,7 @@ public class AddressUpdatedEventObserver extends AbstractContractEventObserver<A
     @Autowired
     public AddressUpdatedEventObserver(ApplicationStorage applicationStorage) {
         super(applicationStorage);
+        subscribe();
     }
 
     @Override

@@ -22,6 +22,7 @@ public class CloseSessionEventHandler extends AbstractContractEventObserver<Clos
     @Autowired
     public CloseSessionEventHandler(SessionOracle sessionOracle) {
         super(sessionOracle);
+        subscribe();
     }
 
     @Override

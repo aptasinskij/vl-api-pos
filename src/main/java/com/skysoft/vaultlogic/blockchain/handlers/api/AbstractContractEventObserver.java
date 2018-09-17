@@ -8,6 +8,7 @@ import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.tx.Contract;
 import rx.Subscription;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
@@ -16,12 +17,11 @@ public abstract class AbstractContractEventObserver<E extends SmartContractEvent
 
     protected final C contract;
     private final EthFilter ethFilter;
-    private final Subscription subscription;
+    private Subscription subscription;
 
     public AbstractContractEventObserver(C contract) {
         this.contract = contract;
         this.ethFilter = getEthFilter(contract);
-        this.subscription = getEventObservable().apply(this.ethFilter).subscribe(this);
     }
 
     private EthFilter getEthFilter(C contract) {
@@ -42,6 +42,11 @@ public abstract class AbstractContractEventObserver<E extends SmartContractEvent
 
     protected Function<C, String> getAddress() {
         return C::getContractAddress;
+    }
+
+    protected void subscribe() {
+        if (Objects.nonNull(subscription)) this.subscription.unsubscribe();
+        this.subscription = getEventObservable().apply(this.ethFilter).subscribe(this);
     }
 
 }

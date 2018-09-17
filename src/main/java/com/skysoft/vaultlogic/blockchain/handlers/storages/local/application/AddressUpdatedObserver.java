@@ -22,6 +22,7 @@ public class AddressUpdatedObserver extends AbstractContractEventObserver<Applic
     @Autowired
     public AddressUpdatedObserver(ApplicationStorage applicationStorage) {
         super(applicationStorage);
+        subscribe();
     }
 
     @Override

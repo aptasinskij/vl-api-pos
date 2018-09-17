@@ -20,6 +20,7 @@ public class SavedEventObserver extends AbstractContractEventObserver<Applicatio
     @Autowired
     public SavedEventObserver(ApplicationStorage applicationStorage) {
         super(applicationStorage);
+        subscribe();
     }
 
     @Override

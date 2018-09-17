@@ -22,6 +22,7 @@ public class UrlUpdatedEventObserver extends AbstractContractEventObserver<Appli
     @Autowired
     public UrlUpdatedEventObserver(ApplicationStorage applicationStorage) {
         super(applicationStorage);
+        subscribe();
     }
 
     @Override

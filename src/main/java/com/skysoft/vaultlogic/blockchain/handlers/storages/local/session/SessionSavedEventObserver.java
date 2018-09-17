@@ -22,6 +22,7 @@ public class SessionSavedEventObserver extends AbstractContractEventObserver<Sav
     @Autowired
     public SessionSavedEventObserver(SessionStorage sessionStorage) {
         super(sessionStorage);
+        subscribe();
     }
 
     @Override
