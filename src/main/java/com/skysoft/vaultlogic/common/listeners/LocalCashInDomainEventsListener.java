@@ -57,7 +57,7 @@ public class LocalCashInDomainEventsListener {
     @TransactionalEventListener
     public void failedToCreate(CashInFailedToCreate event) {
         log.info("[x]---> CASH IN FAILED TO CREATE. ID: {}");
-        cashInRepository.findById(event.getChannelId()).map(CashInChannel::markFailedToCreate).ifPresent(cashInRepository::save);
+        //TODO add call to CashInOracle#failedToCreate
     }
 
     @Async
@@ -84,14 +84,13 @@ public class LocalCashInDomainEventsListener {
                     log.error("[x] Error during confirmation", th);
                     return null;
                 });
-        cashInRepository.findById(event.getChannelId()).map(CashInChannel::markClosed).ifPresent(cashInRepository::save);
     }
 
     @Async
     @TransactionalEventListener
     public void failedToClose(CashInFailedToCreate event) {
         log.info("[x]---> CASH IN FAILED TO CREATE. ID: {}");
-        cashInRepository.findById(event.getChannelId()).map(CashInChannel::markFailedToClose).ifPresent(cashInRepository::save);
+        //TODO add call to CashInOracle#failedToCreate
     }
 
     @Async
