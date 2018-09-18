@@ -52,7 +52,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> Save(sessionId, appId, xToken, status) </h4>
-         # save new session
+         # Save new session
          > Arguments
          - (uint256) sessionId - session id
          - (uint256) appId - application id
@@ -71,7 +71,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getSession(index) </h4>
-         # get session info
+         # Get session info
          > Arguments
          - (uint256) index - session id
          > Returns
@@ -92,7 +92,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getStatusAndXToken(index) </h4>
-         # get session status and xToken
+         # Get session status and xToken
          > Arguments
          - (uint256) index - session id
          > Returns
@@ -107,7 +107,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getAppId(index) </h4>
-         # get application ID of session
+         # Get application ID of session
          > Arguments
          - (uint256) index - session index
          > Returns
@@ -120,7 +120,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getXToken(index) </h4>
-         # get session xToken
+         # Get session xToken
          > Arguments
          - (uint256) index - session id
          > Returns
@@ -133,7 +133,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getAppIdAndXToken(index) </h4>
-         # get application ID and xToken of session
+         # Get application ID and xToken of session
          > Arguments
          - (uint256) index - session id
          > Returns
@@ -148,7 +148,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> setStatus(index, status) </h4>
-         # update session status
+         # Set session status
          > Arguments
          - (uint256) index - session id
          - (uint256) status - session status
@@ -163,7 +163,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getStatus(index) </h4>
-         # get session status
+         # Get session status
          > Arguments
          - (uint256) index - session id
          > Returns
@@ -178,7 +178,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> Saved </h4>
-         # get info of saved session (emits on "save" method call)
+         # Get info of saved session (emits on "save" method call)
          > Returns
          - (uint256) sessionId - session id
          - (uint256) appId - application id
@@ -189,7 +189,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> StatusUpdated </h4>
-         # get updated status of session (emits on "setStatus" method call)
+         # Get updated status of session (emits on "setStatus" method call)
          > Returns
          - (uint256) index - session id
          - (uint256) status - session status

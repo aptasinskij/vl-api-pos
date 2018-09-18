@@ -60,7 +60,7 @@ contract('ApplicationLib', (accounts) => {
         /*\
          # <hr>
          # <h4> get(self, appId) </h4>
-         # get all info of application
+         # Get all info of application
          > Arguments
          - (address) self - self database address
          - (uint256) appId - application id
@@ -82,7 +82,7 @@ contract('ApplicationLib', (accounts) => {
         /*\
          # <hr>
          # <h4> getOwner(self, appId) </h4>
-         # get owner of application
+         # Get owner of application
          > Arguments
          - (address) self - self database address
          - (uint256) appId - application id
@@ -96,7 +96,7 @@ contract('ApplicationLib', (accounts) => {
         /*\
          # <hr>
          # <h4> getUrl(self, appId) </h4>
-         # get owner of application
+         # Get owner of application
          > Arguments
          - (address) self - self database address
          - (uint256) appId - application id
@@ -110,7 +110,7 @@ contract('ApplicationLib', (accounts) => {
         /*\
          # <hr>
          # <h4> getAddress(self, appId) </h4>
-         # get owner of application
+         # Get owner of application
          > Arguments
          - (address) self - self database address
          - (uint256) appId - application id
@@ -124,7 +124,7 @@ contract('ApplicationLib', (accounts) => {
         /*\
          # <hr>
          # <h4> getStatus(self, appId) </h4>
-         # get owner of application
+         # Get owner of application
          > Arguments
          - (address) self - self database address
          - (uint256) appId - application id
@@ -138,7 +138,7 @@ contract('ApplicationLib', (accounts) => {
         /*\
          # <hr>
          # <h4> getName(self, appId) </h4>
-         # get owner of application
+         # Get owner of application
          > Arguments
          - (address) self - self database address
          - (uint256) appId - application id
@@ -154,7 +154,7 @@ contract('ApplicationLib', (accounts) => {
         /*\
          # <hr>
          # <h4> save(self, appId, name, owner, url, appAddr, status) </h4>
-         # save new application
+         # Save new application
          > Arguments
          - (address) self - self database address
          - (uint256) appId - application id
@@ -168,7 +168,7 @@ contract('ApplicationLib', (accounts) => {
         /*\
          # <hr>
          # <h4> setUrl(self, appId, url) </h4>
-         # get owner of application
+         # Set url of application
          > Arguments
          - (address) self - self database address
          - (uint256) appId - application id
@@ -178,7 +178,7 @@ contract('ApplicationLib', (accounts) => {
         /*\
          # <hr>
          # <h4> setAddress(self, appId, appAddr) </h4>
-         # get owner of application
+         # Set address of application
          > Arguments
          - (address) self - self database address
          - (uint256) appId - application id
@@ -188,7 +188,7 @@ contract('ApplicationLib', (accounts) => {
         /*\
          # <hr>
          # <h4> setStatus(self, appId, status) </h4>
-         # get owner of application
+         # Set status of application
          > Arguments
          - (address) self - self database address
          - (uint256) appId - application id

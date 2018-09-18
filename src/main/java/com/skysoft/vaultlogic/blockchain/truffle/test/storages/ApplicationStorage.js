@@ -59,7 +59,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> save(appId, name, owner, url, appAddr, status) </h4>
-         # save new application
+         # Save new application
          > Arguments
          - (uint256) appId - application id
          - (string) name - application name
@@ -82,7 +82,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> get(appId) </h4>
-         # get all info of application
+         # Get all info of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -109,7 +109,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationName(appId) </h4>
-         # get name of application
+         # Get name of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -122,7 +122,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationOwner(appId) </h4>
-         # get owner of application
+         # Get owner of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -135,7 +135,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> setApplicationUrl(appId, url) </h4>
-         # set url of application
+         # Set url of application
          > Arguments
          - (uint256) appId - application id
          - (string) url - application url
@@ -150,7 +150,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationUrl(appId) </h4>
-         # get url of application
+         # Get url of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -163,7 +163,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> setApplicationAddress(appId, appAddr) </h4>
-         # set address of application
+         # Set address of application
          > Arguments
          - (uint256) appId - application id
          - (address) appAddr - application address
@@ -178,7 +178,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationAddress(appId) </h4>
-         # get address of application
+         # Get address of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -191,7 +191,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> setApplicationStatus(appId) </h4>
-         # set status of application
+         # Set status of application
          > Arguments
          - (uint256) appId - application id
          > Emits
@@ -205,7 +205,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationStatus(appId) </h4>
-         # get status of application
+         # Get status of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -220,7 +220,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> ApplicationSaved </h4>
-         # get full info of saved application (emits on "save" method call)
+         # Get full info of saved application (emits on "save" method call)
          > Returns
          - (uint256) appId - application id
          - (string) name - application name
@@ -233,7 +233,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> ApplicationUrlUpdated </h4>
-         # get updated url of application (emits on "setApplicationUrl" method call)
+         # Get updated url of application (emits on "setApplicationUrl" method call)
          > Returns
          - (uint256) appId - application id
          - (string) url - application url
@@ -242,7 +242,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> ApplicationAddressUpdated </h4>
-         # get updated address of application (emits on "getApplicationAddress" method call)
+         # Get updated address of application (emits on "getApplicationAddress" method call)
          > Returns
          - (uint256) appId - application id
          - (address) appAddr - application address
@@ -251,7 +251,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> ApplicationStatusUpdated </h4>
-         # get updated status of application (emits on "setApplicationStatus" method call)
+         # Get updated status of application (emits on "setApplicationStatus" method call)
          > Returns
          - (uint256) appId - application id
          - (uint256) status - application status
