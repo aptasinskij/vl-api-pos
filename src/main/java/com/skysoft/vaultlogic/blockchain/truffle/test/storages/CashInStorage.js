@@ -1,6 +1,6 @@
 const assert = require('chai').assert;
 const CashInStorage = artifacts.require('CashInStorage.sol');
-const convertToNumber = require('../helpers').convertToNumber;
+const {convertToNumber} = require('../helpers');
 
 /*\
 * CashInStorage
@@ -81,12 +81,12 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> save(sessionId, application, status) </h4>
-         # save new cashInChannel
+         # Save new cashInChannel
          > Arguments
          - (uint256) sessionId - session id
          - (address) application - application address
          - (uint256) status - session status
-         > Returns
+         > Emits
          - (event) CashInSaved
         \*/
         it('save', () => {
@@ -99,7 +99,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> get(index) </h4>
-         # get all cashInChannel info
+         # Get all info of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          > Returns
@@ -126,7 +126,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getSessionId(index) </h4>
-         # get session id of cashInChannel
+         # Get session id of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          > Returns
@@ -139,7 +139,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationAddress(index) </h4>
-         # get application address of cashInChannel
+         # Get application address of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          > Returns
@@ -152,7 +152,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationAndSessionId(index) </h4>
-         # get application address and session id of cashInChannel
+         # Get application address and session id of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          > Returns
@@ -167,11 +167,11 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> setBalance(index, amount) </h4>
-         # save set balance of cashInChannel
+         # Save set balance of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (address) amount - cashInChannel money to insert amount
-         > Returns
+         > Emits
          - (event) CashInBalanceUpdated
         \*/
         it('setBalance', () => {
@@ -182,11 +182,11 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getBalance(index) </h4>
-         # get balance of cashInChannel
+         # Get balance of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (address) amount - cashInChannel amount
-         > Returns
+         > Emits
          - (event) CashInBalanceUpdated
         \*/
         it('getBalance', () => {
@@ -196,11 +196,11 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> setStatus(index) </h4>
-         # set status of cashInChannel
+         # Set status of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (uint256) status - cashInChannel status
-         > Returns
+         > Emits
          - (event) CashInStatusUpdated
         \*/
         it('setStatus', () => {
@@ -211,12 +211,12 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> addSplit(index, party, amount) </h4>
-         # add split to cashInChannel
+         # Add new split to cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (address) party - cashInChannel party
-         - (uint256) amount - cashInChannel amount
-         > Returns
+         - (uint256) amount - cashInChannel fee size
+         > Emits
          - (event) CashInSplitAdded
         \*/
         it('addSplit', () => {
@@ -228,11 +228,11 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> addSplit(index, parties, amounts) </h4>
-         # get status of cashInChannel
+         # Get status of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
-         - (address[]) parties - array of cashInChannel parties
-         - (uint256[]) amounts - array of cashInChannel amounts
+         - (address[]) parties - array of cashInChannel parties address
+         - (uint256[]) amounts - array of cashInChannel parties fee size
         \*/
         it('addSplits', () => {
             assert.notEqual(resAddSplits.receipt.transactionHash, '', 'transactionHash is empty');
@@ -242,7 +242,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getSplitSize(index) </h4>
-         # get split size of cashInChannel
+         # Get split size of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
           > Returns
@@ -256,7 +256,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getSplit(index, subIndex) </h4>
-         # get split size of cashInChannel
+         # Get split size of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (uint256) subIndex - cashInChannel split index in array
@@ -272,5 +272,46 @@ contract('CashInStorage', () => {
             assert.strictEqual(resGetSplit3[0], 5, 'split 8, subSplit 4: party is not equal');
             assert.strictEqual(resGetSplit3[1], 50, 'split 8, subSplit 0: amount is not equal');
         });
+
+        /* events description */
+
+        /*\
+         # <hr>
+         # <h4> CashInSaved </h4>
+         # Get info of saved cashInChannel (emits on "save" method call)
+         > Returns
+         - (uint256) channelId - channel id
+         - (uint256) sessionId - session id
+         - (address) application - application address
+         - (uint256) status - session status
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> CashInBalanceUpdated </h4>
+         # Get updated balance of cashInChannel (emits on "setBalance" method call)
+         > Returns
+         - (uint256) channelId - channel id
+         - (uint256) amount - channel balance
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> CashInStatusUpdated </h4>
+         # Get updated status of cashInChannel (emits on "setStatus" method call)
+         > Returns
+         - (uint256) channelId - channel id
+         - (uint256) status - channel status
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> CashInSplitAdded </h4>
+         # Get updated split info of cashInChannel (emits on "addSplit" method call)
+         > Returns
+         - (uint256) channelId - channel id
+         - (address) party - party address
+         - (uint256) amount - party balance
+        \*/
     })
 });

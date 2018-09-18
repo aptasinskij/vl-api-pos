@@ -1,0 +1,129 @@
+<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of SessionLib.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">const assert = require(&#39;chai&#39;).assert;
+const SessionLib = artifacts.require(&#39;SessionLib.sol&#39;);
+const CapitalHero = artifacts.require(&#39;CapitalHero.sol&#39;);
+const SessionStorage = artifacts.require(&#39;SessionStorage.sol&#39;);
+const Database = artifacts.require(&#39;Database.sol&#39;);
+const {convertToNumber} = require(&#39;..&#47;helpers&#39;);
+
+&#47;*\
+* SessionLib
+\*&#47;
+
+contract(&#39;SessionLib&#39;, () =&#62; {
+
+    describe(&#39;tests for &#34;read&#34; methods&#39;, () =&#62; {
+
+        let resGet;
+        let appInstance;
+        let resGetAppId;
+        let resGetToken;
+        let resGetStatus;
+
+        before(async () =&#62; {
+            appInstance = await CapitalHero.deployed();
+            const sessionLibInstance = await SessionLib.deployed();
+            const sessionStorageInstance = await SessionStorage.deployed();
+            const databaseInstance = await Database.deployed();
+
+            &#47;* save by SessionStorage method *&#47;
+            await sessionStorageInstance.save(0, 1, &#39;1a2b3c&#39;, 3);
+            &#47;* get *&#47;
+            resGet = await sessionLibInstance.get(databaseInstance.address, 0);
+            resGet = convertToNumber(resGet, true);
+            &#47;* getAppId *&#47;
+            resGetAppId = await sessionLibInstance.getAppId(databaseInstance.address, 0);
+            resGetAppId = Number(resGetAppId);
+            &#47;* getXToken *&#47;
+            resGetToken = await sessionLibInstance.getXToken(databaseInstance.address, 0);
+            &#47;* setStatus by SessionStorage method *&#47;
+            await sessionStorageInstance.setStatus(0, 2);
+            &#47;* getStatus *&#47;
+            resGetStatus = await sessionLibInstance.getStatus(databaseInstance.address, 0);
+            resGetStatus = Number(resGetStatus);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; get(self, index) &#60;&#47;h4&#62;
+         # Get all info of session
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) index - session id
+         &#62; Returns
+         - (uint256) appId - application id
+         - (string) xToken - session xToken
+         - (uint256) status - session status
+        \*&#47;
+        it(&#39;get&#39;, () =&#62; {
+            assert.strictEqual(resGet[0], 1, &#39;application id is not equal&#39;);
+            assert.strictEqual(resGet[1], &#39;1a2b3c&#39;, &#39;session xToken is not equal&#39;);
+            assert.strictEqual(resGet[2], 3, &#39;session status is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getAppId(self, index) &#60;&#47;h4&#62;
+         # Get application id of session
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) index - session id
+         &#62; Returns
+         - (uint256) appId - application id
+        \*&#47;
+        it(&#39;getAppId&#39;, () =&#62; {
+            assert.strictEqual(resGetAppId, 1, &#39;application id is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getXToken(self, index) &#60;&#47;h4&#62;
+         # Get xToken of session
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) index - session id
+         &#62; Returns
+         - (string) xToken - session xToken
+        \*&#47;
+        it(&#39;getToken&#39;, () =&#62; {
+            assert.strictEqual(resGetToken, &#39;1a2b3c&#39;, &#39;session xToken is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getStatus(self, index) &#60;&#47;h4&#62;
+         # Get status of session
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) index - session id
+         &#62; Returns
+         - (uint256) status - session status
+        \*&#47;
+        it(&#39;getStatus&#39;, () =&#62; {
+            assert.strictEqual(resGetStatus, 2, &#39;cashInChannel status is not equal&#39;);
+        });
+
+        &#47;* methods below are not tested, only description provided *&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; save(self, sessionId, appId, xToken, status) &#60;&#47;h4&#62;
+         # Save new session
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) sessionId - session id
+         - (uint256) appId - application id
+         - (string) xToken - session xToken
+         - (uint256) status - session status
+        \*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; setStatus(self, index, status) &#60;&#47;h4&#62;
+         # Set status of session
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) index - session id
+         - (string) status - session status
+        \*&#47;
+    })
+});</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>

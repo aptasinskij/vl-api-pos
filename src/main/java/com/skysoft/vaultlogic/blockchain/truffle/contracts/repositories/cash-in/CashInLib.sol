@@ -29,7 +29,7 @@ library CashInLib {
     }
 
     /// @dev size of both arrays (e.g. parties and fees) stored in separate field 'splitSize'
-    function get(address self, uint256 index) internal view returns(
+    function get(address self, uint256 index) public view returns(
         uint256 sessionId,
         address application,
         uint256 balance,
@@ -43,11 +43,11 @@ library CashInLib {
         splitSize = Database(self).getUintValue(string256(SPLIT_SIZE, index));
     }
 
-    function getSessionId(address self, uint256 index) internal view returns(uint256) {
+    function getSessionId(address self, uint256 index) public view returns(uint256) {
         return Database(self).getUintValue(string256(SESSION_ID, index));
     }
 
-    function getApplication(address self, uint256 index) internal view returns(address) {
+    function getApplication(address self, uint256 index) public view returns(address) {
         return Database(self).getAddressValue(string256(APPLICATION, index));
     }
 
@@ -55,7 +55,7 @@ library CashInLib {
         Database(self).setUintValue(string256(BALANCE, index), amount);
     }
 
-    function getBalance(address self, uint256 index) internal view returns (uint256) {
+    function getBalance(address self, uint256 index) public view returns (uint256) {
         return Database(self).getUintValue(string256(BALANCE, index));
     }
 
@@ -63,7 +63,7 @@ library CashInLib {
         Database(self).setUintValue(string256(STATUS, index), uint256(status));
     }
 
-    function getStatus(address self, uint256 index) internal view returns(uint256) {
+    function getStatus(address self, uint256 index) public view returns(uint256) {
         return Database(self).getUintValue(string256(STATUS, index));
     }
 
@@ -80,11 +80,11 @@ library CashInLib {
         }
     }
 
-    function getSplitSize(address self, uint256 index) internal view returns(uint256) {
+    function getSplitSize(address self, uint256 index) public view returns(uint256) {
         return Database(self).getUintValue(string256(SPLIT_SIZE, index));
     }
 
-    function getSplit(address self, uint256 index, uint256 subIndex) internal view returns(address party, uint256 fee) {
+    function getSplit(address self, uint256 index, uint256 subIndex) public view returns(address party, uint256 fee) {
         party = Database(self).getAddressValue(string256x2(SPLIT_PARTIES, index, subIndex));
         fee = Database(self).getUintValue(string256x2(SPLIT_FEES, index, subIndex));
     }

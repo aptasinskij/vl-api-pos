@@ -14,21 +14,21 @@ library SessionLib {
         Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, sessionId)), status);
     }
 
-    function get(address self, uint256 index) internal view returns (uint256 appId, string xToken, uint256 status) {
+    function get(address self, uint256 index) public view returns (uint256 appId, string xToken, uint256 status) {
         appId = Database(self).getUintValue(keccak256(abi.encodePacked(APP_ID, index)));
         xToken = Database(self).getStringValue(keccak256(abi.encodePacked(X_TOKEN, index)));
         status = Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, index)));
     }
 
-    function getAppId(address self, uint256 index) internal view returns (uint256) {
+    function getAppId(address self, uint256 index) public view returns (uint256) {
         return Database(self).getUintValue(keccak256(abi.encodePacked(APP_ID, index)));
     }
 
-    function getXToken(address self, uint256 index) internal view returns (string) {
+    function getXToken(address self, uint256 index) public view returns (string) {
         return Database(self).getStringValue(keccak256(abi.encodePacked(X_TOKEN, index)));
     }
 
-    function getStatus(address self, uint256 index) internal view returns (uint256) {
+    function getStatus(address self, uint256 index) public view returns (uint256) {
         return Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, index)));
     }
 
