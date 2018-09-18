@@ -1,6 +1,6 @@
 const assert = require('chai').assert;
 const ApplicationStorage = artifacts.require('ApplicationStorage.sol');
-const convertToNumber = require('../helpers').convertToNumber;
+const {convertToNumber} = require('../helpers');
 
 /*\
 * ApplicationStorage
@@ -67,7 +67,7 @@ contract('ApplicationStorage', () => {
          - (string) url - application url
          - (address) appAddr - application address
          - (uint256) status - application status
-         > Returns
+         > Emits
          - (event) ApplicationSaved
         \*/
         it('save', () => {
@@ -82,7 +82,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> get(appId) </h4>
-         # get all application info
+         # get all info of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -109,7 +109,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationName(appId) </h4>
-         # get application name
+         # get name of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -122,7 +122,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationOwner(appId) </h4>
-         # get application owner
+         # get owner of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -135,11 +135,11 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> setApplicationUrl(appId, url) </h4>
-         # set application url
+         # set url of application
          > Arguments
          - (uint256) appId - application id
          - (string) url - application url
-         > Returns
+         > Emits
          - (event) ApplicationUrlUpdated
         \*/
         it('setApplicationUrl', () => {
@@ -150,7 +150,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationUrl(appId) </h4>
-         # get application url
+         # get url of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -163,11 +163,11 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> setApplicationAddress(appId, appAddr) </h4>
-         # set application address
+         # set address of application
          > Arguments
          - (uint256) appId - application id
          - (address) appAddr - application address
-         > Returns
+         > Emits
          - (event) ApplicationAddressUpdated
         \*/
         it('setApplicationAddress', () => {
@@ -178,7 +178,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationAddress(appId) </h4>
-         # get application address
+         # get address of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -191,10 +191,10 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> setApplicationStatus(appId) </h4>
-         # set application status
+         # set status of application
          > Arguments
          - (uint256) appId - application id
-         > Returns
+         > Emits
          - (event) ApplicationStatusUpdated
         \*/
         it('setApplicationStatus', () => {
@@ -205,7 +205,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationStatus(appId) </h4>
-         # get application status
+         # get status of application
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -214,5 +214,47 @@ contract('ApplicationStorage', () => {
         it('getApplicationStatus', () => {
             assert.strictEqual(resGetApplicationStatus, 8, 'application status is not equal');
         });
+
+        /* events description */
+
+        /*\
+         # <hr>
+         # <h4> ApplicationSaved </h4>
+         # get full info of saved application (emits on "save" method call)
+         > Returns
+         - (uint256) appId - application id
+         - (string) name - application name
+         - (address) owner - application owner
+         - (string) url - application url
+         - (address) appAddr - application address
+         - (uint256) status - application status
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> ApplicationUrlUpdated </h4>
+         # get updated url of application (emits on "setApplicationUrl" method call)
+         > Returns
+         - (uint256) appId - application id
+         - (string) url - application url
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> ApplicationAddressUpdated </h4>
+         # get updated address of application (emits on "getApplicationAddress" method call)
+         > Returns
+         - (uint256) appId - application id
+         - (address) appAddr - application address
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> ApplicationStatusUpdated </h4>
+         # get updated status of application (emits on "setApplicationStatus" method call)
+         > Returns
+         - (uint256) appId - application id
+         - (uint256) status - application status
+        \*/
     })
 });

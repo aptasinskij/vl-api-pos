@@ -1,6 +1,6 @@
 <!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of ApplicationStorage.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">const assert = require(&#39;chai&#39;).assert;
 const ApplicationStorage = artifacts.require(&#39;ApplicationStorage.sol&#39;);
-const convertToNumber = require(&#39;..&#47;helpers&#39;).convertToNumber;
+const {convertToNumber} = require(&#39;..&#47;helpers&#39;);
 
 &#47;*\
 * ApplicationStorage
@@ -67,7 +67,7 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
          - (string) url - application url
          - (address) appAddr - application address
          - (uint256) status - application status
-         &#62; Returns
+         &#62; Emits
          - (event) ApplicationSaved
         \*&#47;
         it(&#39;save&#39;, () =&#62; {
@@ -82,7 +82,7 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; get(appId) &#60;&#47;h4&#62;
-         # get all application info
+         # get all info of application
          &#62; Arguments
          - (uint256) appId - application id
          &#62; Returns
@@ -109,7 +109,7 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getApplicationName(appId) &#60;&#47;h4&#62;
-         # get application name
+         # get name of application
          &#62; Arguments
          - (uint256) appId - application id
          &#62; Returns
@@ -122,7 +122,7 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getApplicationOwner(appId) &#60;&#47;h4&#62;
-         # get application owner
+         # get owner of application
          &#62; Arguments
          - (uint256) appId - application id
          &#62; Returns
@@ -135,11 +135,11 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; setApplicationUrl(appId, url) &#60;&#47;h4&#62;
-         # set application url
+         # set url of application
          &#62; Arguments
          - (uint256) appId - application id
          - (string) url - application url
-         &#62; Returns
+         &#62; Emits
          - (event) ApplicationUrlUpdated
         \*&#47;
         it(&#39;setApplicationUrl&#39;, () =&#62; {
@@ -150,7 +150,7 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getApplicationUrl(appId) &#60;&#47;h4&#62;
-         # get application url
+         # get url of application
          &#62; Arguments
          - (uint256) appId - application id
          &#62; Returns
@@ -163,11 +163,11 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; setApplicationAddress(appId, appAddr) &#60;&#47;h4&#62;
-         # set application address
+         # set address of application
          &#62; Arguments
          - (uint256) appId - application id
          - (address) appAddr - application address
-         &#62; Returns
+         &#62; Emits
          - (event) ApplicationAddressUpdated
         \*&#47;
         it(&#39;setApplicationAddress&#39;, () =&#62; {
@@ -178,7 +178,7 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getApplicationAddress(appId) &#60;&#47;h4&#62;
-         # get application address
+         # get address of application
          &#62; Arguments
          - (uint256) appId - application id
          &#62; Returns
@@ -191,10 +191,10 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; setApplicationStatus(appId) &#60;&#47;h4&#62;
-         # set application status
+         # set status of application
          &#62; Arguments
          - (uint256) appId - application id
-         &#62; Returns
+         &#62; Emits
          - (event) ApplicationStatusUpdated
         \*&#47;
         it(&#39;setApplicationStatus&#39;, () =&#62; {
@@ -205,7 +205,7 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getApplicationStatus(appId) &#60;&#47;h4&#62;
-         # get application status
+         # get status of application
          &#62; Arguments
          - (uint256) appId - application id
          &#62; Returns
@@ -214,5 +214,47 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         it(&#39;getApplicationStatus&#39;, () =&#62; {
             assert.strictEqual(resGetApplicationStatus, 8, &#39;application status is not equal&#39;);
         });
+
+        &#47;* events description *&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; ApplicationSaved &#60;&#47;h4&#62;
+         # get full info of saved application (emits on &#34;save&#34; method call)
+         &#62; Returns
+         - (uint256) appId - application id
+         - (string) name - application name
+         - (address) owner - application owner
+         - (string) url - application url
+         - (address) appAddr - application address
+         - (uint256) status - application status
+        \*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; ApplicationUrlUpdated &#60;&#47;h4&#62;
+         # get updated url of application (emits on &#34;setApplicationUrl&#34; method call)
+         &#62; Returns
+         - (uint256) appId - application id
+         - (string) url - application url
+        \*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; ApplicationAddressUpdated &#60;&#47;h4&#62;
+         # get updated address of application (emits on &#34;getApplicationAddress&#34; method call)
+         &#62; Returns
+         - (uint256) appId - application id
+         - (address) appAddr - application address
+        \*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; ApplicationStatusUpdated &#60;&#47;h4&#62;
+         # get updated status of application (emits on &#34;setApplicationStatus&#34; method call)
+         &#62; Returns
+         - (uint256) appId - application id
+         - (uint256) status - application status
+        \*&#47;
     })
 });</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>

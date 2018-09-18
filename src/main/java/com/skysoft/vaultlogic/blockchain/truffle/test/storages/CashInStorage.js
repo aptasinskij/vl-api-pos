@@ -1,6 +1,6 @@
 const assert = require('chai').assert;
 const CashInStorage = artifacts.require('CashInStorage.sol');
-const convertToNumber = require('../helpers').convertToNumber;
+const {convertToNumber} = require('../helpers');
 
 /*\
 * CashInStorage
@@ -86,7 +86,7 @@ contract('CashInStorage', () => {
          - (uint256) sessionId - session id
          - (address) application - application address
          - (uint256) status - session status
-         > Returns
+         > Emits
          - (event) CashInSaved
         \*/
         it('save', () => {
@@ -99,7 +99,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> get(index) </h4>
-         # get all cashInChannel info
+         # get all info of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          > Returns
@@ -171,7 +171,7 @@ contract('CashInStorage', () => {
          > Arguments
          - (uint256) index - cashInChannel id
          - (address) amount - cashInChannel money to insert amount
-         > Returns
+         > Emits
          - (event) CashInBalanceUpdated
         \*/
         it('setBalance', () => {
@@ -186,7 +186,7 @@ contract('CashInStorage', () => {
          > Arguments
          - (uint256) index - cashInChannel id
          - (address) amount - cashInChannel amount
-         > Returns
+         > Emits
          - (event) CashInBalanceUpdated
         \*/
         it('getBalance', () => {
@@ -200,7 +200,7 @@ contract('CashInStorage', () => {
          > Arguments
          - (uint256) index - cashInChannel id
          - (uint256) status - cashInChannel status
-         > Returns
+         > Emits
          - (event) CashInStatusUpdated
         \*/
         it('setStatus', () => {
@@ -216,7 +216,7 @@ contract('CashInStorage', () => {
          - (uint256) index - cashInChannel id
          - (address) party - cashInChannel party
          - (uint256) amount - cashInChannel amount
-         > Returns
+         > Emits
          - (event) CashInSplitAdded
         \*/
         it('addSplit', () => {
@@ -272,5 +272,46 @@ contract('CashInStorage', () => {
             assert.strictEqual(resGetSplit3[0], 5, 'split 8, subSplit 4: party is not equal');
             assert.strictEqual(resGetSplit3[1], 50, 'split 8, subSplit 0: amount is not equal');
         });
+
+        /* events description */
+
+        /*\
+         # <hr>
+         # <h4> CashInSaved </h4>
+         # get info of saved cashInChannel (emits on "save" method call)
+         > Returns
+         - (uint256) channelId - channel id
+         - (uint256) sessionId - session id
+         - (address) application - application address
+         - (uint256) status - session status
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> CashInBalanceUpdated </h4>
+         # get updated balance of cashInChannel (emits on "setBalance" method call)
+         > Returns
+         - (uint256) channelId - channel id
+         - (uint256) amount - channel balance
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> CashInStatusUpdated </h4>
+         # get updated status of cashInChannel (emits on "setStatus" method call)
+         > Returns
+         - (uint256) channelId - channel id
+         - (uint256) status - channel status
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> CashInSplitAdded </h4>
+         # get updated split info of cashInChannel (emits on "addSplit" method call)
+         > Returns
+         - (uint256) channelId - channel id
+         - (address) party - party address
+         - (uint256) amount - party balance
+        \*/
     })
 });

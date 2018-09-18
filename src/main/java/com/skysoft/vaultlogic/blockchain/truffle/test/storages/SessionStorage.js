@@ -58,7 +58,7 @@ contract('SessionStorage', () => {
          - (uint256) appId - application id
          - (string) xToken - session xToken
          - (uint256) status - session status
-         > Returns
+         > Emits
          - (event) Saved
         \*/
         it('save', () => {
@@ -152,7 +152,7 @@ contract('SessionStorage', () => {
          > Arguments
          - (uint256) index - session id
          - (uint256) status - session status
-         > Returns
+         > Emits
          - (event) StatusUpdated
         \*/
         it('setStatus', () => {
@@ -172,5 +172,27 @@ contract('SessionStorage', () => {
         it('getStatus', () => {
             assert.strictEqual(resGetStatus, 9, 'status is not equal');
         });
+
+        /* events description */
+
+        /*\
+         # <hr>
+         # <h4> Saved </h4>
+         # get info of saved session (emits on "save" method call)
+         > Returns
+         - (uint256) sessionId - session id
+         - (uint256) appId - application id
+         - (string) xToken - application xToken
+         - (uint256) status - application status
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> StatusUpdated </h4>
+         # get updated status of session (emits on "setStatus" method call)
+         > Returns
+         - (uint256) index - session id
+         - (uint256) status - session status
+        \*/
     })
 });
