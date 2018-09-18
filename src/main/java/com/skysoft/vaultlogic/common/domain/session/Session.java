@@ -8,6 +8,7 @@ import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 
+import java.math.BigInteger;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -24,7 +25,7 @@ public class Session extends AbstractAggregateRoot<Session> {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(updatable = false, insertable = false)
-    private Long id;
+    private BigInteger id;
 
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "application_id", nullable = false)

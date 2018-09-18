@@ -9,6 +9,6 @@ public class CashInCloseRequested {
 
     BigInteger channelId;
 
-    String xToken;
+    BigInteger sessionId;
 
 }

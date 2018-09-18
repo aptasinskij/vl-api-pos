@@ -3,7 +3,6 @@ package com.skysoft.vaultlogic.common.domain.cashin;
 import com.skysoft.vaultlogic.common.domain.cashin.events.*;
 import com.skysoft.vaultlogic.common.domain.session.Session;
 import lombok.Getter;
-import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
@@ -17,17 +16,12 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Entity
 public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
-
-    @NaturalId
     @Column(nullable = false)
     private BigInteger channelId;
 
@@ -61,7 +55,7 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
         return new CashInChannel(channelId, session, status);
     }
 
-    public CashInChannel emitCreated() {
+    public CashInChannel markCreated() {
         registerEvent(CashInCreated.of(this.session.getXToken(), this.channelId));
         return this;
     }
@@ -71,9 +65,9 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
         return andEvent(CashInOpened.of(this.channelId));
     }
 
-    public CashInChannel markHalfClosed(String xToken) {
+    public CashInChannel markHalfClosed(BigInteger sessionId) {
         this.status = Status.HALF_CLOSED;
-        return andEvent(CashInCloseRequested.of(this.channelId, xToken));
+        return andEvent(CashInCloseRequested.of(this.channelId, sessionId));
     }
 
     public CashInChannel markClosed() {

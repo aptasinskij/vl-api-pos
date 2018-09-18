@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
 import java.net.URI;
 
 import static java.lang.String.valueOf;
@@ -45,7 +46,7 @@ public class KeepAliveController {
     @PostMapping
     private void keepAlive(@RequestHeader(KEEP_ALIVE_TOKEN) String keepAliveToken, @RequestHeader(VAULT_LOGIC_TOKEN) String sessionId) {
         log.info("[x]---> Keep Alive request. Token: {}, Session: {}", keepAliveToken, sessionId);
-        String xToken = sessionRepository.findById(Long.valueOf(sessionId))
+        String xToken = sessionRepository.findById(new BigInteger(sessionId))
                 .orElseThrow(RuntimeException::new)
                 .getXToken();
         oAuth2RestTemplate.exchange(buildRequestEntity(xToken, keepAliveToken), String.class);

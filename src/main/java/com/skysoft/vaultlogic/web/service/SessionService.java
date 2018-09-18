@@ -10,4 +10,6 @@ public interface SessionService {
 
     void closeSession(BigInteger sessionId);
 
+    String getSessionXToken(BigInteger sessionId);
+
 }

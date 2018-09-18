@@ -44,7 +44,7 @@ public class CloudApplicationIndexController {
     public ResponseEntity<String> getApplicationIndexPage(@PathVariable Long appId, @RequestParam("token") String xToken) {
         URI appIndexUri = applicationService.getApplicationUri(appId);
         Session session = sessionService.createApplicationSession(appId, xToken);
-        ResponseEntity<String> responseEntity = getIndexPage(appIndexUri, session.getId());
+        ResponseEntity<String> responseEntity = getIndexPage(appIndexUri, session.getId().longValue());
         launchApplication(xToken);
         return responseEntity;
     }

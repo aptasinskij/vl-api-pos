@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 @Repository
-public interface CashInRepository extends JpaRepository<CashInChannel, Long> {
+public interface CashInRepository extends JpaRepository<CashInChannel, BigInteger> {
 
     Optional<CashInChannel> findByChannelId(BigInteger channelId);
 

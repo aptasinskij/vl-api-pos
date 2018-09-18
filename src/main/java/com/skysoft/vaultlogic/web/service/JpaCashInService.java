@@ -1,5 +1,6 @@
 package com.skysoft.vaultlogic.web.service;
 
+import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel;
 import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel.Status;
 import com.skysoft.vaultlogic.common.domain.cashin.CashInRepository;
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
@@ -9,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-
-import static com.skysoft.vaultlogic.common.domain.cashin.CashInChannel.newChannel;
 
 @Service
 public class JpaCashInService implements CashInService {
@@ -26,40 +25,38 @@ public class JpaCashInService implements CashInService {
 
     @Override
     @Transactional
-    public void createCashInChannel(BigInteger id, BigInteger sessionId, BigInteger status) {
-        sessionRepository.findById(sessionId.longValue())
-                .ifPresent(session -> cashInRepository.save(newChannel(id, session, Status.from(status)).emitCreated()));
+    public void createCashInChannel(BigInteger channelId, BigInteger sessionId, BigInteger status) {
+        sessionRepository.findById(sessionId)
+                .map(session -> CashInChannel.newChannel(channelId, session, Status.from(status)))
+                .map(CashInChannel::markCreated)
+                .ifPresent(cashInRepository::save);
     }
 
     @Override
     @Transactional
     public void confirmOpened(BigInteger channelId) {
-        cashInRepository.findByChannelId(channelId)
-                .ifPresent(channel -> cashInRepository.save(channel.markOpened()));
+        cashInRepository.findById(channelId).map(CashInChannel::markOpened).ifPresent(cashInRepository::save);
     }
 
     @Override
     @Transactional
     public void updateBalance(CashInsert event, String xToken) {
-        cashInRepository.findBySession_xTokenAndStatus(xToken, Status.OPENED).ifPresent(channel -> {
-            channel.updateBalance(event.getCurrentAmount());
-            cashInRepository.save(channel);
-        });
+        cashInRepository.findBySession_xTokenAndStatus(xToken, Status.OPENED)
+                .map(cashInChannel -> cashInChannel.updateBalance(event.getCurrentAmount()))
+                .ifPresent(cashInRepository::save);
     }
 
     @Override
     @Transactional
     public void closeCashInChannel(BigInteger channelId, BigInteger sessionId) {
-        //TODO update logic
-        /*cashInRepository.findByChannelId(channelId)
-                .ifPresent(channel -> cashInRepository.save(channel.markHalfClosed(xToken)));*/
+        cashInRepository.findById(channelId).map(cashInChannel -> cashInChannel.markHalfClosed(sessionId))
+                .ifPresent(cashInRepository::save);
     }
 
     @Override
     @Transactional
     public void confirmClosed(BigInteger channelId) {
-        cashInRepository.findByChannelId(channelId)
-                .ifPresent(channel -> cashInRepository.save(channel.markClosed()));
+        cashInRepository.findByChannelId(channelId).map(CashInChannel::markClosed).ifPresent(cashInRepository::save);
     }
 
 }
