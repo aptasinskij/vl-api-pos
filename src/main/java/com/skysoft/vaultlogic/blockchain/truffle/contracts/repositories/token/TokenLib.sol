@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "./Database.sol";
+import "../../storage/Database.sol";
 
 library TokenLib {
 
@@ -11,7 +11,7 @@ library TokenLib {
     }
 
     function get(address self, address customer) internal view returns (uint256) {
-        Database(self).getUintValue(keccak256(abi.encodePacked(TOKEN_AMOUNT, customer)));
+        return Database(self).getUintValue(keccak256(abi.encodePacked(TOKEN_AMOUNT, customer)));
     }
 
 }
