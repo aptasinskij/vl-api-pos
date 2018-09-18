@@ -5,7 +5,7 @@ import lombok.Value;
 import java.math.BigInteger;
 
 @Value(staticConstructor = "of")
-public class CashInCreated {
+public class CashInCreating {
 
     String xToken;
 

@@ -26,7 +26,7 @@ public class LocalCashInDomainEventsListener {
 
     @Async
     @TransactionalEventListener
-    public void created(CashInCreated event) {
+    public void created(CashInCreating event) {
         log.info("[x]---> CASH IN CREATED EVENT, ID: {}, XTOKEN: {}", event.getId(), event.getXToken());
         try {
             log.info("[x] Sending request to MAYA");
@@ -40,7 +40,7 @@ public class LocalCashInDomainEventsListener {
 
     @Async
     @TransactionalEventListener
-    public void opened(CashInOpened event) {
+    public void opened(CashInActivated event) {
         log.info("[x]---> CASH IN OPENED EVENT. ID: {}", event.getId());
         cashInOracle.confirmOpen(event.getId())
                 .sendAsync()

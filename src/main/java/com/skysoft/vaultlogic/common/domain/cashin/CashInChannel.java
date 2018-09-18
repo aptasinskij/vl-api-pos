@@ -55,24 +55,35 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
         return new CashInChannel(channelId, session, status);
     }
 
-    public CashInChannel markCreated() {
-        registerEvent(CashInCreated.of(this.session.getXToken(), this.channelId));
+    public CashInChannel markCreating() {
+        this.status = Status.CREATING;
+        registerEvent(CashInCreating.of(this.session.getXToken(), this.channelId));
         return this;
     }
 
-    public CashInChannel markOpened() {
-        this.status = Status.OPENED;
-        return andEvent(CashInOpened.of(this.channelId));
+    public CashInChannel markActive() {
+        this.status = Status.ACTIVE;
+        return andEvent(CashInActivated.of(this.channelId));
     }
 
-    public CashInChannel markHalfClosed(BigInteger sessionId) {
-        this.status = Status.HALF_CLOSED;
-        return andEvent(CashInCloseRequested.of(this.channelId, sessionId));
+    public CashInChannel markFailedToCreate() {
+        this.status = Status.FAILED_TO_CREATE;
+        return andEvent(CashInFailedToCreate.of(this.session.getXToken(), this.channelId));
+    }
+
+    public CashInChannel markCloseRequested() {
+        this.status = Status.CLOSE_REQUESTED;
+        return andEvent(CashInCloseRequested.of(this.channelId, this.session.getId()));
     }
 
     public CashInChannel markClosed() {
         this.status = Status.CLOSED;
         return andEvent(CashInClosed.of(this.channelId));
+    }
+
+    public CashInChannel markFailedToClose() {
+        this.status = Status.FAILED_TO_CLOSE;
+        return andEvent(CashInFailedToClose.of(this.channelId, this.session.getId()));
     }
 
     public <T extends Number> CashInChannel updateBalance(T amount) {
@@ -99,10 +110,12 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
 
     public enum Status {
 
-        PENDING(BigInteger.valueOf(0)),
-        OPENED(BigInteger.valueOf(1)),
-        HALF_CLOSED(BigInteger.valueOf(2)),
-        CLOSED(BigInteger.valueOf(3));
+        CREATING(BigInteger.valueOf(0)),
+        ACTIVE(BigInteger.valueOf(1)),
+        FAILED_TO_CREATE(BigInteger.valueOf(2)),
+        CLOSE_REQUESTED(BigInteger.valueOf(3)),
+        CLOSED(BigInteger.valueOf(4)),
+        FAILED_TO_CLOSE(BigInteger.valueOf(5));
 
         private final BigInteger value;
 
