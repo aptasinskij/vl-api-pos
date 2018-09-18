@@ -1,6 +1,7 @@
 package com.skysoft.vaultlogic.common.domain.session;
 
 import com.skysoft.vaultlogic.common.domain.application.Application;
+import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel;
 import com.skysoft.vaultlogic.common.domain.session.events.*;
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -37,6 +40,9 @@ public class Session extends AbstractAggregateRoot<Session> {
     @Enumerated(STRING)
     @Column(nullable = false)
     private Status status;
+
+    @OneToMany(mappedBy = "session", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<CashInChannel> cashInChannels = new ArrayList<>();
 
     public Session() {
     }

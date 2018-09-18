@@ -28,20 +28,20 @@ public class JpaCashInService implements CashInService {
     public void createCashInChannel(BigInteger channelId, BigInteger sessionId, BigInteger status) {
         sessionRepository.findById(sessionId)
                 .map(session -> CashInChannel.newChannel(channelId, session, Status.from(status)))
-                .map(CashInChannel::markCreated)
+                .map(CashInChannel::markCreating)
                 .ifPresent(cashInRepository::save);
     }
 
     @Override
     @Transactional
     public void confirmOpened(BigInteger channelId) {
-        cashInRepository.findById(channelId).map(CashInChannel::markOpened).ifPresent(cashInRepository::save);
+        cashInRepository.findById(channelId).map(CashInChannel::markActive).ifPresent(cashInRepository::save);
     }
 
     @Override
     @Transactional
     public void updateBalance(CashInsert event, String xToken) {
-        cashInRepository.findBySession_xTokenAndStatus(xToken, Status.OPENED)
+        cashInRepository.findBySession_xTokenAndStatus(xToken, Status.ACTIVE)
                 .map(cashInChannel -> cashInChannel.updateBalance(event.getCurrentAmount()))
                 .ifPresent(cashInRepository::save);
     }
@@ -49,7 +49,7 @@ public class JpaCashInService implements CashInService {
     @Override
     @Transactional
     public void closeCashInChannel(BigInteger channelId, BigInteger sessionId) {
-        cashInRepository.findById(channelId).map(cashInChannel -> cashInChannel.markHalfClosed(sessionId))
+        cashInRepository.findById(channelId).map(CashInChannel::markCloseRequested)
                 .ifPresent(cashInRepository::save);
     }
 
