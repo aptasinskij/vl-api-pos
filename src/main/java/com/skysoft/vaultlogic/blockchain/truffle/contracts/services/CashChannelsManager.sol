@@ -6,10 +6,11 @@ import "../repositories/session/ISessionStorage.sol";
 import "../repositories/application/IApplicationStorage.sol";
 import "../application/IApplication.sol";
 import "../oracles/ICashInOracle.sol";
+import "./ISessionManger.sol";
 
 contract CashChannelsManager is RegistryComponent {
 
-    enum CashInStatus { CREATING, FAILED_TO_CREATE, ACTIVE, CLOSE_REQUESTED, FAILED_TO_CLOSE, CLOSED }
+    enum CashInStatus { CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED, FAILED_TO_CLOSE }
 
     string constant COMPONENT_NAME = "cash-channels-manager";
 
@@ -17,6 +18,12 @@ contract CashChannelsManager is RegistryComponent {
     string constant CASH_IN_ORACLE = "cash-in-oracle";
     string constant SESSION_STORAGE = "session-storage";
     string constant APPLICATION_STORAGE = "application-storage";
+    string constant SESSION_MANAGER = "session-manager";
+
+    modifier sessionIsActive(uint256 _sessionId) {
+        require(ISessionManager(lookup(SESSION_MANAGER)).isActive(_sessionId), "Illegal state of the session");
+        _;
+    }
 
     constructor(address regAddr) RegistryComponent(regAddr) public {}
 
@@ -24,12 +31,13 @@ contract CashChannelsManager is RegistryComponent {
         return COMPONENT_NAME;
     }
 
-    function openCashInChannel(uint256 sessionId) external returns(uint256) {
+    ///@dev cash-in channel could be created only if:
+    ///session is active; application owns the session; there is no active channels in the session
+    function openCashInChannel(uint256 sessionId) external sessionIsActive(sessionId) returns(uint256 channelId) {
         uint256 appId = ISessionStorage(lookup(SESSION_STORAGE)).getAppId(sessionId);
         address application = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(appId);
-        uint256 channelId = ICashInStorage(lookup(CASH_IN_STORAGE)).save(sessionId, application, uint256(CashInStatus.CREATING));
+        channelId = ICashInStorage(lookup(CASH_IN_STORAGE)).save(sessionId, application, uint256(CashInStatus.CREATING));
         ICashInOracle(lookup(CASH_IN_ORACLE)).open(sessionId, channelId, uint256(CashInStatus.CREATING));
-        return channelId;
     }
 
     function updateCashInBalance(uint256 channelId, uint256 amount) external {
