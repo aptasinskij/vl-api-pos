@@ -3,6 +3,7 @@ package com.skysoft.vaultlogic.web.controller.local;
 import com.skysoft.vaultlogic.common.domain.session.Session;
 import com.skysoft.vaultlogic.web.service.ApplicationService;
 import com.skysoft.vaultlogic.web.service.SessionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.RequestEntity;
@@ -10,10 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigInteger;
 import java.net.URI;
 
 import static org.springframework.http.MediaType.TEXT_HTML;
 
+@Slf4j
 @RestController
 @Profile("ganache")
 @RequestMapping("/index/{appId}")
@@ -35,11 +38,11 @@ public class LocalApplicationIndexController {
     }
 
     @GetMapping
-    public ResponseEntity<String> getApplicationIndexPage(@PathVariable Long appId, @RequestParam("token") String xToken) {
+    public ResponseEntity<String> getApplicationIndexPage(@PathVariable BigInteger appId, @RequestParam("token") String xToken) {
         URI appIndexUri = applicationService.getApplicationUri(appId);
         Session session = sessionService.createApplicationSession(appId, xToken);
         RequestEntity<Void> request = buildRequest(appIndexUri, String.valueOf(session.getId()));
-        /*return ResponseEntity.ok(appIndexUri.toString());*/
+        sessionService.activate(session.getId());
         return restTemplate.exchange(request, String.class);
     }
 

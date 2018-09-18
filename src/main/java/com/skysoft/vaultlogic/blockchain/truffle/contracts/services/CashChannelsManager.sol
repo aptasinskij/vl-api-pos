@@ -6,10 +6,12 @@ import "../repositories/session/ISessionStorage.sol";
 import "../repositories/application/IApplicationStorage.sol";
 import "../application/IApplication.sol";
 import "../oracles/ICashInOracle.sol";
+import "./ISessionManager.sol";
+import "./ICashChannelsManager.sol";
 
-contract CashChannelsManager is RegistryComponent {
+contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
 
-    enum CashInStatus { PENDING, OPENED, HALF_CLOSED, CLOSED }
+    enum CashInStatus { CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED, FAILED_TO_CLOSE }
 
     string constant COMPONENT_NAME = "cash-channels-manager";
 
@@ -17,6 +19,7 @@ contract CashChannelsManager is RegistryComponent {
     string constant CASH_IN_ORACLE = "cash-in-oracle";
     string constant SESSION_STORAGE = "session-storage";
     string constant APPLICATION_STORAGE = "application-storage";
+    string constant SESSION_MANAGER = "session-manager";
 
     constructor(address regAddr) RegistryComponent(regAddr) public {}
 
@@ -24,12 +27,15 @@ contract CashChannelsManager is RegistryComponent {
         return COMPONENT_NAME;
     }
 
-    function openCashInChannel(uint256 sessionId) external returns(uint256) {
-        uint256 appId = ISessionStorage(lookup(SESSION_STORAGE)).getAppId(sessionId);
-        address application = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(appId);
-        uint256 channelId = ICashInStorage(lookup(CASH_IN_STORAGE)).save(sessionId, application, uint256(CashInStatus.PENDING));
-        ICashInOracle(lookup(CASH_IN_ORACLE)).open(sessionId, channelId, uint256(CashInStatus.PENDING));
-        return channelId;
+    ///@dev cash-in channel could be created only if:
+    ///session is active; application owns the session; there is no active channels in the session
+    function openCashInChannel(uint256 _sessionId, address _application) external returns(uint256 channelId) {
+        require(getSessionManager().isActive(_sessionId), "Illegal state of the session");
+        ISessionStorage sessionStorage = getSessionStorage();
+        address application = getApplicationStorage().getApplicationAddress(sessionStorage.getAppId(_sessionId));
+        require(application == _application, "Illegal access");
+        channelId = getCashInStorage().save(_sessionId, application, uint256(CashInStatus.CREATING));
+        ICashInOracle(lookup(CASH_IN_ORACLE)).open(_sessionId, channelId, uint256(CashInStatus.CREATING));
     }
 
     function updateCashInBalance(uint256 channelId, uint256 amount) external {
@@ -41,14 +47,14 @@ contract CashChannelsManager is RegistryComponent {
     }
 
     function closeCashInChannel(uint256 sessionId, uint256 channelId) external {
-        ICashInStorage(lookup(CASH_IN_STORAGE)).setStatus(channelId, uint256(CashInStatus.HALF_CLOSED));
+        ICashInStorage(lookup(CASH_IN_STORAGE)).setStatus(channelId, uint256(CashInStatus.CLOSE_REQUESTED));
         ICashInOracle(lookup(CASH_IN_ORACLE)).close(sessionId, channelId);
     }
 
     function confirmOpen(uint256 channelId) external {
         ICashInStorage cashInStorage = ICashInStorage(lookup(CASH_IN_STORAGE));
         (address application, uint256 sessionId) = cashInStorage.getApplicationAndSessionId(channelId);
-        cashInStorage.setStatus(channelId, uint256(CashInStatus.OPENED));
+        cashInStorage.setStatus(channelId, uint256(CashInStatus.ACTIVE));
         IApplication(application).cashInChannelOpened(channelId, sessionId);
     }
 
@@ -57,6 +63,22 @@ contract CashChannelsManager is RegistryComponent {
         (address application, uint256 sessionId) = cashInRepo.getApplicationAndSessionId(channelId);
         cashInRepo.setStatus(channelId, uint256(CashInStatus.CLOSED));
         IApplication(application).cashInChannelClosed(channelId, sessionId);
+    }
+
+    function getSessionManager() private returns(ISessionManager) {
+        return ISessionManager(lookup(SESSION_MANAGER));
+    }
+
+    function getSessionStorage() private view returns(ISessionStorage) {
+        return ISessionStorage(lookup(SESSION_STORAGE));
+    }
+
+    function getApplicationStorage() private view returns(IApplicationStorage) {
+        return IApplicationStorage(lookup(APPLICATION_STORAGE));
+    }
+
+    function getCashInStorage() private view returns(ICashInStorage) {
+        return ICashInStorage(lookup(CASH_IN_STORAGE));
     }
 
 }

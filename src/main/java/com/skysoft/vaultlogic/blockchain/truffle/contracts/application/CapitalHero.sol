@@ -19,7 +19,7 @@ contract CapitalHero is IApplication, RegistryDependent {
     constructor(address regAddr) RegistryDependent(regAddr) public {}
 
     function openCashInChannel(uint256 sessionId) external {
-        ICashChannelsManager(componentForName(CASH_CHANNELS_MANAGER)).openCashInChannel(sessionId);
+        ICashChannelsManager(componentForName(CASH_CHANNELS_MANAGER)).openCashInChannel(sessionId, address(this));
     }
 
     function closeCashInChannel(uint256 sessionId, uint256 channelId) external {

@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.storages.local.session;
+package com.skysoft.vaultlogic.blockchain.handlers.storages.ganache.session;
 
 import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.SessionStorage.SavedEventResponse;

@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 interface ICashChannelsManager {
     
-    function openCashInChannel(uint256 sessionId) external returns(uint256);
+    function openCashInChannel(uint256 _sessionId, address _application) external returns(uint256);
 
     function closeCashInChannel(uint256 sessionId, uint256 channelId) external;
 

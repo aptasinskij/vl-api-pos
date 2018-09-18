@@ -1,14 +1,16 @@
 package com.skysoft.vaultlogic.common.domain.session;
 
 import com.skysoft.vaultlogic.common.domain.application.Application;
+import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel;
 import com.skysoft.vaultlogic.common.domain.session.events.*;
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
-
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -38,6 +40,9 @@ public class Session extends AbstractAggregateRoot<Session> {
     @Enumerated(STRING)
     @Column(nullable = false)
     private Status status;
+
+    @OneToMany(mappedBy = "session", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<CashInChannel> cashInChannels = new ArrayList<>();
 
     public Session() {
     }
@@ -96,20 +101,25 @@ public class Session extends AbstractAggregateRoot<Session> {
 
     public enum Status {
 
-        CREATING(1), ACTIVE(2), FAILED_TO_CREATE(3), CLOSE_REQUESTED(4), CLOSED(5), FAILED_TO_CLOSE(6);
+        CREATING(BigInteger.valueOf(0)),
+        ACTIVE(BigInteger.valueOf(1)),
+        FAILED_TO_CREATE(BigInteger.valueOf(2)),
+        CLOSE_REQUESTED(BigInteger.valueOf(3)),
+        CLOSED(BigInteger.valueOf(4)),
+        FAILED_TO_CLOSE(BigInteger.valueOf(5));
 
-        private final int value;
+        private final BigInteger value;
 
-        Status(int value) {
+        Status(BigInteger value) {
             this.value = value;
         }
 
-        public static Status from(int value) {
+        public static Status from(BigInteger value) {
             return Stream.of(values()).filter(equalTo(value)).findAny().orElseThrow(RuntimeException::new);
         }
 
-        private static Predicate<Session.Status> equalTo(int value) {
-            return status -> status.value == value;
+        private static Predicate<Session.Status> equalTo(BigInteger value) {
+            return status -> status.value.equals(value);
         }
 
     }
