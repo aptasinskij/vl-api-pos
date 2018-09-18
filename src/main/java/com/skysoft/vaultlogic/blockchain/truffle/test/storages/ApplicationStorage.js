@@ -59,7 +59,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> save(appId, name, owner, url, appAddr, status) </h4>
-         # Description: use to save new application
+         # save new application
          > Arguments
          - (uint256) appId - application id
          - (string) name - application name
@@ -82,7 +82,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> get(appId) </h4>
-         # Description: use to get all application info
+         # get all application info
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -109,7 +109,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationName(appId) </h4>
-         # Description: use to get application name
+         # get application name
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -122,7 +122,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationOwner(appId) </h4>
-         # Description: use to get application owner
+         # get application owner
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -135,7 +135,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> setApplicationUrl(appId, url) </h4>
-         # Description: use to set application url
+         # set application url
          > Arguments
          - (uint256) appId - application id
          - (string) url - application url
@@ -150,7 +150,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationUrl(appId) </h4>
-         # Description: use to get application url
+         # get application url
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -163,7 +163,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> setApplicationAddress(appId, appAddr) </h4>
-         # Description: use to set application address
+         # set application address
          > Arguments
          - (uint256) appId - application id
          - (address) appAddr - application address
@@ -178,7 +178,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationAddress(appId) </h4>
-         # Description: use to get application address
+         # get application address
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -191,7 +191,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> setApplicationStatus(appId) </h4>
-         # Description: use to set application status
+         # set application status
          > Arguments
          - (uint256) appId - application id
          > Returns
@@ -205,7 +205,7 @@ contract('ApplicationStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationStatus(appId) </h4>
-         # Description: use to get application status
+         # get application status
          > Arguments
          - (uint256) appId - application id
          > Returns
