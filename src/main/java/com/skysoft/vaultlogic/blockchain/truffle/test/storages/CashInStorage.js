@@ -81,7 +81,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> save(sessionId, application, status) </h4>
-         # Description: use to save new cashInChannel
+         # save new cashInChannel
          > Arguments
          - (uint256) sessionId - session id
          - (address) application - application address
@@ -99,7 +99,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> get(index) </h4>
-         # Description: use to get all cashInChannel info
+         # get all cashInChannel info
          > Arguments
          - (uint256) index - cashInChannel id
          > Returns
@@ -126,7 +126,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getSessionId(index) </h4>
-         # Description: use to get session id of cashInChannel
+         # get session id of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          > Returns
@@ -139,7 +139,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationAddress(index) </h4>
-         # Description: use to get application address of cashInChannel
+         # get application address of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          > Returns
@@ -152,7 +152,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getApplicationAndSessionId(index) </h4>
-         # Description: use to get application address and session id of cashInChannel
+         # get application address and session id of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          > Returns
@@ -167,7 +167,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> setBalance(index, amount) </h4>
-         # Description: use to save set balance of cashInChannel
+         # save set balance of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (address) amount - cashInChannel money to insert amount
@@ -182,7 +182,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getBalance(index) </h4>
-         # Description: use to get balance of cashInChannel
+         # get balance of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (address) amount - cashInChannel amount
@@ -196,7 +196,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> setStatus(index) </h4>
-         # Description: use to set status of cashInChannel
+         # set status of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (uint256) status - cashInChannel status
@@ -211,7 +211,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> addSplit(index, party, amount) </h4>
-         # Description: use to add split to cashInChannel
+         # add split to cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (address) party - cashInChannel party
@@ -228,7 +228,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> addSplit(index, parties, amounts) </h4>
-         # Description: use to get status of cashInChannel
+         # get status of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (address[]) parties - array of cashInChannel parties
@@ -242,7 +242,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getSplitSize(index) </h4>
-         # Description: use to get split size of cashInChannel
+         # get split size of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
           > Returns
@@ -256,7 +256,7 @@ contract('CashInStorage', () => {
         /*\
          # <hr>
          # <h4> getSplit(index, subIndex) </h4>
-         # Description: use to get split size of cashInChannel
+         # get split size of cashInChannel
          > Arguments
          - (uint256) index - cashInChannel id
          - (uint256) subIndex - cashInChannel split index in array

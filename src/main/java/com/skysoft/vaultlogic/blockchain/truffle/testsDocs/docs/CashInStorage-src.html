@@ -81,7 +81,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; save(sessionId, application, status) &#60;&#47;h4&#62;
-         # Description: use to save new cashInChannel
+         # save new cashInChannel
          &#62; Arguments
          - (uint256) sessionId - session id
          - (address) application - application address
@@ -93,13 +93,13 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
             assert.strictEqual(resSave.sessionId, 1, &#39;sessionId is not equal&#39;);
             assert.strictEqual(resSave.application, 2, &#39;application address is not equal&#39;);
             assert.strictEqual(resSave.status, 3, &#39;status is not equal&#39;);
-            assert.strictEqual(resSave.index, 0, &#39;index is not equal&#39;);
+            assert.strictEqual(resSave.channelId, 0, &#39;index is not equal&#39;);
         });
 
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; get(index) &#60;&#47;h4&#62;
-         # Description: use to get all cashInChannel info
+         # get all cashInChannel info
          &#62; Arguments
          - (uint256) index - cashInChannel id
          &#62; Returns
@@ -126,7 +126,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getSessionId(index) &#60;&#47;h4&#62;
-         # Description: use to get session id of cashInChannel
+         # get session id of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          &#62; Returns
@@ -139,7 +139,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getApplicationAddress(index) &#60;&#47;h4&#62;
-         # Description: use to get application address of cashInChannel
+         # get application address of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          &#62; Returns
@@ -152,7 +152,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getApplicationAndSessionId(index) &#60;&#47;h4&#62;
-         # Description: use to get application address and session id of cashInChannel
+         # get application address and session id of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          &#62; Returns
@@ -167,7 +167,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; setBalance(index, amount) &#60;&#47;h4&#62;
-         # Description: use to save set balance of cashInChannel
+         # save set balance of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (address) amount - cashInChannel money to insert amount
@@ -175,14 +175,14 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
          - (event) CashInBalanceUpdated
         \*&#47;
         it(&#39;setBalance&#39;, () =&#62; {
-            assert.strictEqual(resSetBalance.index, 0, &#39;index is not equal&#39;);
+            assert.strictEqual(resSetBalance.channelId, 0, &#39;index is not equal&#39;);
             assert.strictEqual(resSetBalance.amount, 500, &#39;amount is not equal&#39;);
         });
 
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getBalance(index) &#60;&#47;h4&#62;
-         # Description: use to get balance of cashInChannel
+         # get balance of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (address) amount - cashInChannel amount
@@ -196,7 +196,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; setStatus(index) &#60;&#47;h4&#62;
-         # Description: use to set status of cashInChannel
+         # set status of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (uint256) status - cashInChannel status
@@ -204,14 +204,14 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
          - (event) CashInStatusUpdated
         \*&#47;
         it(&#39;setStatus&#39;, () =&#62; {
-            assert.strictEqual(resSetStatus.index, 0, &#39;index is not equal&#39;);
+            assert.strictEqual(resSetStatus.channelId, 0, &#39;index is not equal&#39;);
             assert.strictEqual(resSetStatus.status, 5, &#39;status is not equal&#39;);
         });
 
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; addSplit(index, party, amount) &#60;&#47;h4&#62;
-         # Description: use to add split to cashInChannel
+         # add split to cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (address) party - cashInChannel party
@@ -220,7 +220,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
          - (event) CashInSplitAdded
         \*&#47;
         it(&#39;addSplit&#39;, () =&#62; {
-            assert.strictEqual(resAddSplit.index, 0, &#39;index is not equal&#39;);
+            assert.strictEqual(resAddSplit.channelId, 0, &#39;index is not equal&#39;);
             assert.strictEqual(resAddSplit.party, 10, &#39;party is not equal&#39;);
             assert.strictEqual(resAddSplit.amount, 20, &#39;amount is not equal&#39;);
         });
@@ -228,7 +228,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; addSplit(index, parties, amounts) &#60;&#47;h4&#62;
-         # Description: use to get status of cashInChannel
+         # get status of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (address[]) parties - array of cashInChannel parties
@@ -242,7 +242,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getSplitSize(index) &#60;&#47;h4&#62;
-         # Description: use to get split size of cashInChannel
+         # get split size of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
           &#62; Returns
@@ -256,7 +256,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getSplit(index, subIndex) &#60;&#47;h4&#62;
-         # Description: use to get split size of cashInChannel
+         # get split size of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (uint256) subIndex - cashInChannel split index in array
