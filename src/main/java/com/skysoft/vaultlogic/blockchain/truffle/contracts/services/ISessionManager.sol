@@ -6,4 +6,6 @@ interface ISessionManager {
 
     function closeSession(uint256 sessionId) external;
 
+    function isActive(uint256 sessionId) external view returns(bool);
+
 }
