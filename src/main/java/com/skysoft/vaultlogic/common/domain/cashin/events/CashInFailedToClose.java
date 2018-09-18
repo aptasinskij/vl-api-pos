@@ -5,7 +5,7 @@ import lombok.Value;
 import java.math.BigInteger;
 
 @Value(staticConstructor = "of")
-public class CashInCloseRequested {
+public class CashInFailedToClose {
 
     BigInteger channelId;
 

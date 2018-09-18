@@ -6,16 +6,13 @@ import com.skysoft.vaultlogic.web.service.SessionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigInteger;
 import java.net.URI;
-import java.util.Random;
 
 import static org.springframework.http.MediaType.TEXT_HTML;
 
@@ -44,26 +41,9 @@ public class LocalApplicationIndexController {
     public ResponseEntity<String> getApplicationIndexPage(@PathVariable BigInteger appId, @RequestParam("token") String xToken) {
         URI appIndexUri = applicationService.getApplicationUri(appId);
         Session session = sessionService.createApplicationSession(appId, xToken);
-        try {
-            RequestEntity<Void> request = buildRequest(appIndexUri, String.valueOf(session.getId()));
-            emulateRequestToMaya();
-            sessionService.activate(session);
-            return restTemplate.exchange(request, String.class);
-        } catch (HttpClientErrorException e) {
-            sessionService.failedToCreate(session);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    private void emulateRequestToMaya() {
-        try {
-            Thread.sleep(1500);
-            if (new Random().nextBoolean()) return;
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            log.error("[x] Thread was interrupted");
-        }
+        RequestEntity<Void> request = buildRequest(appIndexUri, String.valueOf(session.getId()));
+        sessionService.activate(session.getId());
+        return restTemplate.exchange(request, String.class);
     }
 
     private RequestEntity<Void> buildRequest(URI appIndexUri, String token) {

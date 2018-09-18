@@ -1,8 +1,9 @@
 package com.skysoft.vaultlogic.common.listeners;
 
 import com.skysoft.vaultlogic.blockchain.contracts.CashInOracle;
+import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel;
+import com.skysoft.vaultlogic.common.domain.cashin.CashInRepository;
 import com.skysoft.vaultlogic.common.domain.cashin.events.*;
-import com.skysoft.vaultlogic.web.service.CashInService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -15,19 +16,20 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Profile("ganache")
 public class LocalCashInDomainEventsListener {
 
-    private final CashInService cashInService;
     private final CashInOracle cashInOracle;
 
+    private final CashInRepository cashInRepository;
+
     @Autowired
-    public LocalCashInDomainEventsListener(CashInService cashInService, CashInOracle cashInOracle) {
-        this.cashInService = cashInService;
+    public LocalCashInDomainEventsListener(CashInOracle cashInOracle, CashInRepository repository) {
+        this.cashInRepository = repository;
         this.cashInOracle = cashInOracle;
     }
 
     @Async
     @TransactionalEventListener
-    public void created(CashInCreated event) {
-        log.info("[x]---> CASH IN CREATED EVENT, ID: {}, XTOKEN: {}", event.getId(), event.getXToken());
+    public void creating(CashInCreating event) {
+        log.info("[x]---> CASH IN CREATING EVENT, ID: {}", event.getChannelId());
         try {
             log.info("[x] Sending request to MAYA");
             Thread.sleep(1000);
@@ -35,14 +37,14 @@ public class LocalCashInDomainEventsListener {
             log.warn("[x] Thread was interrupted", e);
             Thread.currentThread().interrupt();
         }
-        cashInService.confirmOpened(event.getId());
+        cashInRepository.findById(event.getChannelId()).map(CashInChannel::markActive).ifPresent(cashInRepository::save);
     }
 
     @Async
     @TransactionalEventListener
-    public void opened(CashInOpened event) {
-        log.info("[x]---> CASH IN OPENED EVENT. ID: {}", event.getId());
-        cashInOracle.confirmOpen(event.getId())
+    public void activated(CashInActivated event) {
+        log.info("[x]---> CASH IN ACTIVATED EVENT. ID: {}", event.getChannelId());
+        cashInOracle.confirmOpen(event.getChannelId())
                 .sendAsync()
                 .thenAccept(tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()))
                 .exceptionally(th -> {
@@ -53,8 +55,15 @@ public class LocalCashInDomainEventsListener {
 
     @Async
     @TransactionalEventListener
+    public void failedToCreate(CashInFailedToCreate event) {
+        log.info("[x]---> CASH IN FAILED TO CREATE. ID: {}");
+        //TODO add call to CashInOracle#failedToCreate
+    }
+
+    @Async
+    @TransactionalEventListener
     public void closeRequested(CashInCloseRequested event) {
-        log.info("[x]---> CASH IN CLOSE REQUESTED. ID: {}, X-TOKEN: {} ", event.getChannelId(), event.getSessionId());
+        log.info("[x]---> CASH IN CLOSE REQUESTED. ID: {}", event.getChannelId());
         try {
             log.info("[x] Sending: CLOSE CASH ACCEPTOR");
             Thread.sleep(1000);
@@ -62,7 +71,7 @@ public class LocalCashInDomainEventsListener {
             log.warn("[x] Thread was interrupted", e);
             Thread.currentThread().interrupt();
         }
-        cashInService.confirmClosed(event.getChannelId());
+        cashInRepository.findByChannelId(event.getChannelId()).map(CashInChannel::markClosed).ifPresent(cashInRepository::save);
     }
 
     @Async
@@ -75,6 +84,13 @@ public class LocalCashInDomainEventsListener {
                     log.error("[x] Error during confirmation", th);
                     return null;
                 });
+    }
+
+    @Async
+    @TransactionalEventListener
+    public void failedToClose(CashInFailedToCreate event) {
+        log.info("[x]---> CASH IN FAILED TO CREATE. ID: {}");
+        //TODO add call to CashInOracle#failedToCreate
     }
 
     @Async
