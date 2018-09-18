@@ -3,6 +3,7 @@ package com.skysoft.vaultlogic.web.service;
 import com.skysoft.vaultlogic.common.domain.application.Application;
 import com.skysoft.vaultlogic.common.domain.application.projections.SmartContractApplication;
 
+import java.math.BigInteger;
 import java.net.URI;
 
 public interface ApplicationService {
@@ -13,6 +14,6 @@ public interface ApplicationService {
 
     SmartContractApplication findSmartContractApplicationByName(String name);
 
-    URI getApplicationUri(Long appId);
+    URI getApplicationUri(BigInteger applicationId);
 
 }
