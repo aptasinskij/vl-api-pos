@@ -44,8 +44,9 @@ public class JpaSessionService implements SessionService {
 
     @Override
     @Transactional
-    public void activate(Session session) {
-        sessionRepo.save(session.markActive());
+    public void activate(BigInteger sessionId) {
+        Session session = sessionRepo.getOne(sessionId).markActive();
+        sessionRepo.save(session);
     }
 
     @Override
