@@ -17,7 +17,7 @@ contract TokenStorage is RegistryComponent {
     }
 
     function set(address customer, uint256 amount) public {
-        return lookup(DATABASE).set(customer, amount);
+        lookup(DATABASE).set(customer, amount);
     }
 
     function get(address consumer) public view returns (uint256) {
