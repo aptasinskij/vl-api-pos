@@ -9,7 +9,7 @@ import "../oracles/ICashInOracle.sol";
 
 contract CashChannelsManager is RegistryComponent {
 
-    enum CashInStatus { PENDING, OPENED, HALF_CLOSED, CLOSED }
+    enum CashInStatus { CREATING, FAILED_TO_CREATE, ACTIVE, CLOSE_REQUESTED, FAILED_TO_CLOSE, CLOSED }
 
     string constant COMPONENT_NAME = "cash-channels-manager";
 
@@ -27,8 +27,8 @@ contract CashChannelsManager is RegistryComponent {
     function openCashInChannel(uint256 sessionId) external returns(uint256) {
         uint256 appId = ISessionStorage(lookup(SESSION_STORAGE)).getAppId(sessionId);
         address application = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(appId);
-        uint256 channelId = ICashInStorage(lookup(CASH_IN_STORAGE)).save(sessionId, application, uint256(CashInStatus.PENDING));
-        ICashInOracle(lookup(CASH_IN_ORACLE)).open(sessionId, channelId, uint256(CashInStatus.PENDING));
+        uint256 channelId = ICashInStorage(lookup(CASH_IN_STORAGE)).save(sessionId, application, uint256(CashInStatus.CREATING));
+        ICashInOracle(lookup(CASH_IN_ORACLE)).open(sessionId, channelId, uint256(CashInStatus.CREATING));
         return channelId;
     }
 
@@ -41,7 +41,7 @@ contract CashChannelsManager is RegistryComponent {
     }
 
     function closeCashInChannel(uint256 sessionId, uint256 channelId) external {
-        ICashInStorage(lookup(CASH_IN_STORAGE)).setStatus(channelId, uint256(CashInStatus.HALF_CLOSED));
+        ICashInStorage(lookup(CASH_IN_STORAGE)).setStatus(channelId, uint256(CashInStatus.CLOSE_REQUESTED));
         ICashInOracle(lookup(CASH_IN_ORACLE)).close(sessionId, channelId);
     }
 
