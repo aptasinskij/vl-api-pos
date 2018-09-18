@@ -7,8 +7,6 @@ import java.math.BigInteger;
 @Value(staticConstructor = "of")
 public class CashInFailedToClose {
 
-    BigInteger id;
-
-    BigInteger sessionId;
+    BigInteger channelId;
 
 }

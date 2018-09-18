@@ -7,8 +7,6 @@ import java.math.BigInteger;
 @Value(staticConstructor = "of")
 public class CashInFailedToCreate {
 
-    String xToken;
-
-    BigInteger id;
+    BigInteger channelId;
 
 }

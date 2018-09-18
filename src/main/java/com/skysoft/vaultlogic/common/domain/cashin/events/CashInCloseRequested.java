@@ -9,6 +9,4 @@ public class CashInCloseRequested {
 
     BigInteger channelId;
 
-    BigInteger sessionId;
-
 }

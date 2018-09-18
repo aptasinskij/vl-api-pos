@@ -57,8 +57,7 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
 
     public CashInChannel markCreating() {
         this.status = Status.CREATING;
-        registerEvent(CashInCreating.of(this.session.getXToken(), this.channelId));
-        return this;
+        return andEvent(CashInCreating.of(this.channelId));
     }
 
     public CashInChannel markActive() {
@@ -68,12 +67,12 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
 
     public CashInChannel markFailedToCreate() {
         this.status = Status.FAILED_TO_CREATE;
-        return andEvent(CashInFailedToCreate.of(this.session.getXToken(), this.channelId));
+        return andEvent(CashInFailedToCreate.of(this.channelId));
     }
 
     public CashInChannel markCloseRequested() {
         this.status = Status.CLOSE_REQUESTED;
-        return andEvent(CashInCloseRequested.of(this.channelId, this.session.getId()));
+        return andEvent(CashInCloseRequested.of(this.channelId));
     }
 
     public CashInChannel markClosed() {
@@ -83,7 +82,7 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
 
     public CashInChannel markFailedToClose() {
         this.status = Status.FAILED_TO_CLOSE;
-        return andEvent(CashInFailedToClose.of(this.channelId, this.session.getId()));
+        return andEvent(CashInFailedToClose.of(this.channelId));
     }
 
     public <T extends Number> CashInChannel updateBalance(T amount) {

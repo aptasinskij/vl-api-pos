@@ -7,6 +7,6 @@ import java.math.BigInteger;
 @Value(staticConstructor = "of")
 public class CashInActivated {
 
-    BigInteger id;
+    BigInteger channelId;
 
 }

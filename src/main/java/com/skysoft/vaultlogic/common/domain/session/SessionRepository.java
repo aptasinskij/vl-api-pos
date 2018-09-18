@@ -17,4 +17,6 @@ public interface SessionRepository extends JpaRepository<Session, BigInteger> {
 
     SessionXToken findSessionXTokenById(BigInteger sessionId);
 
+    SessionXToken findSessionXTokenByCashInChannels_ChannelId(BigInteger channelId);
+
 }
