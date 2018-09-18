@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.blockchain.handlers.storages.local.application;
+package com.skysoft.vaultlogic.blockchain.handlers.storages.ganache.application;
 
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage;
 import com.skysoft.vaultlogic.blockchain.contracts.ApplicationStorage.ApplicationAddressUpdatedEventResponse;
