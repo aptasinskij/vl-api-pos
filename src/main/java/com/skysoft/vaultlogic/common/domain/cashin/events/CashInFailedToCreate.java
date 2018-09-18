@@ -5,8 +5,8 @@ import lombok.Value;
 import java.math.BigInteger;
 
 @Value(staticConstructor = "of")
-public class CashInOpened {
+public class CashInFailedToCreate {
 
-    BigInteger id;
+    BigInteger channelId;
 
 }
