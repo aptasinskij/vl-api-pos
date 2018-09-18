@@ -7,7 +7,6 @@ import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
-
 import java.math.BigInteger;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -96,7 +95,7 @@ public class Session extends AbstractAggregateRoot<Session> {
 
     public enum Status {
 
-        CREATING(1), ACTIVE(2), FAILED_TO_CREATE(3), CLOSE_REQUESTED(4), CLOSED(5), FAILED_TO_CLOSE(6);
+        CREATING(0), ACTIVE(1), FAILED_TO_CREATE(2), CLOSE_REQUESTED(3), CLOSED(4), FAILED_TO_CLOSE(5);
 
         private final int value;
 
