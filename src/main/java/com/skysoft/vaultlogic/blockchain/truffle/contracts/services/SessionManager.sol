@@ -44,4 +44,8 @@ contract SessionManager is RegistryComponent {
         IApplication(appAddress).sessionClosed(sessionId);
     }
 
+    function isActive(uint256 sessionId) public view returns(bool) {
+        return (ISessionStorage(lookup(SESSION_STORAGE)).getStatus(sessionId) == uint256(SessionStatus.ACTIVE));
+    }
+
 }
