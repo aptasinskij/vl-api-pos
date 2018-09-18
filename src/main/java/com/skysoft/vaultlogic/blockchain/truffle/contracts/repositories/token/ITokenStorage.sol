@@ -1,9 +1,9 @@
-pragma solidity ^0.4.0;
+pragma solidity 0.4.24;
 
 interface ITokenStorage {
 
-    function set(address customer, uint256 amount) public;
+    function set(address customer, uint256 amount) external;
 
-    function get(address consumer) public view returns (uint256);
+    function get(address consumer) external view returns (uint256);
 
 }
