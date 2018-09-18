@@ -12,7 +12,7 @@ public interface SessionService {
 
     String getSessionXToken(BigInteger sessionId);
 
-    void activate(Session session);
+    void activate(BigInteger sessionId);
 
     void failedToCreate(Session session);
 }
