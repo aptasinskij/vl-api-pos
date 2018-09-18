@@ -24,9 +24,9 @@ public class JpaSessionService implements SessionService {
 
     @Override
     @Transactional
-    public Session createApplicationSession(Long appId, String xToken) {
-        Application app = applicationRepo.getOne(appId);
-        Session session = Session.newApplicationSession(app, xToken).markActive();
+    public Session createApplicationSession(BigInteger applicationId, String xToken) {
+        Application app = applicationRepo.getOne(applicationId);
+        Session session = Session.newApplicationSession(app, xToken).markCreating();
         return sessionRepo.save(session);
     }
 
@@ -40,6 +40,18 @@ public class JpaSessionService implements SessionService {
     @Transactional(readOnly = true)
     public String getSessionXToken(BigInteger sessionId) {
         return sessionRepo.findSessionXTokenById(sessionId).getXToken();
+    }
+
+    @Override
+    @Transactional
+    public void activate(Session session) {
+        sessionRepo.save(session.markActive());
+    }
+
+    @Override
+    @Transactional
+    public void failedToCreate(Session session) {
+        sessionRepo.save(session.markFailedToCreate());
     }
 
 }

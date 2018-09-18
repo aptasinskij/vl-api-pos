@@ -7,6 +7,7 @@ import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -15,8 +16,6 @@ import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-
-
 @Getter
 @Entity
 public class Application extends AbstractAggregateRoot<Application> {
@@ -24,7 +23,7 @@ public class Application extends AbstractAggregateRoot<Application> {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(updatable = false, insertable = false)
-    private Long id;
+    private BigInteger id;
 
     @NaturalId
     @Column(nullable = false, unique = true)

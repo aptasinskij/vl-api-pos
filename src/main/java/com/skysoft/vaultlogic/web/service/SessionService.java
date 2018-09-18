@@ -6,10 +6,13 @@ import java.math.BigInteger;
 
 public interface SessionService {
 
-    Session createApplicationSession(Long appId, String xToken);
+    Session createApplicationSession(BigInteger applicationId, String xToken);
 
     void closeSession(BigInteger sessionId);
 
     String getSessionXToken(BigInteger sessionId);
 
+    void activate(Session session);
+
+    void failedToCreate(Session session);
 }

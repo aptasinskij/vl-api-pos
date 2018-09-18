@@ -7,6 +7,7 @@ import com.skysoft.vaultlogic.common.domain.application.projections.SmartContrac
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.net.URI;
 
 
@@ -41,8 +42,8 @@ public class JpaApplicationService implements ApplicationService {
     }
 
     @Override
-    public URI getApplicationUri(Long appId) {
-        return applicationRepository.findAppUriStatusById(appId)
+    public URI getApplicationUri(BigInteger applicationId) {
+        return applicationRepository.findAppUriStatusById(applicationId)
                 .map(AppUriStatus::getUri)
                 .map(URI::create)
                 .orElseThrow(RuntimeException::new);
