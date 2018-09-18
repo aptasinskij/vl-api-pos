@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.net.URI;
 
 import static java.lang.String.valueOf;
@@ -41,7 +42,7 @@ public class CloudApplicationIndexController {
     }
 
     @GetMapping
-    public ResponseEntity<String> getApplicationIndexPage(@PathVariable Long appId, @RequestParam("token") String xToken) {
+    public ResponseEntity<String> getApplicationIndexPage(@PathVariable BigInteger appId, @RequestParam("token") String xToken) {
         URI appIndexUri = applicationService.getApplicationUri(appId);
         Session session = sessionService.createApplicationSession(appId, xToken);
         ResponseEntity<String> responseEntity = getIndexPage(appIndexUri, session.getId().longValue());
