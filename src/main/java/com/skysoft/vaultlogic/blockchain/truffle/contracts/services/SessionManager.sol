@@ -6,8 +6,9 @@ import "../application/IApplication.sol";
 import "../registry/RegistryComponent.sol";
 import "../repositories/session/ISessionStorage.sol";
 import "../repositories/application/IApplicationStorage.sol";
+import "./ISessionManager.sol";
 
-contract SessionManager is RegistryComponent {
+contract SessionManager is RegistryComponent, ISessionManager {
     
     enum SessionStatus { CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED }
 
@@ -25,7 +26,7 @@ contract SessionManager is RegistryComponent {
     }
 
     function createSession(uint256 sessionId, uint256 appId, string xToken) external {
-        ISessionStorage(lookup(SESSION_STORAGE)).save(sessionId, appId, xToken, uint256(SessionStatus.ACTIVE));
+        ISessionStorage(lookup(SESSION_STORAGE)).save(sessionId, appId, xToken, uint256(SessionStatus.CREATING));
         address appAddress = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(appId);
         IApplication(appAddress).newSessionCreated();
     }
@@ -45,7 +46,18 @@ contract SessionManager is RegistryComponent {
     }
 
     function isActive(uint256 sessionId) public view returns(bool) {
-        return (ISessionStorage(lookup(SESSION_STORAGE)).getStatus(sessionId) == uint256(SessionStatus.ACTIVE));
+        return (getSessionStorage().getStatus(sessionId) == uint256(SessionStatus.ACTIVE));
+    }
+
+    function activate(uint256 _sessionId) public returns(bool) {
+        ISessionStorage sessionStorage = getSessionStorage();
+        require(sessionStorage.getStatus(_sessionId) == uint256(SessionStatus.CREATING), "Illegal state modification");
+        sessionStorage.setStatus(_sessionId, uint256(SessionStatus.ACTIVE));
+        return true;
+    }
+
+    function getSessionStorage() private view returns(ISessionStorage) {
+        return ISessionStorage(lookup(SESSION_STORAGE));
     }
 
 }
