@@ -36,7 +36,8 @@ contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
     ///session is active; application owns the session; there is no active channels in the session
     function openCashInChannel(address _application, uint256 _sessionId) public returns(uint256 channelId) {
         require(_sessionManager().isActive(_sessionId), "Illegal state of the session");
-        require(!_sessionManager().isHasActiveCashIn(_sessionId), "There is already opened cash-in channel");
+        require(!_sessionStorage().isHasActiveCashIn(_sessionId), "There is already opened cash-in channel");
+        _sessionStorage().setHasActiveCashIn(_sessionId, true);
         address application = _applicationStorage().getApplicationAddress(_sessionStorage().getAppId(_sessionId));
         require(application == _application, "Illegal access");
         channelId = _cashInStorage().save(_sessionId, application, uint256(CashInStatus.CREATING));
@@ -68,13 +69,13 @@ contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
     function confirmOpen(uint256 channelId) external {
         (address application, uint256 sessionId) = _cashInStorage().getApplicationAndSessionId(channelId);
         _cashInStorage().setStatus(channelId, uint256(CashInStatus.ACTIVE));
-        _sessionStorage().setHasActiveCashIn(sessionId, true);
         IApplication(application).cashInChannelOpened(channelId, sessionId);
     }
 
     function confirmClose(uint256 channelId) external {
         (address application, uint256 sessionId) = _cashInStorage().getApplicationAndSessionId(channelId);
         _cashInStorage().setStatus(channelId, uint256(CashInStatus.CLOSED));
+        _sessionStorage().setHasActiveCashIn(sessionId, false);
         IApplication(application).cashInChannelClosed(channelId, sessionId);
     }
 
