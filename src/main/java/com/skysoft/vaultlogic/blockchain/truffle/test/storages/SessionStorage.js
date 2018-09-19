@@ -52,13 +52,13 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> Save(sessionId, appId, xToken, status) </h4>
-         # save new session
+         # Save new session
          > Arguments
          - (uint256) sessionId - session id
          - (uint256) appId - application id
          - (string) xToken - session xToken
          - (uint256) status - session status
-         > Returns
+         > Emits
          - (event) Saved
         \*/
         it('save', () => {
@@ -71,7 +71,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getSession(index) </h4>
-         # get session info
+         # Get session info
          > Arguments
          - (uint256) index - session id
          > Returns
@@ -92,7 +92,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getStatusAndXToken(index) </h4>
-         # get session status and xToken
+         # Get session status and xToken
          > Arguments
          - (uint256) index - session id
          > Returns
@@ -107,7 +107,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getAppId(index) </h4>
-         # get application ID of session
+         # Get application ID of session
          > Arguments
          - (uint256) index - session index
          > Returns
@@ -120,7 +120,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getXToken(index) </h4>
-         # get session xToken
+         # Get session xToken
          > Arguments
          - (uint256) index - session id
          > Returns
@@ -133,7 +133,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getAppIdAndXToken(index) </h4>
-         # get application ID and xToken of session
+         # Get application ID and xToken of session
          > Arguments
          - (uint256) index - session id
          > Returns
@@ -148,11 +148,11 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> setStatus(index, status) </h4>
-         # update session status
+         # Set session status
          > Arguments
          - (uint256) index - session id
          - (uint256) status - session status
-         > Returns
+         > Emits
          - (event) StatusUpdated
         \*/
         it('setStatus', () => {
@@ -163,7 +163,7 @@ contract('SessionStorage', () => {
         /*\
          # <hr>
          # <h4> getStatus(index) </h4>
-         # get session status
+         # Get session status
          > Arguments
          - (uint256) index - session id
          > Returns
@@ -172,5 +172,27 @@ contract('SessionStorage', () => {
         it('getStatus', () => {
             assert.strictEqual(resGetStatus, 9, 'status is not equal');
         });
+
+        /* events description */
+
+        /*\
+         # <hr>
+         # <h4> Saved </h4>
+         # Get info of saved session (emits on "save" method call)
+         > Returns
+         - (uint256) sessionId - session id
+         - (uint256) appId - application id
+         - (string) xToken - application xToken
+         - (uint256) status - application status
+        \*/
+
+        /*\
+         # <hr>
+         # <h4> StatusUpdated </h4>
+         # Get updated status of session (emits on "setStatus" method call)
+         > Returns
+         - (uint256) index - session id
+         - (uint256) status - session status
+        \*/
     })
 });
