@@ -46,17 +46,21 @@ contract SessionManager is RegistryComponent, ISessionManager {
     }
 
     function isActive(uint256 sessionId) public view returns(bool) {
-        return (getSessionStorage().getStatus(sessionId) == uint256(SessionStatus.ACTIVE));
+        return (_sessionStorage().getStatus(sessionId) == uint256(SessionStatus.ACTIVE));
+    }
+
+    function isHasActiveCashIn(uint256 _sessionId) external view returns(bool) {
+        return _sessionStorage().isHasActiveCashIn(_sessionId);
     }
 
     function activate(uint256 _sessionId) public returns(bool) {
-        ISessionStorage sessionStorage = getSessionStorage();
+        ISessionStorage sessionStorage = _sessionStorage();
         require(sessionStorage.getStatus(_sessionId) == uint256(SessionStatus.CREATING), "Illegal state modification");
         sessionStorage.setStatus(_sessionId, uint256(SessionStatus.ACTIVE));
         return true;
     }
 
-    function getSessionStorage() private view returns(ISessionStorage) {
+    function _sessionStorage() private view returns(ISessionStorage) {
         return ISessionStorage(lookup(SESSION_STORAGE));
     }
 
