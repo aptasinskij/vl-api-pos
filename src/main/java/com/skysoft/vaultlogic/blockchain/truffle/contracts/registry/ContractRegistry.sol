@@ -1,6 +1,8 @@
 pragma solidity 0.4.24;
 
-contract ContractRegistry {
+import "./IRegistry.sol";
+
+contract ContractRegistry is IRegistry {
 
     event ComponentRegistered(string name, address addr, uint256 index);
     event ComponentAddressUpdated(string name, address addr);
