@@ -1,6 +1,6 @@
 <!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of CashInStorage.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">const assert = require(&#39;chai&#39;).assert;
 const CashInStorage = artifacts.require(&#39;CashInStorage.sol&#39;);
-const convertToNumber = require(&#39;..&#47;helpers&#39;).convertToNumber;
+const {convertToNumber} = require(&#39;..&#47;helpers&#39;);
 
 &#47;*\
 * CashInStorage
@@ -81,12 +81,12 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; save(sessionId, application, status) &#60;&#47;h4&#62;
-         # save new cashInChannel
+         # Save new cashInChannel
          &#62; Arguments
          - (uint256) sessionId - session id
          - (address) application - application address
          - (uint256) status - session status
-         &#62; Returns
+         &#62; Emits
          - (event) CashInSaved
         \*&#47;
         it(&#39;save&#39;, () =&#62; {
@@ -99,7 +99,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; get(index) &#60;&#47;h4&#62;
-         # get all cashInChannel info
+         # Get all info of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          &#62; Returns
@@ -126,7 +126,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getSessionId(index) &#60;&#47;h4&#62;
-         # get session id of cashInChannel
+         # Get session id of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          &#62; Returns
@@ -139,7 +139,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getApplicationAddress(index) &#60;&#47;h4&#62;
-         # get application address of cashInChannel
+         # Get application address of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          &#62; Returns
@@ -152,7 +152,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getApplicationAndSessionId(index) &#60;&#47;h4&#62;
-         # get application address and session id of cashInChannel
+         # Get application address and session id of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          &#62; Returns
@@ -167,11 +167,11 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; setBalance(index, amount) &#60;&#47;h4&#62;
-         # save set balance of cashInChannel
+         # Save set balance of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (address) amount - cashInChannel money to insert amount
-         &#62; Returns
+         &#62; Emits
          - (event) CashInBalanceUpdated
         \*&#47;
         it(&#39;setBalance&#39;, () =&#62; {
@@ -182,11 +182,11 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getBalance(index) &#60;&#47;h4&#62;
-         # get balance of cashInChannel
+         # Get balance of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (address) amount - cashInChannel amount
-         &#62; Returns
+         &#62; Emits
          - (event) CashInBalanceUpdated
         \*&#47;
         it(&#39;getBalance&#39;, () =&#62; {
@@ -196,11 +196,11 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; setStatus(index) &#60;&#47;h4&#62;
-         # set status of cashInChannel
+         # Set status of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (uint256) status - cashInChannel status
-         &#62; Returns
+         &#62; Emits
          - (event) CashInStatusUpdated
         \*&#47;
         it(&#39;setStatus&#39;, () =&#62; {
@@ -211,12 +211,12 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; addSplit(index, party, amount) &#60;&#47;h4&#62;
-         # add split to cashInChannel
+         # Add new split to cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (address) party - cashInChannel party
-         - (uint256) amount - cashInChannel amount
-         &#62; Returns
+         - (uint256) amount - cashInChannel fee size
+         &#62; Emits
          - (event) CashInSplitAdded
         \*&#47;
         it(&#39;addSplit&#39;, () =&#62; {
@@ -228,11 +228,11 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; addSplit(index, parties, amounts) &#60;&#47;h4&#62;
-         # get status of cashInChannel
+         # Get status of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
-         - (address[]) parties - array of cashInChannel parties
-         - (uint256[]) amounts - array of cashInChannel amounts
+         - (address[]) parties - array of cashInChannel parties address
+         - (uint256[]) amounts - array of cashInChannel parties fee size
         \*&#47;
         it(&#39;addSplits&#39;, () =&#62; {
             assert.notEqual(resAddSplits.receipt.transactionHash, &#39;&#39;, &#39;transactionHash is empty&#39;);
@@ -242,7 +242,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getSplitSize(index) &#60;&#47;h4&#62;
-         # get split size of cashInChannel
+         # Get split size of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
           &#62; Returns
@@ -256,7 +256,7 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         &#47;*\
          # &#60;hr&#62;
          # &#60;h4&#62; getSplit(index, subIndex) &#60;&#47;h4&#62;
-         # get split size of cashInChannel
+         # Get split size of cashInChannel
          &#62; Arguments
          - (uint256) index - cashInChannel id
          - (uint256) subIndex - cashInChannel split index in array
@@ -272,5 +272,46 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
             assert.strictEqual(resGetSplit3[0], 5, &#39;split 8, subSplit 4: party is not equal&#39;);
             assert.strictEqual(resGetSplit3[1], 50, &#39;split 8, subSplit 0: amount is not equal&#39;);
         });
+
+        &#47;* events description *&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; CashInSaved &#60;&#47;h4&#62;
+         # Get info of saved cashInChannel (emits on &#34;save&#34; method call)
+         &#62; Returns
+         - (uint256) channelId - channel id
+         - (uint256) sessionId - session id
+         - (address) application - application address
+         - (uint256) status - session status
+        \*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; CashInBalanceUpdated &#60;&#47;h4&#62;
+         # Get updated balance of cashInChannel (emits on &#34;setBalance&#34; method call)
+         &#62; Returns
+         - (uint256) channelId - channel id
+         - (uint256) amount - channel balance
+        \*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; CashInStatusUpdated &#60;&#47;h4&#62;
+         # Get updated status of cashInChannel (emits on &#34;setStatus&#34; method call)
+         &#62; Returns
+         - (uint256) channelId - channel id
+         - (uint256) status - channel status
+        \*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; CashInSplitAdded &#60;&#47;h4&#62;
+         # Get updated split info of cashInChannel (emits on &#34;addSplit&#34; method call)
+         &#62; Returns
+         - (uint256) channelId - channel id
+         - (address) party - party address
+         - (uint256) amount - party balance
+        \*&#47;
     })
 });</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>
