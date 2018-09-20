@@ -8,7 +8,6 @@ import "./ITokenManager.sol";
 contract TokenManager is RegistryComponent, ITokenManager {
 
     string constant COMPONENT_NAME = "token-manager";
-    string constant TOKEN_STORAGE = "token-storage";
 
     event Transfer(address indexed to, uint value);
     event TransferFrom(address indexed from, address indexed to, uint value);
@@ -22,17 +21,17 @@ contract TokenManager is RegistryComponent, ITokenManager {
     }
 
     function balanceOf(address consumer) external view returns (uint) {
-        return ITokenStorage(lookup(TOKEN_STORAGE)).get(consumer);
+        return _tokenStorage().get(consumer);
     }
 
     function transfer(address recipient, uint value) external {
-        ITokenStorage tokenStorage = ITokenStorage(lookup(TOKEN_STORAGE));
+        ITokenStorage tokenStorage = _tokenStorage();
         tokenStorage.set(recipient, tokenStorage.get(recipient).add(value));
         emit Transfer(recipient, value);
     }
 
     function transferFrom(address from, address to, uint value) external {
-        ITokenStorage tokenStorage = ITokenStorage(lookup(TOKEN_STORAGE));
+        ITokenStorage tokenStorage = _tokenStorage();
 
         uint256 balanceFrom = tokenStorage.get(from);
         uint256 balanceTo = tokenStorage.get(to);

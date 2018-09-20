@@ -6,8 +6,6 @@ import "../services/ICashChannelsManager.sol";
 contract CashInOracle is RegistryComponent {
 
     string constant COMPONENT_NAME = "cash-in-oracle";
-
-    string constant CASH_CHANNELS_MANAGER = "cash-channels-manager";
     
     event OpenCashAcceptor(uint256 sessionId, uint256 channelId, uint256 channelStatus);
     event CloseCashAcceptor(uint256 sessionId, uint256 channelId);
@@ -27,15 +25,15 @@ contract CashInOracle is RegistryComponent {
     }
 
     function confirmOpen(uint256 channelId) external {
-        ICashChannelsManager(lookup(CASH_CHANNELS_MANAGER)).confirmOpen(channelId);
+        _cashChannelsManager().confirmOpen(channelId);
     }
 
     function confirmClose(uint256 channelId) external {
-        ICashChannelsManager(lookup(CASH_CHANNELS_MANAGER)).confirmClose(channelId);
+        _cashChannelsManager().confirmClose(channelId);
     }
 
     function increaseBalance(uint256 channelId, uint256 amount) external {
-        ICashChannelsManager(lookup(CASH_CHANNELS_MANAGER)).updateCashInBalance(channelId, amount);
+        _cashChannelsManager().updateCashInBalance(channelId, amount);
     }
 
 }
