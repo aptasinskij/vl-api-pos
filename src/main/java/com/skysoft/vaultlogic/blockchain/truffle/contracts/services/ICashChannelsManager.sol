@@ -12,4 +12,6 @@ interface ICashChannelsManager {
 
     function updateCashInBalance(uint256 channelId, uint256 amount) external;
 
+    function balanceOf(address _application, uint256 _channelId) external view returns(uint256);
+
 }
