@@ -4,11 +4,11 @@ const CashInStorage = artifacts.require('CashInStorage.sol');
 const SessionManager = artifacts.require('SessionManager.sol');
 const ApplicationManager = artifacts.require('ApplicationManager.sol');
 const CapitalHero = artifacts.require('CapitalHero.sol');
-const {convertToNumber} = require('../../helpers');
+const {convertToNumber} = require('../../../helpers');
 
 contract('CashChannelsManager', () => {
 
-    describe('open closed channel', () => {
+    describe('try to open second CashInChannel after first close', () => {
 
         let capitalHeroInstance;
         let resGet1;
@@ -59,7 +59,7 @@ contract('CashChannelsManager', () => {
             resGetStatus3 = Number(resGetStatus3);
         });
 
-        it('allow to open second CashInChannel after first close', () => {
+        it('allow to openCashInChannel', () => {
             /* opened CashInChannel */
             assert.strictEqual(resGet1[0], 1, 'channel id is not equal');
             assert.strictEqual(resGet1[1], capitalHeroInstance.address, 'channel address is not equal');
