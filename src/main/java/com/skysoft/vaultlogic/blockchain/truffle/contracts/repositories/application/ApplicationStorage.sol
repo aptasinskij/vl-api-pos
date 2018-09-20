@@ -2,8 +2,9 @@ pragma solidity 0.4.24;
 
 import "./ApplicationLib.sol";
 import "../../registry/RegistryComponent.sol";
+import "./IApplicationStorage.sol";
 
-contract ApplicationStorage is RegistryComponent {
+contract ApplicationStorage is RegistryComponent, IApplicationStorage {
 
     string constant COMPONENT_NAME = "application-storage";
     string constant DATABASE = "database";
@@ -28,6 +29,10 @@ contract ApplicationStorage is RegistryComponent {
 
     function get(uint256 appId) external view returns (string, address, string, address, uint256) {
         return lookup(DATABASE).get(appId);
+    }
+
+    function isRegistered(address _applicationAddress) external view returns(bool) {
+        return lookup(DATABASE).isRegistered(_applicationAddress);
     }
 
     function getApplicationName(uint256 appId) external view returns(string) {
