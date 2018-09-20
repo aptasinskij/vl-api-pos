@@ -17,13 +17,6 @@ contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
 
     string constant COMPONENT_NAME = "cash-channels-manager";
 
-    string constant CASH_IN_STORAGE = "cash-in-storage";
-    string constant CASH_IN_ORACLE = "cash-in-oracle";
-    string constant SESSION_STORAGE = "session-storage";
-    string constant APPLICATION_STORAGE = "application-storage";
-    string constant SESSION_MANAGER = "session-manager";
-    string constant TOKEN_MANAGER = "token-manager";
-
     using SafeMath for uint256;
 
     constructor(address regAddr) RegistryComponent(regAddr) public {}
@@ -41,7 +34,7 @@ contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
         address application = _applicationStorage().getApplicationAddress(_sessionStorage().getAppId(_sessionId));
         require(application == _application, "Illegal access");
         channelId = _cashInStorage().save(_sessionId, application, uint256(CashInStatus.CREATING));
-        ICashInOracle(lookup(CASH_IN_ORACLE)).open(_sessionId, channelId, uint256(CashInStatus.CREATING));
+        _cashInOracle().open(_sessionId, channelId, uint256(CashInStatus.CREATING));
     }
 
     function updateCashInBalance(uint256 channelId, uint256 amount) external {
@@ -67,7 +60,7 @@ contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
         _tokenManager().transfer(_application, channelBalance.sub(vaultLogicFee).sub(feesAmount));
         for (uint256 j = 0; j < parties.length; j++) _tokenManager().transfer(parties[j], fees[j]);
         _cashInStorage().setStatus(_channelId, uint256(CashInStatus.CLOSE_REQUESTED));
-        ICashInOracle(lookup(CASH_IN_ORACLE)).close(_sessionId, _channelId);
+        _cashInOracle().close(_sessionId, _channelId);
     }
 
     function confirmOpen(uint256 channelId) external {
@@ -88,26 +81,6 @@ contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
     //TODO where to get actual number
     function getVaultLogicPercent() private pure returns(uint256) {
         return 1000;
-    }
-
-    function _tokenManager() private view returns(ITokenManager) {
-        return ITokenManager(lookup(TOKEN_MANAGER));
-    }
-
-    function _sessionManager() private view returns(ISessionManager) {
-        return ISessionManager(lookup(SESSION_MANAGER));
-    }
-
-    function _sessionStorage() private view returns(ISessionStorage) {
-        return ISessionStorage(lookup(SESSION_STORAGE));
-    }
-
-    function _applicationStorage() private view returns(IApplicationStorage) {
-        return IApplicationStorage(lookup(APPLICATION_STORAGE));
-    }
-
-    function _cashInStorage() private view returns(ICashInStorage) {
-        return ICashInStorage(lookup(CASH_IN_STORAGE));
     }
 
 }
