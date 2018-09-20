@@ -1,9 +1,10 @@
 pragma solidity 0.4.24;
 
 import "./IRegistry.sol";
+import "../Ownable.sol";
 
 ///@dev base contract for all registry components
-contract RegistryComponent {
+contract RegistryComponent is Ownable {
 
     address registry;
 
