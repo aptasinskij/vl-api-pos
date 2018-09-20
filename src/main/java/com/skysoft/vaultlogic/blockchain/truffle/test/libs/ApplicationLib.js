@@ -1,3 +1,4 @@
+/*
 const assert = require('chai').assert;
 const ApplicationLib = artifacts.require('ApplicationLib.sol');
 const CapitalHero = artifacts.require('CapitalHero.sol');
@@ -5,9 +6,9 @@ const ApplicationStorage = artifacts.require('ApplicationStorage.sol');
 const Database = artifacts.require('Database.sol');
 const {convertToNumber} = require('../helpers');
 
-/*\
+/!*\
 * ApplicationLib
-\*/
+\*!/
 
 contract('ApplicationLib', (accounts) => {
 
@@ -27,37 +28,37 @@ contract('ApplicationLib', (accounts) => {
             const applicationStorageInstance = await ApplicationStorage.deployed();
             const databaseInstance = await Database.deployed();
 
-            /* save by ApplicationStorage method */
+            /!* save by ApplicationStorage method *!/
             await applicationStorageInstance.save(123,
                 'capitalHero',
                 accounts[0],
                 'http://capital-hero',
                 appInstance.address,
                 0);
-            /* get */
+            /!* get *!/
             resGet = await applicationLibInstance.get(databaseInstance.address, 123);
             resGet = convertToNumber(resGet, true);
-            /* getName */
+            /!* getName *!/
             resGetName = await applicationLibInstance.getName(databaseInstance.address, 123);
-            /* getOwner */
+            /!* getOwner *!/
             resGetOwner = await applicationLibInstance.getOwner(databaseInstance.address, 123);
-            /* setApplicationUrl by ApplicationStorage */
+            /!* setApplicationUrl by ApplicationStorage *!/
             await applicationStorageInstance.setApplicationUrl(123, 'http://updated-url');
-            /* getUrl */
+            /!* getUrl *!/
             resGetUrl = await applicationLibInstance.getUrl(databaseInstance.address, 123);
-            /* setApplicationAddress by ApplicationStorage */
+            /!* setApplicationAddress by ApplicationStorage *!/
             await applicationStorageInstance.setApplicationAddress(123, 13245);
-            /* getAddress */
+            /!* getAddress *!/
             resGetAddress = await applicationLibInstance.getAddress(databaseInstance.address, 123);
             resGetAddress = Number(resGetAddress);
-            /* setApplicationStatus by ApplicationStorage */
+            /!* setApplicationStatus by ApplicationStorage *!/
             await applicationStorageInstance.setApplicationStatus(123, 2);
-            /* getStatus */
+            /!* getStatus *!/
             resGetStatus = await applicationLibInstance.getStatus(databaseInstance.address, 123);
             resGetStatus = Number(resGetStatus);
         });
 
-        /*\
+        /!*\
          # <hr>
          # <h4> get(self, appId) </h4>
          # Get all info of application
@@ -70,7 +71,7 @@ contract('ApplicationLib', (accounts) => {
          - (string) url - application url
          - (address) appAddr - application address
          - (uint256) status - application status
-        \*/
+        \*!/
         it('get', () => {
             assert.strictEqual(resGet[0], 'capitalHero', 'application name is not equal');
             assert.strictEqual(resGet[1], accounts[0], 'application owner is not equal');
@@ -79,7 +80,7 @@ contract('ApplicationLib', (accounts) => {
             assert.strictEqual(resGet[4], 0, 'application status is not equal');
         });
 
-        /*\
+        /!*\
          # <hr>
          # <h4> getOwner(self, appId) </h4>
          # Get owner of application
@@ -88,12 +89,12 @@ contract('ApplicationLib', (accounts) => {
          - (uint256) appId - application id
          > Returns
          - (address) owner - application owner
-        \*/
+        \*!/
         it('getOwner', () => {
             assert.strictEqual(resGetOwner, accounts[0], 'application owner name is not equal');
         });
 
-        /*\
+        /!*\
          # <hr>
          # <h4> getUrl(self, appId) </h4>
          # Get owner of application
@@ -102,12 +103,12 @@ contract('ApplicationLib', (accounts) => {
          - (uint256) appId - application id
          > Returns
          - (string) url - application url
-        \*/
+        \*!/
         it('getUrl', () => {
             assert.strictEqual(resGetUrl, 'http://updated-url', 'application url is not equal');
         });
 
-        /*\
+        /!*\
          # <hr>
          # <h4> getAddress(self, appId) </h4>
          # Get owner of application
@@ -116,12 +117,12 @@ contract('ApplicationLib', (accounts) => {
          - (uint256) appId - application id
          > Returns
          - (address) appAddr - application address
-        \*/
+        \*!/
         it('getAddress', () => {
             assert.strictEqual(resGetAddress, 13245, 'application url is not equal');
         });
 
-        /*\
+        /!*\
          # <hr>
          # <h4> getStatus(self, appId) </h4>
          # Get owner of application
@@ -130,12 +131,12 @@ contract('ApplicationLib', (accounts) => {
          - (uint256) appId - application id
          > Returns
          - (uint256) status - application status
-        \*/
+        \*!/
         it('getStatus', () => {
             assert.strictEqual(resGetStatus, 2, 'application status is not equal');
         });
 
-        /*\
+        /!*\
          # <hr>
          # <h4> getName(self, appId) </h4>
          # Get owner of application
@@ -144,14 +145,14 @@ contract('ApplicationLib', (accounts) => {
          - (uint256) appId - application id
          > Returns
          - (string) name - application name
-        \*/
+        \*!/
         it('getName', () => {
             assert.strictEqual(resGetName, 'capitalHero', 'application name is not equal');
         });
 
-        /* methods below are not tested, only description provided */
+        /!* methods below are not tested, only description provided *!/
 
-        /*\
+        /!*\
          # <hr>
          # <h4> save(self, appId, name, owner, url, appAddr, status) </h4>
          # Save new application
@@ -163,9 +164,9 @@ contract('ApplicationLib', (accounts) => {
          - (string) url - application url
          - (address) appAddr - application address
          - (uint256) status - application status
-        \*/
+        \*!/
 
-        /*\
+        /!*\
          # <hr>
          # <h4> setUrl(self, appId, url) </h4>
          # Set url of application
@@ -173,9 +174,9 @@ contract('ApplicationLib', (accounts) => {
          - (address) self - self database address
          - (uint256) appId - application id
          - (string) url - application url
-        \*/
+        \*!/
 
-        /*\
+        /!*\
          # <hr>
          # <h4> setAddress(self, appId, appAddr) </h4>
          # Set address of application
@@ -183,9 +184,9 @@ contract('ApplicationLib', (accounts) => {
          - (address) self - self database address
          - (uint256) appId - application id
          - (address) appAddr - application address
-        \*/
+        \*!/
 
-        /*\
+        /!*\
          # <hr>
          # <h4> setStatus(self, appId, status) </h4>
          # Set status of application
@@ -193,6 +194,6 @@ contract('ApplicationLib', (accounts) => {
          - (address) self - self database address
          - (uint256) appId - application id
          - (uint256) status - application status
-        \*/
+        \*!/
     })
-});
+});*/

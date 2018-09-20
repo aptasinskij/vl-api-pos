@@ -3,8 +3,9 @@ pragma solidity 0.4.24;
 import "../libs/SafeMath.sol";
 import "../registry/RegistryComponent.sol";
 import "../repositories/token/ITokenStorage.sol";
+import "./ITokenManager.sol";
 
-contract TokenManager is RegistryComponent {
+contract TokenManager is RegistryComponent, ITokenManager {
 
     string constant COMPONENT_NAME = "token-manager";
     string constant TOKEN_STORAGE = "token-storage";

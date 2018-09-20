@@ -2,14 +2,16 @@ pragma solidity 0.4.24;
 
 import "./SessionLib.sol";
 import "../../registry/RegistryComponent.sol";
+import "./ISessionStorage.sol";
 
-contract SessionStorage is RegistryComponent {
+contract SessionStorage is RegistryComponent, ISessionStorage {
     
     string constant COMPONENT_NAME = "session-storage";
     string constant DATABASE = "database";
 
     event Saved(uint256 sessionId, uint256 appId, string xToken, uint256 status);
     event StatusUpdated(uint256 index, uint256 status);
+    event ActiveCashIn(uint256 _sessionId, bool _flag);
 
     using SessionLib for address;
     
@@ -19,13 +21,21 @@ contract SessionStorage is RegistryComponent {
         return COMPONENT_NAME;
     }
     
-    function save(uint256 sessionId, uint256 appId, string xToken, uint256 status) public {
+    function save(uint256 sessionId, uint256 appId, string xToken, uint256 status) external {
         lookup(DATABASE).save(sessionId, appId, xToken, status);
         emit Saved(sessionId, appId, xToken, status);
     }
     
     function getSession(uint256 index) public view returns(uint256 appId, string xToken, uint256 status) {
         return lookup(DATABASE).get(index);
+    }
+
+    function setHasActiveCashIn(uint256 _sessionId, bool _flag) external {
+        lookup(DATABASE).setHasActiveCashIn(_sessionId, _flag);
+    }
+
+    function isHasActiveCashIn(uint256 _sessionId) external returns(bool) {
+        return lookup(DATABASE).getIsHasActiveCashIn(_sessionId);
     }
     
     function getStatus(uint256 index) public view returns (uint256) {
