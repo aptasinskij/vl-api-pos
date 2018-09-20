@@ -1,15 +1,15 @@
-/*
-const assert = require('chai').assert;
+/*const assert = require('chai').assert;
 const SessionLib = artifacts.require('SessionLib.sol');
 const CapitalHero = artifacts.require('CapitalHero.sol');
 const SessionStorage = artifacts.require('SessionStorage.sol');
 const Database = artifacts.require('Database.sol');
-const {convertToNumber} = require('../helpers');
+const {convertToNumber} = require('../helpers');*/
 
-/!*\
+/*\
 * SessionLib
-\*!/
+\*/
 
+/*
 contract('SessionLib', () => {
 
     describe('tests for "read" methods', () => {
@@ -42,8 +42,9 @@ contract('SessionLib', () => {
             resGetStatus = await sessionLibInstance.getStatus(databaseInstance.address, 0);
             resGetStatus = Number(resGetStatus);
         });
+*/
 
-        /!*\
+        /*\
          # <hr>
          # <h4> get(self, index) </h4>
          # Get all info of session
@@ -54,14 +55,14 @@ contract('SessionLib', () => {
          - (uint256) appId - application id
          - (string) xToken - session xToken
          - (uint256) status - session status
-        \*!/
-        it('get', () => {
+        \*/
+        /*it('get', () => {
             assert.strictEqual(resGet[0], 1, 'application id is not equal');
             assert.strictEqual(resGet[1], '1a2b3c', 'session xToken is not equal');
             assert.strictEqual(resGet[2], 3, 'session status is not equal');
-        });
+        });*/
 
-        /!*\
+        /*\
          # <hr>
          # <h4> getAppId(self, index) </h4>
          # Get application id of session
@@ -70,12 +71,12 @@ contract('SessionLib', () => {
          - (uint256) index - session id
          > Returns
          - (uint256) appId - application id
-        \*!/
-        it('getAppId', () => {
+        \*/
+        /*it('getAppId', () => {
             assert.strictEqual(resGetAppId, 1, 'application id is not equal');
-        });
+        });*/
 
-        /!*\
+        /*\
          # <hr>
          # <h4> getXToken(self, index) </h4>
          # Get xToken of session
@@ -84,12 +85,12 @@ contract('SessionLib', () => {
          - (uint256) index - session id
          > Returns
          - (string) xToken - session xToken
-        \*!/
-        it('getToken', () => {
+        \*/
+        /*it('getToken', () => {
             assert.strictEqual(resGetToken, '1a2b3c', 'session xToken is not equal');
-        });
+        });*/
 
-        /!*\
+        /*\
          # <hr>
          # <h4> getStatus(self, index) </h4>
          # Get status of session
@@ -98,14 +99,14 @@ contract('SessionLib', () => {
          - (uint256) index - session id
          > Returns
          - (uint256) status - session status
-        \*!/
-        it('getStatus', () => {
+        \*/
+        /*it('getStatus', () => {
             assert.strictEqual(resGetStatus, 2, 'cashInChannel status is not equal');
-        });
+        });*/
 
-        /!* methods below are not tested, only description provided *!/
+        /* methods below are not tested, only description provided */
 
-        /!*\
+        /*\
          # <hr>
          # <h4> save(self, sessionId, appId, xToken, status) </h4>
          # Save new session
@@ -115,9 +116,9 @@ contract('SessionLib', () => {
          - (uint256) appId - application id
          - (string) xToken - session xToken
          - (uint256) status - session status
-        \*!/
+        \*/
 
-        /!*\
+        /*\
          # <hr>
          # <h4> setStatus(self, index, status) </h4>
          # Set status of session
@@ -125,6 +126,7 @@ contract('SessionLib', () => {
          - (address) self - self database address
          - (uint256) index - session id
          - (string) status - session status
-        \*!/
-    })
-});*/
+        \*/
+ /*   })
+});
+*/
