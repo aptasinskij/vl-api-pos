@@ -67,6 +67,7 @@ contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
     }
 
     function confirmOpen(uint256 channelId) external {
+        require(_cashInStorage().getStatus(channelId) == uint256(CashInStatus.CLOSE_REQUESTED));
         (address application, uint256 sessionId) = _cashInStorage().getApplicationAndSessionId(channelId);
         _cashInStorage().setStatus(channelId, uint256(CashInStatus.ACTIVE));
         IApplication(application).cashInChannelOpened(channelId, sessionId);
