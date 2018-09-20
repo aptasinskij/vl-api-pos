@@ -1,0 +1,57 @@
+<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of TokenLib.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">&#47;*const assert = require(&#39;chai&#39;).assert;
+const TokenLib = artifacts.require(&#39;TokenLib.sol&#39;);
+const CapitalHero = artifacts.require(&#39;CapitalHero.sol&#39;);
+const TokenStorage = artifacts.require(&#39;TokenStorage.sol&#39;);
+const Database = artifacts.require(&#39;Database.sol&#39;);*&#47;
+
+&#47;*\
+* TokenLib
+\*&#47;
+
+&#47;*contract(&#39;TokenLib&#39;, () =&#62; {
+
+    describe(&#39;tests for &#34;read&#34; methods&#39;, () =&#62; {
+
+        let resGet;
+        let appInstance;
+
+        before(async () =&#62; {
+            appInstance = await CapitalHero.deployed();
+            const tokenLibInstance = await TokenLib.deployed();
+            const tokenStorageInstance = await TokenStorage.deployed();
+            const databaseInstance = await Database.deployed();
+
+            &#47;!* save by TokenStorage method *!&#47;
+            await tokenStorageInstance.set(1, 200);
+            &#47;!* get *!&#47;
+            resGet = await tokenLibInstance.get(databaseInstance.address, 1);
+            resGet = Number(resGet);
+        });*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; get(self, customer) &#60;&#47;h4&#62;
+         # Get tokens balance of consumer
+         &#62; Arguments
+         - (address) self - self database address
+         - (address) customer - customer address
+         &#62; Returns
+         - (uint256) amount - tokens amount
+        \*&#47;
+        &#47;*it(&#39;get&#39;, () =&#62; {
+            assert.strictEqual(resGet, 200, &#39;token balance is not equal&#39;);
+        });*&#47;
+
+        &#47;* methods below are not tested, only description provided *&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; set(self, customer, amount) &#60;&#47;h4&#62;
+         # Set tokens on customer balance
+         &#62; Arguments
+         - (address) self - self database address
+         - (address) customer - customer address
+         - (uint256) amount - tokens amount
+        \*&#47;
+    &#47;*})
+});*&#47;</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>

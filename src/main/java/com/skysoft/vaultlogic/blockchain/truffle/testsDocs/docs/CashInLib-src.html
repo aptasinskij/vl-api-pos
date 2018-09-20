@@ -1,15 +1,15 @@
-<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of CashInLib.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">const assert = require(&#39;chai&#39;).assert;
+<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of CashInLib.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">&#47;*const assert = require(&#39;chai&#39;).assert;
 const CashInLib = artifacts.require(&#39;CashInLib.sol&#39;);
 const CapitalHero = artifacts.require(&#39;CapitalHero.sol&#39;);
 const CashInStorage = artifacts.require(&#39;CashInStorage.sol&#39;);
 const Database = artifacts.require(&#39;Database.sol&#39;);
-const {convertToNumber} = require(&#39;..&#47;helpers&#39;);
+const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
 
 &#47;*\
 * CashInLib
 \*&#47;
 
-contract(&#39;CashInLib&#39;, () =&#62; {
+&#47;*contract(&#39;CashInLib&#39;, () =&#62; {
 
     describe(&#39;tests for &#34;read&#34; methods&#39;, () =&#62; {
 
@@ -28,39 +28,39 @@ contract(&#39;CashInLib&#39;, () =&#62; {
             const cashInStorageInstance = await CashInStorage.deployed();
             const databaseInstance = await Database.deployed();
 
-            &#47;* save by CashInStorage method *&#47;
+            &#47;!* save by CashInStorage method *!&#47;
             await cashInStorageInstance.save(123,
                 appInstance.address,
                 1);
-            &#47;* get *&#47;
+            &#47;!* get *!&#47;
             resGet = await cashInLibInstance.get(databaseInstance.address, 0);
             resGet = convertToNumber(resGet, true);
-            &#47;* getSessionId *&#47;
+            &#47;!* getSessionId *!&#47;
             resGetSessionId = await cashInLibInstance.getSessionId(databaseInstance.address, 0);
             resGetSessionId = Number(resGetSessionId);
-            &#47;* getApplication *&#47;
+            &#47;!* getApplication *!&#47;
             resGetApplication = await cashInLibInstance.getApplication(databaseInstance.address, 0);
-            &#47;* setBalance by CashInStorage method *&#47;
+            &#47;!* setBalance by CashInStorage method *!&#47;
             await cashInStorageInstance.setBalance(0, 100);
-            &#47;* getBalance *&#47;
+            &#47;!* getBalance *!&#47;
             resGetBalance = await cashInLibInstance.getBalance(databaseInstance.address, 0);
             resGetBalance = Number(resGetBalance);
-            &#47;* setStatus by CashInStorage method *&#47;
+            &#47;!* setStatus by CashInStorage method *!&#47;
             await cashInStorageInstance.setStatus(0, 2);
-            &#47;* getStatus *&#47;
+            &#47;!* getStatus *!&#47;
             resGetStatus = await cashInLibInstance.getStatus(databaseInstance.address, 0);
             resGetStatus = Number(resGetStatus);
-            &#47;* addSplit by CashInStorage method *&#47;
+            &#47;!* addSplit by CashInStorage method *!&#47;
             await cashInStorageInstance.addSplit(0, 1, 500);
-            &#47;* addSplits by CashInStorage method *&#47;
+            &#47;!* addSplits by CashInStorage method *!&#47;
             await cashInStorageInstance.addSplits(0, [2,3], [200, 300]);
-            &#47;* getSplitSize *&#47;
+            &#47;!* getSplitSize *!&#47;
             resGetSplitSize = await cashInLibInstance.getSplitSize(databaseInstance.address, 0);
             resGetSplitSize = Number(resGetSplitSize);
-            &#47;* getSplit *&#47;
+            &#47;!* getSplit *!&#47;
             resGetSplit = await cashInLibInstance.getSplit(databaseInstance.address, 0, 1);
             resGetSplit = convertToNumber(resGetSplit);
-        });
+        });*&#47;
 
         &#47;*\
          # &#60;hr&#62;
@@ -76,13 +76,13 @@ contract(&#39;CashInLib&#39;, () =&#62; {
          - (uint256) status - cashInChannel status
          - (uint256) splitSize - cashInChannel amount of splits
         \*&#47;
-        it(&#39;get&#39;, () =&#62; {
+        &#47;*it(&#39;get&#39;, () =&#62; {
             assert.strictEqual(resGet[0], 123, &#39;session id is not equal&#39;);
             assert.strictEqual(resGet[1], appInstance.address, &#39;application address is not equal&#39;);
             assert.strictEqual(resGet[2], 0, &#39;cashInChannel balance is not equal&#39;);
             assert.strictEqual(resGet[3], 1, &#39;cashInChannel status is not equal&#39;);
             assert.strictEqual(resGet[4], 0, &#39;cashInChannel split size is not equal&#39;);
-        });
+        });*&#47;
 
         &#47;*\
          # &#60;hr&#62;
@@ -94,9 +94,9 @@ contract(&#39;CashInLib&#39;, () =&#62; {
          &#62; Returns
          - (address) sessionId - session id
         \*&#47;
-        it(&#39;getSessionId&#39;, () =&#62; {
+        &#47;*it(&#39;getSessionId&#39;, () =&#62; {
             assert.strictEqual(resGetSessionId, 123, &#39;session id is not equal&#39;);
-        });
+        });*&#47;
 
         &#47;*\
          # &#60;hr&#62;
@@ -108,9 +108,9 @@ contract(&#39;CashInLib&#39;, () =&#62; {
          &#62; Returns
          - (address) application - application address
         \*&#47;
-        it(&#39;getApplication&#39;, () =&#62; {
+        &#47;*it(&#39;getApplication&#39;, () =&#62; {
             assert.strictEqual(resGetApplication, appInstance.address, &#39;application address is not equal&#39;);
-        });
+        });*&#47;
 
         &#47;*\
          # &#60;hr&#62;
@@ -122,9 +122,9 @@ contract(&#39;CashInLib&#39;, () =&#62; {
          &#62; Returns
          - (uint256) balance - cashInChannel balance
         \*&#47;
-        it(&#39;getBalance&#39;, () =&#62; {
+        &#47;*it(&#39;getBalance&#39;, () =&#62; {
             assert.strictEqual(resGetBalance, 100, &#39;cashInChannel balance is not equal&#39;);
-        });
+        });*&#47;
 
         &#47;*\
          # &#60;hr&#62;
@@ -136,9 +136,9 @@ contract(&#39;CashInLib&#39;, () =&#62; {
          &#62; Returns
          - (uint256) status - application status
         \*&#47;
-        it(&#39;getStatus&#39;, () =&#62; {
+        &#47;*it(&#39;getStatus&#39;, () =&#62; {
             assert.strictEqual(resGetStatus, 2, &#39;cashInChannel status is not equal&#39;);
-        });&#47;*
+        });*&#47;
 
         &#47;*\
          # &#60;hr&#62;
@@ -150,9 +150,9 @@ contract(&#39;CashInLib&#39;, () =&#62; {
          &#62; Returns
          - (uint256) size - amount of splits
         \*&#47;
-        it(&#39;getSplitSize&#39;, () =&#62; {
+        &#47;*it(&#39;getSplitSize&#39;, () =&#62; {
             assert.strictEqual(resGetSplitSize, 3, &#39;cashInChannel split size is not equal&#39;);
-        });
+        });*&#47;
 
         &#47;*\
          # &#60;hr&#62;
@@ -166,10 +166,10 @@ contract(&#39;CashInLib&#39;, () =&#62; {
          - (address) party -  split party address of cashInChannel
          - (uint256) fee - split party fee size of cashInChannel
         \*&#47;
-        it(&#39;getSplit&#39;, () =&#62; {
+        &#47;*it(&#39;getSplit&#39;, () =&#62; {
             assert.strictEqual(resGetSplit[0], 2, &#39;cashInChannel split party address is not equal&#39;);
             assert.strictEqual(resGetSplit[1], 200, &#39;cashInChannel split party fee is not equal&#39;);
-        });
+        });*&#47;
 
         &#47;* methods below are not tested, only description provided *&#47;
 
@@ -225,5 +225,6 @@ contract(&#39;CashInLib&#39;, () =&#62; {
          - (uint256) receiver - array of receivers addresses
          - (uint256) amount - array of fee sizes
         \*&#47;
-    })
-});</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>
+   &#47;* })
+});
+*&#47;</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>
