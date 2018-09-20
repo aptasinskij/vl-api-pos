@@ -14,11 +14,6 @@ contract SessionManager is RegistryComponent, ISessionManager {
 
     string constant COMPONENT_NAME = "session-manager";
 
-    string constant SESSION_STORAGE = "session-storage";
-    string constant APPLICATION_STORAGE = "application-storage";
-
-    string constant SESSION_ORACLE = "session-oracle";
-
     constructor(address regAddr) RegistryComponent(regAddr) public {}
 
     function getName() internal pure returns(string) {
@@ -26,22 +21,22 @@ contract SessionManager is RegistryComponent, ISessionManager {
     }
 
     function createSession(uint256 sessionId, uint256 appId, string xToken) external {
-        ISessionStorage(lookup(SESSION_STORAGE)).save(sessionId, appId, xToken, uint256(SessionStatus.CREATING));
-        address appAddress = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(appId);
+        _sessionStorage().save(sessionId, appId, xToken, uint256(SessionStatus.CREATING));
+        address appAddress = _applicationStorage().getApplicationAddress(appId);
         IApplication(appAddress).newSessionCreated();
     }
 
     function closeSession(uint256 sessionId) external {
         uint256 status = ISessionStorage(lookup(SESSION_STORAGE)).getStatus(sessionId);
         require(status == uint256(SessionStatus.ACTIVE), "Illegal state modification");
-        ISessionStorage(lookup(SESSION_STORAGE)).setStatus(sessionId, uint256(SessionStatus.CLOSE_REQUESTED));
-        ISessionOracle(lookup(SESSION_ORACLE)).closeSession(sessionId);
+        _sessionStorage().setStatus(sessionId, uint256(SessionStatus.CLOSE_REQUESTED));
+        _sessionOracle().closeSession(sessionId);
     }
 
     function confirmClose(uint256 sessionId) external {
-        ISessionStorage sessionStorage = ISessionStorage(lookup(SESSION_STORAGE));
+        ISessionStorage sessionStorage = _sessionStorage();
         sessionStorage.setStatus(sessionId, uint256(SessionStatus.CLOSED));
-        address appAddress = IApplicationStorage(lookup(APPLICATION_STORAGE)).getApplicationAddress(sessionStorage.getAppId(sessionId));
+        address appAddress = _applicationStorage().getApplicationAddress(sessionStorage.getAppId(sessionId));
         IApplication(appAddress).sessionClosed(sessionId);
     }
 
@@ -58,10 +53,6 @@ contract SessionManager is RegistryComponent, ISessionManager {
         require(sessionStorage.getStatus(_sessionId) == uint256(SessionStatus.CREATING), "Illegal state modification");
         sessionStorage.setStatus(_sessionId, uint256(SessionStatus.ACTIVE));
         return true;
-    }
-
-    function _sessionStorage() private view returns(ISessionStorage) {
-        return ISessionStorage(lookup(SESSION_STORAGE));
     }
 
 }
