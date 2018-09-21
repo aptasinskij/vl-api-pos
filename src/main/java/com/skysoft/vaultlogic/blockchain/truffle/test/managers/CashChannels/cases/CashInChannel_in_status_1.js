@@ -99,12 +99,13 @@ contract('CashChannelsManager', () => {
             } catch (e) {
                 resCloseCashInChannel5 = e.method;
             }
-            /* make balance = 20 000 (19 000 + previous 1000) */
+            /* make balance = 20 000 (19 000 + previous 1 000) */
             await cashChannelsManagerInstance.updateCashInBalance(0, 19000);
             resBalanceOf = await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 0);
             resBalanceOf = Number(resBalanceOf);
+            /* break condition: (balance) - (splits amount) < (10% of balance) */
             try {
-                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [600,300,100,500,501], [1,2,3,4,5]);
+                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [6000,3000,1000,5000,3001], [1,2,3,4,5]);
                 resCloseCashInChannel6 = 'Method Allowed';
             } catch (e) {
                 resCloseCashInChannel6 = e.method;
@@ -134,9 +135,9 @@ contract('CashChannelsManager', () => {
         });
         it('restrict to closeCashInChannel with wrong splits amount', () => {
             /* restrict to break condition: (balance) - (splits amount) < (10% of balance) */
-            assert.notEqual(resCloseCashInChannel5, 'Method Allowed', 'allowed to call closeCashInChannel with break condition: (balance [1000]) - (splits amount [600,301]) < (10% of balance)');
-            assert.strictEqual(resBalanceOf, 20000, '')
-            assert.notEqual(resCloseCashInChannel6, 'Method Allowed', 'allowed to call closeCashInChannel with break condition: (balance [20000]) - (splits amount [600,300,100,500,501]) < (10% of balance)');
+            assert.notEqual(resCloseCashInChannel5, 'Method Allowed', 'allowed to call closeCashInChannel with break condition: (balance [1000]) - (splits amount [600,301]) < (10% of balance [100])');
+            assert.strictEqual(resBalanceOf, 20000, 'channel balance is not equal');
+            assert.notEqual(resCloseCashInChannel6, 'Method Allowed', 'allowed to call closeCashInChannel with break condition: (balance [20000]) - (splits amount [6000,3000,1000,5000,3001]) < (10% of balance [2000])');
         })
     });
 });
