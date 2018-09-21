@@ -9,13 +9,13 @@ contract ParameterManager is RegistryComponent, IParameterManager {
 
     constructor(address registryAddress) RegistryComponent(registryAddress) public {}
 
-    function setVLFee(address customer, uint256 percent) external {
+    function setVLFee(uint256 percent) public {
         require(percent >= 0, "The fee percent for vault logic cannot be less then zero");
-        _parameterStorage().setVLFee(customer, percent);
+        _parameterStorage().setVLFee(percent);
     }
 
-    function getVLFee(address consumer) external view returns (uint256) {
-        return _parameterStorage().getVLFee(consumer);
+    function getVLFee() public view returns (uint256) {
+        return _parameterStorage().getVLFee();
     }
 
 }

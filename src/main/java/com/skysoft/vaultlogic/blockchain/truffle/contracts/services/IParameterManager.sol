@@ -1,9 +1,9 @@
 pragma solidity 0.4.24;
 
-interface IParameterManager {
+contract IParameterManager {
 
-    function setVLFee(address customer, uint256 percent) external;
+    function setVLFee(uint256 percent) public;
 
-    function getVLFee(address consumer) external view returns (uint256);
+    function getVLFee() public view returns (uint256);
 
 }

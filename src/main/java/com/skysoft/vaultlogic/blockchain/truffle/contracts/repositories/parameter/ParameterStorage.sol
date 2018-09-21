@@ -16,12 +16,12 @@ contract ParameterStorage is RegistryComponent {
         return COMPONENT_NAME;
     }
 
-    function setVLFee(address customer, uint256 percent) public {
-        lookup(DATABASE).setVLFee(customer, percent);
+    function setVLFee(uint256 percent) public {
+        lookup(DATABASE).setVLFee(percent);
     }
 
-    function getVLFee(address consumer) public view returns (uint256) {
-        return lookup(DATABASE).getVLFee(consumer);
+    function getVLFee() public view returns (uint256) {
+        return lookup(DATABASE).getVLFee();
     }
 
 }
