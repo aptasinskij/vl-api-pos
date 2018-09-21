@@ -12,6 +12,8 @@ import "../oracles/ICashInOracle.sol";
 import "../repositories/token/ITokenStorage.sol";
 import "../services/ICashChannelsManager.sol";
 import "../services/ITokenManager.sol";
+import "../repositories/parameter/IParameterStorage.sol";
+import "../services/IParameterManager.sol";
 
 ///@dev base contract for all registry components
 contract RegistryComponent is Ownable {
@@ -32,6 +34,9 @@ contract RegistryComponent is Ownable {
 
     string constant TOKEN_STORAGE = "token-storage";
     string constant TOKEN_MANAGER = "token-manager";
+
+    string constant PARAMETER_STORAGE = "parameter-storage";
+    string constant PARAMETER_MANAGER = "parameter-manager";
 
     ///@param addr - address of deployed Registry instance
     ///@dev each component will be registered at instantiation time
@@ -97,6 +102,15 @@ contract RegistryComponent is Ownable {
 
     function _tokenManager() internal view returns(ITokenManager) {
         return ITokenManager(lookup(TOKEN_MANAGER));
+    }
+
+    /// parameter components
+    function _parameterStorage() internal view returns(IParameterStorage) {
+        return IParameterStorage(lookup(PARAMETER_STORAGE));
+    }
+
+    function _parameterManager() internal view returns(IParameterManager) {
+        return IParameterManager(lookup(PARAMETER_MANAGER));
     }
 
 }
