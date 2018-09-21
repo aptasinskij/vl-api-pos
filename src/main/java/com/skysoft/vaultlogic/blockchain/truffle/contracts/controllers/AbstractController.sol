@@ -5,10 +5,8 @@ import "../repositories/application/IApplicationStorage.sol";
 
 contract AbstractController is RegistryComponent {
 
-    string constant APPLICATION_STORAGE = "application-storage";
-
     modifier onlyRegisteredApp {
-        require(IApplicationStorage(lookup(APPLICATION_STORAGE)).isRegistered(msg.sender), "Illegal access");
+        require(_applicationStorage().isRegistered(msg.sender), "Illegal access");
         _;
     }
 
