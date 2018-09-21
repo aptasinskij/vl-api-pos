@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 contract Ownable {
 
-    address owner;
+    address public owner;
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Illegal access state");

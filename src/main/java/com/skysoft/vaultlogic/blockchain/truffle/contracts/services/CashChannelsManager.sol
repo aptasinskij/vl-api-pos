@@ -48,9 +48,10 @@ contract CashChannelsManager is ACashChannelsManager {
     public returns (bool){
         require(fees.length == parties.length, "Illegal arguments");
         uint256 channelBalance = _cashInStorage().getBalance(_channelId);
-        uint256 vaultLogicFee = channelBalance.mul(getVaultLogicPercent()).div(10000);
+        uint256 vaultLogicFee = channelBalance.mul(_parameterManager().getVLFee()).div(10000);
         uint256 feesAmount = _sumOf(fees);
         require(feesAmount.add(vaultLogicFee) <= channelBalance, "Channel balance overflow");
+        _transfer(owner, vaultLogicFee);
         _transfer(_application, channelBalance.sub(vaultLogicFee).sub(feesAmount));
         _transferAll(parties, fees);
         _cashInStorage().setStatus(_channelId, uint256(CashInStatus.CLOSE_REQUESTED));
@@ -83,11 +84,6 @@ contract CashChannelsManager is ACashChannelsManager {
         _cashInStorage().setStatus(channelId, uint256(CashInStatus.CLOSED));
         _sessionStorage().setHasActiveCashIn(sessionId, false);
         IApplication(application).cashInChannelClosed(channelId, sessionId);
-    }
-
-    //TODO where to get actual number
-    function getVaultLogicPercent() private pure returns (uint256) {
-        return 1000;
     }
 
 }
