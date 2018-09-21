@@ -1,7 +1,7 @@
 pragma solidity 0.4.24;
 
 import "../registry/RegistryComponent.sol";
-import "../services/ICashChannelsManager.sol";
+import "../services/ACashChannelsManager.sol";
 
 contract CashInOracle is RegistryComponent {
 

@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 import "./IApplication.sol";
 import "./RegistryDependent.sol";
-import "../services/ICashChannelsManager.sol";
+import "../services/ACashChannelsManager.sol";
 import "../services/ISessionManager.sol";
 
 contract CapitalHero is IApplication, RegistryDependent {
@@ -19,7 +19,7 @@ contract CapitalHero is IApplication, RegistryDependent {
     constructor(address regAddr) RegistryDependent(regAddr) public {}
 
     function openCashInChannel(uint256 sessionId) external {
-        ICashChannelsManager(componentForName(CASH_CHANNELS_MANAGER)).openCashInChannel(address(this), sessionId);
+        ACashChannelsManager(componentForName(CASH_CHANNELS_MANAGER)).openCashInChannel(address(this), sessionId);
     }
 
     function closeCashInChannel(uint256 sessionId, uint256 channelId) external {
