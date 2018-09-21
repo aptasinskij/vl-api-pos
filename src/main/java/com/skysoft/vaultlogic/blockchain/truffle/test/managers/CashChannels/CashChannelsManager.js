@@ -158,6 +158,5 @@ contract('CashChannelsManager', () => {
             /* from cashInStorage method */
             assert.strictEqual(resGetStatus3, 4, 'channel status is not equal');
         });
-
     });
 });
