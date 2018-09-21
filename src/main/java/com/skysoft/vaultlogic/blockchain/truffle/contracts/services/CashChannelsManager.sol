@@ -53,6 +53,7 @@ contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
     function closeCashInChannel(address _application, uint256 _sessionId, uint256 _channelId, uint256[] fees, address[] parties) external returns(bool){
         require(_cashInStorage().getStatus(_channelId) == uint256(CashInStatus.ACTIVE));
         require(_cashInStorage().getApplication(_channelId) == _application, "Illegal access");
+        require(_cashInStorage().getSessionId(_channelId) == _sessionId, "Arguments mismatch");
         require(fees.length == parties.length, "Illegal arguments");
         uint256 channelBalance = _cashInStorage().getBalance(_channelId);
         uint256 vaultLogicFee = channelBalance.mul(getVaultLogicPercent()).div(10000);

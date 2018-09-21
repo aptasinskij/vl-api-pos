@@ -15,6 +15,8 @@ contract('CashChannelsManager', () => {
         let resGetStatus;
         let resCloseCashInChannel1;
         let resCloseCashInChannel2;
+        let resCloseCashInChannel3;
+        let resCloseCashInChannel4;
 
         before(async () => {
             /* get instances */
@@ -76,9 +78,15 @@ contract('CashChannelsManager', () => {
             /* try to closeCashInChannel with wrong arrays sizes */
             try {
                 await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 33, 0, [1], [1,2,3]);
-                resCloseCashInChannel2 = 'Method Allowed';
+                resCloseCashInChannel3 = 'Method Allowed';
             } catch (e) {
-                resCloseCashInChannel2 = e.message;
+                resCloseCashInChannel3 = e.message;
+            }
+            try {
+                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 33, 0, [1,2,3,4], [1,2]);
+                resCloseCashInChannel4 = 'Method Allowed';
+            } catch (e) {
+                resCloseCashInChannel4 = e.message;
             }
         });
 
@@ -99,6 +107,9 @@ contract('CashChannelsManager', () => {
         it('restrict to closeCashInChannel with wrong session id', () => {
             assert.notEqual(resCloseCashInChannel2, 'Method Allowed', 'allowed to call closeCashInChannel');
         });
-
+        it('restrict to closeCashInChannel with wrong arrays sizes', () => {
+            assert.notEqual(resCloseCashInChannel3, 'Method Allowed', 'allowed to call closeCashInChannel [1], [1,2,3]');
+            assert.notEqual(resCloseCashInChannel4, 'Method Allowed', 'allowed to call closeCashInChannel [1,2,3,4], [1,2]');
+        });
     });
 });
