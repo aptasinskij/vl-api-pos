@@ -10,7 +10,7 @@ import "../oracles/ISessionOracle.sol";
 import "../repositories/cash-in/ICashInStorage.sol";
 import "../oracles/ICashInOracle.sol";
 import "../repositories/token/ITokenStorage.sol";
-import "../services/ICashChannelsManager.sol";
+import "../services/ACashChannelsManager.sol";
 import "../services/ITokenManager.sol";
 
 ///@dev base contract for all registry components
@@ -86,8 +86,8 @@ contract RegistryComponent is Ownable {
     }
 
     /// cash channels manager
-    function _cashChannelsManager() internal view returns(ICashChannelsManager) {
-        return ICashChannelsManager(lookup(CASH_CHANNELS_MANAGER));
+    function _cashChannelsManager() internal view returns(ACashChannelsManager) {
+        return ACashChannelsManager(lookup(CASH_CHANNELS_MANAGER));
     }
 
     /// token components
