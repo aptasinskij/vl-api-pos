@@ -10,6 +10,7 @@ library ApplicationLib {
     string constant URL = "application_url";
     string constant ADDRESS = "application_address";
     string constant STATUS = "application_status";
+    string constant REGISTERED = "application_registered";
 
     function save(address self, uint256 appId, string name, address owner, string url, address appAddr, uint256 status) public {
         Database(self).setUintValue(string256(ID, appId), appId);
@@ -18,6 +19,11 @@ library ApplicationLib {
         Database(self).setStringValue(string256(URL, appId), url);
         Database(self).setAddressValue(string256(ADDRESS, appId), appAddr);
         Database(self).setUintValue(string256(STATUS, appId), status);
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(REGISTERED, appAddr)), true);
+    }
+
+    function isRegistered(address self, address _applicationAddress) internal view returns(bool _registered) {
+        _registered = Database(self).getBooleanValue(keccak256(abi.encode(REGISTERED, _applicationAddress)));
     }
 
     function get(address self, uint256 appId) public view returns(string name, address owner, string url, address appAddr, uint256 status) {

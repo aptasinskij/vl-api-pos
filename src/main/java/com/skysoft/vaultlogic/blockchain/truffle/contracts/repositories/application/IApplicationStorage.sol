@@ -6,6 +6,8 @@ interface IApplicationStorage {
 
     function get(uint256 appId) external view returns (string, address, string, address, uint256);
 
+    function isRegistered(address _applicationAddress) external view returns(bool);
+
     function getApplicationName(uint256 appId) external view returns(string);
 
     function getApplicationOwner(uint256 appId) external view returns(address);

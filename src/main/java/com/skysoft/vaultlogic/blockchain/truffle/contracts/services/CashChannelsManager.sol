@@ -44,7 +44,13 @@ contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
         IApplication(application).cashInBalanceUpdate(channelId, sessionId, amount);
     }
 
-    function closeCashInChannel(address _application, uint256 _sessionId, uint256 _channelId, uint256[] fees, address[] parties) external {
+    function balanceOf(address _application, uint256 _channelId) external view returns(uint256) {
+        ICashInStorage cashInStorage = _cashInStorage();
+        require(cashInStorage.getApplication(_channelId) == _application, "Illegal access");
+        return cashInStorage.getBalance(_channelId);
+    }
+
+    function closeCashInChannel(address _application, uint256 _sessionId, uint256 _channelId, uint256[] fees, address[] parties) external returns(bool){
         require(_cashInStorage().getStatus(_channelId) == uint256(CashInStatus.ACTIVE));
         require(_cashInStorage().getApplication(_channelId) == _application, "Illegal access");
         require(fees.length == parties.length, "Illegal arguments");
@@ -57,6 +63,7 @@ contract CashChannelsManager is RegistryComponent, ICashChannelsManager {
         for (uint256 j = 0; j < parties.length; j++) _tokenManager().transfer(parties[j], fees[j]);
         _cashInStorage().setStatus(_channelId, uint256(CashInStatus.CLOSE_REQUESTED));
         _cashInOracle().close(_sessionId, _channelId);
+        return true;
     }
 
     function confirmOpen(uint256 channelId) external {

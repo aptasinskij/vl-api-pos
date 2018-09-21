@@ -14,7 +14,7 @@ interface ISessionStorage {
 
     function setHasActiveCashIn(uint256 _sessionId, bool _flag) external;
 
-    function isHasActiveCashIn(uint256 _sessionId) external returns(bool);
+    function isHasActiveCashIn(uint256 _sessionId) external view returns(bool);
     
     function getStatus(uint256 index) external view returns (uint256);
 
