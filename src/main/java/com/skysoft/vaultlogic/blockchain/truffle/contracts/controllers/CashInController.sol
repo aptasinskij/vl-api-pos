@@ -15,14 +15,16 @@ contract CashInController is ACashInController {
     }
 
     function open(uint256 _sessionId) public onlyRegisteredApp returns (uint256) {
-        return ICashChannelsManager(lookup(CASH_CHANNELS_MANAGER)).openCashInChannel(msg.sender, _sessionId);
+        return _cashChannelsManager().openCashInChannel(msg.sender, _sessionId);
     }
 
     function close(uint256 _sessionId, uint256 _channelId, uint256[] _fees, address[] _parties) public onlyRegisteredApp returns (bool) {
-        ICashChannelsManager(lookup(CASH_CHANNELS_MANAGER)).closeCashInChannel(msg.sender, _sessionId, _channelId, _fees, _parties);
+        _cashChannelsManager().closeCashInChannel(msg.sender, _sessionId, _channelId, _fees, _parties);
         return true;
     }
 
-    function balanceOf(uint256 _channelId) public view returns (uint256);
+    function balanceOf(uint256 _channelId) public view onlyRegisteredApp returns (uint256) {
+        return _cashChannelsManager().balanceOf(msg.sender, _channelId);
+    }
 
 }
