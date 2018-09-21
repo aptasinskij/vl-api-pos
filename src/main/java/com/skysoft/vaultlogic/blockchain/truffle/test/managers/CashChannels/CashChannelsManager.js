@@ -4,11 +4,13 @@ const CashInStorage = artifacts.require('CashInStorage.sol');
 const SessionManager = artifacts.require('SessionManager.sol');
 const ApplicationManager = artifacts.require('ApplicationManager.sol');
 const CapitalHero = artifacts.require('CapitalHero.sol');
+const TokenManager = artifacts.require('TokenManager.sol');
 const {convertToNumber, sleep} = require('../../helpers');
 
-contract('CashChannelsManager', () => {
+contract('CashChannelsManager', (accounts) => {
 
     describe('tests for all methods', () => {
+        const ownerAccount = accounts[0];
         let resOpenCashInChannel;
         let resGet;
         let resConfirmOpen;
@@ -23,6 +25,12 @@ contract('CashChannelsManager', () => {
         let resBalanceOf1;
         let resBalanceOf2;
         let resBalanceOf3;
+        let resBalanceOfReceiver1;
+        let resBalanceOfReceiver2;
+        let resBalanceOfReceiver3;
+        let resBalanceOfSender1;
+        let resBalanceOfSender2;
+        let resBalanceOwner;
 
         let CashInSavedEvents = [];
         let CashInBalanceUpdatedEvents = [];
@@ -34,6 +42,7 @@ contract('CashChannelsManager', () => {
             const cashInStorageInstance = await CashInStorage.deployed();
             const sessionManagerInstance = await SessionManager.deployed();
             const applicationManagerInstance = await ApplicationManager.deployed();
+            const tokenManagerInstance = await TokenManager.deployed();
             capitalHeroInstance = await CapitalHero.deployed();
             /* watch events */
             cashInStorageInstance.CashInStatusUpdated().watch((err, response) => {
@@ -60,7 +69,7 @@ contract('CashChannelsManager', () => {
             resGetStatus1 = await cashInStorageInstance.getStatus(0);
             resGetStatus1 = Number(resGetStatus1);
             /* updateCashInBalance */
-            resUpdateCashInBalance = await cashChannelsManagerInstance.updateCashInBalance(0, 100);
+            resUpdateCashInBalance = await cashChannelsManagerInstance.updateCashInBalance(0, 1000);
             resGetBalance = await cashInStorageInstance.getBalance(0);
             resGetBalance = Number(resGetBalance);
             /* --- balanceOf --- */
@@ -81,9 +90,32 @@ contract('CashChannelsManager', () => {
                 resBalanceOf3 = e.message;
             }
             /* closeCashInChannel */
-            resCloseCashInChannel = await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [1,2], [1,2]);
+            resCloseCashInChannel = await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [300,350,200], [1,2,3]);
             resGetStatus2 = await cashInStorageInstance.getStatus(0);
             resGetStatus2 = Number(resGetStatus2);
+            /* balanceOf receivers (TokenManager contract) */
+            resBalanceOfReceiver1 = await tokenManagerInstance.balanceOf(1);
+            resBalanceOfReceiver1 = Number(resBalanceOfReceiver1);
+            console.log('resBalanceOfReceiver1', resBalanceOfReceiver1);
+            resBalanceOfReceiver2 = await tokenManagerInstance.balanceOf(2);
+            resBalanceOfReceiver2 = Number(resBalanceOfReceiver2);
+            console.log('resBalanceOfReceiver2', resBalanceOfReceiver2);
+            resBalanceOfReceiver3 = await tokenManagerInstance.balanceOf(3);
+            resBalanceOfReceiver3 = Number(resBalanceOfReceiver3);
+            console.log('resBalanceOfReceiver3', resBalanceOfReceiver3);
+            /* get sender balance (CashChannelsManager contract) */
+            resBalanceOfSender1 = await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 0);
+            resBalanceOfSender1 = Number(resBalanceOfSender1);
+            console.log('resBalanceOfSender1', resBalanceOfSender1);
+            /* get sender balance (TokenManager contract) */
+            resBalanceOfSender2 = await tokenManagerInstance.balanceOf(capitalHeroInstance.address);
+            resBalanceOfSender2 = Number(resBalanceOfSender2);
+            console.log('ownerAccount', ownerAccount);
+            /*console.log(11111111, await tokenManagerInstance.owner());*/
+            console.log(ownerAccount, ownerAccount);
+            resBalanceOwner = await tokenManagerInstance.balanceOf(ownerAccount);
+            resBalanceOwner = Number(resBalanceOwner);
+            console.log('resBalanceOwner', resBalanceOwner);
             /* confirmClose */
             resConfirmClose = await cashChannelsManagerInstance.confirmClose(0);
             resGetStatus3 = await cashInStorageInstance.getStatus(0);
@@ -125,12 +157,12 @@ contract('CashChannelsManager', () => {
             assert.isAbove(resUpdateCashInBalance.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from cashInStorage event */
             assert.strictEqual(CashInBalanceUpdatedEvents[0].channelId, 0, 'channel id is not equal');
-            assert.strictEqual(CashInBalanceUpdatedEvents[0].amount, 100, 'channel amount is not equal');
+            assert.strictEqual(CashInBalanceUpdatedEvents[0].amount, 1000, 'channel amount is not equal');
             /* from cashInStorage method */
-            assert.strictEqual(resGetBalance, 100, 'channel balance is not equal');
+            assert.strictEqual(resGetBalance, 1000, 'channel balance is not equal');
         });
         it('balanceOf', () => {
-            assert.strictEqual(resBalanceOf1, 100, 'channel balance is not equal');
+            assert.strictEqual(resBalanceOf1, 1000, 'channel balance is not equal');
             /* restrict to call balanceOf wrong channel */
             assert.notEqual(resBalanceOf3, 'Method Allowed', 'allow to call balanceOf wrong channel');
             /* restrict to call balanceOf wrong application address */
@@ -146,6 +178,12 @@ contract('CashChannelsManager', () => {
             assert.strictEqual(CashInStatusUpdatedEvents[1].status, 3, 'channel status is not equal');
             /* from cashInStorage method */
             assert.strictEqual(resGetStatus2, 3, 'channel status is not equal');
+            /* check balance of receivers */
+            assert.strictEqual(resBalanceOfReceiver1, 300, 'first receiver balance not equal');
+            assert.strictEqual(resBalanceOfReceiver2, 350, 'second receiver balance not equal');
+            assert.strictEqual(resBalanceOfReceiver3, 200, 'third receiver balance not equal');
+            assert.strictEqual(resBalanceOfSender1, 1000, 'channel balance changed');
+            assert.strictEqual(resBalanceOfSender2, 50, 'sender balance not equal');
         });
         it('confirmClose', () => {
             /* from CashChannelsManager logs */
