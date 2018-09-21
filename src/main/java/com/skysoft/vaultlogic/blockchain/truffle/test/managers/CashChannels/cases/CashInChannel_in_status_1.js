@@ -7,18 +7,20 @@ const CashInStorage = artifacts.require('CashInStorage.sol');
 
 contract('CashChannelsManager', () => {
 
-    describe('try to confirmOpen CashInChannel in "closed" status (4)', () => {
+    describe('CashInChannel in "opened" status (1)', () => {
         let capitalHeroInstance;
         let resConfirmOpen;
+        let resConfirmClose;
+        let resOpenCashInChannel;
         let resGetStatus;
 
         before(async () => {
             /* get instances */
-            const cashInStorageInstance = await CashInStorage.deployed();
             const cashChannelsManagerInstance = await CashChannelsManager.deployed();
             const sessionManagerInstance = await SessionManager.deployed();
             const applicationManagerInstance = await ApplicationManager.deployed();
             capitalHeroInstance = await CapitalHero.deployed();
+            const cashInStorageInstance = await CashInStorage.deployed();
 
             /* registerApplication Capital Hero */
             await applicationManagerInstance.registerApplication(2, 'capital-hero', 235, 'http://capital-hero', capitalHeroInstance.address);
@@ -30,13 +32,23 @@ contract('CashChannelsManager', () => {
             await cashChannelsManagerInstance.openCashInChannel(capitalHeroInstance.address, 1);
             /* confirmOpen */
             await cashChannelsManagerInstance.confirmOpen(0);
-            /* setStatus 3 */
-            await cashInStorageInstance.setStatus(0, 3);
-            /* confirmClose */
-            await cashChannelsManagerInstance.confirmClose(0);
             resGetStatus = await cashInStorageInstance.getStatus(0);
             resGetStatus = Number(resGetStatus);
-            /* try to confirmOpen channel */
+            /* try to openCashInChannel */
+            try {
+                await cashChannelsManagerInstance.openCashInChannel(capitalHeroInstance.address, 1);
+                resOpenCashInChannel = 'Method Allowed';
+            } catch (e) {
+                resConfirmOpen = e.message;
+            }
+            /* try to confirmClose */
+            try {
+                await cashChannelsManagerInstance.confirmClose(0);
+                resConfirmClose = 'Method Allowed';
+            } catch (e) {
+                resConfirmOpen = e.message;
+            }
+            /* try to confirmOpen ones again */
             try {
                 await cashChannelsManagerInstance.confirmOpen(0);
                 resConfirmOpen = 'Method Allowed';
@@ -45,9 +57,17 @@ contract('CashChannelsManager', () => {
             }
         });
 
-        it('restrict to confirmOpen', () => {
-            assert.strictEqual(resGetStatus, 4, 'channel status is not equal');
+        it('restrict to openCashInChannel', () => {
+            assert.strictEqual(resGetStatus, 1, 'channel status is not equal');
             /* restrict to confirmOpen channel */
+            assert.notEqual(resOpenCashInChannel, 'Method Allowed', 'allowed to call openCashInChannel method');
+        });
+        it('restrict to confirmClose', () => {
+            /* restrict to confirmClose channel */
+            assert.notEqual(resConfirmClose, 'Method Allowed', 'allowed to call openCashInChannel method');
+        });
+        it('restrict to confirmOpen ones again', () => {
+            /* restrict to confirmClose channel */
             assert.notEqual(resConfirmOpen, 'Method Allowed', 'allowed to call confirmOpen method');
         });
     });
