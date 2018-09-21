@@ -13,6 +13,8 @@ contract('CashChannelsManager', () => {
         let resConfirmClose;
         let resOpenCashInChannel;
         let resGetStatus;
+        let resCloseCashInChannel1;
+        let resCloseCashInChannel2;
 
         before(async () => {
             /* get instances */
@@ -34,6 +36,8 @@ contract('CashChannelsManager', () => {
             await cashChannelsManagerInstance.confirmOpen(0);
             resGetStatus = await cashInStorageInstance.getStatus(0);
             resGetStatus = Number(resGetStatus);
+            /* updateCashInBalance */
+            await cashChannelsManagerInstance.updateCashInBalance(0, 1000);
             /* try to openCashInChannel */
             try {
                 await cashChannelsManagerInstance.openCashInChannel(capitalHeroInstance.address, 1);
@@ -55,6 +59,27 @@ contract('CashChannelsManager', () => {
             } catch (e) {
                 resConfirmOpen = e.message;
             }
+            /* try to closeCashInChannel with wrong application address */
+            try {
+                await cashChannelsManagerInstance.closeCashInChannel(321123, 1, 0, [1,2], [1,2]);
+                resCloseCashInChannel1 = 'Method Allowed';
+            } catch (e) {
+                resCloseCashInChannel1 = e.message;
+            }
+            /* try to closeCashInChannel with wrong session id */
+            try {
+                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 33, 0, [1,2], [1,2]);
+                resCloseCashInChannel2 = 'Method Allowed';
+            } catch (e) {
+                resCloseCashInChannel2 = e.message;
+            }
+            /* try to closeCashInChannel with wrong arrays sizes */
+            try {
+                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 33, 0, [1], [1,2,3]);
+                resCloseCashInChannel2 = 'Method Allowed';
+            } catch (e) {
+                resCloseCashInChannel2 = e.message;
+            }
         });
 
         it('restrict to openCashInChannel', () => {
@@ -63,12 +88,17 @@ contract('CashChannelsManager', () => {
             assert.notEqual(resOpenCashInChannel, 'Method Allowed', 'allowed to call openCashInChannel method');
         });
         it('restrict to confirmClose', () => {
-            /* restrict to confirmClose channel */
             assert.notEqual(resConfirmClose, 'Method Allowed', 'allowed to call openCashInChannel method');
         });
         it('restrict to confirmOpen ones again', () => {
-            /* restrict to confirmClose channel */
             assert.notEqual(resConfirmOpen, 'Method Allowed', 'allowed to call confirmOpen method');
         });
+        it('restrict to closeCashInChannel with wrong application address', () => {
+            assert.notEqual(resCloseCashInChannel1, 'Method Allowed', 'allowed to call closeCashInChannel');
+        });
+        it('restrict to closeCashInChannel with wrong session id', () => {
+            assert.notEqual(resCloseCashInChannel2, 'Method Allowed', 'allowed to call closeCashInChannel');
+        });
+
     });
 });
