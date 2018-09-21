@@ -17,6 +17,9 @@ contract('CashChannelsManager', () => {
         let resCloseCashInChannel2;
         let resCloseCashInChannel3;
         let resCloseCashInChannel4;
+        let resCloseCashInChannel5;
+        let resCloseCashInChannel6;
+        let resBalanceOf;
 
         before(async () => {
             /* get instances */
@@ -77,16 +80,34 @@ contract('CashChannelsManager', () => {
             }
             /* try to closeCashInChannel with wrong arrays sizes */
             try {
-                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 33, 0, [1], [1,2,3]);
+                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [1], [1,2,3]);
                 resCloseCashInChannel3 = 'Method Allowed';
             } catch (e) {
                 resCloseCashInChannel3 = e.message;
             }
             try {
-                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 33, 0, [1,2,3,4], [1,2]);
+                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [1,2,3,4], [1,2]);
                 resCloseCashInChannel4 = 'Method Allowed';
             } catch (e) {
                 resCloseCashInChannel4 = e.message;
+            }
+            /* --- try to closeCashInChannel with wrong splits amount --- */
+            /* break condition: (balance) - (splits amount) < (10% of balance) */
+            try {
+                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [600,301], [1,2]);
+                resCloseCashInChannel5 = 'Method Allowed';
+            } catch (e) {
+                resCloseCashInChannel5 = e.method;
+            }
+            /* make balance = 20 000 (19 000 + previous 1000) */
+            await cashChannelsManagerInstance.updateCashInBalance(0, 19000);
+            resBalanceOf = await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 0);
+            resBalanceOf = Number(resBalanceOf);
+            try {
+                await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [600,300,100,500,501], [1,2,3,4,5]);
+                resCloseCashInChannel6 = 'Method Allowed';
+            } catch (e) {
+                resCloseCashInChannel6 = e.method;
             }
         });
 
@@ -111,5 +132,11 @@ contract('CashChannelsManager', () => {
             assert.notEqual(resCloseCashInChannel3, 'Method Allowed', 'allowed to call closeCashInChannel [1], [1,2,3]');
             assert.notEqual(resCloseCashInChannel4, 'Method Allowed', 'allowed to call closeCashInChannel [1,2,3,4], [1,2]');
         });
+        it('restrict to closeCashInChannel with wrong splits amount', () => {
+            /* restrict to break condition: (balance) - (splits amount) < (10% of balance) */
+            assert.notEqual(resCloseCashInChannel5, 'Method Allowed', 'allowed to call closeCashInChannel with break condition: (balance [1000]) - (splits amount [600,301]) < (10% of balance)');
+            assert.strictEqual(resBalanceOf, 20000, '')
+            assert.notEqual(resCloseCashInChannel6, 'Method Allowed', 'allowed to call closeCashInChannel with break condition: (balance [20000]) - (splits amount [600,300,100,500,501]) < (10% of balance)');
+        })
     });
 });
