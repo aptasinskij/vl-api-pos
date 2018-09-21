@@ -34,7 +34,7 @@ contract SessionStorage is RegistryComponent, ISessionStorage {
         lookup(DATABASE).setHasActiveCashIn(_sessionId, _flag);
     }
 
-    function isHasActiveCashIn(uint256 _sessionId) external returns(bool) {
+    function isHasActiveCashIn(uint256 _sessionId) external view returns(bool) {
         return lookup(DATABASE).getIsHasActiveCashIn(_sessionId);
     }
     
