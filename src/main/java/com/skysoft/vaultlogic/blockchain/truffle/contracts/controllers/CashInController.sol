@@ -6,7 +6,6 @@ import "../services/ICashChannelsManager.sol";
 contract CashInController is ACashInController {
 
     string constant COMPONENT_NAME = "cash-in-controller";
-    string constant CASH_CHANNELS_MANAGER = "cash-channels-manager";
 
     constructor(address registry) ACashInController(registry) public {}
 
