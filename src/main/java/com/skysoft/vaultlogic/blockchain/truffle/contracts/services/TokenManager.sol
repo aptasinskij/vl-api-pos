@@ -20,22 +20,23 @@ contract TokenManager is RegistryComponent, ITokenManager {
         return COMPONENT_NAME;
     }
 
-    function balanceOf(address consumer) external view returns (uint) {
+    function balanceOf(address consumer) external view returns (uint256) {
         return _tokenStorage().get(consumer);
     }
 
-    function transfer(address recipient, uint value) external {
+    function transfer(address recipient, uint256 value) external {
+        require(value > 0, "The value for the transaction cannot be equals to zero");
         ITokenStorage tokenStorage = _tokenStorage();
         tokenStorage.set(recipient, tokenStorage.get(recipient).add(value));
         emit Transfer(recipient, value);
     }
 
-    function transferFrom(address from, address to, uint value) external {
+    function transferFrom(address from, address to, uint256 value) external {
         ITokenStorage tokenStorage = _tokenStorage();
 
         uint256 balanceFrom = tokenStorage.get(from);
         uint256 balanceTo = tokenStorage.get(to);
-        require(balanceFrom >= value && value > 0);
+        require(balanceFrom >= value && value > 0, "Transaction parameters are not correct");
 
         tokenStorage.set(from, balanceFrom.sub(value));
         tokenStorage.set(to, balanceTo.add(value));
