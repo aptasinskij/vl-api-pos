@@ -2,9 +2,9 @@ pragma solidity 0.4.24;
 
 import "./SessionLib.sol";
 import "../../registry/Component.sol";
-import "./ISessionStorage.sol";
+import "./ASessionStorage.sol";
 
-contract SessionStorage is Component, ISessionStorage {
+contract SessionStorage is Component, ASessionStorage {
     
     string constant COMPONENT_NAME = "session-storage";
     string constant DATABASE = "database";
@@ -21,7 +21,7 @@ contract SessionStorage is Component, ISessionStorage {
         return COMPONENT_NAME;
     }
     
-    function save(uint256 sessionId, uint256 appId, string xToken, uint256 status) external {
+    function save(uint256 sessionId, uint256 appId, string xToken, uint256 status) public {
         lookup(DATABASE).save(sessionId, appId, xToken, status);
         emit Saved(sessionId, appId, xToken, status);
     }
@@ -30,11 +30,11 @@ contract SessionStorage is Component, ISessionStorage {
         return lookup(DATABASE).get(index);
     }
 
-    function setHasActiveCashIn(uint256 _sessionId, bool _flag) external {
+    function setHasActiveCashIn(uint256 _sessionId, bool _flag) public {
         lookup(DATABASE).setHasActiveCashIn(_sessionId, _flag);
     }
 
-    function isHasActiveCashIn(uint256 _sessionId) external view returns(bool) {
+    function isHasActiveCashIn(uint256 _sessionId) public view returns(bool) {
         return lookup(DATABASE).getIsHasActiveCashIn(_sessionId);
     }
     

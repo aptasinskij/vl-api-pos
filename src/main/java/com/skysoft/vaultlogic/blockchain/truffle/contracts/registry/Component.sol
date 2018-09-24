@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 import "./IRegistry.sol";
 import "../oracles/IApplicationOracle.sol";
-import "../repositories/session/ISessionStorage.sol";
+import "../repositories/session/ASessionStorage.sol";
 import "../services/ISessionManager.sol";
 import "../oracles/ISessionOracle.sol";
 import "../repositories/cash-in/ACashInStorage.sol";
@@ -69,8 +69,8 @@ contract Component is Ownable {
     }
 
     /// session components
-    function _sessionStorage() internal view returns(ISessionStorage) {
-        return ISessionStorage(lookup(SESSION_STORAGE));
+    function _sessionStorage() internal view returns(ASessionStorage) {
+        return ASessionStorage(lookup(SESSION_STORAGE));
     }
 
     function _sessionManager() internal view returns(ISessionManager) {

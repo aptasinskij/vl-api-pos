@@ -4,7 +4,7 @@ import "../application/IApplication.sol";
 import "../oracles/ISessionOracle.sol";
 import "../application/IApplication.sol";
 import "../registry/Component.sol";
-import "../repositories/session/ISessionStorage.sol";
+import "../repositories/session/ASessionStorage.sol";
 import "../repositories/application/AnApplicationStorage.sol";
 import "./ISessionManager.sol";
 
@@ -27,14 +27,14 @@ contract SessionManager is Component, ISessionManager {
     }
 
     function closeSession(uint256 sessionId) external {
-        uint256 status = ISessionStorage(lookup(SESSION_STORAGE)).getStatus(sessionId);
+        uint256 status = ASessionStorage(lookup(SESSION_STORAGE)).getStatus(sessionId);
         require(status == uint256(SessionStatus.ACTIVE), "Illegal state modification");
         _sessionStorage().setStatus(sessionId, uint256(SessionStatus.CLOSE_REQUESTED));
         _sessionOracle().closeSession(sessionId);
     }
 
     function confirmClose(uint256 sessionId) external {
-        ISessionStorage sessionStorage = _sessionStorage();
+        ASessionStorage sessionStorage = _sessionStorage();
         sessionStorage.setStatus(sessionId, uint256(SessionStatus.CLOSED));
         address appAddress = _applicationStorage().getApplicationAddress(sessionStorage.getAppId(sessionId));
         IApplication(appAddress).sessionClosed(sessionId);
@@ -49,7 +49,7 @@ contract SessionManager is Component, ISessionManager {
     }
 
     function activate(uint256 _sessionId) public returns(bool) {
-        ISessionStorage sessionStorage = _sessionStorage();
+        ASessionStorage sessionStorage = _sessionStorage();
         require(sessionStorage.getStatus(_sessionId) == uint256(SessionStatus.CREATING), "Illegal state modification");
         sessionStorage.setStatus(_sessionId, uint256(SessionStatus.ACTIVE));
         return true;
