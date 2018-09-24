@@ -1,10 +1,15 @@
 pragma solidity 0.4.24;
 
-contract ICashInStorage {
-    
+contract ACashInStorage {
+
+    event CashInSaved(uint256 channelId, uint256 sessionId, address application, uint256 status);
+    event CashInBalanceUpdated(uint256 channelId, uint256 amount);
+    event CashInStatusUpdated(uint256 channelId, uint256 status);
+    event CashInSplitAdded(uint256 channelId, address party, uint256 amount);
+
     function save(uint256 sessionId, address application, uint256 status) public returns(uint256);
 
-    function get(uint256 channelId) external view
+    function get(uint256 channelId) public view
     returns(
         uint256 sessionId,
         address application,

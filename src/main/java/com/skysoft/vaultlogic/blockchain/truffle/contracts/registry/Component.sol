@@ -5,7 +5,7 @@ import "../oracles/IApplicationOracle.sol";
 import "../repositories/session/ISessionStorage.sol";
 import "../services/ISessionManager.sol";
 import "../oracles/ISessionOracle.sol";
-import "../repositories/cash-in/ICashInStorage.sol";
+import "../repositories/cash-in/ACashInStorage.sol";
 import "../oracles/ICashInOracle.sol";
 import "../repositories/token/ITokenStorage.sol";
 import "../services/ACashChannelsManager.sol";
@@ -82,8 +82,8 @@ contract Component is Ownable {
     }
 
     /// cash-in-channel components
-    function _cashInStorage() internal view returns(ICashInStorage) {
-        return ICashInStorage(lookup(CASH_IN_STORAGE));
+    function _cashInStorage() internal view returns(ACashInStorage) {
+        return ACashInStorage(lookup(CASH_IN_STORAGE));
     }
 
     function _cashInOracle() internal view returns(ICashInOracle) {

@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../repositories/cash-in/ICashInStorage.sol";
+import "../repositories/cash-in/ACashInStorage.sol";
 import "../repositories/session/ISessionStorage.sol";
 import "../repositories/application/AnApplicationStorage.sol";
 import "../application/IApplication.sol";
@@ -59,7 +59,7 @@ contract CashChannelsManager is ACashChannelsManager, Component {
     }
 
     function balanceOf(address _application, uint256 _channelId) public view returns (uint256) {
-        ICashInStorage cashInStorage = _cashInStorage();
+        ACashInStorage cashInStorage = _cashInStorage();
         require(cashInStorage.getApplication(_channelId) == _application, "Illegal access");
         return cashInStorage.getBalance(_channelId);
     }
