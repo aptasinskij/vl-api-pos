@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 import "../../registry/Component.sol";
 
 import {SessionLib} from "../../libs/Libraries.sol";
-import {ASessionStorage} from "../../Storages.sol";
+import {ASessionStorage} from "../../StorageDefinitions.sol";
 
 contract SessionStorage is Component, ASessionStorage {
     

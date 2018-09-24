@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 import "../../registry/Component.sol";
 
 import {TokenLib} from "../../libs/Libraries.sol";
-import {ATokenStorage} from "../../Storages.sol";
+import {ATokenStorage} from "../../StorageDefinitions.sol";
 
 contract TokenStorage is Component, ATokenStorage {
 

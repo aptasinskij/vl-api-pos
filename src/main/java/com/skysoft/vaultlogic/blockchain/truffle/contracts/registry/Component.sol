@@ -9,7 +9,7 @@ import "../services/ACashChannelsManager.sol";
 import "../services/ATokenManager.sol";
 import "../services/AParameterManager.sol";
 import "../Ownable.sol";
-import "../Storages.sol";
+import "../StorageDefinitions.sol";
 
 ///@dev base contract for all registry components
 contract Component is Ownable {
