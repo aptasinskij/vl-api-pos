@@ -9,7 +9,7 @@ import "../repositories/cash-in/ACashInStorage.sol";
 import "../oracles/ICashInOracle.sol";
 import "../repositories/token/ATokenStorage.sol";
 import "../services/ACashChannelsManager.sol";
-import "../services/ITokenManager.sol";
+import "../services/ATokenManager.sol";
 import "../services/AParameterManager.sol";
 import "../repositories/application/AnApplicationStorage.sol";
 import "../Ownable.sol";
@@ -100,8 +100,8 @@ contract Component is Ownable {
         return ATokenStorage(lookup(TOKEN_STORAGE));
     }
 
-    function _tokenManager() internal view returns(ITokenManager) {
-        return ITokenManager(lookup(TOKEN_MANAGER));
+    function _tokenManager() internal view returns(ATokenManager) {
+        return ATokenManager(lookup(TOKEN_MANAGER));
     }
 
     /// parameter components

@@ -7,7 +7,6 @@ import "../application/IApplication.sol";
 import "../oracles/ICashInOracle.sol";
 import "./ACashChannelsManager.sol";
 import "../libs/SafeMath.sol";
-import "./ITokenManager.sol";
 import "../Ownable.sol";
 import "../registry/Component.sol";
 

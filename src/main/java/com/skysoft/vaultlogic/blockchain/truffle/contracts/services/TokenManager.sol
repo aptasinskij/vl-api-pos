@@ -3,14 +3,11 @@ pragma solidity 0.4.24;
 import "../libs/SafeMath.sol";
 import "../registry/Component.sol";
 import "../repositories/token/ATokenStorage.sol";
-import "./ITokenManager.sol";
+import "./ATokenManager.sol";
 
-contract TokenManager is Component, ITokenManager {
+contract TokenManager is Component, ATokenManager {
 
     string constant COMPONENT_NAME = "token-manager";
-
-    event Transfer(address indexed to, uint value);
-    event TransferFrom(address indexed from, address indexed to, uint value);
 
     using SafeMath for uint256;
 
@@ -20,18 +17,18 @@ contract TokenManager is Component, ITokenManager {
         return COMPONENT_NAME;
     }
 
-    function balanceOf(address consumer) external view returns (uint256) {
+    function balanceOf(address consumer) public view returns (uint256) {
         return _tokenStorage().get(consumer);
     }
 
-    function transfer(address recipient, uint256 value) external {
+    function transfer(address recipient, uint256 value) public {
         require(value > 0, "The value for the transaction cannot be equals to zero");
         ATokenStorage tokenStorage = _tokenStorage();
         tokenStorage.set(recipient, tokenStorage.get(recipient).add(value));
         emit Transfer(recipient, value);
     }
 
-    function transferFrom(address from, address to, uint256 value) external {
+    function transferFrom(address from, address to, uint256 value) public {
         ATokenStorage tokenStorage = _tokenStorage();
 
         uint256 balanceFrom = tokenStorage.get(from);
