@@ -51,9 +51,9 @@ contract CashChannelsManager is ACashChannelsManager {
         uint256 vaultLogicFee = channelBalance.mul(_parameterManager().getVLFee()).div(10000);
         uint256 feesAmount = _sumOf(fees);
         require(feesAmount.add(vaultLogicFee) <= channelBalance, "Channel balance overflow");
-        _transfer(owner, vaultLogicFee);
-        _transfer(_application, channelBalance.sub(vaultLogicFee).sub(feesAmount));
-        _transferAll(parties, fees);
+        _cashInStorage().setVLFee(vaultLogicFee);
+        _cashInStorage().setApplicationBalance(_channelId, channelBalance.sub(vaultLogicFee).sub(feesAmount));
+        _cashInStorage().addSplits(_channelId, parties, fees);
         _cashInStorage().setStatus(_channelId, uint256(CashInStatus.CLOSE_REQUESTED));
         _cashInOracle().close(_sessionId, _channelId);
         return true;
@@ -81,6 +81,12 @@ contract CashChannelsManager is ACashChannelsManager {
     function confirmClose(uint256 channelId) public {
         require(_cashInStorage().getStatus(channelId) == uint256(CashInStatus.CLOSE_REQUESTED));
         (address application, uint256 sessionId) = _cashInStorage().getApplicationAndSessionId(channelId);
+        _transfer(owner, _cashInStorage().getVLFee(channelId));
+        _transfer(_application, _cashInStorage().getApplicationBalance(channelId));
+        for(uint256 i = 0; i < _cashInStorage().getSplitSize(channelId); i++) {
+            (address party, uint256 fee) = _cashInStorage().getSplit(channelId, i);
+            _transfer(party, fee);
+        }
         _cashInStorage().setStatus(channelId, uint256(CashInStatus.CLOSED));
         _sessionStorage().setHasActiveCashIn(sessionId, false);
         IApplication(application).cashInChannelClosed(channelId, sessionId);
