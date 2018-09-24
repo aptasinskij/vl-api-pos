@@ -11,6 +11,7 @@ library CashInLib {
     string constant STATUS = "cash_in_status";
     string constant BALANCE = "cash_in_balance";
     string constant VL_FEE = "cash_in_vault_logic_fee";
+    string constant APP_BALANCE = "cash_in_application_balance";
 
     ///@dev set of constants to store and retrieve dynamic sized arrays of splits
     string constant SPLIT_SIZE = "cash_in_split_size";
@@ -66,6 +67,14 @@ library CashInLib {
 
     function getVLFee(address self, uint256 index) internal view returns(uint256) {
         return Database(self).getUintValue(keccak256(abi.encodePacked(VL_FEE, index)));
+    }
+
+    function setApplicationBalance(address self, uint256 index, uint256 balance) internal {
+        Database(self).setUintValue(string256(APP_BALANCE, index), balance);
+    }
+
+    function getApplicationBalance(address self, uint256 index) internal view returns(uint256) {
+        return Database(self).getUintValue(string256(APP_BALANCE, index));
     }
 
     function setStatus(address self, uint256 index, uint256 status) internal {

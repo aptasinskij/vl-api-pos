@@ -23,9 +23,13 @@ contract ICashInStorage {
 
     function getBalance(uint256 channelId) public view returns(uint256);
 
-    function setVLFee(uint256 _channelId) public;
+    function setVLFee(uint256 channelId, uint256 fee) public;
 
-    function getVLFee(uint256 _channelId) public view returns(uint256);
+    function getVLFee(uint256 channelId) public view returns(uint256);
+
+    function setApplicationBalance(uint256 channelId, uint256 balance) public;
+
+    function getApplicationBalance(uint256 channelId) public view returns(uint256);
 
     function setStatus(uint256 channelId, uint256 status) public;
 
