@@ -9,10 +9,29 @@ import "./ISessionManager.sol";
 import "./ACashChannelsManager.sol";
 import "../libs/SafeMath.sol";
 import "./ITokenManager.sol";
+import "../Ownable.sol";
+import "../registry/Component.sol";
 
-contract CashChannelsManager is ACashChannelsManager {
+contract CashChannelsManager is ACashChannelsManager, Component {
+
+    string constant COMPONENT_NAME = "cash-channels-manager";
 
     using SafeMath for uint256;
+
+    modifier cashInActive(uint256 _channelId) {
+        require(_cashInStorage().getStatus(_channelId) == uint256(CashInStatus.ACTIVE), "CashIn in illegal state");
+        _;
+    }
+
+    modifier appOwnsChannel(uint256 _channelId, address _application) {
+        require(_cashInStorage().getApplication(_channelId) == _application, "Illegal access");
+        _;
+    }
+
+    modifier channelBelongsToSession(uint256 _channelId, uint256 _sessionId) {
+        require(_cashInStorage().getSessionId(_channelId) == _sessionId, "Arguments mismatch");
+        _;
+    }
 
     constructor(address registry) Component(registry) public {}
 

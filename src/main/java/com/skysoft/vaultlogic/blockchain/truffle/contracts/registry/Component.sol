@@ -13,9 +13,10 @@ import "../services/ITokenManager.sol";
 import "../repositories/parameter/IParameterStorage.sol";
 import "../services/IParameterManager.sol";
 import "../repositories/application/AnApplicationStorage.sol";
+import "../Ownable.sol";
 
 ///@dev base contract for all registry components
-contract Component {
+contract Component is Ownable {
 
     address registry;
 

@@ -5,7 +5,7 @@ import "./AnApplicationStorage.sol";
 import "../../registry/Component.sol";
 import "../../Ownable.sol";
 
-contract ApplicationStorage is AnApplicationStorage, Component, Ownable {
+contract ApplicationStorage is AnApplicationStorage, Component {
 
     string constant COMPONENT_NAME = "application-storage";
     string constant DATABASE = "database";
