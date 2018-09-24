@@ -1,20 +1,41 @@
 pragma solidity 0.4.24;
 
-import "../repositories/cash-in/ICashInStorage.sol";
-import "../repositories/session/ISessionStorage.sol";
-import "../repositories/application/IApplicationStorage.sol";
+import "../repositories/cash-in/ACashInStorage.sol";
+import "../repositories/session/ASessionStorage.sol";
+import "../repositories/application/AnApplicationStorage.sol";
 import "../application/IApplication.sol";
 import "../oracles/ICashInOracle.sol";
-import "./ISessionManager.sol";
 import "./ACashChannelsManager.sol";
 import "../libs/SafeMath.sol";
-import "./ITokenManager.sol";
+import "../Ownable.sol";
+import "../registry/Component.sol";
 
-contract CashChannelsManager is ACashChannelsManager {
+contract CashChannelsManager is ACashChannelsManager, Component {
+
+    string constant COMPONENT_NAME = "cash-channels-manager";
 
     using SafeMath for uint256;
 
-    constructor(address registry) ACashChannelsManager(registry) public {}
+    modifier cashInActive(uint256 _channelId) {
+        require(_cashInStorage().getStatus(_channelId) == uint256(CashInStatus.ACTIVE), "CashIn in illegal state");
+        _;
+    }
+
+    modifier appOwnsChannel(uint256 _channelId, address _application) {
+        require(_cashInStorage().getApplication(_channelId) == _application, "Illegal access");
+        _;
+    }
+
+    modifier channelBelongsToSession(uint256 _channelId, uint256 _sessionId) {
+        require(_cashInStorage().getSessionId(_channelId) == _sessionId, "Arguments mismatch");
+        _;
+    }
+
+    constructor(address registry) Component(registry) public {}
+
+    function getName() internal pure returns (string name) {
+        return COMPONENT_NAME;
+    }
 
     ///@dev cash-in channel could be created only if:
     ///session is active; application owns the session; there is no active channels in the session
@@ -36,7 +57,7 @@ contract CashChannelsManager is ACashChannelsManager {
     }
 
     function balanceOf(address _application, uint256 _channelId) public view returns (uint256) {
-        ICashInStorage cashInStorage = _cashInStorage();
+        ACashInStorage cashInStorage = _cashInStorage();
         require(cashInStorage.getApplication(_channelId) == _application, "Illegal access");
         return cashInStorage.getBalance(_channelId);
     }
@@ -51,7 +72,7 @@ contract CashChannelsManager is ACashChannelsManager {
         uint256 vaultLogicFee = channelBalance.mul(_parameterManager().getVLFee()).div(10000);
         uint256 feesAmount = _sumOf(fees);
         require(feesAmount.add(vaultLogicFee) <= channelBalance, "Channel balance overflow");
-        _cashInStorage().setVLFee(vaultLogicFee);
+        _cashInStorage().setVLFee(_channelId, vaultLogicFee);
         _cashInStorage().setApplicationBalance(_channelId, channelBalance.sub(vaultLogicFee).sub(feesAmount));
         _cashInStorage().addSplits(_channelId, parties, fees);
         _cashInStorage().setStatus(_channelId, uint256(CashInStatus.CLOSE_REQUESTED));
@@ -82,7 +103,7 @@ contract CashChannelsManager is ACashChannelsManager {
         require(_cashInStorage().getStatus(channelId) == uint256(CashInStatus.CLOSE_REQUESTED));
         (address application, uint256 sessionId) = _cashInStorage().getApplicationAndSessionId(channelId);
         _transfer(owner, _cashInStorage().getVLFee(channelId));
-        _transfer(_application, _cashInStorage().getApplicationBalance(channelId));
+        _transfer(application, _cashInStorage().getApplicationBalance(channelId));
         for(uint256 i = 0; i < _cashInStorage().getSplitSize(channelId); i++) {
             (address party, uint256 fee) = _cashInStorage().getSplit(channelId, i);
             _transfer(party, fee);

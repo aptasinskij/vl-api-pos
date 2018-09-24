@@ -1,16 +1,16 @@
 pragma solidity 0.4.24;
 
-import "../registry/RegistryComponent.sol";
+import "../registry/Component.sol";
 import "../services/ACashChannelsManager.sol";
 
-contract CashInOracle is RegistryComponent {
+contract CashInOracle is Component {
 
     string constant COMPONENT_NAME = "cash-in-oracle";
     
     event OpenCashAcceptor(uint256 sessionId, uint256 channelId, uint256 channelStatus);
     event CloseCashAcceptor(uint256 sessionId, uint256 channelId);
 
-    constructor(address regAddr) RegistryComponent(regAddr) public {}
+    constructor(address regAddr) Component(regAddr) public {}
 
     function getName() internal pure returns(string name) {
         return COMPONENT_NAME;

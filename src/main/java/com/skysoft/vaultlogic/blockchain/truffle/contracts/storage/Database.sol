@@ -1,12 +1,12 @@
 pragma solidity 0.4.24;
 
-import "../registry/RegistryComponent.sol";
+import "../registry/Component.sol";
 
-contract Database is RegistryComponent {
+contract Database is Component {
 
     string constant DATABASE = "database";
 
-    constructor(address regAddr) RegistryComponent(regAddr) public {}
+    constructor(address regAddr) Component(regAddr) public {}
     
     function getName() internal pure returns(string name) {
         return DATABASE;

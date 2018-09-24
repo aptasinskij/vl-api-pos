@@ -1,22 +1,22 @@
 pragma solidity 0.4.24;
 
 import "./IRegistry.sol";
-import "../Ownable.sol";
-import "../repositories/application/IApplicationStorage.sol";
 import "../oracles/IApplicationOracle.sol";
-import "../repositories/session/ISessionStorage.sol";
-import "../services/ISessionManager.sol";
+import "../repositories/session/ASessionStorage.sol";
+import "../services/ASessionManager.sol";
 import "../oracles/ISessionOracle.sol";
-import "../repositories/cash-in/ICashInStorage.sol";
+import "../repositories/cash-in/ACashInStorage.sol";
 import "../oracles/ICashInOracle.sol";
-import "../repositories/token/ITokenStorage.sol";
+import "../repositories/token/ATokenStorage.sol";
 import "../services/ACashChannelsManager.sol";
-import "../services/ITokenManager.sol";
-import "../repositories/parameter/IParameterStorage.sol";
-import "../services/IParameterManager.sol";
+import "../services/ATokenManager.sol";
+import "../services/AParameterManager.sol";
+import "../repositories/application/AnApplicationStorage.sol";
+import "../Ownable.sol";
+import "../repositories/parameter/AParameterStorage.sol";
 
 ///@dev base contract for all registry components
-contract RegistryComponent is Ownable {
+contract Component is Ownable {
 
     address registry;
 
@@ -41,7 +41,7 @@ contract RegistryComponent is Ownable {
     ///@param addr - address of deployed Registry instance
     ///@dev each component will be registered at instantiation time
     ///by name with returns from getName() abstract method
-    constructor(address addr) public {
+    constructor(address addr) internal {
         require(addr != 0x0, "System state violation");
         registry = addr;
         IRegistry(registry).register(getName(), address(this));
@@ -60,8 +60,8 @@ contract RegistryComponent is Ownable {
     /// @return name of implementation
     function getName() internal pure returns(string name);
 
-    function _applicationStorage() internal view returns(IApplicationStorage) {
-        return IApplicationStorage(lookup(APPLICATION_STORAGE));
+    function _applicationStorage() internal view returns(AnApplicationStorage) {
+        return AnApplicationStorage(lookup(APPLICATION_STORAGE));
     }
 
     function _applicationOracle() internal view returns(IApplicationOracle) {
@@ -69,12 +69,12 @@ contract RegistryComponent is Ownable {
     }
 
     /// session components
-    function _sessionStorage() internal view returns(ISessionStorage) {
-        return ISessionStorage(lookup(SESSION_STORAGE));
+    function _sessionStorage() internal view returns(ASessionStorage) {
+        return ASessionStorage(lookup(SESSION_STORAGE));
     }
 
-    function _sessionManager() internal view returns(ISessionManager) {
-        return ISessionManager(lookup(SESSION_MANAGER));
+    function _sessionManager() internal view returns(ASessionManager) {
+        return ASessionManager(lookup(SESSION_MANAGER));
     }
 
     function _sessionOracle() internal view returns(ISessionOracle) {
@@ -82,8 +82,8 @@ contract RegistryComponent is Ownable {
     }
 
     /// cash-in-channel components
-    function _cashInStorage() internal view returns(ICashInStorage) {
-        return ICashInStorage(lookup(CASH_IN_STORAGE));
+    function _cashInStorage() internal view returns(ACashInStorage) {
+        return ACashInStorage(lookup(CASH_IN_STORAGE));
     }
 
     function _cashInOracle() internal view returns(ICashInOracle) {
@@ -96,21 +96,21 @@ contract RegistryComponent is Ownable {
     }
 
     /// token components
-    function _tokenStorage() internal view returns(ITokenStorage) {
-        return ITokenStorage(lookup(TOKEN_STORAGE));
+    function _tokenStorage() internal view returns(ATokenStorage) {
+        return ATokenStorage(lookup(TOKEN_STORAGE));
     }
 
-    function _tokenManager() internal view returns(ITokenManager) {
-        return ITokenManager(lookup(TOKEN_MANAGER));
+    function _tokenManager() internal view returns(ATokenManager) {
+        return ATokenManager(lookup(TOKEN_MANAGER));
     }
 
     /// parameter components
-    function _parameterStorage() internal view returns(IParameterStorage) {
-        return IParameterStorage(lookup(PARAMETER_STORAGE));
+    function _parameterStorage() internal view returns(AParameterStorage) {
+        return AParameterStorage(lookup(PARAMETER_STORAGE));
     }
 
-    function _parameterManager() internal view returns(IParameterManager) {
-        return IParameterManager(lookup(PARAMETER_MANAGER));
+    function _parameterManager() internal view returns(AParameterManager) {
+        return AParameterManager(lookup(PARAMETER_MANAGER));
     }
 
 }

@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 import "./IApplication.sol";
 import "./RegistryDependent.sol";
 import "../services/ACashChannelsManager.sol";
-import "../services/ISessionManager.sol";
+import "../services/ASessionManager.sol";
 
 contract CapitalHero is IApplication, RegistryDependent {
 
@@ -43,7 +43,7 @@ contract CapitalHero is IApplication, RegistryDependent {
     }
 
     function closeSession(uint256 sessionId) external {
-        ISessionManager(componentForName(SESSION_MANAGER)).closeSession(sessionId);
+        ASessionManager(componentForName(SESSION_MANAGER)).closeSession(sessionId);
     }
 
     function sessionClosed(uint256 sessionId) external {
