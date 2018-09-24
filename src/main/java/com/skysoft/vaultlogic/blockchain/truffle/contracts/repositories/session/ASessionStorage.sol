@@ -1,6 +1,10 @@
 pragma solidity 0.4.24;
 
 contract ASessionStorage {
+
+    event Saved(uint256 sessionId, uint256 appId, string xToken, uint256 status);
+    event StatusUpdated(uint256 index, uint256 status);
+    event ActiveCashIn(uint256 _sessionId, bool _flag);
     
     function getAppId(uint256 index) public view returns (uint256);
 

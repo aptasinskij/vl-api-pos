@@ -1,17 +1,14 @@
 pragma solidity 0.4.24;
 
-import "./SessionLib.sol";
 import "../../registry/Component.sol";
 import "./ASessionStorage.sol";
+
+import {SessionLib} from "../../libs/Libraries.sol";
 
 contract SessionStorage is Component, ASessionStorage {
     
     string constant COMPONENT_NAME = "session-storage";
     string constant DATABASE = "database";
-
-    event Saved(uint256 sessionId, uint256 appId, string xToken, uint256 status);
-    event StatusUpdated(uint256 index, uint256 status);
-    event ActiveCashIn(uint256 _sessionId, bool _flag);
 
     using SessionLib for address;
     

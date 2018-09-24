@@ -1,8 +1,8 @@
 pragma solidity 0.4.24;
 
-import "./CashInLib.sol";
 import "../../registry/Component.sol";
 import "./ACashInStorage.sol";
+import {CashInLib} from "../../libs/Libraries.sol";
 
 contract CashInStorage is Component, ACashInStorage {
 

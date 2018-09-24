@@ -6,7 +6,9 @@ import "../repositories/application/AnApplicationStorage.sol";
 import "../application/IApplication.sol";
 import "../oracles/ICashInOracle.sol";
 import "./ACashChannelsManager.sol";
-import "../libs/SafeMath.sol";
+
+import {SafeMath} from "../libs/Libraries.sol";
+
 import "../Ownable.sol";
 import "../registry/Component.sol";
 
@@ -80,8 +82,8 @@ contract CashChannelsManager is ACashChannelsManager, Component {
         return true;
     }
 
-    function _sumOf(uint256[] _elements) private pure returns(uint256 _sum) {
-        for(uint256 i = 0; i < _elements.length; i++) _sum = _sum.add(_elements[i]);
+    function _sumOf(uint256[] _elements) private pure returns (uint256 _sum) {
+        for (uint256 i = 0; i < _elements.length; i++) _sum = _sum.add(_elements[i]);
     }
 
     function _transferAll(address[] _recepients, uint256[] _amounts) private {
@@ -104,7 +106,7 @@ contract CashChannelsManager is ACashChannelsManager, Component {
         (address application, uint256 sessionId) = _cashInStorage().getApplicationAndSessionId(channelId);
         _transfer(owner, _cashInStorage().getVLFee(channelId));
         _transfer(application, _cashInStorage().getApplicationBalance(channelId));
-        for(uint256 i = 0; i < _cashInStorage().getSplitSize(channelId); i++) {
+        for (uint256 i = 0; i < _cashInStorage().getSplitSize(channelId); i++) {
             (address party, uint256 fee) = _cashInStorage().getSplit(channelId, i);
             _transfer(party, fee);
         }

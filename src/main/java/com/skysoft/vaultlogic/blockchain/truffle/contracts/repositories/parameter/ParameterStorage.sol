@@ -1,8 +1,8 @@
 pragma solidity 0.4.24;
 
 import "../../registry/Component.sol";
-import "./ParameterLib.sol";
 import "./AParameterStorage.sol";
+import {ParameterLib} from "../../libs/Libraries.sol";
 
 contract ParameterStorage is Component, AParameterStorage {
 
