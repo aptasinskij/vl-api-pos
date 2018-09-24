@@ -19,13 +19,11 @@ contract('ParameterStorage', () => {
             const instance = await ParameterStorage.deployed();
             /* setVLFee */
             resSetVLFee1 = await instance.setVLFee(50);
-            resSetVLFee1 = convertToNumber(resSetVLFee1.logs[0].args);
             /* getVLFee */
             resGetVLFee1 = await instance.getVLFee();
             resGetVLFee1 = Number(resGetVLFee1);
             /* setVLFee ones again */
             resSetVLFee2 = await instance.setVLFee(10);
-            resSetVLFee2 = convertToNumber(resSetVLFee2.logs[0].args);
             /* getVLFee ones again */
             resGetVLFee2 = await instance.getVLFee();
             resGetVLFee2 = Number(resGetVLFee2);
@@ -39,14 +37,18 @@ contract('ParameterStorage', () => {
          - (uint256) percent - value of VaultLogic fee
         \*/
         it('setVLFee', () => {
-            assert.strictEqual(resSetVLFee1.percent, 50, 'percent value is not equal');
-            assert.strictEqual(resSetVLFee2.percent, 10, 'percent value is not equal after redefine');
+            assert.notEqual(resSetVLFee1.receipt.transactionHash, '', 'transaction hash is empty');
+            assert.isAbove(resSetVLFee1.receipt.gasUsed, 0, 'gasUsed is 0');
+            assert.notEqual(resSetVLFee2.receipt.transactionHash, '', 'transaction hash is empty');
+            assert.isAbove(resSetVLFee2.receipt.gasUsed, 0, 'gasUsed is 0');
         });
 
         /*\
          # <hr>
          # <h4> getVLFee() </h4>
          # Get value of VaultLogic fee
+         > Returns
+         - (uint256) percent - value of VaultLogic fee
         \*/
         it('getVLFee', () => {
             assert.strictEqual(resGetVLFee1, 50, 'percent value is not equal');
