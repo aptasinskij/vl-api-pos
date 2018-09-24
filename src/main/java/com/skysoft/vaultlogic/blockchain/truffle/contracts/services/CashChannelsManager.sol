@@ -55,7 +55,7 @@ contract CashChannelsManager is ACashChannelsManager {
         uint256 vaultLogicFee = channelBalance.mul(_parameterManager().getVLFee()).div(10000);
         uint256 feesAmount = _sumOf(fees);
         require(feesAmount.add(vaultLogicFee) <= channelBalance, "Channel balance overflow");
-        _cashInStorage().setVLFee(vaultLogicFee);
+        _cashInStorage().setVLFee(_channelId, vaultLogicFee);
         _cashInStorage().setApplicationBalance(_channelId, channelBalance.sub(vaultLogicFee).sub(feesAmount));
         _cashInStorage().addSplits(_channelId, parties, fees);
         _cashInStorage().setStatus(_channelId, uint256(CashInStatus.CLOSE_REQUESTED));
@@ -86,7 +86,7 @@ contract CashChannelsManager is ACashChannelsManager {
         require(_cashInStorage().getStatus(channelId) == uint256(CashInStatus.CLOSE_REQUESTED));
         (address application, uint256 sessionId) = _cashInStorage().getApplicationAndSessionId(channelId);
         _transfer(owner, _cashInStorage().getVLFee(channelId));
-        _transfer(_application, _cashInStorage().getApplicationBalance(channelId));
+        _transfer(application, _cashInStorage().getApplicationBalance(channelId));
         for(uint256 i = 0; i < _cashInStorage().getSplitSize(channelId); i++) {
             (address party, uint256 fee) = _cashInStorage().getSplit(channelId, i);
             _transfer(party, fee);
