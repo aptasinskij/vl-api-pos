@@ -2,15 +2,17 @@ pragma solidity 0.4.24;
 
 import "./ApplicationLib.sol";
 import "./AnApplicationStorage.sol";
+import "../../registry/Component.sol";
+import "../../Ownable.sol";
 
-contract ApplicationStorage is AnApplicationStorage {
+contract ApplicationStorage is AnApplicationStorage, Component, Ownable {
 
     string constant COMPONENT_NAME = "application-storage";
     string constant DATABASE = "database";
 
     using ApplicationLib for address;
 
-    constructor(address registry) AnApplicationStorage(registry) public {}
+    constructor(address registry) Component(registry) public {}
 
     function getName() internal pure returns(string) {
         return COMPONENT_NAME;
