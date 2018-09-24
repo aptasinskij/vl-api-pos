@@ -1,16 +1,16 @@
 pragma solidity 0.4.24;
 
-import "../../registry/RegistryComponent.sol";
+import "../../registry/Component.sol";
 import "./ParameterLib.sol";
 
-contract ParameterStorage is RegistryComponent {
+contract ParameterStorage is Component {
 
     string constant COMPONENT_NAME = "parameter-storage";
     string constant DATABASE = "database";
 
     using ParameterLib for address;
 
-    constructor(address registryAddress) RegistryComponent(registryAddress) public {}
+    constructor(address registryAddress) Component(registryAddress) public {}
 
     function getName() internal pure returns(string) {
         return COMPONENT_NAME;

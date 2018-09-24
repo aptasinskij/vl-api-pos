@@ -1,10 +1,10 @@
 pragma solidity 0.4.24;
 
 import "./SessionLib.sol";
-import "../../registry/RegistryComponent.sol";
+import "../../registry/Component.sol";
 import "./ISessionStorage.sol";
 
-contract SessionStorage is RegistryComponent, ISessionStorage {
+contract SessionStorage is Component, ISessionStorage {
     
     string constant COMPONENT_NAME = "session-storage";
     string constant DATABASE = "database";
@@ -15,7 +15,7 @@ contract SessionStorage is RegistryComponent, ISessionStorage {
 
     using SessionLib for address;
     
-    constructor(address registryAddress) RegistryComponent(registryAddress) public {}
+    constructor(address registryAddress) Component(registryAddress) public {}
 
     function getName() internal pure returns(string) {
         return COMPONENT_NAME;

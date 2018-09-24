@@ -14,7 +14,11 @@ contract CashChannelsManager is ACashChannelsManager {
 
     using SafeMath for uint256;
 
-    constructor(address registry) ACashChannelsManager(registry) public {}
+    constructor(address registry) Component(registry) public {}
+
+    function getName() internal pure returns (string name) {
+        return COMPONENT_NAME;
+    }
 
     ///@dev cash-in channel could be created only if:
     ///session is active; application owns the session; there is no active channels in the session

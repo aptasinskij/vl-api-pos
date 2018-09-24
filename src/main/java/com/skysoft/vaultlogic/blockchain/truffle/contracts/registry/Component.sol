@@ -1,7 +1,6 @@
 pragma solidity 0.4.24;
 
 import "./IRegistry.sol";
-import "../Ownable.sol";
 import "../repositories/application/IApplicationStorage.sol";
 import "../oracles/IApplicationOracle.sol";
 import "../repositories/session/ISessionStorage.sol";
@@ -16,7 +15,7 @@ import "../repositories/parameter/IParameterStorage.sol";
 import "../services/IParameterManager.sol";
 
 ///@dev base contract for all registry components
-contract RegistryComponent is Ownable {
+contract Component {
 
     address registry;
 
@@ -41,7 +40,7 @@ contract RegistryComponent is Ownable {
     ///@param addr - address of deployed Registry instance
     ///@dev each component will be registered at instantiation time
     ///by name with returns from getName() abstract method
-    constructor(address addr) public {
+    constructor(address addr) internal {
         require(addr != 0x0, "System state violation");
         registry = addr;
         IRegistry(registry).register(getName(), address(this));

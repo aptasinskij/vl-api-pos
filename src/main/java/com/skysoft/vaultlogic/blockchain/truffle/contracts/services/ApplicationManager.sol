@@ -1,16 +1,16 @@
 pragma solidity 0.4.24;
 
-import "../registry/RegistryComponent.sol";
+import "../registry/Component.sol";
 import "../repositories/application/IApplicationStorage.sol";
 import "../oracles/IApplicationOracle.sol";
 
-contract ApplicationManager is RegistryComponent {
+contract ApplicationManager is Component {
 
     enum ApplicationStatus { PENDING, ENABLED, DISABLED }
 
     string constant COMPONENT_NAME = "application-manager";
 
-    constructor(address regAddr) RegistryComponent(regAddr) public {}
+    constructor(address regAddr) Component(regAddr) public {}
 
     function getName() internal pure returns(string name) {
         return COMPONENT_NAME;

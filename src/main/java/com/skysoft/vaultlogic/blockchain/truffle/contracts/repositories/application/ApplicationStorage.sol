@@ -1,10 +1,10 @@
 pragma solidity 0.4.24;
 
 import "./ApplicationLib.sol";
-import "../../registry/RegistryComponent.sol";
+import "../../registry/Component.sol";
 import "./IApplicationStorage.sol";
 
-contract ApplicationStorage is RegistryComponent, IApplicationStorage {
+contract ApplicationStorage is Component, IApplicationStorage {
 
     string constant COMPONENT_NAME = "application-storage";
     string constant DATABASE = "database";
@@ -16,7 +16,7 @@ contract ApplicationStorage is RegistryComponent, IApplicationStorage {
 
     using ApplicationLib for address;
 
-    constructor(address registryAddr) RegistryComponent(registryAddr) public {}
+    constructor(address registryAddr) Component(registryAddr) public {}
 
     function getName() internal pure returns(string) {
         return COMPONENT_NAME;

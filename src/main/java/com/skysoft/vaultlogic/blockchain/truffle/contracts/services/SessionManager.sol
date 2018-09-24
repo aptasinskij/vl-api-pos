@@ -3,18 +3,18 @@ pragma solidity 0.4.24;
 import "../application/IApplication.sol";
 import "../oracles/ISessionOracle.sol";
 import "../application/IApplication.sol";
-import "../registry/RegistryComponent.sol";
+import "../registry/Component.sol";
 import "../repositories/session/ISessionStorage.sol";
 import "../repositories/application/IApplicationStorage.sol";
 import "./ISessionManager.sol";
 
-contract SessionManager is RegistryComponent, ISessionManager {
+contract SessionManager is Component, ISessionManager {
     
     enum SessionStatus { CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED }
 
     string constant COMPONENT_NAME = "session-manager";
 
-    constructor(address regAddr) RegistryComponent(regAddr) public {}
+    constructor(address regAddr) Component(regAddr) public {}
 
     function getName() internal pure returns(string) {
         return COMPONENT_NAME;

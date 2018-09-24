@@ -1,8 +1,9 @@
 pragma solidity 0.4.24;
 
-import "../registry/RegistryComponent.sol";
+import "../Ownable.sol";
+import "../registry/Component.sol";
 
-contract ACashChannelsManager is RegistryComponent {
+contract ACashChannelsManager is Ownable, Component {
 
     string constant COMPONENT_NAME = "cash-channels-manager";
 
@@ -23,20 +24,12 @@ contract ACashChannelsManager is RegistryComponent {
         _;
     }
 
-    constructor(address registry) RegistryComponent(registry) public {}
-
-    function getName() internal pure returns (string name) {
-        return COMPONENT_NAME;
-    }
-
     function openCashInChannel(address _application, uint256 _sessionId) public returns (uint256);
 
-    //TODO maybe store splits for channel and request to close
     function closeCashInChannel(address _application, uint256 _sessionId, uint256 _channelId, uint256[] fees, address[] parties) public returns (bool);
 
     function confirmOpen(uint256 channelId) public;
 
-    //TODO maybe make transfer only after confirmation?
     function confirmClose(uint256 channelId) public;
 
     function updateCashInBalance(uint256 channelId, uint256 amount) public;

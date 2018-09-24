@@ -1,11 +1,11 @@
 pragma solidity 0.4.24;
 
 import "../libs/SafeMath.sol";
-import "../registry/RegistryComponent.sol";
+import "../registry/Component.sol";
 import "../repositories/token/ITokenStorage.sol";
 import "./ITokenManager.sol";
 
-contract TokenManager is RegistryComponent, ITokenManager {
+contract TokenManager is Component, ITokenManager {
 
     string constant COMPONENT_NAME = "token-manager";
 
@@ -14,7 +14,7 @@ contract TokenManager is RegistryComponent, ITokenManager {
 
     using SafeMath for uint256;
 
-    constructor(address registryAddress) RegistryComponent(registryAddress) public {}
+    constructor(address registryAddress) Component(registryAddress) public {}
 
     function getName() internal pure returns(string) {
         return COMPONENT_NAME;

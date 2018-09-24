@@ -1,9 +1,9 @@
 pragma solidity 0.4.24;
 
 import "./CashInLib.sol";
-import "../../registry/RegistryComponent.sol";
+import "../../registry/Component.sol";
 
-contract CashInStorage is RegistryComponent {
+contract CashInStorage is Component {
 
     string constant COMPONENT_NAME = "cash-in-storage";
     string constant DATABASE = "database";
@@ -15,7 +15,7 @@ contract CashInStorage is RegistryComponent {
 
     using CashInLib for address;
 
-    constructor(address registryAddr) RegistryComponent(registryAddr) public {}
+    constructor(address registryAddr) Component(registryAddr) public {}
 
     function getName() internal pure returns(string) {
         return COMPONENT_NAME;

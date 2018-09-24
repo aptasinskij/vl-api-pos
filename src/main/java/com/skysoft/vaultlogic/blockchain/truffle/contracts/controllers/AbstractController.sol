@@ -1,15 +1,15 @@
 pragma solidity 0.4.24;
 
-import "../registry/RegistryComponent.sol";
+import "../registry/Component.sol";
 import "../repositories/application/IApplicationStorage.sol";
 
-contract AbstractController is RegistryComponent {
+contract AbstractController is Component {
 
     modifier onlyRegisteredApp {
         require(_applicationStorage().isRegistered(msg.sender), "Illegal access");
         _;
     }
 
-    constructor(address registry) RegistryComponent(registry) public {}
+    constructor(address registry) Component(registry) public {}
 
 }

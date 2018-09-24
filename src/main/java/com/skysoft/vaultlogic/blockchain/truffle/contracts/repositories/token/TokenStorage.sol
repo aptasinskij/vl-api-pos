@@ -1,16 +1,16 @@
 pragma solidity 0.4.24;
 
 import "./TokenLib.sol";
-import "../../registry/RegistryComponent.sol";
+import "../../registry/Component.sol";
 
-contract TokenStorage is RegistryComponent {
+contract TokenStorage is Component {
 
     string constant COMPONENT_NAME = "token-storage";
     string constant DATABASE = "database";
 
     using TokenLib for address;
 
-    constructor(address registryAddress) RegistryComponent(registryAddress) public {}
+    constructor(address registryAddress) Component(registryAddress) public {}
 
     function getName() internal pure returns(string) {
         return COMPONENT_NAME;
