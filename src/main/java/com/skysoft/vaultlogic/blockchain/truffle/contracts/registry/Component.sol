@@ -10,10 +10,10 @@ import "../oracles/ICashInOracle.sol";
 import "../repositories/token/ITokenStorage.sol";
 import "../services/ACashChannelsManager.sol";
 import "../services/ITokenManager.sol";
-import "../repositories/parameter/IParameterStorage.sol";
 import "../services/IParameterManager.sol";
 import "../repositories/application/AnApplicationStorage.sol";
 import "../Ownable.sol";
+import "../repositories/parameter/AParameterStorage.sol";
 
 ///@dev base contract for all registry components
 contract Component is Ownable {
@@ -105,8 +105,8 @@ contract Component is Ownable {
     }
 
     /// parameter components
-    function _parameterStorage() internal view returns(IParameterStorage) {
-        return IParameterStorage(lookup(PARAMETER_STORAGE));
+    function _parameterStorage() internal view returns(AParameterStorage) {
+        return AParameterStorage(lookup(PARAMETER_STORAGE));
     }
 
     function _parameterManager() internal view returns(IParameterManager) {

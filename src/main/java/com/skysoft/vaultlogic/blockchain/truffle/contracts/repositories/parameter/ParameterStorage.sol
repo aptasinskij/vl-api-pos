@@ -2,8 +2,9 @@ pragma solidity 0.4.24;
 
 import "../../registry/Component.sol";
 import "./ParameterLib.sol";
+import "./AParameterStorage.sol";
 
-contract ParameterStorage is Component {
+contract ParameterStorage is Component, AParameterStorage {
 
     string constant COMPONENT_NAME = "parameter-storage";
     string constant DATABASE = "database";
