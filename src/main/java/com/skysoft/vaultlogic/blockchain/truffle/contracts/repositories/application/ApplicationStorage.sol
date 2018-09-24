@@ -1,22 +1,16 @@
 pragma solidity 0.4.24;
 
 import "./ApplicationLib.sol";
-import "../../registry/Component.sol";
 import "./AnApplicationStorage.sol";
 
-contract ApplicationStorage is Component, AnApplicationStorage {
+contract ApplicationStorage is AnApplicationStorage {
 
     string constant COMPONENT_NAME = "application-storage";
     string constant DATABASE = "database";
 
-    event ApplicationSaved(uint256 appId, string name, address owner, string url, address appAddr, uint256 status);
-    event ApplicationUrlUpdated(uint256 appId, string url);
-    event ApplicationAddressUpdated(uint256 appId, address appAddr);
-    event ApplicationStatusUpdated(uint256 appId, uint256 status);
-
     using ApplicationLib for address;
 
-    constructor(address registryAddr) Component(registryAddr) public {}
+    constructor(address registry) AnApplicationStorage(registry) public {}
 
     function getName() internal pure returns(string) {
         return COMPONENT_NAME;

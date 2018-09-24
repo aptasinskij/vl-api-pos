@@ -1,6 +1,16 @@
 pragma solidity 0.4.24;
 
-contract AnApplicationStorage {
+import "../../registry/Component.sol";
+import "../../Ownable.sol";
+
+contract AnApplicationStorage is Component, Ownable {
+
+    event ApplicationSaved(uint256 appId, string name, address owner, string url, address appAddr, uint256 status);
+    event ApplicationUrlUpdated(uint256 appId, string url);
+    event ApplicationAddressUpdated(uint256 appId, address appAddr);
+    event ApplicationStatusUpdated(uint256 appId, uint256 status);
+
+    constructor(address registry) Component(registry) internal {}
     
     function save(uint256 appId, string name, address owner, string url, address appAddr, uint256 status) public;
 
