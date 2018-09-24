@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../registry/Component.sol";
+import "./registry/Component.sol";
 
 contract Database is Component {
 

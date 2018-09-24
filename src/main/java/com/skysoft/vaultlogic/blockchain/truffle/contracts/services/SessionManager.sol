@@ -4,8 +4,6 @@ import "../application/IApplication.sol";
 import "../oracles/ISessionOracle.sol";
 import "../application/IApplication.sol";
 import "../registry/Component.sol";
-import "../repositories/session/ASessionStorage.sol";
-import "../repositories/application/AnApplicationStorage.sol";
 import "./ASessionManager.sol";
 
 contract SessionManager is Component, ASessionManager {

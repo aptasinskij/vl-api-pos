@@ -2,18 +2,14 @@ pragma solidity 0.4.24;
 
 import "./IRegistry.sol";
 import "../oracles/IApplicationOracle.sol";
-import "../repositories/session/ASessionStorage.sol";
 import "../services/ASessionManager.sol";
 import "../oracles/ISessionOracle.sol";
-import "../repositories/cash-in/ACashInStorage.sol";
 import "../oracles/ICashInOracle.sol";
-import "../repositories/token/ATokenStorage.sol";
 import "../services/ACashChannelsManager.sol";
 import "../services/ATokenManager.sol";
 import "../services/AParameterManager.sol";
-import "../repositories/application/AnApplicationStorage.sol";
 import "../Ownable.sol";
-import "../repositories/parameter/AParameterStorage.sol";
+import "../Storages.sol";
 
 ///@dev base contract for all registry components
 contract Component is Ownable {
