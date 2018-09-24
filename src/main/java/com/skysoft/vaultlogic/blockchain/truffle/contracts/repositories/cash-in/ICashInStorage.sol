@@ -1,8 +1,8 @@
 pragma solidity 0.4.24;
 
-interface ICashInStorage {
+contract ICashInStorage {
     
-    function save(uint256 sessionId, address application, uint256 status) external returns(uint256);
+    function save(uint256 sessionId, address application, uint256 status) public returns(uint256);
 
     function get(uint256 channelId) external view
     returns(
@@ -13,26 +13,34 @@ interface ICashInStorage {
         uint256 splitSize
     );
 
-    function getSessionId(uint256 channelId) external view returns(uint256);
+    function getSessionId(uint256 channelId) public view returns(uint256);
 
-    function getApplication(uint256 channelId) external view returns(address);
+    function getApplication(uint256 channelId) public view returns(address);
 
-    function getApplicationAndSessionId(uint256 channelId) external view returns(address, uint256);
+    function getApplicationAndSessionId(uint256 channelId) public view returns(address, uint256);
 
-    function setBalance(uint256 channelId, uint256 amount) external;
+    function setBalance(uint256 channelId, uint256 amount) public;
 
-    function getBalance(uint256 channelId) external view returns(uint256);
+    function getBalance(uint256 channelId) public view returns(uint256);
 
-    function setStatus(uint256 channelId, uint256 status) external;
+    function setVLFee(uint256 channelId, uint256 fee) public;
 
-    function getStatus(uint256 channelId) external view returns(uint256);
+    function getVLFee(uint256 channelId) public view returns(uint256);
 
-    function addSplit(uint256 channelId, address party, uint256 amount) external;
+    function setApplicationBalance(uint256 channelId, uint256 balance) public;
 
-    function addSplits(uint256 channelId, address[] parties, uint256[] amounts) external;
+    function getApplicationBalance(uint256 channelId) public view returns(uint256);
 
-    function getSplitSize(uint256 channelId) external view returns(uint256);
+    function setStatus(uint256 channelId, uint256 status) public;
 
-    function getSplit(uint256 channelId, uint256 subIndex) external view returns(address, uint256);
+    function getStatus(uint256 channelId) public view returns(uint256);
+
+    function addSplit(uint256 channelId, address party, uint256 amount) public;
+
+    function addSplits(uint256 channelId, address[] parties, uint256[] amounts) public;
+
+    function getSplitSize(uint256 channelId) public view returns(uint256);
+
+    function getSplit(uint256 channelId, uint256 subIndex) public view returns(address, uint256);
 
 }

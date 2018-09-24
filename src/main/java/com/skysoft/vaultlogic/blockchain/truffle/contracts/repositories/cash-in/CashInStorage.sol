@@ -59,6 +59,22 @@ contract CashInStorage is RegistryComponent {
         return lookup(DATABASE).getBalance(channelId);
     }
 
+    function setVLFee(uint256 channelId, uint256 fee) external {
+        lookup(DATABASE).setVLFee(channelId, fee);
+    }
+
+    function getVLFee(uint256 channelId) external view returns(uint256){
+        lookup(DATABASE).getVLFee(channelId);
+    }
+
+    function setApplicationBalance(uint256 channelId, uint256 balance) public {
+        lookup(DATABASE).setApplicationBalance(channelId, balance);
+    }
+
+    function getApplicationBalance(uint256 channelId) public view returns(uint256) {
+        return lookup(DATABASE).getApplicationBalance(channelId);
+    }
+
     function setStatus(uint256 channelId, uint256 status) external {
         lookup(DATABASE).setStatus(channelId, status);
         emit CashInStatusUpdated(channelId, status);
