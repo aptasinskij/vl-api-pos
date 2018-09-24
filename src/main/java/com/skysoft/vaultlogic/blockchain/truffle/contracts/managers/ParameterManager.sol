@@ -1,6 +1,7 @@
 pragma solidity 0.4.24;
 
 import "../registry/Component.sol";
+import {AParameterManager} from "./Managers.sol";
 
 contract ParameterManager is Component, AParameterManager {
 

@@ -2,8 +2,7 @@ pragma solidity 0.4.24;
 
 import "./IApplication.sol";
 import "./RegistryDependent.sol";
-import "../services/ACashChannelsManager.sol";
-import "../services/ASessionManager.sol";
+import "../managers/Managers.sol";
 
 contract CapitalHero is IApplication, RegistryDependent {
 

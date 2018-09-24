@@ -2,9 +2,9 @@ pragma solidity 0.4.24;
 
 import "../application/IApplication.sol";
 import "../oracles/ICashInOracle.sol";
-import "./ACashChannelsManager.sol";
 
 import {SafeMath} from "../libs/Libraries.sol";
+import {ACashChannelsManager} from "./Managers.sol";
 
 import "../Ownable.sol";
 import "../registry/Component.sol";

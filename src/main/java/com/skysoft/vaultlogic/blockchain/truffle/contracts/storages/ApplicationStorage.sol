@@ -1,10 +1,10 @@
 pragma solidity 0.4.24;
 
-import "../../registry/Component.sol";
-import "../../Ownable.sol";
+import "../registry/Component.sol";
+import "../Ownable.sol";
 
-import {ApplicationLib} from "../../libs/Libraries.sol";
-import {AnApplicationStorage} from "../../StorageDefinitions.sol";
+import {ApplicationLib} from "../libs/Libraries.sol";
+import {AnApplicationStorage} from "./Storages.sol";
 
 contract ApplicationStorage is AnApplicationStorage, Component {
 
