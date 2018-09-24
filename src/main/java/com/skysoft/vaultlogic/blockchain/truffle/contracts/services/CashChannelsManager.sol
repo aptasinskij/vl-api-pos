@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 import "../repositories/cash-in/ICashInStorage.sol";
 import "../repositories/session/ISessionStorage.sol";
-import "../repositories/application/IApplicationStorage.sol";
+import "../repositories/application/AnApplicationStorage.sol";
 import "../application/IApplication.sol";
 import "../oracles/ICashInOracle.sol";
 import "./ISessionManager.sol";

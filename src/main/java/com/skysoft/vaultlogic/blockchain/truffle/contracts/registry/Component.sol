@@ -1,7 +1,6 @@
 pragma solidity 0.4.24;
 
 import "./IRegistry.sol";
-import "../repositories/application/IApplicationStorage.sol";
 import "../oracles/IApplicationOracle.sol";
 import "../repositories/session/ISessionStorage.sol";
 import "../services/ISessionManager.sol";
@@ -13,6 +12,7 @@ import "../services/ACashChannelsManager.sol";
 import "../services/ITokenManager.sol";
 import "../repositories/parameter/IParameterStorage.sol";
 import "../services/IParameterManager.sol";
+import "../repositories/application/AnApplicationStorage.sol";
 
 ///@dev base contract for all registry components
 contract Component {
@@ -59,8 +59,8 @@ contract Component {
     /// @return name of implementation
     function getName() internal pure returns(string name);
 
-    function _applicationStorage() internal view returns(IApplicationStorage) {
-        return IApplicationStorage(lookup(APPLICATION_STORAGE));
+    function _applicationStorage() internal view returns(AnApplicationStorage) {
+        return AnApplicationStorage(lookup(APPLICATION_STORAGE));
     }
 
     function _applicationOracle() internal view returns(IApplicationOracle) {

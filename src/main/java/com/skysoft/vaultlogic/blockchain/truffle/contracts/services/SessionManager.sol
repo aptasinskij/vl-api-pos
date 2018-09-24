@@ -5,7 +5,7 @@ import "../oracles/ISessionOracle.sol";
 import "../application/IApplication.sol";
 import "../registry/Component.sol";
 import "../repositories/session/ISessionStorage.sol";
-import "../repositories/application/IApplicationStorage.sol";
+import "../repositories/application/AnApplicationStorage.sol";
 import "./ISessionManager.sol";
 
 contract SessionManager is Component, ISessionManager {

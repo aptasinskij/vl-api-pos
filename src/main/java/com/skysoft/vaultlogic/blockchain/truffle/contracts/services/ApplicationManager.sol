@@ -1,7 +1,7 @@
 pragma solidity 0.4.24;
 
 import "../registry/Component.sol";
-import "../repositories/application/IApplicationStorage.sol";
+import "../repositories/application/AnApplicationStorage.sol";
 import "../oracles/IApplicationOracle.sol";
 
 contract ApplicationManager is Component {
