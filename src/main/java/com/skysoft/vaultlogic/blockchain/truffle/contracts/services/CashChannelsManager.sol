@@ -103,7 +103,8 @@ contract CashChannelsManager is ACashChannelsManager, Component {
         require(_cashInStorage().getStatus(channelId) == uint256(CashInStatus.CLOSE_REQUESTED));
         (address application, uint256 sessionId) = _cashInStorage().getApplicationAndSessionId(channelId);
         _transfer(owner, _cashInStorage().getVLFee(channelId));
-        _transfer(application, _cashInStorage().getApplicationBalance(channelId));
+        uint256 applicationBalance = _cashInStorage().getApplicationBalance(channelId);
+        if (applicationBalance > 0) _transfer(application, applicationBalance);
         for(uint256 i = 0; i < _cashInStorage().getSplitSize(channelId); i++) {
             (address party, uint256 fee) = _cashInStorage().getSplit(channelId, i);
             _transfer(party, fee);
