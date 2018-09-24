@@ -6,9 +6,9 @@ import "../application/IApplication.sol";
 import "../registry/Component.sol";
 import "../repositories/session/ASessionStorage.sol";
 import "../repositories/application/AnApplicationStorage.sol";
-import "./ISessionManager.sol";
+import "./ASessionManager.sol";
 
-contract SessionManager is Component, ISessionManager {
+contract SessionManager is Component, ASessionManager {
     
     enum SessionStatus { CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED }
 
@@ -20,20 +20,20 @@ contract SessionManager is Component, ISessionManager {
         return COMPONENT_NAME;
     }
 
-    function createSession(uint256 sessionId, uint256 appId, string xToken) external {
+    function createSession(uint256 sessionId, uint256 appId, string xToken) public {
         _sessionStorage().save(sessionId, appId, xToken, uint256(SessionStatus.CREATING));
         address appAddress = _applicationStorage().getApplicationAddress(appId);
         IApplication(appAddress).newSessionCreated();
     }
 
-    function closeSession(uint256 sessionId) external {
+    function closeSession(uint256 sessionId) public {
         uint256 status = ASessionStorage(lookup(SESSION_STORAGE)).getStatus(sessionId);
         require(status == uint256(SessionStatus.ACTIVE), "Illegal state modification");
         _sessionStorage().setStatus(sessionId, uint256(SessionStatus.CLOSE_REQUESTED));
         _sessionOracle().closeSession(sessionId);
     }
 
-    function confirmClose(uint256 sessionId) external {
+    function confirmClose(uint256 sessionId) public {
         ASessionStorage sessionStorage = _sessionStorage();
         sessionStorage.setStatus(sessionId, uint256(SessionStatus.CLOSED));
         address appAddress = _applicationStorage().getApplicationAddress(sessionStorage.getAppId(sessionId));
@@ -44,7 +44,7 @@ contract SessionManager is Component, ISessionManager {
         return (_sessionStorage().getStatus(sessionId) == uint256(SessionStatus.ACTIVE));
     }
 
-    function isHasActiveCashIn(uint256 _sessionId) external view returns(bool) {
+    function isHasActiveCashIn(uint256 _sessionId) public view returns(bool) {
         return _sessionStorage().isHasActiveCashIn(_sessionId);
     }
 

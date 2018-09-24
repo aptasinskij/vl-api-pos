@@ -5,7 +5,6 @@ import "../repositories/session/ASessionStorage.sol";
 import "../repositories/application/AnApplicationStorage.sol";
 import "../application/IApplication.sol";
 import "../oracles/ICashInOracle.sol";
-import "./ISessionManager.sol";
 import "./ACashChannelsManager.sol";
 import "../libs/SafeMath.sol";
 import "./ITokenManager.sol";
