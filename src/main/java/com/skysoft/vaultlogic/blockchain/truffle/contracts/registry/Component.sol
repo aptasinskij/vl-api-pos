@@ -7,7 +7,7 @@ import "../services/ISessionManager.sol";
 import "../oracles/ISessionOracle.sol";
 import "../repositories/cash-in/ACashInStorage.sol";
 import "../oracles/ICashInOracle.sol";
-import "../repositories/token/ITokenStorage.sol";
+import "../repositories/token/ATokenStorage.sol";
 import "../services/ACashChannelsManager.sol";
 import "../services/ITokenManager.sol";
 import "../services/IParameterManager.sol";
@@ -96,8 +96,8 @@ contract Component is Ownable {
     }
 
     /// token components
-    function _tokenStorage() internal view returns(ITokenStorage) {
-        return ITokenStorage(lookup(TOKEN_STORAGE));
+    function _tokenStorage() internal view returns(ATokenStorage) {
+        return ATokenStorage(lookup(TOKEN_STORAGE));
     }
 
     function _tokenManager() internal view returns(ITokenManager) {

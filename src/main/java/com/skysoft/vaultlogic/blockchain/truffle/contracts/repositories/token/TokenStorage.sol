@@ -2,8 +2,9 @@ pragma solidity 0.4.24;
 
 import "./TokenLib.sol";
 import "../../registry/Component.sol";
+import "./ATokenStorage.sol";
 
-contract TokenStorage is Component {
+contract TokenStorage is Component, ATokenStorage {
 
     string constant COMPONENT_NAME = "token-storage";
     string constant DATABASE = "database";
