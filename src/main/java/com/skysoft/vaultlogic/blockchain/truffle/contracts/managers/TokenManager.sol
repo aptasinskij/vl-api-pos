@@ -1,9 +1,8 @@
 pragma solidity 0.4.24;
 
-import "../libs/SafeMath.sol";
 import "../registry/Component.sol";
-import "../repositories/token/ATokenStorage.sol";
-import "./ATokenManager.sol";
+import {SafeMath} from "../libs/Libraries.sol";
+import {ATokenManager} from "./Managers.sol";
 
 contract TokenManager is Component, ATokenManager {
 
@@ -23,20 +22,16 @@ contract TokenManager is Component, ATokenManager {
 
     function transfer(address recipient, uint256 value) public {
         require(value > 0, "The value for the transaction cannot be equals to zero");
-        ATokenStorage tokenStorage = _tokenStorage();
-        tokenStorage.set(recipient, tokenStorage.get(recipient).add(value));
+        _tokenStorage().set(recipient, _tokenStorage().get(recipient).add(value));
         emit Transfer(recipient, value);
     }
 
     function transferFrom(address from, address to, uint256 value) public {
-        ATokenStorage tokenStorage = _tokenStorage();
-
-        uint256 balanceFrom = tokenStorage.get(from);
-        uint256 balanceTo = tokenStorage.get(to);
+        uint256 balanceFrom = _tokenStorage().get(from);
+        uint256 balanceTo = _tokenStorage().get(to);
         require(balanceFrom >= value && value > 0, "Transaction parameters are not correct");
-
-        tokenStorage.set(from, balanceFrom.sub(value));
-        tokenStorage.set(to, balanceTo.add(value));
+        _tokenStorage().set(from, balanceFrom.sub(value));
+        _tokenStorage().set(to, balanceTo.add(value));
         emit TransferFrom(from, to, value);
     }
 

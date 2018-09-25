@@ -1,7 +1,7 @@
 pragma solidity 0.4.24;
 
 import "../registry/Component.sol";
-import "./AnApplicationManager.sol";
+import {AnApplicationManager} from "./Managers.sol";
 
 contract ApplicationManager is Component, AnApplicationManager {
 

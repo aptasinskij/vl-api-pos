@@ -1,13 +1,11 @@
 pragma solidity 0.4.24;
 
-import "../repositories/cash-in/ACashInStorage.sol";
-import "../repositories/session/ASessionStorage.sol";
-import "../repositories/application/AnApplicationStorage.sol";
 import "../application/IApplication.sol";
 import "../oracles/ICashInOracle.sol";
-import "./ACashChannelsManager.sol";
-import "../libs/SafeMath.sol";
-import "../Ownable.sol";
+
+import {SafeMath} from "../libs/Libraries.sol";
+import {ACashChannelsManager} from "./Managers.sol";
+
 import "../registry/Component.sol";
 
 contract CashChannelsManager is ACashChannelsManager, Component {
@@ -80,8 +78,8 @@ contract CashChannelsManager is ACashChannelsManager, Component {
         return true;
     }
 
-    function _sumOf(uint256[] _elements) private pure returns(uint256 _sum) {
-        for(uint256 i = 0; i < _elements.length; i++) _sum = _sum.add(_elements[i]);
+    function _sumOf(uint256[] _elements) private pure returns (uint256 _sum) {
+        for (uint256 i = 0; i < _elements.length; i++) _sum = _sum.add(_elements[i]);
     }
 
     function _transferAll(address[] _recepients, uint256[] _amounts) private {

@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "./ACashInController.sol";
+import {ACashInController} from "./Controllers.sol";
 
 contract CashInController is ACashInController {
 
