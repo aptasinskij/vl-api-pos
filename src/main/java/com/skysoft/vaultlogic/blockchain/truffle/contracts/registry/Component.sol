@@ -4,12 +4,12 @@ import "./IRegistry.sol";
 import "../oracles/IApplicationOracle.sol";
 import "../oracles/ISessionOracle.sol";
 import "../oracles/ICashInOracle.sol";
-import "../Ownable.sol";
+import "../Owned.sol";
 import "../storages/Storages.sol";
 import "../managers/Managers.sol";
 
 ///@dev base contract for all registry components
-contract Component is Ownable {
+contract Component is Owned {
 
     address registry;
 

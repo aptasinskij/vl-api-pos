@@ -6,7 +6,6 @@ import "../oracles/ICashInOracle.sol";
 import {SafeMath} from "../libs/Libraries.sol";
 import {ACashChannelsManager} from "./Managers.sol";
 
-import "../Ownable.sol";
 import "../registry/Component.sol";
 
 contract CashChannelsManager is ACashChannelsManager, Component {
