@@ -21,6 +21,8 @@ contract('CashChannelsManager', () => {
         let resCloseCashInChannel5;
         let resCloseCashInChannel6;
         let resBalanceOf;
+        let resBalanceOf2;
+        let resBalanceOf3;
 
         before(async () => {
             /* get instances */
@@ -115,6 +117,21 @@ contract('CashChannelsManager', () => {
             } catch (e) {
                 resCloseCashInChannel6 = e.method;
             }
+
+            /* try get balanceOf wrong channel */
+            try {
+                await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 1);
+                resBalanceOf2 = 'Method Allowed';
+            } catch (e) {
+                resBalanceOf2 = e.message;
+            }
+            /* try get balanceOf wrong application address */
+            try {
+                await cashChannelsManagerInstance.balanceOf(321, 0);
+                resBalanceOf3 = 'Method Allowed';
+            } catch (e) {
+                resBalanceOf3 = e.message;
+            }
         });
 
         it('restrict to openCashInChannel', () => {
@@ -143,6 +160,12 @@ contract('CashChannelsManager', () => {
             assert.notEqual(resCloseCashInChannel5, 'Method Allowed', 'allowed to call closeCashInChannel with break condition: (balance [1000]) - (splits amount [600,301]) < (10% of balance [100])');
             assert.strictEqual(resBalanceOf, 20000, 'channel balance is not equal');
             assert.notEqual(resCloseCashInChannel6, 'Method Allowed', 'allowed to call closeCashInChannel with break condition: (balance [20000]) - (splits amount [6000,3000,1000,5000,3001]) < (10% of balance [2000])');
-        })
+        });
+        it('restrict to get balanceOf wrong channel', () => {
+            assert.notEqual(resBalanceOf2, 'Method Allowed', 'allow to call balanceOf wrong channel');
+        });
+        it('restrict to get balanceOf wrong application address', () => {
+            assert.notEqual(resBalanceOf3, 'Method Allowed', 'allow to call balanceOf wrong application address');
+        });
     });
 });

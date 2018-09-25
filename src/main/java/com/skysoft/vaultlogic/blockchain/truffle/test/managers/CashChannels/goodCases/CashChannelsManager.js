@@ -6,7 +6,7 @@ const ApplicationManager = artifacts.require('ApplicationManager.sol');
 const CapitalHero = artifacts.require('CapitalHero.sol');
 const TokenManager = artifacts.require('TokenManager.sol');
 const ParameterStorage = artifacts.require('ParameterStorage.sol');
-const {convertToNumber, sleep} = require('../../helpers');
+const {convertToNumber, sleep} = require('../../../helpers');
 
 contract('CashChannelsManager', (accounts) => {
 
@@ -31,16 +31,13 @@ contract('CashChannelsManager', (accounts) => {
         let resBalanceOfSender2;
         let resBalanceOwner;
         let requestCloseChannelInfo;
+        let resIsHasActiveCashIn0;
         let resIsHasActiveCashIn;
 
         let CashInSavedEvents = [];
         let CashInBalanceUpdatedEvents = [];
         let CashInStatusUpdatedEvents = [];
         let CapitalHeroEvents = [];
-
-        let second = {
-            splitsArray: []
-        };
 
         before(async () => {
             /* get instances */
@@ -81,38 +78,24 @@ contract('CashChannelsManager', (accounts) => {
             /* activate session */
             await sessionManagerInstance.activate(1);
 
-            /* ====== First Channel ====== */
             /* setVLFee of ParameterStorage */
             await parameterStorageInstance.setVLFee(1000);
 
             /* openCashInChannel */
             resOpenCashInChannel = await cashChannelsManagerInstance.openCashInChannel(capitalHeroInstance.address, 1);
             resGet = convertToNumber(await cashInStorageInstance.get(0), true);
-            /* confirmOpen  */
+            /* confirmOpen */
             resConfirmOpen = await cashChannelsManagerInstance.confirmOpen(0);
             resGetStatus1 = Number(await cashInStorageInstance.getStatus(0));
+
+            /* isHasActiveCashIn */
+            resIsHasActiveCashIn0 = await sessionManagerInstance.isHasActiveCashIn(1);
 
             /* updateCashInBalance */
             resUpdateCashInBalance = await cashChannelsManagerInstance.updateCashInBalance(0, 100000);
             resGetBalance = Number(await cashInStorageInstance.getBalance(0));
-            /* --- balanceOf --- */
+            /* balanceOf */
             resBalanceOf = Number(await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 0));
-
-            /* --- must be moved to bad cases !!! --- */
-            /* try get balanceOf wrong channel */
-            /*try {
-                await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 1);
-                resBalanceOf2 = 'Method Allowed';
-            } catch (e) {
-                resBalanceOf2 = e.message;
-            }
-            /!* try get balanceOf wrong application address *!/
-            try {
-                await cashChannelsManagerInstance.balanceOf(321, 0);
-                resBalanceOf3 = 'Method Allowed';
-            } catch (e) {
-                resBalanceOf3 = e.message;
-            }*/
 
             /* closeCashInChannel */
             resCloseCashInChannel = await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [30000,35000,20000], [1,2,3]);
@@ -147,58 +130,6 @@ contract('CashChannelsManager', (accounts) => {
             /* get sender balance (TokenManager contract) */
             resBalanceOfSender2 = Number(await tokenManagerInstance.balanceOf(capitalHeroInstance.address));
             resBalanceOwner = Number(await tokenManagerInstance.balanceOf(ownerAccount));
-            /* ====== */
-
-            /* ====== Second Channel ====== */
-
-            /* setVLFee of ParameterStorage */
-            await parameterStorageInstance.setVLFee(1300);
-            /* openCashInChannel */
-            await cashChannelsManagerInstance.openCashInChannel(capitalHeroInstance.address, 1);
-            /* confirmOpen */
-            await cashChannelsManagerInstance.confirmOpen(1);
-
-            /* updateCashInBalance */
-            await cashChannelsManagerInstance.updateCashInBalance(1, 10000);
-            second.resGetBalance = Number(await cashInStorageInstance.getBalance(1));
-            /* --- balanceOf --- */
-            second.resBalanceOf = Number(await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 1));
-
-            /* closeCashInChannel */
-            await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 1, [3000,4000,1600], [4,5,6]);
-            second.requestCloseChannelInfo = {
-                VLFee: Number(await cashInStorageInstance.getVLFee(1)),
-                appBalance: Number(await cashInStorageInstance.getApplicationBalance(1)),
-                channelSplitSize: Number(await cashInStorageInstance.getSplitSize(1)),
-                channelBalance: Number(await cashInStorageInstance.getBalance(1)),
-                channelStatus: Number(await cashInStorageInstance.getStatus(1))
-            };
-
-            /* get splits */
-            // must be moved to helpers
-            let resGetSplitSize2 = Number(await cashInStorageInstance.getSplitSize(1));
-            for (let i = 0; i < resGetSplitSize2; i++) {
-                let resGetSplit = await cashInStorageInstance.getSplit(1, i);
-                resGetSplit = convertToNumber(resGetSplit);
-                second.splitsArray.push(resGetSplit);
-            }
-            /* --- */
-
-            /* confirmClose */
-            await cashChannelsManagerInstance.confirmClose(1);
-            /* check different params */
-            second.resIsHasActiveCashIn = await sessionManagerInstance.isHasActiveCashIn(1);
-            second.resGetStatus2 = Number(await cashInStorageInstance.getStatus(1));
-            /* balanceOf receivers (TokenManager contract) */
-            second.resBalanceOfReceiver1 = Number(await tokenManagerInstance.balanceOf(4));
-            second.resBalanceOfReceiver2 = Number(await tokenManagerInstance.balanceOf(5));
-            second.resBalanceOfReceiver3 = Number(await tokenManagerInstance.balanceOf(6));
-            /* get sender balance (CashChannelsManager contract) */
-            second.resBalanceOfSender1 = Number(await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 1));
-            /* get sender balance (TokenManager contract) */
-            second.resBalanceOfSender2 = Number(await tokenManagerInstance.balanceOf(capitalHeroInstance.address));
-            second.resBalanceOwner = Number(await tokenManagerInstance.balanceOf(ownerAccount));
-            /* ====== */
 
             sleep(3000); // for make sure events handles
         });
@@ -232,8 +163,11 @@ contract('CashChannelsManager', (accounts) => {
             assert.strictEqual(CapitalHeroEvents[0].channelId, 0, 'channel id is not equal');
             assert.strictEqual(CapitalHeroEvents[0].sessionId, 1, 'session id is not equal');
         });
+        it('activate', () => {
+            /* from SessionManager method */
+            assert.strictEqual(resIsHasActiveCashIn0, true, 'session has no active channel');
+        });
         it('updateCashInBalance', () => {
-            /* --- first channel --- */
             /* from CashChannelsManager logs */
             assert.isAbove(resUpdateCashInBalance.receipt.logs.length, 0, 'transaction logs are empty');
             assert.notEqual(resUpdateCashInBalance.receipt.transactionHash, '', 'transaction hash is empty');
@@ -247,25 +181,11 @@ contract('CashChannelsManager', (accounts) => {
             assert.strictEqual(CapitalHeroEvents[1].channelId, 0, 'channel id is not equal');
             assert.strictEqual(CapitalHeroEvents[1].sessionId, 1, 'session id is not equal');
             assert.strictEqual(CapitalHeroEvents[1].balance, 100000, 'channel balance is not equal');
-            /* --- */
-            /* --- second channel --- */
-            assert.strictEqual(CapitalHeroEvents[4].channelId, 1, 'channel id is not equal');
-            assert.strictEqual(CapitalHeroEvents[4].sessionId, 1, 'session id is not equal');
-            assert.strictEqual(CapitalHeroEvents[4].balance, 10000, 'channel balance is not equal');
         });
         it('balanceOf', () => {
-            /* --- first channel --- */
             assert.strictEqual(resBalanceOf, 100000, 'channel balance is not equal');
-            /*/!* restrict to call balanceOf wrong channel *!/
-            assert.notEqual(resBalanceOf3, 'Method Allowed', 'allow to call balanceOf wrong channel');
-            /!* restrict to call balanceOf wrong application address *!/
-            assert.notEqual(resBalanceOf3, 'Method Allowed', 'allow to call balanceOf wrong application address');
-            /!* --- *!/*/
-            /* --- second channel --- */
-            assert.strictEqual(second.resBalanceOf, 10000, 'second channel balance is not equal');
         });
         it('closeCashInChannel', () => {
-            /* --- first channel --- */
             /* from CashChannelsManager logs */
             assert.isAbove(resCloseCashInChannel.receipt.logs.length, 0, 'transaction logs are empty');
             assert.notEqual(resCloseCashInChannel.receipt.transactionHash, '', 'transaction hash is empty');
@@ -286,27 +206,8 @@ contract('CashChannelsManager', (accounts) => {
             assert.strictEqual(requestCloseChannelInfo.appBalance, 5000, 'application balance is not equal');
             assert.strictEqual(requestCloseChannelInfo.channelSplitSize, 3, 'channel split size is not equal');
             assert.strictEqual(requestCloseChannelInfo.VLFee, 10000, 'application fee amount is not equal');
-            /* --- */
-            /* --- second channel --- */
-            /* from cashInStorage event */
-            assert.strictEqual(CashInStatusUpdatedEvents[4].channelId, 1, 'channel id is not equal');
-            assert.strictEqual(CashInStatusUpdatedEvents[4].status, 3, 'channel status is not equal');
-            /* check splits info */
-            assert.strictEqual(second.splitsArray[0][0], 4, 'first receiver address is not equal');
-            assert.strictEqual(second.splitsArray[1][0], 5, 'second receiver address is not equal');
-            assert.strictEqual(second.splitsArray[2][0], 6, 'third receiver address is not equal');
-            assert.strictEqual(second.splitsArray[0][1], 3000, 'first receiver balance is not equal');
-            assert.strictEqual(second.splitsArray[1][1], 4000, 'second receiver balance is not equal');
-            assert.strictEqual(second.splitsArray[2][1], 1600, 'third receiver balance is not equal');
-            /* check rest channel props */
-            assert.strictEqual(second.requestCloseChannelInfo.channelStatus, 3, 'channel status is not equal');
-            assert.strictEqual(second.requestCloseChannelInfo.channelBalance, 10000, 'channel balance is not equal');
-            assert.strictEqual(second.requestCloseChannelInfo.appBalance, 100, 'application balance is not equal');
-            assert.strictEqual(second.requestCloseChannelInfo.channelSplitSize, 3, 'channel split size is not equal');
-            assert.strictEqual(second.requestCloseChannelInfo.VLFee, 1300, 'application fee amount is not equal');
         });
         it('confirmClose', () => {
-            /* --- first channel --- */
             /* from CashChannelsManager logs */
             assert.isAbove(resConfirmClose.receipt.logs.length, 0, 'transaction logs are empty');
             assert.notEqual(resConfirmClose.receipt.transactionHash, '', 'transaction hash is empty');
@@ -329,26 +230,6 @@ contract('CashChannelsManager', (accounts) => {
             /* from CapitalHero event */
             assert.strictEqual(CapitalHeroEvents[2].channelId, 0, 'channel id is not equal');
             assert.strictEqual(CapitalHeroEvents[2].sessionId, 1, 'session id is not equal');
-            /* --- */
-            /* --- second channel --- */
-            /* from cashInStorage event */
-            assert.strictEqual(CashInStatusUpdatedEvents[5].channelId, 1, 'channel id is not equal');
-            assert.strictEqual(CashInStatusUpdatedEvents[5].status, 4, 'channel status is not equal');
-            /* from cashInStorage method */
-            assert.strictEqual(second.resGetStatus2, 4, 'channel status is not equal');
-            /* from SessionManager method */
-            assert.strictEqual(second.resIsHasActiveCashIn, false, 'session has active channel');
-            /* check balance of receivers */
-            assert.strictEqual(second.resBalanceOfReceiver1, 3000, 'first receiver balance not equal');
-            assert.strictEqual(second.resBalanceOfReceiver2, 4000, 'second receiver balance not equal');
-            assert.strictEqual(second.resBalanceOfReceiver3, 1600, 'third receiver balance not equal');
-            assert.strictEqual(second.resBalanceOfSender1, 10000, 'channel balance changed');
-            assert.strictEqual(second.resBalanceOfSender2, 5100, 'sender balance not equal');
-            /* balance of VaultLogic */
-            assert.strictEqual(second.resBalanceOwner, 11300, 'vaultLogic balance is not equal');
-            /* from CapitalHero event */
-            assert.strictEqual(CapitalHeroEvents[5].channelId, 1, 'channel id is not equal');
-            assert.strictEqual(CapitalHeroEvents[5].sessionId, 1, 'session id is not equal');
         });
     });
 });
