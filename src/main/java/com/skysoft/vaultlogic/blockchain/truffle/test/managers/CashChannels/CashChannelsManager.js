@@ -5,6 +5,7 @@ const SessionManager = artifacts.require('SessionManager.sol');
 const ApplicationManager = artifacts.require('ApplicationManager.sol');
 const CapitalHero = artifacts.require('CapitalHero.sol');
 const TokenManager = artifacts.require('TokenManager.sol');
+const ParameterStorage = artifacts.require('ParameterStorage.sol');
 const {convertToNumber, sleep} = require('../../helpers');
 
 contract('CashChannelsManager', (accounts) => {
@@ -32,6 +33,8 @@ contract('CashChannelsManager', (accounts) => {
         let resBalanceOfSender1;
         let resBalanceOfSender2;
         let resBalanceOwner;
+        let resSetVLFee;
+        let resGetVLFee;
 
         let CashInSavedEvents = [];
         let CashInBalanceUpdatedEvents = [];
@@ -44,6 +47,7 @@ contract('CashChannelsManager', (accounts) => {
             const sessionManagerInstance = await SessionManager.deployed();
             const applicationManagerInstance = await ApplicationManager.deployed();
             const tokenManagerInstance = await TokenManager.deployed();
+            const parameterStorageInstance = await ParameterStorage.deployed();
             capitalHeroInstance = await CapitalHero.deployed();
             /* watch events */
             cashInStorageInstance.CashInStatusUpdated().watch((err, response) => {
@@ -61,6 +65,7 @@ contract('CashChannelsManager', (accounts) => {
             await sessionManagerInstance.createSession(1, 2, '1a2b3c');
             /* activate session */
             await sessionManagerInstance.activate(1);
+
             /* openCashInChannel */
             resOpenCashInChannel = await cashChannelsManagerInstance.openCashInChannel(capitalHeroInstance.address, 1);
             resGet = await cashInStorageInstance.get(0);
@@ -69,33 +74,45 @@ contract('CashChannelsManager', (accounts) => {
             resConfirmOpen = await cashChannelsManagerInstance.confirmOpen(0);
             resGetStatus1 = await cashInStorageInstance.getStatus(0);
             resGetStatus1 = Number(resGetStatus1);
+
+            /* setVLFee of ParameterStorage */
+            await parameterStorageInstance.setVLFee(1000);
+            /* getVLFee of ParameterStorage */
+            console.log('getVLFee of ParameterStorage', Number(await parameterStorageInstance.getVLFee()));
+
+           /* /!* setVLFee *!/
+            resSetVLFee = await cashInStorageInstance.setVLFee(0, 10);
+            /!* getVLFee *!/
+            resGetVLFee = Number(await cashInStorageInstance.getVLFee(0));
+            console.log('getVLFee of CashInStorage', resGetVLFee);*/
+
             /* updateCashInBalance */
-            resUpdateCashInBalance = await cashChannelsManagerInstance.updateCashInBalance(0, 1000);
+            resUpdateCashInBalance = await cashChannelsManagerInstance.updateCashInBalance(0, 100000);
             resGetBalance = await cashInStorageInstance.getBalance(0);
             resGetBalance = Number(resGetBalance);
             /* --- balanceOf --- */
             resBalanceOf1 = await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 0);
             resBalanceOf1 = Number(resBalanceOf1);
             /* try get balanceOf wrong channel */
-            try {
+            /*try {
                 await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 1);
                 resBalanceOf2 = 'Method Allowed';
             } catch (e) {
                 resBalanceOf2 = e.message;
             }
-            /* try get balanceOf wrong application address */
+            /!* try get balanceOf wrong application address *!/
             try {
                 await cashChannelsManagerInstance.balanceOf(321, 0);
                 resBalanceOf3 = 'Method Allowed';
             } catch (e) {
                 resBalanceOf3 = e.message;
-            }
+            }*/
             /* closeCashInChannel */
-            resCloseCashInChannel = await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [300,350,200], [1,2,3]);
+            resCloseCashInChannel = await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [30000,35000,20000], [1,2,3]);
             resGetStatus2 = await cashInStorageInstance.getStatus(0);
             resGetStatus2 = Number(resGetStatus2);
 
-            console.log('getVLFee', Number(await cashInStorageInstance.getVLFee(0)));
+            console.log('getVLFee of cashInStorage', Number(await cashInStorageInstance.getVLFee(0)));
             console.log('getApplicationBalance', Number(await cashInStorageInstance.getApplicationBalance(0)));
             console.log('getSplitSize', Number(await cashInStorageInstance.getSplitSize(0)));
             console.log('getBalance', Number(await cashInStorageInstance.getBalance(0)));
@@ -174,19 +191,18 @@ contract('CashChannelsManager', (accounts) => {
             assert.isAbove(resUpdateCashInBalance.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from cashInStorage event */
             assert.strictEqual(CashInBalanceUpdatedEvents[0].channelId, 0, 'channel id is not equal');
-            assert.strictEqual(CashInBalanceUpdatedEvents[0].amount, 1000, 'channel amount is not equal');
+            assert.strictEqual(CashInBalanceUpdatedEvents[0].amount, 100000, 'channel amount is not equal');
             /* from cashInStorage method */
-            assert.strictEqual(resGetBalance, 1000, 'channel balance is not equal');
+            assert.strictEqual(resGetBalance, 100000, 'channel balance is not equal');
         });
         it('balanceOf', () => {
-            assert.strictEqual(resBalanceOf1, 1000, 'channel balance is not equal');
+            assert.strictEqual(resBalanceOf1, 100000, 'channel balance is not equal');
             /* restrict to call balanceOf wrong channel */
             assert.notEqual(resBalanceOf3, 'Method Allowed', 'allow to call balanceOf wrong channel');
             /* restrict to call balanceOf wrong application address */
             assert.notEqual(resBalanceOf3, 'Method Allowed', 'allow to call balanceOf wrong application address');
         });
         it('closeCashInChannel', () => {
-            console.log('CashInStatusUpdatedEvents', CashInStatusUpdatedEvents[1]);
             /* from CashChannelsManager logs */
             assert.isAbove(resCloseCashInChannel.receipt.logs.length, 0, 'transaction logs are empty');
             assert.notEqual(resCloseCashInChannel.receipt.transactionHash, '', 'transaction hash is empty');
@@ -200,9 +216,9 @@ contract('CashChannelsManager', (accounts) => {
             assert.strictEqual(splitsArray[0][0], 1, 'first receiver address is not equal');
             assert.strictEqual(splitsArray[1][0], 2, 'second receiver address is not equal');
             assert.strictEqual(splitsArray[2][0], 3, 'third receiver address is not equal');
-            assert.strictEqual(splitsArray[0][1], 300, 'first receiver balance is not equal');
-            assert.strictEqual(splitsArray[1][1], 350, 'second receiver balance is not equal');
-            assert.strictEqual(splitsArray[2][1], 200, 'third receiver balance is not equal');
+            assert.strictEqual(splitsArray[0][1], 30000, 'first receiver balance is not equal');
+            assert.strictEqual(splitsArray[1][1], 35000, 'second receiver balance is not equal');
+            assert.strictEqual(splitsArray[2][1], 20000, 'third receiver balance is not equal');
         });
         it('confirmClose', () => {
             /* from CashChannelsManager logs */
