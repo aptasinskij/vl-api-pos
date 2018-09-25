@@ -8,6 +8,10 @@ const TokenManager = artifacts.require('TokenManager.sol');
 const ParameterStorage = artifacts.require('ParameterStorage.sol');
 const {convertToNumber, sleep} = require('../../../helpers');
 
+/*\
+* CashChannelsManager
+\*/
+
 contract('CashChannelsManager', (accounts) => {
 
     describe('tests for all methods', () => {
@@ -134,6 +138,18 @@ contract('CashChannelsManager', (accounts) => {
             sleep(3000); // for make sure events handles
         });
 
+        /*\
+         # <hr>
+         # <h4> openCashInChannel(_application, _sessionId) </h4>
+        # Create request to open new CashInChannel
+        > Arguments
+        - (address) _application - application address (from which calls makes)
+        - (uint256) _sessionId - session id
+        > Preconditions
+        - (1) Session is active
+        - (2) Application owns the Session
+        - (3) There is no active CashInChannels in the Session
+        \*/
         it('openCashInChannel', () => {
             /* from CashChannelsManager logs */
             assert.isAbove(resOpenCashInChannel.receipt.logs.length, 0, 'transaction logs are empty');
@@ -149,6 +165,16 @@ contract('CashChannelsManager', (accounts) => {
             assert.strictEqual(resGet[1], capitalHeroInstance.address, 'channel address is not equal');
             assert.strictEqual(resGet[4], 0, 'channel status is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> confirmOpen(channelId) </h4>
+        # Confirm CashInChannel opening
+        > Arguments
+        - (uint256) channelId - channel id (which going to be opened)
+        > Preconditions
+        - (1) CashInChannel is in "ACTIVE" state
+        \*/
         it('confirmOpen', () => {
             /* from CashChannelsManager logs */
             assert.isAbove(resConfirmOpen.receipt.logs.length, 0, 'transaction logs are empty');
@@ -162,11 +188,17 @@ contract('CashChannelsManager', (accounts) => {
             /* from CapitalHero event */
             assert.strictEqual(CapitalHeroEvents[0].channelId, 0, 'channel id is not equal');
             assert.strictEqual(CapitalHeroEvents[0].sessionId, 1, 'session id is not equal');
-        });
-        it('activate', () => {
-            /* from SessionManager method */
             assert.strictEqual(resIsHasActiveCashIn0, true, 'session has no active channel');
         });
+
+        /*\
+         # <hr>
+         # <h4> updateCashInBalance(channelId, amount) </h4>
+        # Updated CashInChannel balance
+        > Arguments
+        - (uint256) channelId - channel id (which going to be updated)
+        - (uint256) amount - amount of money to be inserted
+        \*/
         it('updateCashInBalance', () => {
             /* from CashChannelsManager logs */
             assert.isAbove(resUpdateCashInBalance.receipt.logs.length, 0, 'transaction logs are empty');
@@ -182,9 +214,40 @@ contract('CashChannelsManager', (accounts) => {
             assert.strictEqual(CapitalHeroEvents[1].sessionId, 1, 'session id is not equal');
             assert.strictEqual(CapitalHeroEvents[1].balance, 100000, 'channel balance is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> balanceOf(_application, _channelId) </h4>
+        # Get balance of CashInChannel
+        > Arguments
+        - (address) _application - application address
+        - (uint256) _channelId - channel id
+        > Preconditions
+        - (1) Application owns the CashInChannel
+        \*/
         it('balanceOf', () => {
             assert.strictEqual(resBalanceOf, 100000, 'channel balance is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> closeCashInChannel(_application, _sessionId, _channelId, fees, parties) </h4>
+        # Create request to close CashInChannel
+        > Arguments
+        - (address) _application - application address
+        - (address) _sessionId - session id
+        - (uint256) _channelId - channel id
+        - (uint256[]) fees - array of cashInChannel parties fee amounts
+        - (address[]) parties - array of cashInChannel parties addresses
+        > Returns
+         - (bool) isTransactionSuccessful - is request to close CashInChannel successful
+        > Preconditions
+        - (1) CashInChannel is in "ACTIVE" state
+        - (2) Application owns the CashInChannel
+        - (3) CashInChannel belongs to Session
+        - (4) Sizes of fees and parties arrays are equal
+        - (5) Sum of fees and VLfee is less or equal to CashInChannel balance
+        \*/
         it('closeCashInChannel', () => {
             /* from CashChannelsManager logs */
             assert.isAbove(resCloseCashInChannel.receipt.logs.length, 0, 'transaction logs are empty');
@@ -207,6 +270,16 @@ contract('CashChannelsManager', (accounts) => {
             assert.strictEqual(requestCloseChannelInfo.channelSplitSize, 3, 'channel split size is not equal');
             assert.strictEqual(requestCloseChannelInfo.VLFee, 10000, 'application fee amount is not equal');
         });
+
+        /*\
+         # <hr>
+         # <h4> confirmClose(channelId) </h4>
+        # Confirm CashInChannel closing
+        > Arguments
+        - (address) channelId - channel id
+        > Conditions
+        - (1) CashInChannel is in "CLOSE_REQUESTED" state
+        \*/
         it('confirmClose', () => {
             /* from CashChannelsManager logs */
             assert.isAbove(resConfirmClose.receipt.logs.length, 0, 'transaction logs are empty');
