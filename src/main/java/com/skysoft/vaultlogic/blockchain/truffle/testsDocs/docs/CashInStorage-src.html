@@ -26,6 +26,10 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
         let resGetSplit2;
         let resGetSplit3;
         let resGetAfterAll;
+        let resSetVLFee;
+        let resGetVLFee;
+        let resSetApplicationBalance;
+        let resGetApplicationBalance;
 
         before(async () =&#62; {
             const instance = await CashInStorage.deployed();
@@ -35,6 +39,14 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
             &#47;* get *&#47;
             resGet = await instance.get(0);
             resGet = convertToNumber(resGet);
+            &#47;* setVLFee *&#47;
+            resSetVLFee = await instance.setVLFee(0, 1000);
+            &#47;* getVLFee *&#47;
+            resGetVLFee = Number(await instance.getVLFee(0));
+            &#47;* setApplicationBalance *&#47;
+            resSetApplicationBalance = await instance.setApplicationBalance(0, 15000);
+            &#47;* getApplicationBalance *&#47;
+            resGetApplicationBalance = Number(await instance.getApplicationBalance(0));
             &#47;* getSessionId *&#47;
             resGetSessionID = await instance.getSessionId(0);
             resGetSessionID = Number(resGetSessionID);
@@ -121,6 +133,58 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
             assert.strictEqual(resGetAfterAll[2], 500, &#39;balance is not equal (after all)&#39;);
             assert.strictEqual(resGetAfterAll[3], 5, &#39;status is not equal (after all)&#39;);
             assert.strictEqual(resGetAfterAll[4], 1, &#39;index is not equal (after all)&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; setVLFee(channelId, fee) &#60;&#47;h4&#62;
+         # Set VaultLogic fee amount
+         &#62; Arguments
+         - (uint256) channelId - cashInChannel id
+         - (uint256) fee - fee amount
+        \*&#47;
+        it(&#39;setVLFee&#39;, () =&#62; {
+            assert.notEqual(resSetVLFee.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resSetVLFee.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            &#47;* getVLFee *&#47;
+            assert.strictEqual(resGetVLFee, 1000, &#39;fee amount is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getVLFee(channelId) &#60;&#47;h4&#62;
+         # Get VaultLogic fee amount
+         &#62; Arguments
+         - (uint256) fee - fee amount
+        \*&#47;
+        it(&#39;getVLFee&#39;, () =&#62; {
+            assert.strictEqual(resGetVLFee, 1000, &#39;fee amount is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; setApplicationBalance(channelId) &#60;&#47;h4&#62;
+         # Set application balance
+         &#62; Arguments
+         - (uint256) channelId - cashInChannel id
+         - (uint256) balance - application balance
+        \*&#47;
+        it(&#39;setApplicationBalance&#39;, () =&#62; {
+            assert.notEqual(resSetApplicationBalance.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resSetApplicationBalance.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            &#47;* getVLFee *&#47;
+            assert.strictEqual(resGetApplicationBalance, 15000, &#39;application balance is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getApplicationBalance(channelId) &#60;&#47;h4&#62;
+         # Get application balance
+         &#62; Arguments
+         - (uint256) balance - application balance
+        \*&#47;
+        it(&#39;getApplicationBalance&#39;, () =&#62; {
+            assert.strictEqual(resGetApplicationBalance, 15000, &#39;application balance is not equal&#39;);
         });
 
         &#47;*\
@@ -314,4 +378,5 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
          - (uint256) amount - party balance
         \*&#47;
     })
-});</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>
+});
+</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>
