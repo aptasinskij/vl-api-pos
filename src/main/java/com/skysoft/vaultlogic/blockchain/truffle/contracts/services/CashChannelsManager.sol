@@ -53,7 +53,7 @@ contract CashChannelsManager is ACashChannelsManager, Component {
         uint256 currentBalance = _cashInStorage().getBalance(channelId);
         _cashInStorage().setBalance(channelId, currentBalance + amount);
         (address application, uint256 sessionId) = _cashInStorage().getApplicationAndSessionId(channelId);
-        IApplication(application).cashInBalanceUpdate(channelId, sessionId, amount);
+        IApplication(application).cashInBalanceUpdate(channelId, amount, sessionId);
     }
 
     function balanceOf(address _application, uint256 _channelId) public view returns (uint256) {

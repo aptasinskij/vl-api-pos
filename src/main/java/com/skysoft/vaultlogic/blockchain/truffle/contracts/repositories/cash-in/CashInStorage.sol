@@ -60,7 +60,7 @@ contract CashInStorage is Component, ACashInStorage {
     }
 
     function getVLFee(uint256 channelId) public view returns(uint256){
-        lookup(DATABASE).getVLFee(channelId);
+        return lookup(DATABASE).getVLFee(channelId);
     }
 
     function setApplicationBalance(uint256 channelId, uint256 balance) public {
