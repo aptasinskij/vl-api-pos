@@ -1,108 +1,94 @@
 package com.skysoft.vaultlogic.common.configuration.properties;
 
 import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-import static lombok.AccessLevel.PUBLIC;
-
 @Data
-@Component
+@Validated
+@Configuration
+@ConfigurationProperties("maya")
 public class MayaProperties {
 
-    private final BaseUrl baseUrl;
-    private final ApplicationUrl applicationUrl;
-    private final DeviceInfo deviceInfo;
-    private final CashDevice cashDevice;
-    private final ScannerDevice scannerDevice;
-    private final ReceiptDevice receiptDevice;
-    private final CameraDevice cameraDevice;
-    private final CustomerUrl customerUrl;
-    private final GeneralInfo generalInfo;
+    @URL
+    @NotBlank
+    private String baseUrl;
+    @NotBlank
+    private String sso;
+
+    @Valid
+    private Application application;
+    @Valid
+    private Device device;
+    @Valid
+    private CustomerUrl customer;
+    @Valid
+    private GeneralInfo generalInfo;
 
     @Data
-    @Validated
-    @FieldDefaults(level = PUBLIC)
-    @ConfigurationProperties(prefix = "maya")
-    public static class BaseUrl {
+    public static class Application {
         @NotBlank
-        String baseUrl;
+        private String launchApplication;
         @NotBlank
-        String sso;
+        private String keepAlive;
+        @NotBlank
+        private String clientActivity;
+        @NotBlank
+        private String closeApplication;
     }
 
     @Data
-    @Validated
-    @FieldDefaults(level = PUBLIC)
-    @ConfigurationProperties(prefix = "maya.application")
-    public static class ApplicationUrl {
+    public static class Device {
         @NotBlank
-        String launchApplication;
-        @NotBlank
-        String keepAlive;
-        @NotBlank
-        String clientActivity;
-        @NotBlank
-        String closeApplication;
+        private String info;
+        @Valid
+        private CashDevice cash;
+        @Valid
+        private Scanner scanner;
+        @Valid
+        private ReceiptDevice receipt;
+        @Valid
+        private CameraDevice camera;
+
     }
 
     @Data
-    @Validated
-    @FieldDefaults(level = PUBLIC)
-    @ConfigurationProperties(prefix = "maya.device")
-    public static class DeviceInfo {
+    public static class CashDevice {
         @NotBlank
-        String info;
+        private String cashDeviceStatus;
+        @NotBlank
+        private String recyclerDeviceStatus;
+        @NotBlank
+        private String enableCashAcceptor;
+        @NotBlank
+        private String disableCashAcceptor;
+        @NotBlank
+        private String dispensableAmount;
+        @NotBlank
+        private String dispenseCash;
     }
 
     @Data
-    @Validated
-    @FieldDefaults(level = PUBLIC)
-    @ConfigurationProperties(prefix = "maya.device.cash")
-    public class CashDevice {
+    public static class Scanner {
         @NotBlank
-        String cashDeviceStatus;
-        @NotBlank
-        String recyclerDeviceStatus;
-        @NotBlank
-        String enableCashAcceptor;
-        @NotBlank
-        String disableCashAcceptor;
-        @NotBlank
-        String dispensableAmount;
-        @NotBlank
-        String dispenseCash;
+        private String status;
     }
 
     @Data
-    @Validated
-    @FieldDefaults(level = PUBLIC)
-    @ConfigurationProperties(prefix = "maya.device")
-    public class ScannerDevice {
+    public static class ReceiptDevice {
         @NotBlank
-        String scannerStatus;
+        private String createReceipt;
+        @NotBlank
+        private String printReceipt;
     }
 
     @Data
-    @Validated
-    @FieldDefaults(level = PUBLIC)
-    @ConfigurationProperties(prefix = "maya.device.receipt")
-    public class ReceiptDevice {
-        @NotBlank
-        String createReceipt;
-        @NotBlank
-        String printReceipt;
-    }
-
-    @Data
-    @Validated
-    @FieldDefaults(level = PUBLIC)
-    @ConfigurationProperties(prefix = "maya.device.camera")
-    public class CameraDevice {
+    public static class CameraDevice {
         @NotBlank
         String takePhoto;
         @NotBlank
@@ -114,10 +100,7 @@ public class MayaProperties {
     }
 
     @Data
-    @Validated
-    @FieldDefaults(level = PUBLIC)
-    @ConfigurationProperties(prefix = "maya.customer")
-    public class CustomerUrl {
+    public static class CustomerUrl {
         @NotBlank
         String setCustomerInSession;
         @NotBlank
@@ -125,10 +108,7 @@ public class MayaProperties {
     }
 
     @Data
-    @Validated
-    @FieldDefaults(level = PUBLIC)
-    @ConfigurationProperties(prefix = "maya.general-info")
-    public class GeneralInfo {
+    public static class GeneralInfo {
         @NotBlank
         String locationsAndDevices;
         @NotBlank
