@@ -109,10 +109,13 @@ public class MayaProperties {
 
     @Data
     public static class GeneralInfo {
+        @URL
         @NotBlank
         String locationsAndDevices;
+        @URL
         @NotBlank
         String device;
+        @URL
         @NotBlank
         String devices;
     }
