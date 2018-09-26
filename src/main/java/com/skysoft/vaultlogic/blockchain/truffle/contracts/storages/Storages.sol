@@ -89,6 +89,14 @@ contract AParameterStorage {
 
 }
 
+contract AKioskStorage {
+
+    function saveKiosk(string shortId, string locationAddress, string name, string timeZone) public;
+
+    function retrieveKiosk(string shortId) public view returns(string locationAddress, string name, string timeZone);
+
+}
+
 contract ASessionStorage {
 
     event Saved(uint256 sessionId, uint256 appId, string xToken, uint256 status);
