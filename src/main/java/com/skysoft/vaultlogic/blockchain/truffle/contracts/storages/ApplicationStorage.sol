@@ -18,6 +18,26 @@ contract ApplicationStorage is AnApplicationStorage, Component {
         return COMPONENT_NAME;
     }
 
+    function createApplication(uint256 _Id, string _name, address _owner, string _url, address _appAddr, uint256 _status) public {
+        lookup(DATABASE).createApplication(ApplicationLib.Application({
+            id: _Id,
+            name: _name,
+            owner: _owner,
+            url: _url,
+            deployedAddress: _appAddr,
+            status: ApplicationLib.Status(_status)
+        }));
+    }
+
+    function retrieveApplication(uint256 _id) public view returns (string _name, address _owner, string _url, address _appAddr, uint256 _status) {
+        ApplicationLib.Application memory application = lookup(DATABASE).retrieveApplication(_id);
+        _name = application.name;
+        _owner = application.owner;
+        _url = application.url;
+        _appAddr = application.deployedAddress;
+        _status = uint256(application.status);
+    }
+
     function save(uint256 appId, string name, address owner, string url, address appAddr, uint256 status) public {
         lookup(DATABASE).save(appId, name, owner, url, appAddr, status);
         emit ApplicationSaved(appId, name, owner, url, appAddr, status);
