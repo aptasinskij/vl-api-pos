@@ -1,3 +1,4 @@
+/*
 const assert = require('chai').assert;
 const CashChannelsManager = artifacts.require('CashChannelsManager.sol');
 const SessionManager = artifacts.require('SessionManager.sol');
@@ -10,19 +11,19 @@ contract('CashChannelsManager', () => {
         let resOpenCashInChannel;
 
         before(async () => {
-            /* get instances */
+            /!* get instances *!/
             const cashChannelsManagerInstance = await CashChannelsManager.deployed();
             const sessionManagerInstance = await SessionManager.deployed();
             const applicationManagerInstance = await ApplicationManager.deployed();
             const capitalHeroInstance = await CapitalHero.deployed();
 
-            /* registerApplication Capital Hero */
+            /!* registerApplication Capital Hero *!/
             await applicationManagerInstance.registerApplication(2, 'capital-hero', 235, 'http://capital-hero', capitalHeroInstance.address);
-            /* createSession for Capital Hero */
+            /!* createSession for Capital Hero *!/
             await sessionManagerInstance.createSession(1, 2, '1a2b3c');
-            /* activate session */
+            /!* activate session *!/
             await sessionManagerInstance.activate(1);
-            /* try to openCashInChannel with wrong app address */
+            /!* try to openCashInChannel with wrong app address *!/
             try {
                 await cashChannelsManagerInstance.openCashInChannel(132, 1);
                 resOpenCashInChannel = 'Method Allowed';
@@ -35,4 +36,4 @@ contract('CashChannelsManager', () => {
             assert.notEqual(resOpenCashInChannel, 'Method Allowed', 'openCashInChannel method allowed');
         });
     });
-});
+});*/

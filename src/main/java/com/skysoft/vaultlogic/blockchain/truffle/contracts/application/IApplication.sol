@@ -4,7 +4,7 @@ interface IApplication {
     
     function openCashInChannel(uint256 sessionId) external;
 
-    function closeCashInChannel(uint256 sessionId, uint256 channelId) external;
+    function closeCashInChannel(uint256 sessionId, uint256 channelId, uint256[] _fees, address[] _parties) external;
 
     function cashInBalanceUpdate(uint256 channelId, uint256 balance, uint256 sessionId) external;
 
