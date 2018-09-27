@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.common.mapper;
+package com.skysoft.vaultlogic.web.postback.mapper;
 
 class DataMapperException extends RuntimeException {
     DataMapperException(String message, Throwable cause) {
