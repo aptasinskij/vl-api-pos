@@ -9,8 +9,7 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
 * ApplicationLib
 \*&#47;
 
-&#47;*
-contract(&#39;ApplicationLib&#39;, (accounts) =&#62; {
+&#47;*contract(&#39;ApplicationLib&#39;, (accounts) =&#62; {
 
     describe(&#39;tests for &#34;read&#34; methods&#39;, () =&#62; {
 
@@ -21,6 +20,8 @@ contract(&#39;ApplicationLib&#39;, (accounts) =&#62; {
         let resGetAddress;
         let resGetStatus;
         let resGetName;
+        let resIsRegistered1;
+        let resIsRegistered2;
 
         before(async () =&#62; {
             appInstance = await CapitalHero.deployed();
@@ -28,16 +29,27 @@ contract(&#39;ApplicationLib&#39;, (accounts) =&#62; {
             const applicationStorageInstance = await ApplicationStorage.deployed();
             const databaseInstance = await Database.deployed();
 
+            &#47;!* isRegistered *!&#47;
+            resIsRegistered1 = await applicationLibInstance.isRegistered(databaseInstance.address, appInstance.address);
+            console.log(&#39;resIsRegistered1&#39;, resIsRegistered1);
+
             &#47;!* save by ApplicationStorage method *!&#47;
-            await applicationStorageInstance.save(123,
+            let res = await applicationStorageInstance.save(
+                123,
                 &#39;capitalHero&#39;,
                 accounts[0],
                 &#39;http:&#47;&#47;capital-hero&#39;,
                 appInstance.address,
-                0);
+                0
+            );
+            console.log(&#39;res&#39;, convertToNumber(res.logs[0].args, true));
+            &#47;!* isRegistered *!&#47;
+            resIsRegistered2 = await applicationStorageInstance.isRegistered(appInstance.address);
+
+            console.log(&#39;resIsRegistered2&#39;, resIsRegistered2);
+
             &#47;!* get *!&#47;
-            resGet = await applicationLibInstance.get(databaseInstance.address, 123);
-            resGet = convertToNumber(resGet, true);
+            resGet = convertToNumber(await applicationLibInstance.get(databaseInstance.address, 123), true);
             &#47;!* getName *!&#47;
             resGetName = await applicationLibInstance.getName(databaseInstance.address, 123);
             &#47;!* getOwner *!&#47;
@@ -49,15 +61,12 @@ contract(&#39;ApplicationLib&#39;, (accounts) =&#62; {
             &#47;!* setApplicationAddress by ApplicationStorage *!&#47;
             await applicationStorageInstance.setApplicationAddress(123, 13245);
             &#47;!* getAddress *!&#47;
-            resGetAddress = await applicationLibInstance.getAddress(databaseInstance.address, 123);
-            resGetAddress = Number(resGetAddress);
+            resGetAddress = Number(await applicationLibInstance.getAddress(databaseInstance.address, 123));
             &#47;!* setApplicationStatus by ApplicationStorage *!&#47;
             await applicationStorageInstance.setApplicationStatus(123, 2);
             &#47;!* getStatus *!&#47;
-            resGetStatus = await applicationLibInstance.getStatus(databaseInstance.address, 123);
-            resGetStatus = Number(resGetStatus);
-        });
-*&#47;
+            resGetStatus = Number(await applicationLibInstance.getStatus(databaseInstance.address, 123));
+        });*&#47;
 
         &#47;*\
          # &#60;hr&#62;
@@ -133,7 +142,7 @@ contract(&#39;ApplicationLib&#39;, (accounts) =&#62; {
          &#62; Returns
          - (uint256) status - application status
         \*&#47;
-       &#47;* it(&#39;getStatus&#39;, () =&#62; {
+        &#47;*it(&#39;getStatus&#39;, () =&#62; {
             assert.strictEqual(resGetStatus, 2, &#39;application status is not equal&#39;);
         });*&#47;
 

@@ -21,6 +21,7 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
         let resGetStatus;
         let resGetSplitSize;
         let resGetSplit;
+        let resGetVLFee;
 
         before(async () =&#62; {
             appInstance = await CapitalHero.deployed();
@@ -35,6 +36,10 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
             &#47;!* get *!&#47;
             resGet = await cashInLibInstance.get(databaseInstance.address, 0);
             resGet = convertToNumber(resGet, true);
+            &#47;!* setVLFee by CashInStorage method *!&#47;
+            await cashInStorageInstance.setVLFee(0, 1500);
+            &#47;!* getVLFee *!&#47;
+            resGetVLFee = Number(await cashInLibInstance.getVLFee(databaseInstance.address, 0));
             &#47;!* getSessionId *!&#47;
             resGetSessionId = await cashInLibInstance.getSessionId(databaseInstance.address, 0);
             resGetSessionId = Number(resGetSessionId);
@@ -171,6 +176,20 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
             assert.strictEqual(resGetSplit[1], 200, &#39;cashInChannel split party fee is not equal&#39;);
         });*&#47;
 
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getVLFee(self, index) &#60;&#47;h4&#62;
+         # Get owner of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) index - cashInChannel id
+         &#62; Returns
+         - (uint256) fee - split party fee size of cashInChannel
+        \*&#47;
+        &#47;*it(&#39;getVLFee&#39;, () =&#62; {
+            assert.strictEqual(resGetVLFee, 1500, &#39;VL fee amount is not equal&#39;);
+        });*&#47;
+
         &#47;* methods below are not tested, only description provided *&#47;
 
         &#47;*\
@@ -225,6 +244,18 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
          - (uint256) receiver - array of receivers addresses
          - (uint256) amount - array of fee sizes
         \*&#47;
-   &#47;* })
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; setVLFee(self, index, fee) &#60;&#47;h4&#62;
+         # Get owner of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) index - cashInChannel id
+         - (uint256) fee - cashInChannel id
+         &#62; Returns
+         - (uint256) fee - split party fee size of cashInChannel
+        \*&#47;
+    &#47;*})
 });
 *&#47;</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>

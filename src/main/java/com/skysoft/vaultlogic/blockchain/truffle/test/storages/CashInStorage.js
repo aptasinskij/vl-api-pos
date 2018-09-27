@@ -66,8 +66,7 @@ contract('CashInStorage', () => {
             resSetStatus = await instance.setStatus(0, 5);
             resSetStatus = convertToNumber(resSetStatus.logs[0].args);
             /* getStatus */
-            resGetStatus = await instance.getStatus(0);
-            resGetStatus = Number(resGetStatus);
+            resGetStatus = Number(await instance.getStatus(0));
             /* addSplit */
             resAddSplit = await instance.addSplit(0, 10, 20);
             resAddSplit = convertToNumber(resAddSplit.logs[0].args);
@@ -270,6 +269,19 @@ contract('CashInStorage', () => {
         it('setStatus', () => {
             assert.strictEqual(resSetStatus.channelId, 0, 'index is not equal');
             assert.strictEqual(resSetStatus.status, 5, 'status is not equal');
+        });
+
+        /*\
+         # <hr>
+         # <h4> getStatus(channelId) </h4>
+         # Get status of cashInChannel
+         > Arguments
+         - (uint256) channelId - cashInChannel id
+         > Returns
+         - (uint256) status - cashInChannel status
+        \*/
+        it('getStatus', () => {
+            assert.strictEqual(resGetStatus, 5, 'status is not equal');
         });
 
         /*\
