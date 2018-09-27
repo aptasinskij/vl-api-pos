@@ -18,7 +18,7 @@ contract KioskStorage is Component, AKioskStorage {
     }
 
     function saveKiosk(string shortId, string locationAddress, string name, string timeZone) public {
-        lookup(DATABASE).saveKiosk(shortId, locationAddress, name, timeZone);
+        lookup(DATABASE).save(shortId, locationAddress, name, timeZone);
     }
 
     function retrieveKiosk(string shortId) public view
@@ -27,7 +27,7 @@ contract KioskStorage is Component, AKioskStorage {
         string name,
         string timeZone
     ) {
-        return lookup(DATABASE).retrieveKiosk(shortId);
+        return lookup(DATABASE).retrieve(shortId);
     }
 
 }
