@@ -21,6 +21,7 @@ const {convertToNumber} = require('../helpers');*/
         let resGetStatus;
         let resGetSplitSize;
         let resGetSplit;
+        let resGetVLFee;
 
         before(async () => {
             appInstance = await CapitalHero.deployed();
@@ -35,6 +36,10 @@ const {convertToNumber} = require('../helpers');*/
             /!* get *!/
             resGet = await cashInLibInstance.get(databaseInstance.address, 0);
             resGet = convertToNumber(resGet, true);
+            /!* setVLFee by CashInStorage method *!/
+            await cashInStorageInstance.setVLFee(0, 1500);
+            /!* getVLFee *!/
+            resGetVLFee = Number(await cashInLibInstance.getVLFee(databaseInstance.address, 0));
             /!* getSessionId *!/
             resGetSessionId = await cashInLibInstance.getSessionId(databaseInstance.address, 0);
             resGetSessionId = Number(resGetSessionId);
@@ -171,6 +176,20 @@ const {convertToNumber} = require('../helpers');*/
             assert.strictEqual(resGetSplit[1], 200, 'cashInChannel split party fee is not equal');
         });*/
 
+        /*\
+         # <hr>
+         # <h4> getVLFee(self, index) </h4>
+         # Get owner of application
+         > Arguments
+         - (address) self - self database address
+         - (uint256) index - cashInChannel id
+         > Returns
+         - (uint256) fee - split party fee size of cashInChannel
+        \*/
+        /*it('getVLFee', () => {
+            assert.strictEqual(resGetVLFee, 1500, 'VL fee amount is not equal');
+        });*/
+
         /* methods below are not tested, only description provided */
 
         /*\
@@ -225,6 +244,18 @@ const {convertToNumber} = require('../helpers');*/
          - (uint256) receiver - array of receivers addresses
          - (uint256) amount - array of fee sizes
         \*/
-   /* })
+
+        /*\
+         # <hr>
+         # <h4> setVLFee(self, index, fee) </h4>
+         # Get owner of application
+         > Arguments
+         - (address) self - self database address
+         - (uint256) index - cashInChannel id
+         - (uint256) fee - cashInChannel id
+         > Returns
+         - (uint256) fee - split party fee size of cashInChannel
+        \*/
+    /*})
 });
 */
