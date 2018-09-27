@@ -1,6 +1,7 @@
 pragma solidity 0.4.24;
 
 import "../Database.sol";
+import "./Libraries.sol";
 
 library SafeMath {
 
@@ -238,6 +239,28 @@ library ParameterLib {
 
     function getVLFee(address self) internal view returns (uint256) {
         return Database(self).getUintValue(keccak256(abi.encode(VAULT_LOGIC_FEE_PERCENT)));
+    }
+
+}
+
+library KioskLib {
+
+    string constant SHORT_ID = "kiosk_short_id";
+    string constant LOCATION = "kiosk_location_address";
+    string constant NAME = "kiosk_name";
+    string constant TIME_ZONE = "kiosk_time_zone";
+
+    function saveKiosk(address self, string shortId, string locationAddress, string name, string timeZone) internal {
+        Database(self).setStringValue(keccak256(abi.encode(SHORT_ID, shortId)), shortId);
+        Database(self).setStringValue(keccak256(abi.encode(LOCATION, shortId)), locationAddress);
+        Database(self).setStringValue(keccak256(abi.encode(NAME, shortId)), name);
+        Database(self).setStringValue(keccak256(abi.encode(TIME_ZONE, shortId)), timeZone);
+    }
+
+    function retrieveKiosk(address self, string shortId) internal view returns(string locationAddress, string name, string timeZone) {
+        locationAddress = Database(self).getStringValue(keccak256(abi.encode(LOCATION, shortId)));
+        name = Database(self).getStringValue(keccak256(abi.encode(NAME, shortId)));
+        timeZone = Database(self).getStringValue(keccak256(abi.encode(TIME_ZONE, shortId)));
     }
 
 }
