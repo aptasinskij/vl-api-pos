@@ -15,36 +15,40 @@ spring:
       settings:
         web-allow-others: true
 maya:
-  base-url: "https://api-staging.maya.tech/open/"
-  sso: "https://sso.maya.tech/oauth2/token/"
+  base-url: https://api-staging.maya.tech/open
+  sso: https://sso.maya.tech/oauth2/token
+  access:
+    client-id: zlJLS7b3AdoCzwj4eQYvQ2K7x3KvDJlBKf3yqTPu
+    client-secret: wVgM1llhuNzTHTCU3NCZ9xpmz3Xmfn9VlRAPNNlu9sBo1A427gVtNLp3e8b3or1kqXwbSjlSXLQtg8nAMqfqBVNcFbV2IfiERI9vlKiAfkaeL6oLklVmkuBgujIstwSJ
   application:
-    launch-application: "/application/launch"
-    keep-alive: "/application/keepalive"
-    client-activity: "/application/activity"
-    close-application: "/application/close"
+    launch-application: /application/launch
+    keep-alive: /application/keepalive
+    client-activity: /application/activity
+    close-application: /application/close
   device:
-    info: "/device/info"
+    info: /device/info
     cash:
-      cash-device-status: "/device/cash/status"
-      recycler-device-status: "/device/cash/recycler/status"
-      enable-cash-acceptor: "/device/cash/enable"
-      disable-cash-acceptor: "/device/cash/disable"
-      dispensable-amount: "/device/cash/dispenser/amount"
-      dispense-cash: "/device/cash/dispense"
+      cash-device-status:
+      recycler-device-status: /device/cash/recycler/status
+      enable-cash-acceptor: /device/cash/enable
+      disable-cash-acceptor: /device/cash/disable
+      dispensable-amount: /device/cash/dispenser/amount
+      dispense-cash: /device/cash/dispense
     scanner:
-      status: "/device/scanner/status"
+      status: /device/scanner/status
     receipt:
-      create-receipt: "/device/printer/create"
-      print-receipt: "/device/printer/print"
+      create-receipt: /device/printer/create
+      print-receipt: /device/printer/print
     camera:
-      take-photo: "/device/camera/photo"
-      take-scan: "/device/camera/scan"
-      start-preview: "/device/camera/preview/start"
-      stop-preview: "/device/camera/preview/stop"
+      take-photo: /device/camera/photo
+      take-scan: /device/camera/scan
+      start-preview: /device/camera/preview/start
+      stop-preview: /device/camera/preview/stop
   customer:
-    set-customer-in-session: "/customer/create"
-    get-customer-information: "/customer/info"
+    set-customer-in-session: /customer/create
+    get-customer-information: /customer/info
   general-info:
-    locations-and-devices: "https://api.interwallet.com/open_api/locations/devices"
-    device: "https://api.interwallet.com/open_api/device/info"
-    devices: "https://api.interwallet.com/open_api/device/info/all"
+    ## this config can be outdated, need to get the latest URI from MAYA team
+    locations-and-devices: https://api.interwallet.com/open_api/locations/devices
+    device: https://api.interwallet.com/open_api/device/info
+    devices: https://api.interwallet.com/open_api/device/info/all
