@@ -3,32 +3,38 @@ package com.skysoft.vaultlogic.common.configuration.properties;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @Data
 @Validated
-@Configuration
 @ConfigurationProperties("maya")
 public class MayaProperties {
 
-    @URL
-    @NotBlank
+    private static final String URI_FORMAT = "%s%s";
+
     private String baseUrl;
-    @NotBlank
+
     private String sso;
 
-    @Valid
+    private Access access;
+
     private Application application;
-    @Valid
+
     private Device device;
-    @Valid
+
     private CustomerUrl customer;
-    @Valid
+
     private GeneralInfo generalInfo;
+
+    @Data
+    public static class Access {
+        @NotBlank
+        private String clientId;
+        @NotBlank
+        private String clientSecret;
+    }
 
     @Data
     public static class Application {
@@ -46,15 +52,10 @@ public class MayaProperties {
     public static class Device {
         @NotBlank
         private String info;
-        @Valid
         private CashDevice cash;
-        @Valid
         private Scanner scanner;
-        @Valid
         private ReceiptDevice receipt;
-        @Valid
         private CameraDevice camera;
-
     }
 
     @Data
@@ -90,34 +91,34 @@ public class MayaProperties {
     @Data
     public static class CameraDevice {
         @NotBlank
-        String takePhoto;
+        private String takePhoto;
         @NotBlank
-        String takeScan;
+        private String takeScan;
         @NotBlank
-        String startPreview;
+        private String startPreview;
         @NotBlank
-        String stopPreview;
+        private String stopPreview;
     }
 
     @Data
     public static class CustomerUrl {
         @NotBlank
-        String setCustomerInSession;
+        private String setCustomerInSession;
         @NotBlank
-        String getCustomerInformation;
+        private String getCustomerInformation;
     }
 
     @Data
     public static class GeneralInfo {
         @URL
         @NotBlank
-        String locationsAndDevices;
+        private String locationsAndDevices;
         @URL
         @NotBlank
-        String device;
+        private String device;
         @URL
         @NotBlank
-        String devices;
+        private String devices;
     }
 
 }
