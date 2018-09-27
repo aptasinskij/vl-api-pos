@@ -1,7 +1,6 @@
 pragma solidity 0.4.24;
 
 import "../Database.sol";
-import "./Libraries.sol";
 
 library SafeMath {
 
@@ -53,6 +52,39 @@ library ApplicationLib {
     string constant ADDRESS = "application_address";
     string constant STATUS = "application_status";
     string constant REGISTERED = "application_registered";
+
+    enum Status {PENDING, ENABLED, DISABLED}
+
+    struct Application {
+        uint256 id;
+        string name;
+        address owner;
+        string url;
+        address deployedAddress;
+        Status status;
+    }
+
+    function createApplication(address self, Application memory application) internal returns (bool) {
+        Database(self).setUintValue(keccak256(abi.encodePacked(ID, application.id)), application.id);
+        Database(self).setStringValue(keccak256(abi.encodePacked(NAME, application.id)), application.name);
+        Database(self).setAddressValue(keccak256(abi.encodePacked(OWNER, application.id)), application.owner);
+        Database(self).setStringValue(keccak256(abi.encodePacked(URL, application.id)), application.url);
+        Database(self).setAddressValue(keccak256(abi.encodePacked(ADDRESS, application.id)), application.deployedAddress);
+        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, application.id)), uint256(application.status));
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(REGISTERED, application.deployedAddress)), true);
+        return true;
+    }
+
+    function retrieveApplication(address self, uint256 applicationId) internal view returns (Application memory) {
+        return Application({
+            id: applicationId,
+            name: Database(self).getStringValue(keccak256(abi.encodePacked(NAME, applicationId))),
+            owner: Database(self).getAddressValue(keccak256(abi.encodePacked(OWNER, applicationId))),
+            url: Database(self).getStringValue(keccak256(abi.encodePacked(URL, applicationId))),
+            deployedAddress: Database(self).getAddressValue(keccak256(abi.encodePacked(ADDRESS, applicationId))),
+            status: Status(Database(self).getUintValue(keccak256(abi.encodePacked(ID, applicationId))))
+        });
+    }
 
     function save(address self, uint256 appId, string name, address owner, string url, address appAddr, uint256 status) internal {
         Database(self).setUintValue(string256(ID, appId), appId);
