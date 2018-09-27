@@ -2,6 +2,7 @@ package com.skysoft.vaultlogic.common.domain.session;
 
 import com.skysoft.vaultlogic.common.domain.application.Application;
 import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel;
+import com.skysoft.vaultlogic.common.domain.kiosk.Kiosk;
 import com.skysoft.vaultlogic.common.domain.session.events.*;
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
@@ -44,16 +45,21 @@ public class Session extends AbstractAggregateRoot<Session> {
     @OneToMany(mappedBy = "session", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<CashInChannel> cashInChannels = new ArrayList<>();
 
+    @JoinColumn(name = "kiosk_id")
+    @ManyToOne(fetch = LAZY, optional = false)
+    private Kiosk kiosk;
+
     public Session() {
     }
 
-    private Session(Application application, String xToken) {
+    private Session(Application application, Kiosk kiosk, String xToken) {
         this.application = application;
+        this.kiosk = kiosk;
         this.xToken = xToken;
     }
 
-    public static Session newApplicationSession(Application application, String xToken) {
-        return new Session(requireNonNull(application), requireNonNull(xToken));
+    public static Session session(Application application, Kiosk kiosk, String xToken) {
+        return new Session(requireNonNull(application), requireNonNull(kiosk), requireNonNull(xToken));
     }
 
     public Session markCreating() {

@@ -1,6 +1,6 @@
 package com.skysoft.vaultlogic.web.postback.impl.handlers;
 
-import com.skysoft.vaultlogic.common.mapper.DataMapper;
+import com.skysoft.vaultlogic.web.postback.mapper.DataMapper;
 import com.skysoft.vaultlogic.web.postback.api.AbstractEventHandler;
 import com.skysoft.vaultlogic.web.postback.api.EventEmptyResponse;
 import com.skysoft.vaultlogic.web.postback.impl.factories.markers.ApplicationActionHandler;

@@ -1,7 +1,7 @@
 package com.skysoft.vaultlogic.web.postback.api;
 
 
-import com.skysoft.vaultlogic.common.mapper.DataMapper;
+import com.skysoft.vaultlogic.web.postback.mapper.DataMapper;
 
 /**
  * Abstract implementation of @see {@link EventHandler}

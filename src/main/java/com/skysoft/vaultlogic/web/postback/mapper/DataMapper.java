@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.common.mapper;
+package com.skysoft.vaultlogic.web.postback.mapper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
