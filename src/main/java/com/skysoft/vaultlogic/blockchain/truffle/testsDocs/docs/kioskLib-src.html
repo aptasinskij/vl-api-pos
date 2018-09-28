@@ -1,0 +1,60 @@
+<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of kioskLib.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">&#47;*const assert = require(&#39;chai&#39;).assert;
+const KioskLib = artifacts.require(&#39;KioskLib&#39;);
+const KioskStorage = artifacts.require(&#39;KioskStorage&#39;);
+const Database = artifacts.require(&#39;Database&#39;);*&#47;
+
+&#47;*\
+* KioskLib
+\*&#47;
+
+&#47;*contract(&#39;KioskLib&#39;, () =&#62; {
+
+    describe(&#39;tests for &#34;read&#34; methods&#39;, () =&#62; {
+
+        let resRetrieve;
+
+        before(async () =&#62; {
+            &#47;!* get instances *!&#47;
+            const kioskStorageInstance = await KioskStorage.deployed();
+            const kioskLibInstance = await KioskLib.deployed();
+            const databaseInstance = await Database.deployed();
+
+            &#47;!* saveKiosk by KioskStorage method *!&#47;
+            await kioskStorageInstance.saveKiosk(1, &#39;Vinnytsia&#39;, &#39;Privat&#39;, &#39;timezone1&#39;);
+            &#47;!* retrieve *!&#47;
+            resRetrieve = await kioskLibInstance.retrieve(databaseInstance.address, 1);
+        });*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; retrieve(self, shortId) &#60;&#47;h4&#62;
+         # Get all info of kiosk
+         &#62; Arguments
+         - (address) self - self database address
+         - (string) shortId - kiosk short id
+         &#62; Returns
+         - (string) locationAddress - kiosk location address
+         - (string) name - kiosk name
+         - (string) timeZone - kiosk timeZone
+        \*&#47;
+        &#47;*it(&#39;retrieve&#39;, () =&#62; {
+            assert.strictEqual(resRetrieve[0], &#39;Vinnytsia&#39;, &#39;kiosk location address is not equal&#39;);
+            assert.strictEqual(resRetrieve[1], &#39;Privat&#39;, &#39;kiosk name is not equal&#39;);
+            assert.strictEqual(resRetrieve[2], &#39;timezone1&#39;, &#39;kiosk name is not equal&#39;);
+        });*&#47;
+
+        &#47;* methods below are not tested, only description provided *&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; save(self, shortId, locationAddress, name, timeZone) &#60;&#47;h4&#62;
+         # Save new kiosk
+         &#62; Arguments
+         - (address) self - self database address
+         - (string) shortId - kiosk short id
+         - (string) locationAddress - kiosk location address
+         - (string) name - kiosk name
+         - (string) timeZone - kiosk timeZone
+        \*&#47;
+    &#47;*});
+});*&#47;</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>

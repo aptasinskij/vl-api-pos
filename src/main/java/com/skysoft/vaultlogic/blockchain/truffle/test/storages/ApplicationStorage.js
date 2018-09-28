@@ -10,7 +10,8 @@ contract('ApplicationStorage', () => {
 
     describe('tests for all methods', () => {
         let resSave;
-        let resGet;
+        let resGet1;
+        let resGet2;
         let resGetApplicationName;
         let resGetApplicationOwner;
         let resGetApplicationUrl;
@@ -20,20 +21,21 @@ contract('ApplicationStorage', () => {
         let resSetApplicationStatus;
         let resGetApplicationStatus;
         let resGetAfterAll;
+        let resCreateApplication;
+        let resRetrieveApplication;
 
         before(async () => {
             const instance = await ApplicationStorage.deployed();
+
             /* save */
             resSave = await instance.save(1, 'app name', 235, 'https://my-app-url', 456, 4);
             resSave = convertToNumber(resSave.logs[0].args);
             /* get */
-            resGet = await instance.get(1);
-            resGet = convertToNumber(resGet);
+            resGet1 = convertToNumber(await instance.get(1));
             /* getApplicationName */
             resGetApplicationName = await instance.getApplicationName(1);
             /* getApplicationOwner */
-            resGetApplicationOwner = await instance.getApplicationOwner(1);
-            resGetApplicationOwner = Number(resGetApplicationOwner);
+            resGetApplicationOwner = Number(await instance.getApplicationOwner(1));
             /* setApplicationUrl */
             resSetApplicationUrl = await instance.setApplicationUrl(1, 'http://new-url');
             resSetApplicationUrl = convertToNumber(resSetApplicationUrl.logs[0].args);
@@ -43,17 +45,20 @@ contract('ApplicationStorage', () => {
             resSetApplicationAddress = await instance.setApplicationAddress(1, 999);
             resSetApplicationAddress = convertToNumber(resSetApplicationAddress.logs[0].args);
             /* getApplicationAddress */
-            resGetApplicationAddress = await instance.getApplicationAddress(1);
-            resGetApplicationAddress = Number(resGetApplicationAddress);
+            resGetApplicationAddress = Number(await instance.getApplicationAddress(1));
             /* setApplicationStatus */
             resSetApplicationStatus = await instance.setApplicationStatus(1, 8);
             resSetApplicationStatus = convertToNumber(resSetApplicationStatus.logs[0].args);
             /* getApplicationStatus */
-            resGetApplicationStatus = await instance.getApplicationStatus(1);
-            resGetApplicationStatus = Number(resGetApplicationStatus);
+            resGetApplicationStatus = Number(await instance.getApplicationStatus(1));
             /* get (after all) */
-            resGetAfterAll = await instance.get(1);
-            resGetAfterAll = convertToNumber(resGetAfterAll);
+            resGetAfterAll = convertToNumber(await instance.get(1));
+
+            /* createApplication */
+            resCreateApplication = await instance.createApplication(2, 'my app', 3, 'http://url', 4, 0);
+            resGet2 = convertToNumber(await instance.get(2));
+            /* retrieveApplication */
+            resRetrieveApplication = convertToNumber(await instance.retrieveApplication(2));
         });
 
         /*\
@@ -93,11 +98,11 @@ contract('ApplicationStorage', () => {
          - (uint256) status - application status
         \*/
         it('get', () => {
-            assert.strictEqual(resGet[0], 'app name', 'application name is not equal');
-            assert.strictEqual(resGet[1], 235, 'application owner is not equal');
-            assert.strictEqual(resGet[2], 'https://my-app-url', 'application url is not equal');
-            assert.strictEqual(resGet[3], 456, 'application address is not equal');
-            assert.strictEqual(resGet[4], 4, 'application status is not equal');
+            assert.strictEqual(resGet1[0], 'app name', 'application name is not equal');
+            assert.strictEqual(resGet1[1], 235, 'application owner is not equal');
+            assert.strictEqual(resGet1[2], 'https://my-app-url', 'application url is not equal');
+            assert.strictEqual(resGet1[3], 456, 'application address is not equal');
+            assert.strictEqual(resGet1[4], 4, 'application status is not equal');
             /* after all */
             assert.strictEqual(resGetAfterAll[0], 'app name', 'application name is not equal (after all)');
             assert.strictEqual(resGetAfterAll[1], 235, 'application owner is not equal (after all)');
@@ -213,6 +218,51 @@ contract('ApplicationStorage', () => {
         \*/
         it('getApplicationStatus', () => {
             assert.strictEqual(resGetApplicationStatus, 8, 'application status is not equal');
+        });
+
+        /*\
+         # <hr>
+         # <h4> createApplication(_Id, _name, _owner, _url, _appAddr, _status) </h4>
+         # Create new application using structure approach
+         > Arguments
+         - (uint256) _Id - application id
+         - (string) _name - application name
+         - (address) _owner - owner address
+         - (string) _url - application url
+         - (address) _appAddr - application address
+         - (uint256) _status - application status
+        \*/
+        it('createApplication', () => {
+            /* from resCreateApplication method */
+            assert.notEqual(resCreateApplication.receipt.transactionHash, '', 'transaction hash is empty');
+            assert.isAbove(resCreateApplication.receipt.gasUsed, 0, 'gasUsed is 0');
+            /* from get method */
+            assert.strictEqual(resGet2[0], 'my app', 'application name is not equal');
+            assert.strictEqual(resGet2[1], 3, 'owner address is not equal');
+            assert.strictEqual(resGet2[2], 'http://url', 'application url is not equal');
+            assert.strictEqual(resGet2[3], 4, 'application address is not equal');
+            assert.strictEqual(resGet2[4], 0, 'application status is not equal');
+        });
+
+        /*\
+         # <hr>
+         # <h4> retrieveApplication(_id) </h4>
+         # Get full application info using structure approach
+         > Arguments
+         - (uint256) _id - application id
+         > Returns
+         - (string) _name - application name
+         - (address) _owner - owner address
+         - (string) _url - application url
+         - (address) _appAddr - application address
+         - (uint256) _status - application status
+        \*/
+        it('retrieveApplication', () => {
+            assert.strictEqual(resRetrieveApplication[0], 'my app', 'application name is not equal');
+            assert.strictEqual(resRetrieveApplication[1], 3, 'owner address is not equal');
+            assert.strictEqual(resRetrieveApplication[2], 'http://url', 'application url is not equal');
+            assert.strictEqual(resRetrieveApplication[3], 4, 'application address is not equal');
+            assert.strictEqual(resRetrieveApplication[4], 0, 'application status is not equal');
         });
 
         /* events description */
