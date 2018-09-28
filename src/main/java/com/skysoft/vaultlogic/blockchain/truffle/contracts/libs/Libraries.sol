@@ -70,7 +70,7 @@ library ApplicationLib {
     }
 
     function createApplication(address self, Application memory application) internal returns (bool) {
-        if (applicationExists(self, application.id)) return false;
+        require(!applicationExists(self, application.id), "exists");
         Database(self).setUintValue(keccak256(abi.encodePacked(ID, application.id)), application.id);
         Database(self).setStringValue(keccak256(abi.encodePacked(NAME, application.id)), application.name);
         Database(self).setAddressValue(keccak256(abi.encodePacked(OWNER, application.id)), application.owner);
