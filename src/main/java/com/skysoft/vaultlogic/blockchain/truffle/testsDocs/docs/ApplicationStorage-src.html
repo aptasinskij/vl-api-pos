@@ -20,9 +20,13 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
         let resSetApplicationStatus;
         let resGetApplicationStatus;
         let resGetAfterAll;
+        let resIsRegistered1;
+        let resIsRegistered2;
 
         before(async () =&#62; {
             const instance = await ApplicationStorage.deployed();
+            &#47;* isRegistered *&#47;
+            resIsRegistered1 = await instance.isRegistered(456);
             &#47;* save *&#47;
             resSave = await instance.save(1, &#39;app name&#39;, 235, &#39;https:&#47;&#47;my-app-url&#39;, 456, 4);
             resSave = convertToNumber(resSave.logs[0].args);
@@ -54,6 +58,8 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
             &#47;* get (after all) *&#47;
             resGetAfterAll = await instance.get(1);
             resGetAfterAll = convertToNumber(resGetAfterAll);
+            &#47;* isRegistered *&#47;
+            resIsRegistered2 = await instance.isRegistered(456);
         });
 
         &#47;*\
@@ -104,6 +110,20 @@ contract(&#39;ApplicationStorage&#39;, () =&#62; {
             assert.strictEqual(resGetAfterAll[2], &#39;http:&#47;&#47;new-url&#39;, &#39;application url is not equal (after all)&#39;);
             assert.strictEqual(resGetAfterAll[3], 999, &#39;application address is not equal (after all)&#39;);
             assert.strictEqual(resGetAfterAll[4], 8, &#39;application status is not equal (after all)&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; isRegistered(_applicationAddress) &#60;&#47;h4&#62;
+         # Get application registration state
+         &#62; Arguments
+         - (address) _applicationAddress - application id
+         &#62; Returns
+         - (bool) isRegistered - application registration state
+        \*&#47;
+        it(&#39;isRegistered&#39;, () =&#62; {
+            assert.strictEqual(resIsRegistered1, false, &#39;application is registered before registration&#39;);
+            assert.strictEqual(resIsRegistered2, true, &#39;application is not registered after registration&#39;);
         });
 
         &#47;*\

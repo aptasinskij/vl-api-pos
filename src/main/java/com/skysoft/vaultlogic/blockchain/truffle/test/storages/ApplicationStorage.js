@@ -21,10 +21,13 @@ contract('ApplicationStorage', () => {
         let resSetApplicationStatus;
         let resGetApplicationStatus;
         let resGetAfterAll;
-        let resIsRegistered;
+        let resIsRegistered1;
+        let resIsRegistered2;
 
         before(async () => {
             const instance = await ApplicationStorage.deployed();
+            /!* isRegistered *!/
+            resIsRegistered1 = await instance.isRegistered(456);
             /!* save *!/
             resSave = await instance.save(1, 'app name', 235, 'https://my-app-url', 456, 4);
             resSave = convertToNumber(resSave.logs[0].args);
@@ -57,8 +60,7 @@ contract('ApplicationStorage', () => {
             resGetAfterAll = await instance.get(1);
             resGetAfterAll = convertToNumber(resGetAfterAll);
             /!* isRegistered *!/
-            resIsRegistered = await instance.isRegistered(456);
-            console.log('resIsRegistered (ApplicationStorage method)', resIsRegistered);
+            resIsRegistered2 = await instance.isRegistered(456);
         });
 
         /!*\
@@ -109,6 +111,20 @@ contract('ApplicationStorage', () => {
             assert.strictEqual(resGetAfterAll[2], 'http://new-url', 'application url is not equal (after all)');
             assert.strictEqual(resGetAfterAll[3], 999, 'application address is not equal (after all)');
             assert.strictEqual(resGetAfterAll[4], 8, 'application status is not equal (after all)');
+        });
+
+        /!*\
+         # <hr>
+         # <h4> isRegistered(_applicationAddress) </h4>
+         # Get application registration state
+         > Arguments
+         - (address) _applicationAddress - application id
+         > Returns
+         - (bool) isRegistered - application registration state
+        \*!/
+        it('isRegistered', () => {
+            assert.strictEqual(resIsRegistered1, false, 'application is registered before registration');
+            assert.strictEqual(resIsRegistered2, true, 'application is not registered after registration');
         });
 
         /!*\
