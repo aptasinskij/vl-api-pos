@@ -1,15 +1,15 @@
-<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of ApplicationLib.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">&#47;*const assert = require(&#39;chai&#39;).assert;
+<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of ApplicationLib.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">const assert = require(&#39;chai&#39;).assert;
 const ApplicationLib = artifacts.require(&#39;ApplicationLib.sol&#39;);
 const CapitalHero = artifacts.require(&#39;CapitalHero.sol&#39;);
 const ApplicationStorage = artifacts.require(&#39;ApplicationStorage.sol&#39;);
 const Database = artifacts.require(&#39;Database.sol&#39;);
-const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
+const {convertToNumber} = require(&#39;..&#47;helpers&#39;);
 
 &#47;*\
 * ApplicationLib
 \*&#47;
 
-&#47;*contract(&#39;ApplicationLib&#39;, (accounts) =&#62; {
+contract(&#39;ApplicationLib&#39;, (accounts) =&#62; {
 
     describe(&#39;tests for &#34;read&#34; methods&#39;, () =&#62; {
 
@@ -24,16 +24,15 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
         let resIsRegistered2;
 
         before(async () =&#62; {
+            &#47;* get instances *&#47;
             appInstance = await CapitalHero.deployed();
             const applicationLibInstance = await ApplicationLib.deployed();
             const applicationStorageInstance = await ApplicationStorage.deployed();
             const databaseInstance = await Database.deployed();
 
-            &#47;!* isRegistered *!&#47;
+            &#47;* isRegistered *&#47;
             resIsRegistered1 = await applicationLibInstance.isRegistered(databaseInstance.address, appInstance.address);
-            console.log(&#39;resIsRegistered1&#39;, resIsRegistered1);
-
-            &#47;!* save by ApplicationStorage method *!&#47;
+            &#47;* save by ApplicationStorage method *&#47;
             let res = await applicationStorageInstance.save(
                 123,
                 &#39;capitalHero&#39;,
@@ -42,31 +41,27 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
                 appInstance.address,
                 0
             );
-            console.log(&#39;res&#39;, convertToNumber(res.logs[0].args, true));
-            &#47;!* isRegistered *!&#47;
+            &#47;* isRegistered *&#47;
             resIsRegistered2 = await applicationStorageInstance.isRegistered(appInstance.address);
-
-            console.log(&#39;resIsRegistered2&#39;, resIsRegistered2);
-
-            &#47;!* get *!&#47;
+            &#47;* get *&#47;
             resGet = convertToNumber(await applicationLibInstance.get(databaseInstance.address, 123), true);
-            &#47;!* getName *!&#47;
+            &#47;* getName *&#47;
             resGetName = await applicationLibInstance.getName(databaseInstance.address, 123);
-            &#47;!* getOwner *!&#47;
+            &#47;* getOwner *&#47;
             resGetOwner = await applicationLibInstance.getOwner(databaseInstance.address, 123);
-            &#47;!* setApplicationUrl by ApplicationStorage *!&#47;
+            &#47;* setApplicationUrl by ApplicationStorage *&#47;
             await applicationStorageInstance.setApplicationUrl(123, &#39;http:&#47;&#47;updated-url&#39;);
-            &#47;!* getUrl *!&#47;
+            &#47;* getUrl *&#47;
             resGetUrl = await applicationLibInstance.getUrl(databaseInstance.address, 123);
-            &#47;!* setApplicationAddress by ApplicationStorage *!&#47;
+            &#47;* setApplicationAddress by ApplicationStorage *&#47;
             await applicationStorageInstance.setApplicationAddress(123, 13245);
-            &#47;!* getAddress *!&#47;
+            &#47;* getAddress *&#47;
             resGetAddress = Number(await applicationLibInstance.getAddress(databaseInstance.address, 123));
-            &#47;!* setApplicationStatus by ApplicationStorage *!&#47;
+            &#47;* setApplicationStatus by ApplicationStorage *&#47;
             await applicationStorageInstance.setApplicationStatus(123, 2);
-            &#47;!* getStatus *!&#47;
+            &#47;* getStatus *&#47;
             resGetStatus = Number(await applicationLibInstance.getStatus(databaseInstance.address, 123));
-        });*&#47;
+        });
 
         &#47;*\
          # &#60;hr&#62;
@@ -82,13 +77,28 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
          - (address) appAddr - application address
          - (uint256) status - application status
         \*&#47;
-        &#47;*it(&#39;get&#39;, () =&#62; {
+        it(&#39;get&#39;, () =&#62; {
             assert.strictEqual(resGet[0], &#39;capitalHero&#39;, &#39;application name is not equal&#39;);
             assert.strictEqual(resGet[1], accounts[0], &#39;application owner is not equal&#39;);
             assert.strictEqual(resGet[2], &#39;http:&#47;&#47;capital-hero&#39;, &#39;application url is not equal&#39;);
             assert.strictEqual(resGet[3], appInstance.address, &#39;application address is not equal&#39;);
             assert.strictEqual(resGet[4], 0, &#39;application status is not equal&#39;);
-        });*&#47;
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; isRegistered(self, _applicationAddress) &#60;&#47;h4&#62;
+         # Get application registration state
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) _applicationAddress - application address
+         &#62; Returns
+         - (bool) isRegistered - application registration state
+        \*&#47;
+        it(&#39;isRegistered&#39;, () =&#62; {
+            assert.strictEqual(resIsRegistered1, false, &#39;application is registered before registration&#39;);
+            assert.strictEqual(resIsRegistered2, true, &#39;application is not registered after registration&#39;);
+        });
 
         &#47;*\
          # &#60;hr&#62;
@@ -100,9 +110,9 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
          &#62; Returns
          - (address) owner - application owner
         \*&#47;
-        &#47;*it(&#39;getOwner&#39;, () =&#62; {
+        it(&#39;getOwner&#39;, () =&#62; {
             assert.strictEqual(resGetOwner, accounts[0], &#39;application owner name is not equal&#39;);
-        });*&#47;
+        });
 
         &#47;*\
          # &#60;hr&#62;
@@ -128,9 +138,9 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
          &#62; Returns
          - (address) appAddr - application address
         \*&#47;
-        &#47;*it(&#39;getAddress&#39;, () =&#62; {
+        it(&#39;getAddress&#39;, () =&#62; {
             assert.strictEqual(resGetAddress, 13245, &#39;application url is not equal&#39;);
-        });*&#47;
+        });
 
         &#47;*\
          # &#60;hr&#62;
@@ -156,9 +166,9 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
          &#62; Returns
          - (string) name - application name
         \*&#47;
-        &#47;*it(&#39;getName&#39;, () =&#62; {
+        it(&#39;getName&#39;, () =&#62; {
             assert.strictEqual(resGetName, &#39;capitalHero&#39;, &#39;application name is not equal&#39;);
-        });*&#47;
+        });
 
         &#47;* methods below are not tested, only description provided *&#47;
 
@@ -205,6 +215,6 @@ const {convertToNumber} = require(&#39;..&#47;helpers&#39;);*&#47;
          - (uint256) appId - application id
          - (uint256) status - application status
         \*&#47;
-    &#47;*})
-});*&#47;
+    })
+});
 </code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>

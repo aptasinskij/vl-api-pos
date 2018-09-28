@@ -3,10 +3,11 @@ pragma solidity 0.4.24;
 import "./IApplication.sol";
 import "./RegistryDependent.sol";
 import "../managers/Managers.sol";
+import {ACashInController} from "../controllers/Controllers.sol";
 
 contract CapitalHero is IApplication, RegistryDependent {
 
-    string constant CASH_CHANNELS_MANAGER = "cash-channels-manager";
+    string constant CASH_IN_CONTROLLER = "cash-in-controller";
     string constant SESSION_MANAGER = "session-manager";
 
     event CashInOpened(uint256 channelId, uint256 sessionId);
@@ -18,11 +19,11 @@ contract CapitalHero is IApplication, RegistryDependent {
     constructor(address regAddr) RegistryDependent(regAddr) public {}
 
     function openCashInChannel(uint256 sessionId) external {
-        ACashChannelsManager(componentForName(CASH_CHANNELS_MANAGER)).openCashInChannel(address(this), sessionId);
+        ACashInController(componentForName(CASH_IN_CONTROLLER)).open(sessionId);
     }
 
-    function closeCashInChannel(uint256 sessionId, uint256 channelId) external {
-        /*ICashChannelsManager(componentForName(CASH_CHANNELS_MANAGER)).closeCashInChannel(sessionId, channelId);*/
+    function closeCashInChannel(uint256 sessionId, uint256 channelId, uint256[] _fees, address[] _parties) external {
+        ACashInController(componentForName(CASH_IN_CONTROLLER)).close(sessionId, channelId, _fees, _parties);
     }
 
     function cashInChannelOpened(uint256 channelId, uint256 sessionId) external {
