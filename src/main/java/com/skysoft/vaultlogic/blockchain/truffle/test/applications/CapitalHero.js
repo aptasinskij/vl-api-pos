@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const cashChannelsManager = artifacts.require('cashChannelsManager');
+const CashChannelsManager = artifacts.require('CashChannelsManager');
 const CashInStorage = artifacts.require('CashInStorage');
 const ApplicationManager = artifacts.require('ApplicationManager');
 const ParameterStorage = artifacts.require('ParameterStorage');
@@ -23,7 +23,7 @@ contract('CapitalHero', accounts => {
             const sessionManagerInstance = await SessionManager.deployed();
             capitalHeroInstance = await CapitalHero.deployed();
             const parameterStorageInstance = await ParameterStorage.deployed();
-            const cashChannelsManagerInstance = await cashChannelsManager.deployed();
+            const cashChannelsManagerInstance = await CashChannelsManager.deployed();
 
             const cashInStorageInstance = await CashInStorage.deployed();
 
@@ -77,7 +77,6 @@ contract('CapitalHero', accounts => {
 
         it('openCashInChannel', () => {
             /* from open method */
-            assert.isAbove(resOpen.receipt.logs.length, 0, 'transaction logs are empty');
             assert.notEqual(resOpen.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resOpen.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from CashInStorage event */
