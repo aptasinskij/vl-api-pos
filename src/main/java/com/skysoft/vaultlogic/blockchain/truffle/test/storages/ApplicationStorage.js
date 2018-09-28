@@ -246,7 +246,7 @@ contract('ApplicationStorage', () => {
 
         /*\
          # <hr>
-         # <h4> retrieveApplication(appId) </h4>
+         # <h4> retrieveApplication(_id) </h4>
          # Get full application info using structure approach
          > Arguments
          - (uint256) _id - application id
