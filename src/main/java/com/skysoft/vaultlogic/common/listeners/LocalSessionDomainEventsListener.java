@@ -5,6 +5,7 @@ import com.skysoft.vaultlogic.common.domain.session.Session;
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
 import com.skysoft.vaultlogic.common.domain.session.SessionTxLog;
 import com.skysoft.vaultlogic.common.domain.session.SessionTxLogRepository;
+import com.skysoft.vaultlogic.common.domain.session.events.SessionActivated;
 import com.skysoft.vaultlogic.common.domain.session.events.SessionCreating;
 import com.skysoft.vaultlogic.common.domain.session.events.SessionFailedToCreate;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +49,14 @@ public class LocalSessionDomainEventsListener {
 
     @Async
     @TransactionalEventListener
-    public void failedToCreate(SessionFailedToCreate ecent) {
-        log.warn("[x]---> Session failed to create. XToken {}", ecent.xToken);
+    public void failedToCreate(SessionFailedToCreate event) {
+        log.warn("[x]---> Session failed to create. XToken {}", event.xToken);
+    }
+
+    @Async
+    @TransactionalEventListener
+    public void activated(SessionActivated event) {
+        log.info("[x]---> Session activated. XToken {}", event.xToken);
     }
 
     private Function<TransactionReceipt, SessionTxLog> sessionCreatingLog(Session session) {
