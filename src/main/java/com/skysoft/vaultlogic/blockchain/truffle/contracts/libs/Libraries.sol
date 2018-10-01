@@ -104,8 +104,8 @@ library ApplicationLib {
         Database(self).setBooleanValue(keccak256(abi.encodePacked(REGISTERED, appAddr)), true);
     }
 
-    function isRegistered(address self, address _applicationAddress) internal view returns (bool _registered) {
-        _registered = Database(self).getBooleanValue(keccak256(abi.encode(REGISTERED, _applicationAddress)));
+    function isRegistered(address self, address _applicationAddress) internal view returns (bool) {
+        return Database(self).getBooleanValue(keccak256(abi.encodePacked(REGISTERED, _applicationAddress)));
     }
 
     function get(address self, uint256 appId) internal view returns (string name, address owner, string url, address appAddr, uint256 status) {

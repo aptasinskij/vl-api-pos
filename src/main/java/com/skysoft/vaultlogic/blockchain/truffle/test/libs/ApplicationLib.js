@@ -24,6 +24,7 @@ const {convertToNumber} = require('../helpers');*/
         let resIsRegistered2;
 
         before(async () => {
+            /!* get instances *!/
             appInstance = await CapitalHero.deployed();
             const applicationLibInstance = await ApplicationLib.deployed();
             const applicationStorageInstance = await ApplicationStorage.deployed();
@@ -31,8 +32,6 @@ const {convertToNumber} = require('../helpers');*/
 
             /!* isRegistered *!/
             resIsRegistered1 = await applicationLibInstance.isRegistered(databaseInstance.address, appInstance.address);
-            console.log('resIsRegistered1', resIsRegistered1);
-
             /!* save by ApplicationStorage method *!/
             let res = await applicationStorageInstance.save(
                 123,
@@ -42,12 +41,8 @@ const {convertToNumber} = require('../helpers');*/
                 appInstance.address,
                 0
             );
-            console.log('res', convertToNumber(res.logs[0].args, true));
             /!* isRegistered *!/
             resIsRegistered2 = await applicationStorageInstance.isRegistered(appInstance.address);
-
-            console.log('resIsRegistered2', resIsRegistered2);
-
             /!* get *!/
             resGet = convertToNumber(await applicationLibInstance.get(databaseInstance.address, 123), true);
             /!* getName *!/
@@ -88,6 +83,21 @@ const {convertToNumber} = require('../helpers');*/
             assert.strictEqual(resGet[2], 'http://capital-hero', 'application url is not equal');
             assert.strictEqual(resGet[3], appInstance.address, 'application address is not equal');
             assert.strictEqual(resGet[4], 0, 'application status is not equal');
+        });*/
+
+        /*\
+         # <hr>
+         # <h4> isRegistered(self, _applicationAddress) </h4>
+         # Get application registration state
+         > Arguments
+         - (address) self - self database address
+         - (uint256) _applicationAddress - application address
+         > Returns
+         - (bool) isRegistered - application registration state
+        \*/
+        /*it('isRegistered', () => {
+            assert.strictEqual(resIsRegistered1, false, 'application is registered before registration');
+            assert.strictEqual(resIsRegistered2, true, 'application is not registered after registration');
         });*/
 
         /*\
