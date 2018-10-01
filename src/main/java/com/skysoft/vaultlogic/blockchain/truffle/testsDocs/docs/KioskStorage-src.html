@@ -1,0 +1,61 @@
+<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of KioskStorage.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">const assert = require(&#39;chai&#39;).assert;
+const KioskStorage = artifacts.require(&#39;KioskStorage&#39;);
+
+&#47;*\
+* KioskStorage
+\*&#47;
+
+contract(&#39;KioskStorage&#39;, () =&#62; {
+
+    describe(&#39;tests for all methods&#39;, () =&#62; {
+
+        let resSaveKiosk;
+        let resRetrieveKiosk;
+
+        before(async () =&#62; {
+            const instance = await KioskStorage.deployed();
+            &#47;* saveKiosk *&#47;
+            resSaveKiosk = await instance.saveKiosk(2, &#39;Kyiv&#39;, &#39;KyivStar&#39;, &#39;timezone0&#39;);
+            &#47;* get *&#47;
+            resRetrieveKiosk = await instance.retrieveKiosk(1);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; saveKiosk(shortId, locationAddress, name, timeZone) &#60;&#47;h4&#62;
+         # Set tokens on customer balance
+         &#62; Arguments
+         - (string) shortId - kiosk short id
+         - (string) locationAddress - kiosk location address
+         - (string) name - kiosk name
+         - (string) timeZone - kiosk timeZone
+        \*&#47;
+        it(&#39;saveKiosk&#39;, () =&#62; {
+            &#47;* from saveKiosk method *&#47;
+            assert.notEqual(resSaveKiosk.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resSaveKiosk.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            &#47;* from retrieveKiosk method *&#47;
+            assert.strictEqual(resRetrieveKiosk[0], &#39;Kyiv&#39;, &#39;kiosk location address is not equal&#39;);
+            assert.strictEqual(resRetrieveKiosk[1], &#39;KyivStar&#39;, &#39;kiosk name is not equal&#39;);
+            assert.strictEqual(resRetrieveKiosk[2], &#39;timezone0&#39;, &#39;kiosk name is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; retrieveKiosk(shortId) &#60;&#47;h4&#62;
+         # Get tokens balance of consumer
+         &#62; Arguments
+         - (string) shortId - kiosk short id
+         &#62; Returns
+         - (string) locationAddress - kiosk location address
+         - (string) name - kiosk name
+         - (string) timeZone - kiosk timeZone
+        \*&#47;
+        it(&#39;retrieveKiosk&#39;, () =&#62; {
+            assert.strictEqual(resRetrieveKiosk[0], &#39;Kyiv&#39;, &#39;kiosk location address is not equal&#39;);
+            assert.strictEqual(resRetrieveKiosk[1], &#39;KyivStar&#39;, &#39;kiosk name is not equal&#39;);
+            assert.strictEqual(resRetrieveKiosk[2], &#39;timezone0&#39;, &#39;kiosk name is not equal&#39;);
+        });
+    })
+});
+</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>

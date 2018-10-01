@@ -71,6 +71,4 @@ contract('CashChannelsManager', () => {
             /!* restrict to confirmOpen channel *!/
             assert.notEqual(resOpenCashInChannel, 'Method Allowed', 'allowed to call openCashInChannel method');
         });
-
-    });
 });*/

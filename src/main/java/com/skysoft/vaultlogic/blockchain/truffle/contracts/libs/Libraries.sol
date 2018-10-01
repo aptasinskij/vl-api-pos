@@ -1,7 +1,6 @@
 pragma solidity 0.4.24;
 
 import "../Database.sol";
-import "./Libraries.sol";
 
 library SafeMath {
 
@@ -46,6 +45,7 @@ library SafeMath {
 
 library ApplicationLib {
 
+    string constant EXISTS = "application.exists";
     string constant ID = "application_id";
     string constant NAME = "application_name";
     string constant OWNER = "application_owner";
@@ -53,6 +53,46 @@ library ApplicationLib {
     string constant ADDRESS = "application_address";
     string constant STATUS = "application_status";
     string constant REGISTERED = "application_registered";
+
+    enum Status {PENDING, ENABLED, DISABLED}
+
+    struct Application {
+        uint256 id;
+        string name;
+        address owner;
+        string url;
+        address deployedAddress;
+        Status status;
+    }
+
+    function applicationExists(address self, uint256 applicationId) internal view returns (bool) {
+        return Database(self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, applicationId)));
+    }
+
+    function createApplication(address self, Application memory application) internal returns (bool) {
+        require(!applicationExists(self, application.id), "exists");
+        Database(self).setUintValue(keccak256(abi.encodePacked(ID, application.id)), application.id);
+        Database(self).setStringValue(keccak256(abi.encodePacked(NAME, application.id)), application.name);
+        Database(self).setAddressValue(keccak256(abi.encodePacked(OWNER, application.id)), application.owner);
+        Database(self).setStringValue(keccak256(abi.encodePacked(URL, application.id)), application.url);
+        Database(self).setAddressValue(keccak256(abi.encodePacked(ADDRESS, application.id)), application.deployedAddress);
+        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, application.id)), uint256(application.status));
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(REGISTERED, application.deployedAddress)), true);
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, application.id)), true);
+        return true;
+    }
+
+    function retrieveApplication(address self, uint256 applicationId) internal view returns (Application memory) {
+        require(applicationExists(self, applicationId), "Not exists");
+        return Application({
+            id : applicationId,
+            name : Database(self).getStringValue(keccak256(abi.encodePacked(NAME, applicationId))),
+            owner : Database(self).getAddressValue(keccak256(abi.encodePacked(OWNER, applicationId))),
+            url : Database(self).getStringValue(keccak256(abi.encodePacked(URL, applicationId))),
+            deployedAddress : Database(self).getAddressValue(keccak256(abi.encodePacked(ADDRESS, applicationId))),
+            status : Status(Database(self).getUintValue(keccak256(abi.encodePacked(ID, applicationId))))
+            });
+    }
 
     function save(address self, uint256 appId, string name, address owner, string url, address appAddr, uint256 status) internal {
         Database(self).setUintValue(string256(ID, appId), appId);
@@ -114,27 +154,245 @@ library ApplicationLib {
 
 }
 
+library KioskLib {
+
+    string constant EXISTS = "kiosk.exists";
+
+    string constant ID = "kiosk_short_id";
+    string constant LOCATION = "kiosk_location_address";
+    string constant NAME = "kiosk_name";
+    string constant TIME_ZONE = "kiosk_time_zone";
+
+    struct Kiosk {
+        string id;
+        string location;
+        string name;
+        string timezone;
+    }
+
+    function kioskExists(address self, string memory kioskId) internal view returns (bool) {
+        return Database(self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, kioskId)));
+    }
+
+    function createKiosk(address self, Kiosk memory kiosk) internal returns (bool) {
+        if (kioskExists(self, kiosk.id)) return false;
+        Database(self).setStringValue(keccak256(abi.encode(ID, kiosk.id)), kiosk.id);
+        Database(self).setStringValue(keccak256(abi.encode(LOCATION, kiosk.id)), kiosk.location);
+        Database(self).setStringValue(keccak256(abi.encode(NAME, kiosk.id)), kiosk.name);
+        Database(self).setStringValue(keccak256(abi.encode(TIME_ZONE, kiosk.id)), kiosk.timezone);
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, kiosk.id)), true);
+        return true;
+    }
+
+    function retrieveKiosk(address self, string memory kioskId) internal view returns (Kiosk memory) {
+        require(kioskExists(self, kioskId), "Not Exists");
+        // @formatter:off
+        return Kiosk({
+            id: kioskId,
+            location: Database(self).getStringValue(keccak256(abi.encode(LOCATION, kioskId))),
+            name: Database(self).getStringValue(keccak256(abi.encode(NAME, kioskId))),
+            timezone: Database(self).getStringValue(keccak256(abi.encode(TIME_ZONE, kioskId)))
+        });
+        // @formatter:on
+    }
+
+    function save(address self, string shortId, string locationAddress, string name, string timeZone) internal {
+        Database(self).setStringValue(keccak256(abi.encode(ID, shortId)), shortId);
+        Database(self).setStringValue(keccak256(abi.encode(LOCATION, shortId)), locationAddress);
+        Database(self).setStringValue(keccak256(abi.encode(NAME, shortId)), name);
+        Database(self).setStringValue(keccak256(abi.encode(TIME_ZONE, shortId)), timeZone);
+    }
+
+    function retrieve(address self, string shortId) internal view returns (string locationAddress, string name, string timeZone) {
+        locationAddress = Database(self).getStringValue(keccak256(abi.encode(LOCATION, shortId)));
+        name = Database(self).getStringValue(keccak256(abi.encode(NAME, shortId)));
+        timeZone = Database(self).getStringValue(keccak256(abi.encode(TIME_ZONE, shortId)));
+    }
+
+}
+
+library SessionLib {
+
+    using ApplicationLib for address;
+    using KioskLib for address;
+
+    string constant EXISTS = "session.exists";
+
+    string constant ID = "session_id";
+    string constant APPLICATION_ID = "session_application_id";
+    string constant KIOSK_ID = "session_kiosk_id";
+    string constant X_TOKEN = "session_x_token";
+    string constant STATUS = "session_status";
+    string constant HAS_ACTIVE_CASH_IN = "session_has_active_cash_in";
+    string constant HAS_ACTIVE_CASH_OUT = "session_has_active_cash_out";
+
+    enum Status {CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED}
+
+    struct Session {
+        uint256 id;
+        uint256 applicationId;
+        uint256 kioskId;
+        string xToken;
+        Status status;
+        bool hasActiveCashIn;
+        bool hasActiveCashOut;
+    }
+
+    function sessionExists(address self, uint256 sessionId) internal view returns (bool) {
+        return Database(self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, sessionId)));
+    }
+
+    function createSession(address self, Session memory session) internal returns (bool) {
+        if (sessionExists(self, session.id)) return false;
+        Database(self).setUintValue(keccak256(abi.encodePacked(ID, session.id)), session.id);
+        Database(self).setUintValue(keccak256(abi.encodePacked(APPLICATION_ID, session.id)), session.applicationId);
+        Database(self).setUintValue(keccak256(abi.encodePacked(KIOSK_ID, session.id)), session.kioskId);
+        Database(self).setStringValue(keccak256(abi.encodePacked(X_TOKEN, session.id)), session.xToken);
+        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, session.id)), uint256(session.status));
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, session.id)), true);
+        return true;
+    }
+
+    function retrieveSession(address self, uint256 sessionId) internal view returns (Session memory) {
+        require(sessionExists(self, sessionId), "Not exists");
+        // @formatter:off
+        return Session({
+            id : sessionId,
+            applicationId : Database(self).getUintValue(keccak256(abi.encodePacked(APPLICATION_ID, sessionId))),
+            kioskId : Database(self).getUintValue(keccak256(abi.encodePacked(KIOSK_ID, sessionId))),
+            xToken : Database(self).getStringValue(keccak256(abi.encodePacked(X_TOKEN, sessionId))),
+            status : Status(Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, sessionId)))),
+            hasActiveCashIn : Database(self).getBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, sessionId))),
+            hasActiveCashOut : Database(self).getBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_OUT, sessionId)))
+        });
+        // @formatter:on
+    }
+
+    function retrieveSessionApplication(address self, uint256 sessionId) internal view returns (ApplicationLib.Application memory) {
+        require(sessionExists(self, sessionId), "Not Exists");
+        return self.retrieveApplication(Database(self).getUintValue(keccak256(abi.encodePacked(APPLICATION_ID, sessionId))));
+    }
+
+    function retrieveSessionKiosk(address self, uint256 sessionId) internal view returns (KioskLib.Kiosk memory) {
+        require(sessionExists(self, sessionId), "Not Exists");
+        return self.retrieveKiosk(Database(self).getStringValue(keccak256(abi.encodePacked(KIOSK_ID, sessionId))));
+    }
+
+    function save(address self, uint256 sessionId, uint256 appId, string xToken, uint256 status) internal {
+        if (sessionExists(self, sessionId)) return;
+        Database(self).setUintValue(keccak256(abi.encodePacked(APPLICATION_ID, sessionId)), appId);
+        Database(self).setStringValue(keccak256(abi.encodePacked(X_TOKEN, sessionId)), xToken);
+        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, sessionId)), status);
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, sessionId)), true);
+    }
+
+    function get(address self, uint256 index) internal view returns (uint256 appId, string xToken, uint256 status) {
+        appId = Database(self).getUintValue(keccak256(abi.encodePacked(APPLICATION_ID, index)));
+        xToken = Database(self).getStringValue(keccak256(abi.encodePacked(X_TOKEN, index)));
+        status = Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, index)));
+    }
+
+    function setHasActiveCashIn(address _self, uint256 _sessionId, bool _flag) internal {
+        Database(_self).setBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, _sessionId)), _flag);
+    }
+
+    function getIsHasActiveCashIn(address _self, uint256 _sessionId) internal view returns (bool) {
+        return Database(_self).getBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, _sessionId)));
+    }
+
+    function getAppId(address self, uint256 index) internal view returns (uint256) {
+        return Database(self).getUintValue(keccak256(abi.encodePacked(APPLICATION_ID, index)));
+    }
+
+    function getXToken(address self, uint256 index) internal view returns (string) {
+        return Database(self).getStringValue(keccak256(abi.encodePacked(X_TOKEN, index)));
+    }
+
+    function getStatus(address self, uint256 index) internal view returns (uint256) {
+        return Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, index)));
+    }
+
+    function setStatus(address self, uint256 index, uint256 status) internal {
+        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, index)), status);
+    }
+
+}
+
 library CashInLib {
 
     bytes32 constant CASH_IN_INDEX = keccak256(abi.encode("CashInIndex"));
 
-    string constant SESSION_ID = "cash_in_session_id";
-    string constant APPLICATION = "cash_in_application";
-    string constant STATUS = "cash_in_status";
-    string constant BALANCE = "cash_in_balance";
-    string constant VL_FEE = "cash_in_vault_logic_fee";
-    string constant APP_BALANCE = "cash_in_application_balance";
+    string constant EXISTS = "cash-in.exists";
+    string constant SESSION_ID = "cash-in.session.id";
+    string constant APPLICATION = "cash-in.application.address";
+    string constant STATUS = "cash-in.status";
+    string constant BALANCE = "cash-in.balance";
+    string constant VL_FEE = "cash-in.vault_logic_fee_percent";
+    string constant VL_BALANCE = "cash-in.vault_logic_balance";
+    string constant APP_BALANCE = "cash-in.application_balance";
 
     ///@dev set of constants to store and retrieve dynamic sized arrays of splits
     string constant SPLIT_SIZE = "cash_in_split_size";
     string constant SPLIT_PARTIES = "cash_in_split_parties";
     string constant SPLIT_FEES = "cash_in_split_fees";
 
-    function getCounter(address self) internal view returns(uint256) {
+    enum Status {CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED, FAILED_TO_CLOSE}
+
+    struct CashIn {
+        uint256 id;
+        uint256 sessionId;
+        address application;
+        Status status;
+        uint256 balance;
+        uint256 vaultLogicPercent;
+        uint256 vaultLogicBalance;
+        uint256 applicationBalance;
+        uint256 splitSize;
+        address[] parties;
+        uint256[] fees;
+    }
+
+    function getCounter(address self) internal view returns (uint256) {
         Database(self).getUintValue(CASH_IN_INDEX);
     }
 
-    function save(address self, uint256 sessionId, address application, uint256 status) internal returns(uint256 index) {
+    function cashInExists(address self, uint256 cashInId) internal view returns (bool) {
+        return Database(self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, cashInId)));
+    }
+
+    function createCashIn(address self, CashIn memory cashIn) internal returns (uint256 index) {
+        index = Database(self).getUintValue(CASH_IN_INDEX);
+        Database(self).setUintValue(keccak256(abi.encodePacked(SESSION_ID, index)), cashIn.sessionId);
+        Database(self).setAddressValue(keccak256(abi.encodePacked(APPLICATION, index)), cashIn.application);
+        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, index)), uint256(cashIn.status));
+        Database(self).setUintValue(keccak256(abi.encodePacked(VL_FEE, index)), cashIn.vaultLogicPercent);
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, index)), true);
+        Database(self).setUintValue(CASH_IN_INDEX, index + 1);
+    }
+
+    function retrieveCashIn(address self, uint256 cashInId) internal view returns (CashIn memory) {
+        require(cashInExists(self, cashInId), "Not exists");
+        CashIn memory cashIn;
+        cashIn.id = cashInId;
+        cashIn.sessionId = Database(self).getUintValue(keccak256(abi.encodePacked(SESSION_ID, cashInId)));
+        cashIn.application = Database(self).getAddressValue(keccak256(abi.encodePacked(APPLICATION, cashInId)));
+        cashIn.status = Status(Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, cashInId))));
+        cashIn.balance = Database(self).getUintValue(keccak256(abi.encodePacked(BALANCE, cashInId)));
+        cashIn.vaultLogicPercent = Database(self).getUintValue(keccak256(abi.encodePacked(VL_FEE, cashInId)));
+        cashIn.vaultLogicBalance = Database(self).getUintValue(keccak256(abi.encodePacked(VL_BALANCE, cashInId)));
+        cashIn.applicationBalance = Database(self).getUintValue(keccak256(abi.encodePacked(APP_BALANCE, cashInId)));
+        cashIn.splitSize = Database(self).getUintValue(keccak256(abi.encodePacked(SPLIT_SIZE, cashInId)));
+        if (cashIn.splitSize == 0) return cashIn;
+        cashIn.parties = new address[](cashIn.splitSize);
+        cashIn.fees = new uint256[](cashIn.splitSize);
+        for (uint256 i = 0; i < cashIn.splitSize; i++) {
+            cashIn.parties[i] = Database(self).getAddressValue(keccak256(abi.encodePacked(SPLIT_PARTIES, cashInId, i)));
+            cashIn.fees[i] = Database(self).getUintValue(keccak256(abi.encodePacked(SPLIT_FEES, cashInId, i)));
+        }
+        return cashIn;
+    }
+
+    function save(address self, uint256 sessionId, address application, uint256 status) internal returns (uint256 index) {
         index = Database(self).getUintValue(CASH_IN_INDEX);
         Database(self).setUintValue(string256(SESSION_ID, index), sessionId);
         Database(self).setAddressValue(string256(APPLICATION, index), application);
@@ -143,7 +401,7 @@ library CashInLib {
     }
 
     /// @dev size of both arrays (e.g. parties and fees) stored in separate field 'splitSize'
-    function get(address self, uint256 index) internal view returns(
+    function get(address self, uint256 index) internal view returns (
         uint256 sessionId,
         address application,
         uint256 balance,
@@ -157,11 +415,11 @@ library CashInLib {
         splitSize = Database(self).getUintValue(string256(SPLIT_SIZE, index));
     }
 
-    function getSessionId(address self, uint256 index) internal view returns(uint256) {
+    function getSessionId(address self, uint256 index) internal view returns (uint256) {
         return Database(self).getUintValue(string256(SESSION_ID, index));
     }
 
-    function getApplication(address self, uint256 index) internal view returns(address) {
+    function getApplication(address self, uint256 index) internal view returns (address) {
         return Database(self).getAddressValue(string256(APPLICATION, index));
     }
 
@@ -177,7 +435,7 @@ library CashInLib {
         Database(self).setUintValue(keccak256(abi.encodePacked(VL_FEE, index)), fee);
     }
 
-    function getVLFee(address self, uint256 index) internal view returns(uint256) {
+    function getVLFee(address self, uint256 index) internal view returns (uint256) {
         return Database(self).getUintValue(keccak256(abi.encodePacked(VL_FEE, index)));
     }
 
@@ -185,7 +443,7 @@ library CashInLib {
         Database(self).setUintValue(string256(APP_BALANCE, index), balance);
     }
 
-    function getApplicationBalance(address self, uint256 index) internal view returns(uint256) {
+    function getApplicationBalance(address self, uint256 index) internal view returns (uint256) {
         return Database(self).getUintValue(string256(APP_BALANCE, index));
     }
 
@@ -193,7 +451,7 @@ library CashInLib {
         Database(self).setUintValue(string256(STATUS, index), uint256(status));
     }
 
-    function getStatus(address self, uint256 index) internal view returns(uint256) {
+    function getStatus(address self, uint256 index) internal view returns (uint256) {
         return Database(self).getUintValue(string256(STATUS, index));
     }
 
@@ -210,20 +468,20 @@ library CashInLib {
         }
     }
 
-    function getSplitSize(address self, uint256 index) internal view returns(uint256) {
+    function getSplitSize(address self, uint256 index) internal view returns (uint256) {
         return Database(self).getUintValue(string256(SPLIT_SIZE, index));
     }
 
-    function getSplit(address self, uint256 index, uint256 subIndex) internal view returns(address party, uint256 fee) {
+    function getSplit(address self, uint256 index, uint256 subIndex) internal view returns (address party, uint256 fee) {
         party = Database(self).getAddressValue(string256x2(SPLIT_PARTIES, index, subIndex));
         fee = Database(self).getUintValue(string256x2(SPLIT_FEES, index, subIndex));
     }
 
-    function string256(string field, uint256 index) private pure returns(bytes32) {
+    function string256(string field, uint256 index) private pure returns (bytes32) {
         return keccak256(abi.encodePacked(field, index));
     }
 
-    function string256x2(string field, uint256 index, uint256 counter) private pure returns(bytes32) {
+    function string256x2(string field, uint256 index, uint256 counter) private pure returns (bytes32) {
         return keccak256(abi.encodePacked(field, index, counter));
     }
 
@@ -239,73 +497,6 @@ library ParameterLib {
 
     function getVLFee(address self) internal view returns (uint256) {
         return Database(self).getUintValue(keccak256(abi.encode(VAULT_LOGIC_FEE_PERCENT)));
-    }
-
-}
-
-library KioskLib {
-
-    string constant SHORT_ID = "kiosk_short_id";
-    string constant LOCATION = "kiosk_location_address";
-    string constant NAME = "kiosk_name";
-    string constant TIME_ZONE = "kiosk_time_zone";
-
-    function saveKiosk(address self, string shortId, string locationAddress, string name, string timeZone) internal {
-        Database(self).setStringValue(keccak256(abi.encode(SHORT_ID, shortId)), shortId);
-        Database(self).setStringValue(keccak256(abi.encode(LOCATION, shortId)), locationAddress);
-        Database(self).setStringValue(keccak256(abi.encode(NAME, shortId)), name);
-        Database(self).setStringValue(keccak256(abi.encode(TIME_ZONE, shortId)), timeZone);
-    }
-
-    function retrieveKiosk(address self, string shortId) internal view returns(string locationAddress, string name, string timeZone) {
-        locationAddress = Database(self).getStringValue(keccak256(abi.encode(LOCATION, shortId)));
-        name = Database(self).getStringValue(keccak256(abi.encode(NAME, shortId)));
-        timeZone = Database(self).getStringValue(keccak256(abi.encode(TIME_ZONE, shortId)));
-    }
-
-}
-
-library SessionLib {
-
-    string constant APP_ID = "session_application_id";
-    string constant X_TOKEN = "session_x_token";
-    string constant STATUS = "session_status";
-    string constant HAS_ACTIVE_CASH_IN = "session_has_active_cash_in";
-
-    function save(address self, uint256 sessionId, uint256 appId, string xToken, uint256 status) internal {
-        Database(self).setUintValue(keccak256(abi.encodePacked(APP_ID, sessionId)), appId);
-        Database(self).setStringValue(keccak256(abi.encodePacked(X_TOKEN, sessionId)), xToken);
-        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, sessionId)), status);
-    }
-
-    function get(address self, uint256 index) internal view returns (uint256 appId, string xToken, uint256 status) {
-        appId = Database(self).getUintValue(keccak256(abi.encodePacked(APP_ID, index)));
-        xToken = Database(self).getStringValue(keccak256(abi.encodePacked(X_TOKEN, index)));
-        status = Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, index)));
-    }
-
-    function setHasActiveCashIn(address _self, uint256 _sessionId, bool _flag) internal {
-        Database(_self).setBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, _sessionId)), _flag);
-    }
-
-    function getIsHasActiveCashIn(address _self, uint256 _sessionId) internal view returns(bool) {
-        return Database(_self).getBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, _sessionId)));
-    }
-
-    function getAppId(address self, uint256 index) internal view returns (uint256) {
-        return Database(self).getUintValue(keccak256(abi.encodePacked(APP_ID, index)));
-    }
-
-    function getXToken(address self, uint256 index) internal view returns (string) {
-        return Database(self).getStringValue(keccak256(abi.encodePacked(X_TOKEN, index)));
-    }
-
-    function getStatus(address self, uint256 index) internal view returns (uint256) {
-        return Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, index)));
-    }
-
-    function setStatus(address self, uint256 index, uint256 status) internal {
-        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, index)), status);
     }
 
 }
