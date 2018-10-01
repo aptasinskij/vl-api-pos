@@ -52,34 +52,34 @@ contract CapitalHero is IApplication, RegistryDependent {
         emit SessionClosed(now, sessionId);
     }
 
-    event QRCodeScanned(string url);
-    event QRScanningStopped();
-    event ReceiptURLReceived(string id, string url);
+    event QRCodeScanned(uint256 sessionId, string url);
+    event QRScanningStopped(uint256 sessionId);
+    event ReceiptURLReceived(uint256 sessionId, string id, string url);
+    event ReceiptPrinted(uint256 sessionId, string id, string data);
 
     function scanQRCodeWithLights(uint256 _sessionId) public {
-        (bool success, string url) = ASessionController(componentForName(SESSION_CONTROLLER)).scanQRCodeWithLights(_sessionId);
-        if (success) {
-            emit QRCodeScanned(url);
-        }
+        (bool success, string memory url) = ASessionController(componentForName(SESSION_CONTROLLER)).scanQRCodeWithLights(_sessionId);
+        if (success) emit QRCodeScanned(_sessionId, url);
     }
 
     function scanQRCode(uint256 _sessionId) public {
-        (bool success, string url) = ASessionController(componentForName(SESSION_CONTROLLER)).scanQRCode(_sessionId);
-        if (success) emit QRCodeScanned(url);
+        (bool success, string memory url) = ASessionController(componentForName(SESSION_CONTROLLER)).scanQRCode(_sessionId);
+        if (success) emit QRCodeScanned(_sessionId, url);
     }
 
     function stopQRScanning(uint256 _sessionId) public {
         bool success = ASessionController(componentForName(SESSION_CONTROLLER)).stopQRScanning(_sessionId);
-        if (success) emit QRScanningStopped();
+        if (success) emit QRScanningStopped(_sessionId);
     }
 
     function getReceiptUrl(uint256 _sessionId) public {
         (bool success, string memory id, string memory url) = ASessionController(componentForName(SESSION_CONTROLLER)).getReceiptUrl(_sessionId);
-        if (success) emit ReceiptURLReceived(id, url);
+        if (success) emit ReceiptURLReceived(_sessionId, id, url);
     }
 
-    function printReceipt(uint256 _sessionId, string _id, string _data) {
-        _success = true;
+    function printReceipt(uint256 _sessionId, string _id, string _data) public {
+        bool success = ASessionController(componentForName(SESSION_CONTROLLER)).printReceipt(_sessionId, _id, _data);
+        if (success) emit ReceiptPrinted(_sessionId, _id, _data);
     }
 
 }
