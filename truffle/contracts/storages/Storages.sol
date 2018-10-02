@@ -91,9 +91,11 @@ contract AParameterStorage {
 
 contract AKioskStorage {
 
-    function createKiosk(string _id, string _location, string _name, string _timezone) public;
+    event Saved(string _kioskId, string _location, string _name, string _timezone);
 
-    function retrieveKiosk(string _id) public view returns (string memory _location, string memory _name, string memory _timezone);
+    function save(string memory _kioskId, string memory _location, string memory _name, string memory _timezone) public;
+
+    function get(string memory _kioskId) public view returns (string memory _location, string memory _name, string memory _timezone);
 
 }
 
