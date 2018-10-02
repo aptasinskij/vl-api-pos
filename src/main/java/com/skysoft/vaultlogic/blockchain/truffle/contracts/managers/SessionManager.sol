@@ -5,49 +5,54 @@ import "../oracles/ISessionOracle.sol";
 import "../application/IApplication.sol";
 import "../registry/Component.sol";
 import {ASessionManager} from "./Managers.sol";
+import {SessionLib} from "../libs/Libraries.sol";
 
 contract SessionManager is Component, ASessionManager {
-    
-    enum SessionStatus { CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED }
+
+    using SessionLib for address;
 
     string constant COMPONENT_NAME = "session-manager";
 
     constructor(address regAddr) Component(regAddr) public {}
 
-    function getName() internal pure returns(string) {
+    function getName() internal pure returns (string) {
         return COMPONENT_NAME;
     }
 
-    function createSession(uint256 sessionId, uint256 appId, string xToken) public {
-        _sessionStorage().save(sessionId, appId, xToken, uint256(SessionStatus.CREATING));
-        address appAddress = _applicationStorage().getApplicationAddress(appId);
-        IApplication(appAddress).newSessionCreated();
+    function createSession(uint256 _sessionId, uint256 _appId, string _xToken, string _kioskId) public {
+        SessionLib.Session memory session = SessionLib.Session(_sessionId, _appId, _kioskId, _xToken, SessionLib.Status.CREATING, false, false);
+        _database().createSession(session);
+        address deployedAddress = _database().retrieveSessionApplicationDeployedAddress(_sessionId);
+        IApplication(deployedAddress).newSessionCreated(_sessionId);
     }
 
-    function closeSession(uint256 sessionId) public {
-        uint256 status = ASessionStorage(lookup(SESSION_STORAGE)).getStatus(sessionId);
-        require(status == uint256(SessionStatus.ACTIVE), "Illegal state modification");
-        _sessionStorage().setStatus(sessionId, uint256(SessionStatus.CLOSE_REQUESTED));
-        _sessionOracle().closeSession(sessionId);
+    function closeSession(uint256 _sessionId) public {
+        SessionLib.Status status = _database().getStatus(_sessionId);
+        require(status == SessionLib.Status.ACTIVE, "Session request close failed. Required ACTIVE state.");
+        _database().setStatus(_sessionId, SessionLib.Status.CLOSE_REQUESTED);
+        _sessionOracle().closeSession(_sessionId);
     }
 
-    function confirmClose(uint256 sessionId) public {
-        _sessionStorage().setStatus(sessionId, uint256(SessionStatus.CLOSED));
-        address appAddress = _applicationStorage().getApplicationAddress(_sessionStorage().getAppId(sessionId));
-        IApplication(appAddress).sessionClosed(sessionId);
+    function confirmClose(uint256 _sessionId) public {
+        SessionLib.Status status = _database().getStatus(_sessionId);
+        require(status == SessionLib.Status.CLOSE_REQUESTED, "Session confirm close failed. Required CLOSE_REQUESTED state.");
+        _database().setStatus(_sessionId, SessionLib.Status.CLOSED);
+        address deployedAddress = _database().retrieveSessionApplicationDeployedAddress(_sessionId);
+        IApplication(deployedAddress).sessionClosed(_sessionId);
     }
 
-    function isActive(uint256 sessionId) public view returns(bool) {
-        return (_sessionStorage().getStatus(sessionId) == uint256(SessionStatus.ACTIVE));
+    function isActive(uint256 _sessionId) public view returns (bool) {
+        return _database().getStatus(_sessionId) == SessionLib.Status.ACTIVE;
     }
 
-    function isHasActiveCashIn(uint256 _sessionId) public view returns(bool) {
-        return _sessionStorage().isHasActiveCashIn(_sessionId);
+    function isHasActiveCashIn(uint256 _sessionId) public view returns (bool) {
+        return _database().getIsHasActiveCashIn(_sessionId);
     }
 
-    function activate(uint256 _sessionId) public returns(bool) {
-        require(_sessionStorage().getStatus(_sessionId) == uint256(SessionStatus.CREATING), "Illegal state modification");
-        _sessionStorage().setStatus(_sessionId, uint256(SessionStatus.ACTIVE));
+    function activate(uint256 _sessionId) public returns (bool) {
+        SessionLib.Status status = _database().getStatus(_sessionId);
+        require(status == SessionLib.Status.CREATING, "Illegal state modification");
+        _database().setStatus(_sessionId, SessionLib.Status.ACTIVE);
         return true;
     }
 

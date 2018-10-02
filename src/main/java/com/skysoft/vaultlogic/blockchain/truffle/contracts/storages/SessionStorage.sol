@@ -36,11 +36,11 @@ contract SessionStorage is Component, ASessionStorage {
     }
     
     function getStatus(uint256 index) public view returns (uint256) {
-        return lookup(DATABASE).getStatus(index);
+        return uint256(lookup(DATABASE).getStatus(index));
     }
 
     function getStatusAndXToken(uint256 index) public view returns (uint256 status, string xToken) {
-        status = getStatus(index);
+        status = uint256(getStatus(index));
         xToken = getXToken(index);
     }
     
@@ -58,7 +58,7 @@ contract SessionStorage is Component, ASessionStorage {
     }
     
     function setStatus(uint256 index, uint256 status) public {
-        lookup(DATABASE).setStatus(index, status);
+        lookup(DATABASE).setStatus(index, SessionLib.Status(status));
         emit StatusUpdated(index, status);
     }
  

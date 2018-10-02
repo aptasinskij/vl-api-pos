@@ -15,7 +15,7 @@ contract CapitalHero is IApplication, RegistryDependent {
     event CashInOpened(uint256 channelId, uint256 sessionId);
     event CashInClosed(uint256 channelId, uint256 sessionId);
     event CashInBalanceUpdated(uint256 channelId, uint256 balance, uint256 sessionId);
-    event SessionCreated(uint256 timestamp);
+    event SessionCreated(uint256 timestamp, uint256 sessionId);
     event SessionClosed(uint256 timestamp, uint256 sessionId);
 
     constructor(address regAddr) RegistryDependent(regAddr) public {}
@@ -40,8 +40,8 @@ contract CapitalHero is IApplication, RegistryDependent {
         emit CashInClosed(channelId, sessionId);
     }
 
-    function newSessionCreated() external {
-        emit SessionCreated(now);
+    function newSessionCreated(uint256 _sessionId) external {
+        emit SessionCreated(now, _sessionId);
     }
 
     function closeSession(uint256 sessionId) external {
