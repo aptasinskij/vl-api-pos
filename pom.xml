@@ -21,6 +21,7 @@
     <modules>
         <module>back-end</module>
         <module>truffle</module>
+        <module>contract-wrappers</module>
     </modules>
 
     <properties>
@@ -34,16 +35,29 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.skysoft</groupId>
+                <artifactId>contract-wrappers</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.web3j</groupId>
+                <artifactId>quorum</artifactId>
+                <version>0.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.web3j</groupId>
+                <artifactId>core</artifactId>
+                <version>3.5.0</version>
+                <systemPath>${project.basedir}/lib/core-3.5.0.jar</systemPath>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
-
-
 
 </project>
