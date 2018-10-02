@@ -196,19 +196,6 @@ library KioskLib {
         // @formatter:on
     }
 
-    function save(address self, string shortId, string locationAddress, string name, string timeZone) internal {
-        Database(self).setStringValue(keccak256(abi.encode(ID, shortId)), shortId);
-        Database(self).setStringValue(keccak256(abi.encode(LOCATION, shortId)), locationAddress);
-        Database(self).setStringValue(keccak256(abi.encode(NAME, shortId)), name);
-        Database(self).setStringValue(keccak256(abi.encode(TIME_ZONE, shortId)), timeZone);
-    }
-
-    function retrieve(address self, string shortId) internal view returns (string locationAddress, string name, string timeZone) {
-        locationAddress = Database(self).getStringValue(keccak256(abi.encode(LOCATION, shortId)));
-        name = Database(self).getStringValue(keccak256(abi.encode(NAME, shortId)));
-        timeZone = Database(self).getStringValue(keccak256(abi.encode(TIME_ZONE, shortId)));
-    }
-
 }
 
 library SessionLib {

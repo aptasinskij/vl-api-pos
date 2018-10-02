@@ -13,21 +13,18 @@ contract KioskStorage is Component, AKioskStorage {
 
     constructor(address registryAddr) Component(registryAddr) public {}
 
-    function getName() internal pure returns(string) {
+    function getName() internal pure returns (string) {
         return COMPONENT_NAME;
     }
 
-    function saveKiosk(string shortId, string locationAddress, string name, string timeZone) public {
-        lookup(DATABASE).save(shortId, locationAddress, name, timeZone);
+    function createKiosk(string _id, string _location, string _name, string _timezone) public {
+        KioskLib.Kiosk memory kiosk = KioskLib.Kiosk(_id, _location, _name, _timezone);
+        require(lookup(DATABASE).createKiosk(kiosk), "Kiosk already exists");
     }
 
-    function retrieveKiosk(string shortId) public view
-    returns(
-        string locationAddress,
-        string name,
-        string timeZone
-    ) {
-        return lookup(DATABASE).retrieve(shortId);
+    function retrieveKiosk(string _id) public view returns (string memory _location, string memory _name, string memory _timezone) {
+        KioskLib.Kiosk memory kiosk = lookup(DATABASE).retrieveKiosk(_id);
+        return (kiosk.location, kiosk.name, kiosk.timezone);
     }
 
 }
