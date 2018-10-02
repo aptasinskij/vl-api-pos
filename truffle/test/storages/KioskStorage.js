@@ -14,24 +14,24 @@ contract('KioskStorage', () => {
 
         before(async () => {
             const instance = await KioskStorage.deployed();
-            /* saveKiosk */
-            resSaveKiosk = await instance.saveKiosk(2, 'Kyiv', 'KyivStar', 'timezone0');
+            /* createKiosk */
+            resSaveKiosk = await instance.createKiosk(2, 'Kyiv', 'KyivStar', 'timezone0');
             /* get */
             resRetrieveKiosk = await instance.retrieveKiosk(1);
         });
 
         /*\
          # <hr>
-         # <h4> saveKiosk(shortId, locationAddress, name, timeZone) </h4>
-         # Set tokens on customer balance
+         # <h4> createKiosk(shortId, locationAddress, name, timeZone) </h4>
+         # Create new Kiosk
          > Arguments
          - (string) shortId - kiosk short id
          - (string) locationAddress - kiosk location address
          - (string) name - kiosk name
          - (string) timeZone - kiosk timeZone
         \*/
-        it('saveKiosk', () => {
-            /* from saveKiosk method */
+        it('createKiosk', () => {
+            /* from createKiosk method */
             assert.notEqual(resSaveKiosk.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resSaveKiosk.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from retrieveKiosk method */
@@ -43,7 +43,7 @@ contract('KioskStorage', () => {
         /*\
          # <hr>
          # <h4> retrieveKiosk(shortId) </h4>
-         # Get tokens balance of consumer
+         # Get all info of kiosk
          > Arguments
          - (string) shortId - kiosk short id
          > Returns
