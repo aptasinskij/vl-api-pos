@@ -31,6 +31,8 @@ contract Component is Owned {
     string constant PARAMETER_STORAGE = "parameter-storage";
     string constant PARAMETER_MANAGER = "parameter-manager";
 
+    string constant DATABASE = "database";
+
     ///@param addr - address of deployed Registry instance
     ///@dev each component will be registered at instantiation time
     ///by name with returns from getName() abstract method
@@ -52,6 +54,10 @@ contract Component is Owned {
     /// of concrete implementation at instantiation time
     /// @return name of implementation
     function getName() internal pure returns(string name);
+
+    function _database() internal view returns (address) {
+        return lookup(DATABASE);
+    }
 
     function _applicationStorage() internal view returns(AnApplicationStorage) {
         return AnApplicationStorage(lookup(APPLICATION_STORAGE));
