@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
-import ContractRegistry from '../../../../build/contracts/ContractRegistry.json';
+import ContractRegistry from '../../../../../back-end/src/main/java/com/skysoft/vaultlogic/blockchain/truffle/build/contracts/ContractRegistry.json';
 import {Header} from '../Header/Header';
 
 import {Button, Radio, Container, Label, Segment, Table, Message, Transition} from 'semantic-ui-react';
