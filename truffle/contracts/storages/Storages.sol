@@ -91,15 +91,17 @@ contract AParameterStorage {
 
 contract AKioskStorage {
 
-    function createKiosk(string _id, string _location, string _name, string _timezone) public;
+    event Saved(string _kioskId, string _location, string _name, string _timezone);
 
-    function retrieveKiosk(string _id) public view returns (string memory _location, string memory _name, string memory _timezone);
+    function save(string memory _kioskId, string memory _location, string memory _name, string memory _timezone) public;
+
+    function get(string memory _kioskId) public view returns (string memory _location, string memory _name, string memory _timezone);
 
 }
 
 contract ASessionStorage {
 
-    event Saved(uint256 sessionId, uint256 appId, string xToken, uint256 status);
+    event Saved(uint256 sessionId, uint256 appId, string xToken, uint256 status, string kioskId);
     event StatusUpdated(uint256 index, uint256 status);
     event ActiveCashIn(uint256 _sessionId, bool _flag);
 
@@ -109,7 +111,7 @@ contract ASessionStorage {
 
     function getAppIdAndXToken(uint256 index) public view returns (uint256 applicationId, string xToken);
 
-    function save(uint256 sessionId, uint256 appId, string xToken, uint256 status) public;
+    function save(uint256 sessionId, uint256 appId, string xToken, uint256 status, string kioskId) public;
 
     function getSession(uint256 index) public view returns (uint256 appId, string xToken, uint256 status);
 

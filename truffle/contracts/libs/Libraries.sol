@@ -181,10 +181,12 @@ library KioskLib {
         string timezone;
     }
 
+    // check existence
     function kioskExists(address self, string memory kioskId) internal view returns (bool) {
         return Database(self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, kioskId)));
     }
 
+    // create
     function createKiosk(address self, Kiosk memory kiosk) internal returns (bool) {
         require(!kioskExists(self, kiosk.id), "Kiosk already exists");
         Database(self).setStringValue(keccak256(abi.encode(ID, kiosk.id)), kiosk.id);
@@ -195,16 +197,34 @@ library KioskLib {
         return true;
     }
 
-    function retrieveKiosk(address self, string memory kioskId) internal view returns (Kiosk memory) {
-        require(kioskExists(self, kioskId), "Kiosk is not exists");
+    function save(address self, string memory _kioskId, string memory _location, string memory _name, string memory _timezone) internal returns (bool) {
+        require(!kioskExists(self, _kioskId), "Kiosk already exists");
+        Database(self).setStringValue(keccak256(abi.encode(ID, _kioskId)), _kioskId);
+        Database(self).setStringValue(keccak256(abi.encode(LOCATION, _kioskId)), _location);
+        Database(self).setStringValue(keccak256(abi.encode(NAME, _kioskId)), _name);
+        Database(self).setStringValue(keccak256(abi.encode(TIME_ZONE, _kioskId)), _timezone);
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, _kioskId)), true);
+        return true;
+    }
+
+    // read
+    function retrieveKiosk(address self, string memory _kioskId) internal view returns (Kiosk memory) {
+        require(kioskExists(self, _kioskId), "Kiosk is not exists");
         // @formatter:off
         return Kiosk({
-            id: kioskId,
-            location: Database(self).getStringValue(keccak256(abi.encode(LOCATION, kioskId))),
-            name: Database(self).getStringValue(keccak256(abi.encode(NAME, kioskId))),
-            timezone: Database(self).getStringValue(keccak256(abi.encode(TIME_ZONE, kioskId)))
+            id: _kioskId,
+            location: Database(self).getStringValue(keccak256(abi.encode(LOCATION, _kioskId))),
+            name: Database(self).getStringValue(keccak256(abi.encode(NAME, _kioskId))),
+            timezone: Database(self).getStringValue(keccak256(abi.encode(TIME_ZONE, _kioskId)))
         });
         // @formatter:on
+    }
+
+    function get(address self, string memory _kioskId) internal view returns (string memory _location, string memory _name, string memory _timezone) {
+        require(kioskExists(self, _kioskId), "Kiosk is not exists");
+        _location = Database(self).getStringValue(keccak256(abi.encode(LOCATION, _kioskId)));
+        _name = Database(self).getStringValue(keccak256(abi.encode(NAME, _kioskId)));
+        _timezone = Database(self).getStringValue(keccak256(abi.encode(TIME_ZONE, _kioskId)));
     }
 
 }
@@ -236,10 +256,12 @@ library SessionLib {
         bool hasActiveCashOut;
     }
 
+    // check existence
     function sessionExists(address self, uint256 sessionId) internal view returns (bool) {
         return Database(self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, sessionId)));
     }
 
+    // create
     function createSession(address self, Session memory session) internal returns (bool) {
         require(!sessionExists(self, session.id), "Session is already exists");
         require(self.kioskExists(session.kioskId), "Kiosk is not exists");
@@ -253,8 +275,19 @@ library SessionLib {
         return true;
     }
 
+    function save(address self, uint256 sessionId, uint256 appId, string xToken, uint256 status, string kioskId) internal {
+        require(!sessionExists(self, sessionId), "Session is already exists");
+        require(self.kioskExists(kioskId), "Kiosk is not exists");
+        require(self.applicationExists(appId), "Application is not exists");
+        Database(self).setUintValue(keccak256(abi.encodePacked(APPLICATION_ID, sessionId)), appId);
+        Database(self).setStringValue(keccak256(abi.encodePacked(X_TOKEN, sessionId)), xToken);
+        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, sessionId)), status);
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, sessionId)), true);
+    }
+
+    // read
     function retrieveSession(address self, uint256 sessionId) internal view returns (Session memory) {
-        require(sessionExists(self, sessionId), "Not exists");
+        require(sessionExists(self, sessionId), "Session is not exists");
         // @formatter:off
         return Session({
             id : sessionId,
@@ -269,37 +302,25 @@ library SessionLib {
     }
 
     function retrieveSessionApplication(address self, uint256 sessionId) internal view returns (ApplicationLib.Application memory) {
-        require(sessionExists(self, sessionId), "Not Exists");
+        require(sessionExists(self, sessionId), "Session is not exists");
         return self.retrieveApplication(Database(self).getUintValue(keccak256(abi.encodePacked(APPLICATION_ID, sessionId))));
     }
 
     function retrieveSessionKiosk(address self, uint256 sessionId) internal view returns (KioskLib.Kiosk memory) {
-        require(sessionExists(self, sessionId), "Not Exists");
+        require(sessionExists(self, sessionId), "Session is not exists");
         return self.retrieveKiosk(Database(self).getStringValue(keccak256(abi.encodePacked(KIOSK_ID, sessionId))));
     }
 
     function retrieveSessionApplicationDeployedAddress(address self, uint256 _sessionId) internal view returns (address) {
-        require(sessionExists(self, _sessionId), "Session Not Exists");
+        require(sessionExists(self, _sessionId), "Session is not exists");
         return self.getAddress(getAppId(self, _sessionId));
     }
 
-    //TODO additional parameters needed: kioskId
-    function save(address self, uint256 sessionId, uint256 appId, string xToken, uint256 status) internal {
-        require(!sessionExists(self, sessionId), "Session is already exists");
-        Database(self).setUintValue(keccak256(abi.encodePacked(APPLICATION_ID, sessionId)), appId);
-        Database(self).setStringValue(keccak256(abi.encodePacked(X_TOKEN, sessionId)), xToken);
-        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, sessionId)), status);
-        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, sessionId)), true);
-    }
-
     function get(address self, uint256 index) internal view returns (uint256 appId, string xToken, uint256 status) {
+        require(sessionExists(self, index), "Session is not exists");
         appId = Database(self).getUintValue(keccak256(abi.encodePacked(APPLICATION_ID, index)));
         xToken = Database(self).getStringValue(keccak256(abi.encodePacked(X_TOKEN, index)));
         status = Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, index)));
-    }
-
-    function setHasActiveCashIn(address _self, uint256 _sessionId, bool _flag) internal {
-        Database(_self).setBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, _sessionId)), _flag);
     }
 
     function getIsHasActiveCashIn(address _self, uint256 _sessionId) internal view returns (bool) {
@@ -316,6 +337,12 @@ library SessionLib {
 
     function getStatus(address self, uint256 index) internal view returns (Status) {
         return Status(Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, index))));
+    }
+
+    //update
+    function setHasActiveCashIn(address _self, uint256 _sessionId, bool _flag) internal {
+        require(sessionExists(_self, _sessionId), "Session is already exists");
+        Database(_self).setBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, _sessionId)), _flag);
     }
 
     function setStatus(address self, uint256 index, Status status) internal {
