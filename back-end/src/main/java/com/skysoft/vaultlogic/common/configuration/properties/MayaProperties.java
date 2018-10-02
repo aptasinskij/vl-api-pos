@@ -28,8 +28,118 @@ public class MayaProperties {
 
     private GeneralInfo generalInfo;
 
+    //access
+    public String getClientIdUrl(){
+        return String.format("%s%s", getBaseUrl(), access.getClientId());
+    }
+
+    public String getClientSecretUrl(){
+        return String.format("%s%s", getBaseUrl(), access.getClientSecret());
+    }
+
+    //application
+    public String getLaunchApplicationUrl(){
+        return String.format("%s%s", getBaseUrl(), application.getLaunchApplication());
+    }
+
+    public String getKeepAliveUrl(){
+        return String.format("%s%s", getBaseUrl(), application.getKeepAlive());
+    }
+
+    public String getClientActivityUrl(){
+        return String.format("%s%s", getBaseUrl(), application.getClientActivity());
+    }
+
+    public String getCloseApplicationUrl(){
+        return String.format("%s%s", getBaseUrl(), application.getCloseApplication());
+    }
+
+    //device info
+    public String getDeviceInfoUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getInfo());
+    }
+
+    //cash
+    public String getCashDeviceStatusUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getCash().getCashDeviceStatus());
+    }
+
+    public String getRecyclerDeviceStatusUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getCash().getRecyclerDeviceStatus());
+    }
+
+    public String getEnableCashAcceptorUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getCash().getEnableCashAcceptor());
+    }
+
+    public String getDisableCashAcceptorUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getCash().getDisableCashAcceptor());
+    }
+
+    public String getDispensableAmountUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getCash().getDispensableAmount());
+    }
+
+    public String getDispenseCashUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getCash().getDispenseCash());
+    }
+
+    //scanner
+    public String getScannerStatusUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getScanner().getStatus());
+    }
+
+    //printer
+    public String getCreateReceiptUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getPrinter().getCreateReceipt());
+    }
+
+    public String getPrintReceiptUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getPrinter().getPrintReceipt());
+    }
+
+    //camera
+    public String getTakePhotoUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getCamera().getTakePhoto());
+    }
+
+    public String getTakeScanUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getCamera().getTakeScan());
+    }
+
+    public String getStartPreviewUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getCamera().getStartPreview());
+    }
+
+    public String getStopPreviewUrl(){
+        return String.format("%s%s", getBaseUrl(), device.getCamera().getStopPreview());
+    }
+
+    //customer
+    public String getSetCustomerInSessionUrl(){
+        return String.format("%s%s", getBaseUrl(), customer.getSetCustomerInSession());
+    }
+
+    public String getCustomerInformationUrl(){
+        return String.format("%s%s", getBaseUrl(), customer.getCustomerInformation());
+    }
+
+    //general info
+    public String getLocationAndDevicesUrl(){
+        return String.format("%s%s", getBaseUrl(), generalInfo.getLocationsAndDevices());
+    }
+
+    public String getDeviceUrl(){
+        return String.format("%s%s", getBaseUrl(), generalInfo.getDevice());
+    }
+
+    public String getDevicesUrl(){
+        return String.format("%s%s", getBaseUrl(), generalInfo.getDevices());
+    }
+
     @Data
     public static class Access {
+
         @NotBlank
         private String clientId;
         @NotBlank
@@ -56,6 +166,59 @@ public class MayaProperties {
         private Scanner scanner;
         private ReceiptDevice receipt;
         private CameraDevice camera;
+
+        public String getCashDeviceStatus(){
+            return cash.getCashDeviceStatus();
+        }
+
+        public String getRecyclerDeviceStatus(){
+            return cash.getRecyclerDeviceStatus();
+        }
+
+        public String getEnableCashAcceptor(){
+            return cash.getEnableCashAcceptor();
+        }
+
+        public String getDisableCashAcceptor(){
+            return cash.getDisableCashAcceptor();
+        }
+
+        public String getDispensableAmount(){
+            return cash.getDispensableAmount();
+        }
+
+        public String getDispenseCash(){
+            return cash.getDispenseCash();
+        }
+
+        public String getScannerStatus(){
+            return scanner.getStatus();
+        }
+
+        public String getCreateReceipt(){
+            return printer.getCreateReceipt();
+        }
+
+        public String getPrintReceipt(){
+            return printer.getPrintReceipt();
+        }
+
+        public String getTakePhoto(){
+            return camera.getTakePhoto();
+        }
+
+        public String getTakeScan(){
+            return camera.getTakeScan();
+        }
+
+        public String getStartPreview(){
+            return camera.getStartPreview();
+        }
+
+        public String getStopPreview(){
+            return camera.getStopPreview();
+        }
+
     }
 
     @Data
@@ -81,7 +244,7 @@ public class MayaProperties {
     }
 
     @Data
-    public static class ReceiptDevice {
+    public static class PrinterDevice {
         @NotBlank
         private String createReceipt;
         @NotBlank
