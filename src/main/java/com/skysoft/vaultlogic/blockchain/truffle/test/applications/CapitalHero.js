@@ -5,6 +5,7 @@ const ApplicationManager = artifacts.require('ApplicationManager');
 const ParameterStorage = artifacts.require('ParameterStorage');
 const SessionManager = artifacts.require('SessionManager');
 const CapitalHero = artifacts.require('CapitalHero');
+const KioskStorage = artifacts.require('KioskStorage');
 const {convertToNumber, sleep} = require('../helpers');
 
 contract('CapitalHero', accounts => {
@@ -15,7 +16,8 @@ contract('CapitalHero', accounts => {
         let resGet1;
         let resGet2;
         let resClose;
-        let cashInStorageEvents = [];
+        let cashInStorageSaveEvents = [];
+        let cashInStorageUpdatedEvents = [];
         let capitalHeroInstance;
 
         before(async () => {
@@ -24,6 +26,7 @@ contract('CapitalHero', accounts => {
             capitalHeroInstance = await CapitalHero.deployed();
             const parameterStorageInstance = await ParameterStorage.deployed();
             const cashChannelsManagerInstance = await CashChannelsManager.deployed();
+            const kioskStorageInstance = await KioskStorage.deployed();
 
             const cashInStorageInstance = await CashInStorage.deployed();
 
@@ -38,10 +41,10 @@ contract('CapitalHero', accounts => {
 
             /* watch CapitalHero events */
             cashInStorageInstance.CashInStatusUpdated().watch((err, response) => {
-                cashInStorageEvents.push(convertToNumber(response.args, true));
+                cashInStorageUpdatedEvents.push(convertToNumber(response.args, true));
             });
             cashInStorageInstance.CashInSaved().watch((err, response) => {
-                cashInStorageEvents.push(convertToNumber(response.args, true));
+                cashInStorageSaveEvents.push(convertToNumber(response.args, true));
             });
             /* setVLFee of ParameterStorage */
             await parameterStorageInstance.setVLFee(1000);
@@ -56,8 +59,9 @@ contract('CapitalHero', accounts => {
             );
             /* enableApplication */
             await applicationManagerInstance.enableApplication(123);
+            await kioskStorageInstance.saveKiosk('f400', 'LA', 'oduvanchik', 'UTC');
             /* createSession */
-            await sessionManagerInstance.createSession(321, 123, 'SessionXToken');
+            await sessionManagerInstance.createSession(321, 123, 'SessionXToken', 'f400');
             /* activate */
             await sessionManagerInstance.activate(321);
             /* openCashInChannel */
@@ -80,10 +84,10 @@ contract('CapitalHero', accounts => {
             assert.notEqual(resOpen.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resOpen.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from CashInStorage event */
-            assert.strictEqual(cashInStorageEvents[0].channelId, 0);
-            assert.strictEqual(cashInStorageEvents[0].sessionId, 321);
-            assert.strictEqual(cashInStorageEvents[0].application, capitalHeroInstance.address);
-            assert.strictEqual(cashInStorageEvents[0].status, 0);
+            assert.strictEqual(cashInStorageSaveEvents[0].channelId, 0);
+            assert.strictEqual(cashInStorageSaveEvents[0].sessionId, 321);
+            assert.strictEqual(cashInStorageSaveEvents[0].application, capitalHeroInstance.address);
+            assert.strictEqual(cashInStorageSaveEvents[0].status, 0);
             /* from get method of CashInStorage */
             assert.strictEqual(resGet1[0], 321, 'session id is not equal');
             assert.strictEqual(resGet1[1], capitalHeroInstance.address, 'app address in not equal');
@@ -97,8 +101,8 @@ contract('CapitalHero', accounts => {
             assert.notEqual(resClose.receipt.transactionHash, '', 'transaction hash is empty');
             assert.isAbove(resClose.receipt.gasUsed, 0, 'gasUsed is 0');
             /* from CashInStorage event */
-            assert.strictEqual(cashInStorageEvents[2].channelId, 0);
-            assert.strictEqual(cashInStorageEvents[2].status, 3);
+            assert.strictEqual(cashInStorageUpdatedEvents[1].channelId, 0);
+            assert.strictEqual(cashInStorageUpdatedEvents[1].status, 3);
             /* from get method of CashInStorage */
             assert.strictEqual(resGet2[0], 321, 'session id is not equal');
             assert.strictEqual(resGet2[1], capitalHeroInstance.address, 'app address in not equal');
