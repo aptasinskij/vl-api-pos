@@ -18,9 +18,9 @@ contract SessionStorage is Component, ASessionStorage {
         return COMPONENT_NAME;
     }
     
-    function save(uint256 sessionId, uint256 appId, string xToken, uint256 status) public {
-        lookup(DATABASE).save(sessionId, appId, xToken, status);
-        emit Saved(sessionId, appId, xToken, status);
+    function save(uint256 sessionId, uint256 appId, string xToken, uint256 status, string kioskId) public {
+        lookup(DATABASE).save(sessionId, appId, xToken, status, kioskId);
+        emit Saved(sessionId, appId, xToken, status, kioskId);
     }
     
     function getSession(uint256 index) public view returns(uint256 appId, string xToken, uint256 status) {

@@ -283,9 +283,10 @@ library SessionLib {
         return self.getAddress(getAppId(self, _sessionId));
     }
 
-    //TODO additional parameters needed: kioskId
-    function save(address self, uint256 sessionId, uint256 appId, string xToken, uint256 status) internal {
+    function save(address self, uint256 sessionId, uint256 appId, string xToken, uint256 status, string kioskId) internal {
         require(!sessionExists(self, sessionId), "Session is already exists");
+        require(self.kioskExists(kioskId), "Kiosk is not exists");
+        require(self.applicationExists(appId), "Application is not exists");
         Database(self).setUintValue(keccak256(abi.encodePacked(APPLICATION_ID, sessionId)), appId);
         Database(self).setStringValue(keccak256(abi.encodePacked(X_TOKEN, sessionId)), xToken);
         Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, sessionId)), status);

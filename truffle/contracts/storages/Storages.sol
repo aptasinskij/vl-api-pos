@@ -99,7 +99,7 @@ contract AKioskStorage {
 
 contract ASessionStorage {
 
-    event Saved(uint256 sessionId, uint256 appId, string xToken, uint256 status);
+    event Saved(uint256 sessionId, uint256 appId, string xToken, uint256 status, string kioskId);
     event StatusUpdated(uint256 index, uint256 status);
     event ActiveCashIn(uint256 _sessionId, bool _flag);
 
@@ -109,7 +109,7 @@ contract ASessionStorage {
 
     function getAppIdAndXToken(uint256 index) public view returns (uint256 applicationId, string xToken);
 
-    function save(uint256 sessionId, uint256 appId, string xToken, uint256 status) public;
+    function save(uint256 sessionId, uint256 appId, string xToken, uint256 status, string kioskId) public;
 
     function getSession(uint256 index) public view returns (uint256 appId, string xToken, uint256 status);
 
