@@ -1,12 +1,12 @@
 package com.skysoft.vaultlogic.listeners;
 
+import com.skysoft.vaultlogic.common.protocol.request.EnableCashAcceptorRequest;
 import com.skysoft.vaultlogic.contracts.CashInOracle;
 import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel;
 import com.skysoft.vaultlogic.common.domain.cashin.CashInRepository;
 import com.skysoft.vaultlogic.common.domain.cashin.events.*;
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
 import com.skysoft.vaultlogic.common.domain.session.projections.SessionXToken;
-import com.skysoft.vaultlogic.common.request.EnableCashAcceptorRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;

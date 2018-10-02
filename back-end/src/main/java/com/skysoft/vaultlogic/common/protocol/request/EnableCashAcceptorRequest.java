@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.common.request;
+package com.skysoft.vaultlogic.common.protocol.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
