@@ -70,7 +70,7 @@ library ApplicationLib {
     }
 
     function createApplication(address self, Application memory application) internal returns (bool) {
-        require(!applicationExists(self, application.id), "exists");
+        require(!applicationExists(self, application.id), "Application already exists");
         Database(self).setUintValue(keccak256(abi.encodePacked(ID, application.id)), application.id);
         Database(self).setStringValue(keccak256(abi.encodePacked(NAME, application.id)), application.name);
         Database(self).setAddressValue(keccak256(abi.encodePacked(OWNER, application.id)), application.owner);
@@ -83,7 +83,7 @@ library ApplicationLib {
     }
 
     function retrieveApplication(address self, uint256 applicationId) internal view returns (Application memory) {
-        require(applicationExists(self, applicationId), "Not exists");
+        require(applicationExists(self, applicationId), "Application is not exists");
         return Application({
             id : applicationId,
             name : Database(self).getStringValue(keccak256(abi.encodePacked(NAME, applicationId))),
@@ -95,6 +95,7 @@ library ApplicationLib {
     }
 
     function save(address self, uint256 appId, string name, address owner, string url, address appAddr, uint256 status) internal {
+        require(!applicationExists(self, appId), "Application already exists");
         Database(self).setUintValue(string256(ID, appId), appId);
         Database(self).setStringValue(string256(NAME, appId), name);
         Database(self).setAddressValue(string256(OWNER, appId), owner);
@@ -102,6 +103,7 @@ library ApplicationLib {
         Database(self).setAddressValue(string256(ADDRESS, appId), appAddr);
         Database(self).setUintValue(string256(STATUS, appId), status);
         Database(self).setBooleanValue(keccak256(abi.encodePacked(REGISTERED, appAddr)), true);
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, appId)), true);
     }
 
     function isRegistered(address self, address _applicationAddress) internal view returns (bool) {
@@ -109,6 +111,7 @@ library ApplicationLib {
     }
 
     function get(address self, uint256 appId) internal view returns (string name, address owner, string url, address appAddr, uint256 status) {
+        require(applicationExists(self, appId), "Application is not exists");
         name = Database(self).getStringValue(string256(NAME, appId));
         owner = Database(self).getAddressValue(string256(OWNER, appId));
         url = Database(self).getStringValue(string256(URL, appId));
@@ -117,34 +120,42 @@ library ApplicationLib {
     }
 
     function getName(address self, uint256 appId) internal view returns (string) {
+        require(applicationExists(self, appId), "Application is not exists");
         return Database(self).getStringValue(string256(NAME, appId));
     }
 
     function getOwner(address self, uint256 appId) internal view returns (address) {
+        require(applicationExists(self, appId), "Application is not exists");
         return Database(self).getAddressValue(string256(OWNER, appId));
     }
 
     function getUrl(address self, uint256 appId) internal view returns (string) {
+        require(applicationExists(self, appId), "Application is not exists");
         return Database(self).getStringValue(string256(URL, appId));
     }
 
     function setUrl(address self, uint256 appId, string url) internal {
+        require(applicationExists(self, appId), "Application is not exists");
         Database(self).setStringValue(string256(URL, appId), url);
     }
 
     function getAddress(address self, uint256 appId) internal view returns (address) {
+        require(applicationExists(self, appId), "Application is not exists");
         return Database(self).getAddressValue(string256(ADDRESS, appId));
     }
 
     function setAddress(address self, uint256 appId, address appAddr) internal {
+        require(applicationExists(self, appId), "Application is not exists");
         Database(self).setAddressValue(string256(ADDRESS, appId), appAddr);
     }
 
     function getStatus(address self, uint256 appId) internal view returns (uint256) {
+        require(applicationExists(self, appId), "Application is not exists");
         return Database(self).getUintValue(string256(STATUS, appId));
     }
 
     function setStatus(address self, uint256 appId, uint256 status) internal {
+        require(applicationExists(self, appId), "Application is not exists");
         Database(self).setUintValue(string256(STATUS, appId), status);
     }
 
@@ -175,7 +186,7 @@ library KioskLib {
     }
 
     function createKiosk(address self, Kiosk memory kiosk) internal returns (bool) {
-        if (kioskExists(self, kiosk.id)) return false;
+        require(!kioskExists(self, kiosk.id), "Kiosk already exists");
         Database(self).setStringValue(keccak256(abi.encode(ID, kiosk.id)), kiosk.id);
         Database(self).setStringValue(keccak256(abi.encode(LOCATION, kiosk.id)), kiosk.location);
         Database(self).setStringValue(keccak256(abi.encode(NAME, kiosk.id)), kiosk.name);
@@ -185,7 +196,7 @@ library KioskLib {
     }
 
     function retrieveKiosk(address self, string memory kioskId) internal view returns (Kiosk memory) {
-        require(kioskExists(self, kioskId), "Not Exists");
+        require(kioskExists(self, kioskId), "Kiosk is not exists");
         // @formatter:off
         return Kiosk({
             id: kioskId,
@@ -230,7 +241,7 @@ library SessionLib {
     }
 
     function createSession(address self, Session memory session) internal returns (bool) {
-        if (sessionExists(self, session.id)) return false;
+        require(!sessionExists(self, session.id), "Session is already exists");
         require(self.kioskExists(session.kioskId), "Kiosk is not exists");
         require(self.applicationExists(session.applicationId), "Application is not exists");
         Database(self).setUintValue(keccak256(abi.encodePacked(ID, session.id)), session.id);
@@ -272,8 +283,9 @@ library SessionLib {
         return self.getAddress(getAppId(self, _sessionId));
     }
 
+    //TODO additional parameters needed: kioskId
     function save(address self, uint256 sessionId, uint256 appId, string xToken, uint256 status) internal {
-        if (sessionExists(self, sessionId)) return;
+        require(!sessionExists(self, sessionId), "Session is already exists");
         Database(self).setUintValue(keccak256(abi.encodePacked(APPLICATION_ID, sessionId)), appId);
         Database(self).setStringValue(keccak256(abi.encodePacked(X_TOKEN, sessionId)), xToken);
         Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, sessionId)), status);

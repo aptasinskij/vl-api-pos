@@ -51,7 +51,7 @@ contract SessionManager is Component, ASessionManager {
 
     function activate(uint256 _sessionId) public returns (bool) {
         SessionLib.Status status = _database().getStatus(_sessionId);
-        require(status == SessionLib.Status.CREATING, "Illegal state modification");
+        require(status == SessionLib.Status.CREATING, "Session activation failed. Required CREATING state");
         _database().setStatus(_sessionId, SessionLib.Status.ACTIVE);
         return true;
     }
