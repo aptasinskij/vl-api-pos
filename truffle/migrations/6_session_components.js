@@ -7,6 +7,7 @@ var SessionOracle = artifacts.require("./SessionOracle.sol");
 module.exports = function (deployer) {
     deployer.deploy(SessionLib);
     deployer.link(SessionLib, SessionStorage);
+    deployer.link(SessionLib, SessionManager);
     deployer.deploy(SessionStorage, ContractRegistry.address);
     deployer.deploy(SessionManager, ContractRegistry.address);
     deployer.deploy(SessionOracle, ContractRegistry.address);
