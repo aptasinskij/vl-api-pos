@@ -12,7 +12,7 @@ interface IApplication {
 
     function cashInChannelClosed(uint256 channelId, uint256 sessionId) external;
 
-    function newSessionCreated() external;
+    function newSessionCreated(uint256 _sessionId) external;
 
     function closeSession(uint256 sessionId) external;
 

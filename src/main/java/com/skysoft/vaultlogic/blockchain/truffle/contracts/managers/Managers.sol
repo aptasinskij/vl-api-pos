@@ -38,7 +38,7 @@ contract AParameterManager {
 
 contract ASessionManager {
 
-    function createSession(uint256 sessionId, uint256 appId, string xToken) public;
+    function createSession(uint256 _sessionId, uint256 _appId, string _xToken, string _kioskId) public;
 
     function closeSession(uint256 sessionId) public;
 

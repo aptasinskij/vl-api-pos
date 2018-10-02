@@ -11,21 +11,21 @@ contract AnApplicationStorage {
 
     function get(uint256 appId) public view returns (string, address, string, address, uint256);
 
-    function isRegistered(address _applicationAddress) public view returns(bool);
+    function isRegistered(address _applicationAddress) public view returns (bool);
 
-    function getApplicationName(uint256 appId) public view returns(string);
+    function getApplicationName(uint256 appId) public view returns (string);
 
-    function getApplicationOwner(uint256 appId) public view returns(address);
+    function getApplicationOwner(uint256 appId) public view returns (address);
 
-    function getApplicationUrl(uint256 appId) public view returns(string);
+    function getApplicationUrl(uint256 appId) public view returns (string);
 
     function setApplicationUrl(uint256 appId, string url) public;
 
-    function getApplicationAddress(uint256 appId) public view returns(address);
+    function getApplicationAddress(uint256 appId) public view returns (address);
 
     function setApplicationAddress(uint256 appId, address appAddr) public;
 
-    function getApplicationStatus(uint256 appId) public view returns(uint256);
+    function getApplicationStatus(uint256 appId) public view returns (uint256);
 
     function setApplicationStatus(uint256 appId, uint256 status) public;
 
@@ -38,10 +38,10 @@ contract ACashInStorage {
     event CashInStatusUpdated(uint256 channelId, uint256 status);
     event CashInSplitAdded(uint256 channelId, address party, uint256 amount);
 
-    function save(uint256 sessionId, address application, uint256 status) public returns(uint256);
+    function save(uint256 sessionId, address application, uint256 status) public returns (uint256);
 
     function get(uint256 channelId) public view
-    returns(
+    returns (
         uint256 sessionId,
         address application,
         uint256 balance,
@@ -49,35 +49,35 @@ contract ACashInStorage {
         uint256 splitSize
     );
 
-    function getSessionId(uint256 channelId) public view returns(uint256);
+    function getSessionId(uint256 channelId) public view returns (uint256);
 
-    function getApplication(uint256 channelId) public view returns(address);
+    function getApplication(uint256 channelId) public view returns (address);
 
-    function getApplicationAndSessionId(uint256 channelId) public view returns(address, uint256);
+    function getApplicationAndSessionId(uint256 channelId) public view returns (address, uint256);
 
     function setBalance(uint256 channelId, uint256 amount) public;
 
-    function getBalance(uint256 channelId) public view returns(uint256);
+    function getBalance(uint256 channelId) public view returns (uint256);
 
     function setVLFee(uint256 channelId, uint256 fee) public;
 
-    function getVLFee(uint256 channelId) public view returns(uint256);
+    function getVLFee(uint256 channelId) public view returns (uint256);
 
     function setApplicationBalance(uint256 channelId, uint256 balance) public;
 
-    function getApplicationBalance(uint256 channelId) public view returns(uint256);
+    function getApplicationBalance(uint256 channelId) public view returns (uint256);
 
     function setStatus(uint256 channelId, uint256 status) public;
 
-    function getStatus(uint256 channelId) public view returns(uint256);
+    function getStatus(uint256 channelId) public view returns (uint256);
 
     function addSplit(uint256 channelId, address party, uint256 amount) public;
 
     function addSplits(uint256 channelId, address[] parties, uint256[] amounts) public;
 
-    function getSplitSize(uint256 channelId) public view returns(uint256);
+    function getSplitSize(uint256 channelId) public view returns (uint256);
 
-    function getSplit(uint256 channelId, uint256 subIndex) public view returns(address, uint256);
+    function getSplit(uint256 channelId, uint256 subIndex) public view returns (address, uint256);
 
 }
 
@@ -91,9 +91,9 @@ contract AParameterStorage {
 
 contract AKioskStorage {
 
-    function saveKiosk(string shortId, string locationAddress, string name, string timeZone) public;
+    function createKiosk(string _id, string _location, string _name, string _timezone) public;
 
-    function retrieveKiosk(string shortId) public view returns(string locationAddress, string name, string timeZone);
+    function retrieveKiosk(string _id) public view returns (string memory _location, string memory _name, string memory _timezone);
 
 }
 
@@ -105,17 +105,17 @@ contract ASessionStorage {
 
     function getAppId(uint256 index) public view returns (uint256);
 
-    function getXToken(uint256 index) public view returns(string xToken);
+    function getXToken(uint256 index) public view returns (string xToken);
 
-    function getAppIdAndXToken(uint256 index) public view returns(uint256 applicationId, string xToken);
+    function getAppIdAndXToken(uint256 index) public view returns (uint256 applicationId, string xToken);
 
     function save(uint256 sessionId, uint256 appId, string xToken, uint256 status) public;
 
-    function getSession(uint256 index) public view returns(uint256 appId, string xToken, uint256 status);
+    function getSession(uint256 index) public view returns (uint256 appId, string xToken, uint256 status);
 
     function setHasActiveCashIn(uint256 _sessionId, bool _flag) public;
 
-    function isHasActiveCashIn(uint256 _sessionId) public view returns(bool);
+    function isHasActiveCashIn(uint256 _sessionId) public view returns (bool);
 
     function getStatus(uint256 index) public view returns (uint256);
 
