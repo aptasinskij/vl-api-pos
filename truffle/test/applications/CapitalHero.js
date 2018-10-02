@@ -59,7 +59,8 @@ contract('CapitalHero', accounts => {
             );
             /* enableApplication */
             await applicationManagerInstance.enableApplication(123);
-            await kioskStorageInstance.saveKiosk('f400', 'LA', 'oduvanchik', 'UTC');
+            /* createKiosk */
+            await kioskStorageInstance.createKiosk('f400', 'LA', 'oduvanchik', 'UTC');
             /* createSession */
             await sessionManagerInstance.createSession(321, 123, 'SessionXToken', 'f400');
             /* activate */
