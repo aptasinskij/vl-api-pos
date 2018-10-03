@@ -36,7 +36,7 @@ public class StatusUpdatedEventObserver extends AbstractContractEventObserver<Ap
 
     @Override
     public void onNext(ApplicationStatusUpdatedEventResponse event) {
-        log.info("[x] Application status updated: {}, {}", event.appId, Status.from(event.status.intValue()));
+        log.info("[x] Application status updated: {}, {}", event.appId, Status.from(event.status));
     }
 
     @Override

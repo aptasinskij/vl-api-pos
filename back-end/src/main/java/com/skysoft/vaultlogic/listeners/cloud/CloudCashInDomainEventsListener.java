@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.listeners;
+package com.skysoft.vaultlogic.listeners.cloud;
 
 import com.skysoft.vaultlogic.common.protocol.request.EnableCashAcceptorRequest;
 import com.skysoft.vaultlogic.contracts.CashInOracle;

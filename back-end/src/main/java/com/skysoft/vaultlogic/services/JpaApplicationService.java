@@ -22,7 +22,7 @@ public class JpaApplicationService implements ApplicationService {
 
     @Transactional
     public Application registerApplication(Application application) {
-        application.submitApplication();
+        application.publishCreated();
         return applicationRepository.save(application);
     }
 
@@ -31,13 +31,6 @@ public class JpaApplicationService implements ApplicationService {
     public Application findByName(String name) {
         return applicationRepository.findByName(name)
                 .orElseThrow(RuntimeException::new);
-        //TODO create meaningful exception
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public SmartContractApplication findSmartContractApplicationByName(String name) {
-        return applicationRepository.findSmartContractApplicationByName(name);
         //TODO create meaningful exception
     }
 

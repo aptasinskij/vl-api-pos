@@ -3,8 +3,8 @@ package com.skysoft.vaultlogic.common.domain.application.events;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-public class AppRegistered {
+public class ApplicationCreated {
 
-    public String name;
+    public final String name;
 
 }

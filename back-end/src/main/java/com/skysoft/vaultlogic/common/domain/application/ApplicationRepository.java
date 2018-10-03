@@ -1,7 +1,6 @@
 package com.skysoft.vaultlogic.common.domain.application;
 
 import com.skysoft.vaultlogic.common.domain.application.projections.AppUriStatus;
-import com.skysoft.vaultlogic.common.domain.application.projections.SmartContractApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,12 +14,10 @@ public interface ApplicationRepository extends JpaRepository<Application, BigInt
 
     Optional<Application> findByName(String name);
 
-    SmartContractApplication findSmartContractApplicationByName(String name);
+    @Query("select a from Application a join a.owner where a.name = :name")
+    Optional<Application> findByNameJoinOwner(@Param("name") String name);
 
     Optional<AppUriStatus> findAppUriStatusById(BigInteger id);
-
-    @Query("select a.uri from Application a where a.name = :name")
-    Optional<String> selectApplicationUrlByName(@Param("name") String name);
 
     Application getByName(String name);
 
