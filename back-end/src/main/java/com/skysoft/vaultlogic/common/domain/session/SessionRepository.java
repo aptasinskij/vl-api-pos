@@ -21,7 +21,7 @@ public interface SessionRepository extends JpaRepository<Session, BigInteger> {
 
     SessionXToken findSessionXTokenByCashInChannels_ChannelId(BigInteger channelId);
 
-    @Query("select s from Session s join s.application where s.xToken = :xToken")
-    Optional<Session> findByXTokenJoinApplication(@Param("xToken") String xToken);
+    @Query("select s from Session s join s.application join s.kiosk where s.xToken = :xToken")
+    Optional<Session> findByXTokenJoinApplicationAndKiosk(@Param("xToken") String xToken);
 
 }
