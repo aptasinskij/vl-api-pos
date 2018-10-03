@@ -1,0 +1,309 @@
+<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of CashChannelsManager.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">const assert = require(&#39;chai&#39;).assert;
+const CashChannelsManager = artifacts.require(&#39;CashChannelsManager.sol&#39;);
+const CashInStorage = artifacts.require(&#39;CashInStorage.sol&#39;);
+const SessionManager = artifacts.require(&#39;SessionManager.sol&#39;);
+const ApplicationManager = artifacts.require(&#39;ApplicationManager.sol&#39;);
+const CapitalHero = artifacts.require(&#39;CapitalHero.sol&#39;);
+const TokenManager = artifacts.require(&#39;TokenManager.sol&#39;);
+const ParameterStorage = artifacts.require(&#39;ParameterStorage.sol&#39;);
+const {convertToNumber, sleep} = require(&#39;..&#47;..&#47;..&#47;helpers&#39;);
+
+&#47;*\
+* CashChannelsManager
+\*&#47;
+
+contract(&#39;CashChannelsManager&#39;, (accounts) =&#62; {
+
+    describe(&#39;tests for all methods&#39;, () =&#62; {
+        const ownerAccount = accounts[0];
+        let resOpenCashInChannel;
+        let resGet;
+        let resConfirmOpen;
+        let resGetStatus1;
+        let capitalHeroInstance;
+        let resGetStatus2;
+        let resCloseCashInChannel;
+        let resConfirmClose;
+        let resUpdateCashInBalance;
+        let resGetBalance;
+        let resBalanceOf;
+        let splitsArray = [];
+        let resBalanceOfReceiver1;
+        let resBalanceOfReceiver2;
+        let resBalanceOfReceiver3;
+        let resBalanceOfSender1;
+        let resBalanceOfSender2;
+        let resBalanceOwner;
+        let requestCloseChannelInfo;
+        let resIsHasActiveCashIn0;
+        let resIsHasActiveCashIn;
+
+        let CashInSavedEvents = [];
+        let CashInBalanceUpdatedEvents = [];
+        let CashInStatusUpdatedEvents = [];
+        let CapitalHeroEvents = [];
+
+        before(async () =&#62; {
+            &#47;* get instances *&#47;
+            const cashChannelsManagerInstance = await CashChannelsManager.deployed();
+            const cashInStorageInstance = await CashInStorage.deployed();
+            const sessionManagerInstance = await SessionManager.deployed();
+            const applicationManagerInstance = await ApplicationManager.deployed();
+            const tokenManagerInstance = await TokenManager.deployed();
+            const parameterStorageInstance = await ParameterStorage.deployed();
+            capitalHeroInstance = await CapitalHero.deployed();
+            &#47;* --- watch events --- *&#47;
+            &#47;* CashInStorage events *&#47;
+            cashInStorageInstance.CashInStatusUpdated().watch((err, response) =&#62; {
+                CashInStatusUpdatedEvents.push(convertToNumber(response.args, true));
+            });
+            cashInStorageInstance.CashInSaved().watch((err, response) =&#62; {
+                CashInSavedEvents.push(convertToNumber(response.args, true));
+            });
+            cashInStorageInstance.CashInBalanceUpdated().watch((err, response) =&#62; {
+                CashInBalanceUpdatedEvents.push(convertToNumber(response.args, true));
+            });
+            &#47;* CapitalHero events *&#47;
+            capitalHeroInstance.CashInOpened().watch((err, response) =&#62; {
+                CapitalHeroEvents.push(convertToNumber(response.args, true));
+            });
+            capitalHeroInstance.CashInClosed().watch((err, response) =&#62; {
+                CapitalHeroEvents.push(convertToNumber(response.args, true));
+            });
+            capitalHeroInstance.CashInBalanceUpdated().watch((err, response) =&#62; {
+                CapitalHeroEvents.push(convertToNumber(response.args, true));
+            });
+            &#47;* --- *&#47;
+
+            &#47;* registerApplication Capital Hero *&#47;
+            await applicationManagerInstance.registerApplication(2, &#39;capital-hero&#39;, 235, &#39;http:&#47;&#47;capital-hero&#39;, capitalHeroInstance.address);
+            &#47;* createSession for Capital Hero *&#47;
+            await sessionManagerInstance.createSession(1, 2, &#39;1a2b3c&#39;);
+            &#47;* activate session *&#47;
+            await sessionManagerInstance.activate(1);
+
+            &#47;* setVLFee of ParameterStorage *&#47;
+            await parameterStorageInstance.setVLFee(1000);
+
+            &#47;* openCashInChannel *&#47;
+            resOpenCashInChannel = await cashChannelsManagerInstance.openCashInChannel(capitalHeroInstance.address, 1);
+            resGet = convertToNumber(await cashInStorageInstance.get(0), true);
+            &#47;* confirmOpen *&#47;
+            resConfirmOpen = await cashChannelsManagerInstance.confirmOpen(0);
+            resGetStatus1 = Number(await cashInStorageInstance.getStatus(0));
+
+            &#47;* isHasActiveCashIn *&#47;
+            resIsHasActiveCashIn0 = await sessionManagerInstance.isHasActiveCashIn(1);
+
+            &#47;* updateCashInBalance *&#47;
+            resUpdateCashInBalance = await cashChannelsManagerInstance.updateCashInBalance(0, 100000);
+            resGetBalance = Number(await cashInStorageInstance.getBalance(0));
+            &#47;* balanceOf *&#47;
+            resBalanceOf = Number(await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 0));
+
+            &#47;* closeCashInChannel *&#47;
+            resCloseCashInChannel = await cashChannelsManagerInstance.closeCashInChannel(capitalHeroInstance.address, 1, 0, [30000,35000,20000], [1,2,3]);
+            requestCloseChannelInfo = {
+                VLFee: Number(await cashInStorageInstance.getVLFee(0)),
+                appBalance: Number(await cashInStorageInstance.getApplicationBalance(0)),
+                channelSplitSize: Number(await cashInStorageInstance.getSplitSize(0)),
+                channelBalance: Number(await cashInStorageInstance.getBalance(0)),
+                channelStatus: Number(await cashInStorageInstance.getStatus(0))
+            };
+
+            &#47;* get splits *&#47;
+            &#47;&#47; must be moved to helpers
+            let resGetSplitSize = Number(await cashInStorageInstance.getSplitSize(0));
+            for (let i = 0; i &#60; resGetSplitSize; i++) {
+                let resGetSplit = await cashInStorageInstance.getSplit(0, i);
+                splitsArray.push(convertToNumber(resGetSplit));
+            }
+            &#47;* --- *&#47;
+
+            &#47;* confirmClose *&#47;
+            resConfirmClose = await cashChannelsManagerInstance.confirmClose(0);
+            &#47;* check different params *&#47;
+            resIsHasActiveCashIn = await sessionManagerInstance.isHasActiveCashIn(1);
+            resGetStatus2 = Number(await cashInStorageInstance.getStatus(0));
+            &#47;* balanceOf receivers (TokenManager contract) *&#47;
+            resBalanceOfReceiver1 = Number(await tokenManagerInstance.balanceOf(1));
+            resBalanceOfReceiver2 = Number(await tokenManagerInstance.balanceOf(2));
+            resBalanceOfReceiver3 = Number(await tokenManagerInstance.balanceOf(3));
+            &#47;* get sender balance (CashChannelsManager contract) *&#47;
+            resBalanceOfSender1 = Number(await cashChannelsManagerInstance.balanceOf(capitalHeroInstance.address, 0));
+            &#47;* get sender balance (TokenManager contract) *&#47;
+            resBalanceOfSender2 = Number(await tokenManagerInstance.balanceOf(capitalHeroInstance.address));
+            resBalanceOwner = Number(await tokenManagerInstance.balanceOf(ownerAccount));
+
+            sleep(3000); &#47;&#47; for make sure events handles
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; openCashInChannel(_application, _sessionId) &#60;&#47;h4&#62;
+        # Create request to open new CashInChannel
+        &#62; Arguments
+        - (address) _application - application address (from which calls makes)
+        - (uint256) _sessionId - session id
+        &#62; Preconditions
+        - (1) Session is active
+        - (2) Application owns the Session
+        - (3) There is no active CashInChannels in the Session
+        \*&#47;
+        it(&#39;openCashInChannel&#39;, () =&#62; {
+            &#47;* from CashChannelsManager logs *&#47;
+            assert.isAbove(resOpenCashInChannel.receipt.logs.length, 0, &#39;transaction logs are empty&#39;);
+            assert.notEqual(resOpenCashInChannel.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resOpenCashInChannel.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            &#47;* from cashInStorage event *&#47;
+            assert.strictEqual(CashInSavedEvents[0].channelId, 0, &#39;channel id is not equal&#39;);
+            assert.strictEqual(CashInSavedEvents[0].sessionId, 1, &#39;session id is not equal&#39;);
+            assert.strictEqual(CashInSavedEvents[0].application, capitalHeroInstance.address, &#39;application address is not equal&#39;);
+            assert.strictEqual(CashInSavedEvents[0].status, 0, &#39;channel status is not equal&#39;);
+            &#47;* from cashInStorage method *&#47;
+            assert.strictEqual(resGet[0], 1, &#39;channel id is not equal&#39;);
+            assert.strictEqual(resGet[1], capitalHeroInstance.address, &#39;channel address is not equal&#39;);
+            assert.strictEqual(resGet[4], 0, &#39;channel status is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; confirmOpen(channelId) &#60;&#47;h4&#62;
+        # Confirm CashInChannel opening
+        &#62; Arguments
+        - (uint256) channelId - channel id (which going to be opened)
+        &#62; Preconditions
+        - (1) CashInChannel is in &#34;ACTIVE&#34; state
+        \*&#47;
+        it(&#39;confirmOpen&#39;, () =&#62; {
+            &#47;* from CashChannelsManager logs *&#47;
+            assert.isAbove(resConfirmOpen.receipt.logs.length, 0, &#39;transaction logs are empty&#39;);
+            assert.notEqual(resConfirmOpen.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resConfirmOpen.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            &#47;* from cashInStorage event *&#47;
+            assert.strictEqual(CashInStatusUpdatedEvents[0].channelId, 0, &#39;channel id is not equal&#39;);
+            assert.strictEqual(CashInStatusUpdatedEvents[0].status, 1, &#39;channel status is not equal&#39;);
+            &#47;* from cashInStorage method *&#47;
+            assert.strictEqual(resGetStatus1, 1, &#39;channel status is not equal&#39;);
+            &#47;* from CapitalHero event *&#47;
+            assert.strictEqual(CapitalHeroEvents[0].channelId, 0, &#39;channel id is not equal&#39;);
+            assert.strictEqual(CapitalHeroEvents[0].sessionId, 1, &#39;session id is not equal&#39;);
+            assert.strictEqual(resIsHasActiveCashIn0, true, &#39;session has no active channel&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; updateCashInBalance(channelId, amount) &#60;&#47;h4&#62;
+        # Updated CashInChannel balance
+        &#62; Arguments
+        - (uint256) channelId - channel id (which going to be updated)
+        - (uint256) amount - amount of money to be inserted
+        \*&#47;
+        it(&#39;updateCashInBalance&#39;, () =&#62; {
+            &#47;* from CashChannelsManager logs *&#47;
+            assert.isAbove(resUpdateCashInBalance.receipt.logs.length, 0, &#39;transaction logs are empty&#39;);
+            assert.notEqual(resUpdateCashInBalance.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resUpdateCashInBalance.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            &#47;* from cashInStorage event *&#47;
+            assert.strictEqual(CashInBalanceUpdatedEvents[0].channelId, 0, &#39;channel id is not equal&#39;);
+            assert.strictEqual(CashInBalanceUpdatedEvents[0].amount, 100000, &#39;channel amount is not equal&#39;);
+            &#47;* from cashInStorage method *&#47;
+            assert.strictEqual(resGetBalance, 100000, &#39;channel balance is not equal&#39;);
+            &#47;* from CapitalHero event *&#47;
+            assert.strictEqual(CapitalHeroEvents[1].channelId, 0, &#39;channel id is not equal&#39;);
+            assert.strictEqual(CapitalHeroEvents[1].sessionId, 1, &#39;session id is not equal&#39;);
+            assert.strictEqual(CapitalHeroEvents[1].balance, 100000, &#39;channel balance is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; balanceOf(_application, _channelId) &#60;&#47;h4&#62;
+        # Get balance of CashInChannel
+        &#62; Arguments
+        - (address) _application - application address
+        - (uint256) _channelId - channel id
+        &#62; Preconditions
+        - (1) Application owns the CashInChannel
+        \*&#47;
+        it(&#39;balanceOf&#39;, () =&#62; {
+            assert.strictEqual(resBalanceOf, 100000, &#39;channel balance is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; closeCashInChannel(_application, _sessionId, _channelId, fees, parties) &#60;&#47;h4&#62;
+        # Create request to close CashInChannel
+        &#62; Arguments
+        - (address) _application - application address
+        - (address) _sessionId - session id
+        - (uint256) _channelId - channel id
+        - (uint256[]) fees - array of cashInChannel parties fee amounts
+        - (address[]) parties - array of cashInChannel parties addresses
+        &#62; Returns
+         - (bool) isTransactionSuccessful - is request to close CashInChannel successful
+        &#62; Preconditions
+        - (1) CashInChannel is in &#34;ACTIVE&#34; state
+        - (2) Application owns the CashInChannel
+        - (3) CashInChannel belongs to Session
+        - (4) Sizes of fees and parties arrays are equal
+        - (5) Sum of fees and VLfee is less or equal to CashInChannel balance
+        \*&#47;
+        it(&#39;closeCashInChannel&#39;, () =&#62; {
+            &#47;* from CashChannelsManager logs *&#47;
+            assert.isAbove(resCloseCashInChannel.receipt.logs.length, 0, &#39;transaction logs are empty&#39;);
+            assert.notEqual(resCloseCashInChannel.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resCloseCashInChannel.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            &#47;* from cashInStorage event *&#47;
+            assert.strictEqual(CashInStatusUpdatedEvents[1].channelId, 0, &#39;channel id is not equal&#39;);
+            assert.strictEqual(CashInStatusUpdatedEvents[1].status, 3, &#39;channel status is not equal&#39;);
+            &#47;* check splits info *&#47;
+            assert.strictEqual(splitsArray[0][0], 1, &#39;first receiver address is not equal&#39;);
+            assert.strictEqual(splitsArray[1][0], 2, &#39;second receiver address is not equal&#39;);
+            assert.strictEqual(splitsArray[2][0], 3, &#39;third receiver address is not equal&#39;);
+            assert.strictEqual(splitsArray[0][1], 30000, &#39;first receiver balance is not equal&#39;);
+            assert.strictEqual(splitsArray[1][1], 35000, &#39;second receiver balance is not equal&#39;);
+            assert.strictEqual(splitsArray[2][1], 20000, &#39;third receiver balance is not equal&#39;);
+            &#47;* check rest channel props *&#47;
+            assert.strictEqual(requestCloseChannelInfo.channelStatus, 3, &#39;channel status is not equal&#39;);
+            assert.strictEqual(requestCloseChannelInfo.channelBalance, 100000, &#39;channel balance is not equal&#39;);
+            assert.strictEqual(requestCloseChannelInfo.appBalance, 5000, &#39;application balance is not equal&#39;);
+            assert.strictEqual(requestCloseChannelInfo.channelSplitSize, 3, &#39;channel split size is not equal&#39;);
+            assert.strictEqual(requestCloseChannelInfo.VLFee, 10000, &#39;application fee amount is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; confirmClose(channelId) &#60;&#47;h4&#62;
+        # Confirm CashInChannel closing
+        &#62; Arguments
+        - (address) channelId - channel id
+        &#62; Conditions
+        - (1) CashInChannel is in &#34;CLOSE_REQUESTED&#34; state
+        \*&#47;
+        it(&#39;confirmClose&#39;, () =&#62; {
+            &#47;* from CashChannelsManager logs *&#47;
+            assert.isAbove(resConfirmClose.receipt.logs.length, 0, &#39;transaction logs are empty&#39;);
+            assert.notEqual(resConfirmClose.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resConfirmClose.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            &#47;* from cashInStorage event *&#47;
+            assert.strictEqual(CashInStatusUpdatedEvents[2].channelId, 0, &#39;channel id is not equal&#39;);
+            assert.strictEqual(CashInStatusUpdatedEvents[2].status, 4, &#39;channel status is not equal&#39;);
+            &#47;* from cashInStorage method *&#47;
+            assert.strictEqual(resGetStatus2, 4, &#39;channel status is not equal&#39;);
+            &#47;* from SessionManager method *&#47;
+            assert.strictEqual(resIsHasActiveCashIn, false, &#39;session has active channel&#39;);
+            &#47;* check balance of receivers *&#47;
+            assert.strictEqual(resBalanceOfReceiver1, 30000, &#39;first receiver balance not equal&#39;);
+            assert.strictEqual(resBalanceOfReceiver2, 35000, &#39;second receiver balance not equal&#39;);
+            assert.strictEqual(resBalanceOfReceiver3, 20000, &#39;third receiver balance not equal&#39;);
+            assert.strictEqual(resBalanceOfSender1, 100000, &#39;channel balance changed&#39;);
+            assert.strictEqual(resBalanceOfSender2, 5000, &#39;sender balance not equal&#39;);
+            &#47;* balance of VaultLogic *&#47;
+            assert.strictEqual(resBalanceOwner, 10000, &#39;vaultLogic balance is not equal&#39;);
+            &#47;* from CapitalHero event *&#47;
+            assert.strictEqual(CapitalHeroEvents[2].channelId, 0, &#39;channel id is not equal&#39;);
+            assert.strictEqual(CapitalHeroEvents[2].sessionId, 1, &#39;session id is not equal&#39;);
+        });
+    });
+});
+</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>

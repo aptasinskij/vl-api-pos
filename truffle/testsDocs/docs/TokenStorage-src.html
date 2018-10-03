@@ -1,0 +1,52 @@
+<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of TokenStorage.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">const assert = require(&#39;chai&#39;).assert;
+const TokenStorage = artifacts.require(&#39;TokenStorage.sol&#39;);
+
+&#47;*\
+* TokenStorage
+\*&#47;
+
+contract(&#39;TokenStorage&#39;, () =&#62; {
+
+    describe(&#39;tests for all methods&#39;, () =&#62; {
+
+        let resSave;
+        let resGet;
+
+        before(async () =&#62; {
+            const instance = await TokenStorage.deployed();
+            &#47;* save *&#47;
+            resSave = await instance.set(1, 150);
+            &#47;* get *&#47;
+            resGet = await instance.get(1);
+            resGet = Number(resGet);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; set(customer, amount) &#60;&#47;h4&#62;
+         # Set tokens on customer balance
+         &#62; Arguments
+         - (address) customer - customer address
+         - (uint256) amount - token amount
+        \*&#47;
+        it(&#39;set&#39;, () =&#62; {
+            &#47;* from set method *&#47;
+            assert.notEqual(resSave.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resSave.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            &#47;* from get method *&#47;
+            assert.strictEqual(resGet, 150, &#39;token amount is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; get(consumer) &#60;&#47;h4&#62;
+         # Get tokens balance of consumer
+         &#62; Arguments
+         - (address) consumer - consumer address
+        \*&#47;
+        it(&#39;get&#39;, () =&#62; {
+            assert.strictEqual(resGet, 150, &#39;token amount is not equal&#39;);
+        });
+    })
+});
+</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>

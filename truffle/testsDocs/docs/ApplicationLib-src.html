@@ -1,0 +1,220 @@
+<!doctype html><html> <head> <meta charset="utf-8"> <title>Source code of ApplicationLib.js</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/docs.css"> </head> <body id="cjs-src"> <!-- Generated with comment.js --> <pre class="prettyprint linenums cjs-pre"><code class="cjs-code">const assert = require(&#39;chai&#39;).assert;
+const ApplicationLib = artifacts.require(&#39;ApplicationLib.sol&#39;);
+const CapitalHero = artifacts.require(&#39;CapitalHero.sol&#39;);
+const ApplicationStorage = artifacts.require(&#39;ApplicationStorage.sol&#39;);
+const Database = artifacts.require(&#39;Database.sol&#39;);
+const {convertToNumber} = require(&#39;..&#47;helpers&#39;);
+
+&#47;*\
+* ApplicationLib
+\*&#47;
+
+contract(&#39;ApplicationLib&#39;, (accounts) =&#62; {
+
+    describe(&#39;tests for &#34;read&#34; methods&#39;, () =&#62; {
+
+        let resGet;
+        let appInstance;
+        let resGetOwner;
+        let resGetUrl;
+        let resGetAddress;
+        let resGetStatus;
+        let resGetName;
+        let resIsRegistered1;
+        let resIsRegistered2;
+
+        before(async () =&#62; {
+            &#47;* get instances *&#47;
+            appInstance = await CapitalHero.deployed();
+            const applicationLibInstance = await ApplicationLib.deployed();
+            const applicationStorageInstance = await ApplicationStorage.deployed();
+            const databaseInstance = await Database.deployed();
+
+            &#47;* isRegistered *&#47;
+            resIsRegistered1 = await applicationLibInstance.isRegistered(databaseInstance.address, appInstance.address);
+            &#47;* save by ApplicationStorage method *&#47;
+            let res = await applicationStorageInstance.save(
+                123,
+                &#39;capitalHero&#39;,
+                accounts[0],
+                &#39;http:&#47;&#47;capital-hero&#39;,
+                appInstance.address,
+                0
+            );
+            &#47;* isRegistered *&#47;
+            resIsRegistered2 = await applicationStorageInstance.isRegistered(appInstance.address);
+            &#47;* get *&#47;
+            resGet = convertToNumber(await applicationLibInstance.get(databaseInstance.address, 123), true);
+            &#47;* getName *&#47;
+            resGetName = await applicationLibInstance.getName(databaseInstance.address, 123);
+            &#47;* getOwner *&#47;
+            resGetOwner = await applicationLibInstance.getOwner(databaseInstance.address, 123);
+            &#47;* setApplicationUrl by ApplicationStorage *&#47;
+            await applicationStorageInstance.setApplicationUrl(123, &#39;http:&#47;&#47;updated-url&#39;);
+            &#47;* getUrl *&#47;
+            resGetUrl = await applicationLibInstance.getUrl(databaseInstance.address, 123);
+            &#47;* setApplicationAddress by ApplicationStorage *&#47;
+            await applicationStorageInstance.setApplicationAddress(123, 13245);
+            &#47;* getAddress *&#47;
+            resGetAddress = Number(await applicationLibInstance.getAddress(databaseInstance.address, 123));
+            &#47;* setApplicationStatus by ApplicationStorage *&#47;
+            await applicationStorageInstance.setApplicationStatus(123, 2);
+            &#47;* getStatus *&#47;
+            resGetStatus = Number(await applicationLibInstance.getStatus(databaseInstance.address, 123));
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; get(self, appId) &#60;&#47;h4&#62;
+         # Get all info of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) appId - application id
+         &#62; Returns
+         - (string) name - application name
+         - (address) owner - application owner
+         - (string) url - application url
+         - (address) appAddr - application address
+         - (uint256) status - application status
+        \*&#47;
+        it(&#39;get&#39;, () =&#62; {
+            assert.strictEqual(resGet[0], &#39;capitalHero&#39;, &#39;application name is not equal&#39;);
+            assert.strictEqual(resGet[1], accounts[0], &#39;application owner is not equal&#39;);
+            assert.strictEqual(resGet[2], &#39;http:&#47;&#47;capital-hero&#39;, &#39;application url is not equal&#39;);
+            assert.strictEqual(resGet[3], appInstance.address, &#39;application address is not equal&#39;);
+            assert.strictEqual(resGet[4], 0, &#39;application status is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; isRegistered(self, _applicationAddress) &#60;&#47;h4&#62;
+         # Get application registration state
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) _applicationAddress - application address
+         &#62; Returns
+         - (bool) isRegistered - application registration state
+        \*&#47;
+        it(&#39;isRegistered&#39;, () =&#62; {
+            assert.strictEqual(resIsRegistered1, false, &#39;application is registered before registration&#39;);
+            assert.strictEqual(resIsRegistered2, true, &#39;application is not registered after registration&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getOwner(self, appId) &#60;&#47;h4&#62;
+         # Get owner of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) appId - application id
+         &#62; Returns
+         - (address) owner - application owner
+        \*&#47;
+        it(&#39;getOwner&#39;, () =&#62; {
+            assert.strictEqual(resGetOwner, accounts[0], &#39;application owner name is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getUrl(self, appId) &#60;&#47;h4&#62;
+         # Get owner of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) appId - application id
+         &#62; Returns
+         - (string) url - application url
+        \*&#47;
+        &#47;*it(&#39;getUrl&#39;, () =&#62; {
+            assert.strictEqual(resGetUrl, &#39;http:&#47;&#47;updated-url&#39;, &#39;application url is not equal&#39;);
+        });*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getAddress(self, appId) &#60;&#47;h4&#62;
+         # Get owner of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) appId - application id
+         &#62; Returns
+         - (address) appAddr - application address
+        \*&#47;
+        it(&#39;getAddress&#39;, () =&#62; {
+            assert.strictEqual(resGetAddress, 13245, &#39;application url is not equal&#39;);
+        });
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getStatus(self, appId) &#60;&#47;h4&#62;
+         # Get owner of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) appId - application id
+         &#62; Returns
+         - (uint256) status - application status
+        \*&#47;
+        &#47;*it(&#39;getStatus&#39;, () =&#62; {
+            assert.strictEqual(resGetStatus, 2, &#39;application status is not equal&#39;);
+        });*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; getName(self, appId) &#60;&#47;h4&#62;
+         # Get owner of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) appId - application id
+         &#62; Returns
+         - (string) name - application name
+        \*&#47;
+        it(&#39;getName&#39;, () =&#62; {
+            assert.strictEqual(resGetName, &#39;capitalHero&#39;, &#39;application name is not equal&#39;);
+        });
+
+        &#47;* methods below are not tested, only description provided *&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; save(self, appId, name, owner, url, appAddr, status) &#60;&#47;h4&#62;
+         # Save new application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) appId - application id
+         - (string) name - application name
+         - (address) owner - application owner
+         - (string) url - application url
+         - (address) appAddr - application address
+         - (uint256) status - application status
+        \*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; setUrl(self, appId, url) &#60;&#47;h4&#62;
+         # Set url of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) appId - application id
+         - (string) url - application url
+        \*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; setAddress(self, appId, appAddr) &#60;&#47;h4&#62;
+         # Set address of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) appId - application id
+         - (address) appAddr - application address
+        \*&#47;
+
+        &#47;*\
+         # &#60;hr&#62;
+         # &#60;h4&#62; setStatus(self, appId, status) &#60;&#47;h4&#62;
+         # Set status of application
+         &#62; Arguments
+         - (address) self - self database address
+         - (uint256) appId - application id
+         - (uint256) status - application status
+        \*&#47;
+    })
+});
+</code></pre> <script src="js/prettify.js"></script> <script src="js/src.js"></script> </body></html>
