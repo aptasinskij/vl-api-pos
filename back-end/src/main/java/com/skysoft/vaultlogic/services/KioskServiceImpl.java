@@ -32,7 +32,7 @@ public class KioskServiceImpl implements KioskService {
     @Override
     @Transactional
     //fixme: USE KioskClient implementation to retrieve current session deviceInfo and custom mapper to map from DeviceInfo to Kiosk
-    public Kiosk forSession(String xToken) {
+    public Kiosk resolveKioskForSession(String xToken) {
         RequestEntity<Void> request = RequestEntity.post(deviceInfoURI()).header("X-Token", xToken).build();
         DeviceInfo deviceInfo = restTemplate.exchange(request, DeviceInfo.class).getBody();
         return kioskRepository.findByShortId(deviceInfo.shortId).orElse(kioskRepository.save(fromDeviceInfoResponse(deviceInfo)));

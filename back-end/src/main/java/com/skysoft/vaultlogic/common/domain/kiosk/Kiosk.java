@@ -1,8 +1,10 @@
 package com.skysoft.vaultlogic.common.domain.kiosk;
 
+import com.skysoft.vaultlogic.common.domain.kiosk.events.KioskCreated;
 import lombok.Getter;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 
@@ -15,7 +17,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Getter
 @Immutable
-public class Kiosk {
+public class Kiosk extends AbstractAggregateRoot<Kiosk> {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -33,24 +35,28 @@ public class Kiosk {
     private String name;
 
     @Column(nullable = false)
-    private String timeZone;
+    private String timezone;
 
     public Kiosk() {
     }
 
-    private Kiosk(String shortId, String address, String name, String timeZone) {
+    private Kiosk(String shortId, String address, String name, String timezone) {
         this.shortId = shortId;
         this.address = address;
         this.name = name;
-        this.timeZone = timeZone;
+        this.timezone = timezone;
     }
 
-    public static Kiosk kiosk(String shortId, String address, String name, String timeZone) {
+    public Kiosk publishCreated() {
+        return andEvent(KioskCreated.of(shortId, address, name, timezone));
+    }
+
+    public static Kiosk kiosk(String shortId, String address, String name, String timezone) {
         requireNonNull(shortId, "short id can not be null");
         requireNonNull(address, "address can not be null");
         requireNonNull(name, "name can not be null");
-        requireNonNull(timeZone, "time zone can not be null");
-        return new Kiosk(shortId, address, name, timeZone);
+        requireNonNull(timezone, "time zone can not be null");
+        return new Kiosk(shortId, address, name, timezone);
     }
 
     @Override

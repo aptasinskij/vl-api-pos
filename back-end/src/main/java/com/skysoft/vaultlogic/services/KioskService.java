@@ -4,6 +4,6 @@ import com.skysoft.vaultlogic.common.domain.kiosk.Kiosk;
 
 public interface KioskService {
 
-    Kiosk forSession(String xToken);
+    Kiosk resolveKioskForSession(String xToken);
 
 }

@@ -58,8 +58,8 @@ public class CloudQuorumConfiguration {
     }
 
     @Bean
-    public IApplicationManager applicationServiceApi(Quorum quorum, ClientTransactionManager clientTransactionManager) {
-        return IApplicationManager.load(APPLICATION_MANAGER, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
+    public ApplicationManager applicationServiceApi(Quorum quorum, ClientTransactionManager clientTransactionManager) {
+        return ApplicationManager.load(APPLICATION_MANAGER, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
     }
 
     @Bean
@@ -73,8 +73,8 @@ public class CloudQuorumConfiguration {
     }
 
     @Bean
-    public ISessionManager iSessionManager(Quorum quorum, ClientTransactionManager clientTransactionManager) {
-        return ISessionManager.load(SESSION_MANAGER, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
+    public SessionManager iSessionManager(Quorum quorum, ClientTransactionManager clientTransactionManager) {
+        return SessionManager.load(SESSION_MANAGER, quorum, clientTransactionManager, BigInteger.ZERO, GAS_LIMIT);
     }
 
     @Bean

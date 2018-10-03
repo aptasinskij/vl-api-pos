@@ -27,16 +27,16 @@ public class GanacheConfiguration {
 
     private static final String NETWORK_ID  = "5777";
 
-    private static final String APPLICATION_MANAGER = "0x1d09293ce251a746693828fb51a324502422b61e";
-    private static final String APPLICATION_STORAGE = "0x096317c5181cc5892b079367cd7f1a3f2fecc36c";
+    private static final String APPLICATION_MANAGER = "0x32ca3b3e56c53104cc19930a5bc736fd5e7ccc21";
+    private static final String APPLICATION_STORAGE = "0x953922b019922da51ead8a6731508b4202c71f35";
 
-    private static final String SESSION_MANAGER = "0x0ad328ffe4e36f8aa533898dbd93e9c07e5e5670";
-    private static final String SESSION_STORAGE = "0xaefe33efa6248c1ee3494fefdd3a744ecaf1c59b";
-    private static final String SESSION_ORACLE = "0xd6dc964864c7f01d2d3f45684942b530a612e713";
+    private static final String SESSION_MANAGER = "0x37b6b88fd2bdffc6250b80daa4a039e2ea182b3c";
+    private static final String SESSION_STORAGE = "0x156001f80a5ea6b235a8353ec01079cddc51e1a3";
+    private static final String SESSION_ORACLE = "0x156001f80a5ea6b235a8353ec01079cddc51e1a3";
 
-    private static final String CAPITAL_HERO_ADDRESS = "0x52071509e918601e7ef456252a1c94a63a8408b3";
+    private static final String CAPITAL_HERO_ADDRESS = "0x4132daa580ff0ab0f2f7b79de6e6a7b10a1226ba";
 
-    private static final String CASH_ACCEPTOR_ORACLE_ADDRESS = "0x34653005dc3f732e97f24101c842d634a1bb3c0c";
+    private static final String CASH_ACCEPTOR_ORACLE_ADDRESS = "0x27b5a83b18445b7dfdb7ab91fc2adedbf6f372e2";
 
     @Bean
     public ScheduledExecutorService scheduledExecutorService() {
@@ -55,44 +55,56 @@ public class GanacheConfiguration {
 
     @Bean
     @Autowired
-    public IApplicationManager applicationServiceApi(Web3j web3j, Credentials credentials) {
-        return IApplicationManager.load(APPLICATION_MANAGER, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    public ApplicationManager applicationServiceApi(Web3j web3j, Credentials credentials) {
+        return ApplicationManager.load(ApplicationManager.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
     @Bean
     @Autowired
     public ApplicationStorage applicationStorage(Web3j web3j, Credentials credentials) {
-        return ApplicationStorage.load(APPLICATION_STORAGE, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+        return ApplicationStorage.load(ApplicationStorage.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
     @Bean
     @Autowired
     public SessionStorage sessionStorage(Web3j web3j, Credentials credentials) {
-        return SessionStorage.load(SESSION_STORAGE, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+        return SessionStorage.load(SessionStorage.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
     @Bean
     @Autowired
-    public ISessionManager sessionServiceApi(Web3j web3j, Credentials credentials) {
-        return ISessionManager.load(SESSION_MANAGER, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    public SessionManager sessionServiceApi(Web3j web3j, Credentials credentials) {
+        return SessionManager.load(SessionManager.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
     @Bean
     @Autowired
     public CashInOracle cashAcceptorOracle(Web3j web3j, Credentials credentials) {
-        return CashInOracle.load(CASH_ACCEPTOR_ORACLE_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+        return CashInOracle.load(CashInOracle.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
     @Bean
     @Autowired
     public SessionOracle sessionOracle(Web3j web3j, Credentials credentials) {
-        return SessionOracle.load(SESSION_ORACLE, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+        return SessionOracle.load(SessionOracle.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
     @Bean
     @Autowired
     public CapitalHero capitalHero(Web3j web3j, Credentials credentials) {
-        return CapitalHero.load(CAPITAL_HERO_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+        return CapitalHero.load(CapitalHero.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    }
+
+    @Bean
+    @Autowired
+    public KioskStorage kioskStorage(Web3j web3j, Credentials credentials) {
+        return KioskStorage.load(KioskStorage.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
+    }
+
+    @Bean
+    @Autowired
+    public ParameterStorage parameterStorage(Web3j web3j, Credentials credentials) {
+        return ParameterStorage.load(ParameterStorage.getPreviouslyDeployedAddress(NETWORK_ID), web3j, credentials, GAS_PRICE, GAS_LIMIT);
     }
 
 }

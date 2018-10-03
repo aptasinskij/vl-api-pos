@@ -29,7 +29,7 @@ public class JpaSessionService implements SessionService {
     @Transactional
     public Session createApplicationSession(BigInteger applicationId, String xToken) {
         Application app = applicationRepo.getOne(applicationId);
-        Kiosk kiosk = kioskService.forSession(xToken);
+        Kiosk kiosk = kioskService.resolveKioskForSession(xToken);
         Session session = Session.session(app, kiosk, xToken).markCreating();
         return sessionRepo.save(session);
     }

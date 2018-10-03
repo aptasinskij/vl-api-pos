@@ -1,12 +1,11 @@
 package com.skysoft.vaultlogic.listeners;
 
-import com.skysoft.vaultlogic.contracts.ISessionManager;
 import com.skysoft.vaultlogic.common.domain.session.Session;
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
 import com.skysoft.vaultlogic.common.domain.session.events.SessionActivated;
 import com.skysoft.vaultlogic.common.domain.session.events.SessionCloseRequested;
 import com.skysoft.vaultlogic.common.domain.session.events.SessionClosed;
-import com.skysoft.vaultlogic.common.domain.session.projections.SmartContractSession;
+import com.skysoft.vaultlogic.contracts.SessionManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.client.RestClientException;
 
-import java.math.BigInteger;
 import java.net.URI;
 
 @Slf4j
@@ -30,13 +28,13 @@ public class CloudSessionDomainEventsListener {
     private static final String X_NONCE_HEADER = "X-Nonce";
     private static final String X_TOKEN_HEADER = "X-Token";
 
-    private final ISessionManager ISessionManager;
+    private final SessionManager sessionManager;
     private final SessionRepository sessionRepository;
     private final OAuth2RestTemplate oAuth2RestTemplate;
 
     @Autowired
-    public CloudSessionDomainEventsListener(ISessionManager ISessionManager, SessionRepository sessionRepository, OAuth2RestTemplate oAuth2RestTemplate) {
-        this.ISessionManager = ISessionManager;
+    public CloudSessionDomainEventsListener(SessionManager sessionManager, SessionRepository sessionRepository, OAuth2RestTemplate oAuth2RestTemplate) {
+        this.sessionManager = sessionManager;
         this.sessionRepository = sessionRepository;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
     }
@@ -45,8 +43,8 @@ public class CloudSessionDomainEventsListener {
     @TransactionalEventListener
     public void handleSessionActivated(SessionActivated event) {
         log.info("[x]---> Session activated with XToken: {}", event.xToken);
-        SmartContractSession session = sessionRepository.findSmartContractSessionByXToken(event.xToken);
-        ISessionManager.createSession(BigInteger.valueOf(session.getId()), BigInteger.valueOf(session.getApplicationId()), session.getXToken())
+        Session session = sessionRepository.findByXTokenJoinApplicationAndKiosk(event.getXToken()).orElseThrow(RuntimeException::new);
+        sessionManager.createSession(session.getId(), session.getApplication().getId(), session.getXToken(), session.getKiosk().getShortId())
                 .sendAsync()
                 .thenAccept(tx -> log.info("[x] Saved to Smart Contract. TX: {}", tx.getTransactionHash()))
                 .exceptionally(throwable -> {

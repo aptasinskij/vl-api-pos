@@ -1,9 +1,9 @@
 package com.skysoft.vaultlogic.services;
 
-import com.skysoft.vaultlogic.contracts.IApplicationManager;
 import com.skysoft.vaultlogic.common.domain.application.projections.SmartContractApplication;
+import com.skysoft.vaultlogic.contracts.ApplicationManager;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
@@ -11,14 +11,10 @@ import java.math.BigInteger;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class BlockchainAppService {
 
-    private final IApplicationManager appService;
-
-    @Autowired
-    public BlockchainAppService(IApplicationManager appService) {
-        this.appService = appService;
-    }
+    private final ApplicationManager appService;
 
     public void saveApplication(SmartContractApplication app) {
         appService.registerApplication(BigInteger.valueOf(app.getId()), app.getName(), app.getOwnerAddress(), app.getUri(), app.getAddress())
