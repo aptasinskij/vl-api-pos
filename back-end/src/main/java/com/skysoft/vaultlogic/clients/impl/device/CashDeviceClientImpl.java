@@ -22,8 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
-
+import static com.skysoft.vaultlogic.clients.MayaHeaders.X_TOKEN_HEADER;
 
 @Service
 public class CashDeviceClientImpl implements CashDeviceClient {
@@ -106,25 +105,25 @@ public class CashDeviceClientImpl implements CashDeviceClient {
 
     private RequestEntity<Void> buildRequestEntity(String xToken, String url) {
         return RequestEntity.post(URI.create(url))
-                .header(getxTokenHeader(), xToken)
+                .header(X_TOKEN_HEADER, xToken)
                 .build();
     }
 
     private RequestEntity<EnableCashAcceptorRequest> buildEnableCashAcceptorRequestEntity(String xToken, EnableCashAcceptorBody enableCashAcceptor) {
         return RequestEntity.post(URI.create(mayaProperties.getEnableCashAcceptorUrl()))
-                .header(getxTokenHeader(), xToken)
+                .header(X_TOKEN_HEADER, xToken)
                 .body(EnableCashAcceptorRequest.of(enableCashAcceptor));
     }
 
     private RequestEntity<GetDispensableAmountRequest> buildGetDispensableAmountRequestEntity(String xToken, GetDispensableAmountBody getDispensableAmount) {
         return RequestEntity.post(URI.create(mayaProperties.getDispensableAmountUrl()))
-                .header(getxTokenHeader(), xToken)
+                .header(X_TOKEN_HEADER, xToken)
                 .body(GetDispensableAmountRequest.of(getDispensableAmount));
     }
 
     private RequestEntity<DispenseCashRequest> buildDispenseCashRequestEntity(String xToken, DispenseCashBody dispenseCash) {
         return RequestEntity.post(URI.create(mayaProperties.getDispenseCashUrl()))
-                .header(getxTokenHeader(), xToken)
+                .header(X_TOKEN_HEADER, xToken)
                 .body(DispenseCashRequest.of(dispenseCash));
     }
 

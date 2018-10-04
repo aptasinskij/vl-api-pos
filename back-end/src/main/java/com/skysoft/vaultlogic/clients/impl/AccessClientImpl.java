@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
-
+import static com.skysoft.vaultlogic.clients.MayaHeaders.X_TOKEN_HEADER;
 
 @Service
 public class AccessClientImpl implements AccessClient {
@@ -36,7 +35,7 @@ public class AccessClientImpl implements AccessClient {
 
     private RequestEntity<Void> buildAccessTokenRequestEntity(String xToken) {
         return RequestEntity.post(URI.create(mayaProperties.getAccessTokenUrl()))
-                .header(getxTokenHeader(), xToken)
+                .header(X_TOKEN_HEADER, xToken)
                 .build();
     }
 

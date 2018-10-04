@@ -18,8 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
-
+import static com.skysoft.vaultlogic.clients.MayaHeaders.X_TOKEN_HEADER;
 
 @Service
 public class CustomerClientImpl implements CustomerClient {
@@ -59,13 +58,13 @@ public class CustomerClientImpl implements CustomerClient {
 
     private RequestEntity<SetCustomerInSessionRequest> buildSetCustomerInSessionRequestEntity(String xToken, String phoneNumber) {
         return RequestEntity.post(URI.create(mayaProperties.getSetCustomerInSessionUrl()))
-                .header(getxTokenHeader(), xToken)
+                .header(X_TOKEN_HEADER, xToken)
                 .body(SetCustomerInSessionRequest.of(phoneNumber));
     }
 
     private RequestEntity<CustomerInfoRequest> buildGetCustomerInfoRequestEntity(String xToken, CustomerInfoBody customerInfo) {
         return RequestEntity.post(URI.create(mayaProperties.getCustomerInformationUrl()))
-                .header(getxTokenHeader(), xToken)
+                .header(X_TOKEN_HEADER, xToken)
                 .body(CustomerInfoRequest.of(customerInfo));
     }
 

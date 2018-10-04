@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
-
+import static com.skysoft.vaultlogic.clients.MayaHeaders.X_TOKEN_HEADER;
 
 @Service
 public class ScannerDeviceClientImpl implements ScannerDeviceClient {
@@ -44,7 +43,7 @@ public class ScannerDeviceClientImpl implements ScannerDeviceClient {
 
     private RequestEntity<Void> buildRequestEntity(String xToken, String url) {
         return RequestEntity.post(URI.create(url))
-                .header(getxTokenHeader(), xToken)
+                .header(X_TOKEN_HEADER, xToken)
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package com.skysoft.vaultlogic.clients.impl;
 
+import com.skysoft.vaultlogic.clients.MayaHeaders;
 import com.skysoft.vaultlogic.clients.api.GeneralInfoClient;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 
@@ -20,8 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
-
+import static com.skysoft.vaultlogic.clients.MayaHeaders.X_TOKEN_HEADER;
 
 @Service
 public class GeneralInfoClientImpl implements GeneralInfoClient {
@@ -74,13 +74,13 @@ public class GeneralInfoClientImpl implements GeneralInfoClient {
 
     private RequestEntity<Void> buildRequestEntity(String xToken, String url) {
         return RequestEntity.post(URI.create(url))
-                .header(getxTokenHeader(), xToken)
+                .header(X_TOKEN_HEADER, xToken)
                 .build();
     }
 
     private RequestEntity<GetDeviceInfoRequest> buildGetDeviceInfoRequestEntity(String xToken, String deviceId) {
         return RequestEntity.post(URI.create(mayaProperties.getDeviceUrl()))
-                .header(getxTokenHeader(), xToken)
+                .header(X_TOKEN_HEADER, xToken)
                 .body(GetDeviceInfoRequest.of(deviceId));
     }
 
