@@ -2,7 +2,9 @@ package com.skysoft.vaultlogic.web.maya.clients.impl.device;
 
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import com.skysoft.vaultlogic.web.maya.clients.api.device.DeviceInfoClient;
-import com.skysoft.vaultlogic.web.maya.clients.responce.device.DeviceInfoResponse;
+import com.skysoft.vaultlogic.web.maya.clients.mappers.DeviceInfoMapper;
+import com.skysoft.vaultlogic.web.maya.clients.responces.device.DeviceInfoResponse;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.DeviceInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +20,25 @@ public class DeviceInfoClientImpl implements DeviceInfoClient {
 
     private final MayaProperties mayaProperties;
     private final OAuth2RestTemplate oAuth2RestTemplate;
+    private final DeviceInfoMapper deviceInfoMapper;
 
     @Autowired
     public DeviceInfoClientImpl(MayaProperties mayaProperties,
-                                OAuth2RestTemplate oAuth2RestTemplate) {
+                                OAuth2RestTemplate oAuth2RestTemplate,
+                                DeviceInfoMapper deviceInfoMapper) {
         this.mayaProperties = mayaProperties;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
+        this.deviceInfoMapper = deviceInfoMapper;
     }
 
     @Override
-    public ResponseEntity<DeviceInfoResponse> getDeviceInfo(String xToken) {
-        return oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getDeviceInfoUrl()), DeviceInfoResponse.class);
+    public DeviceInfo getDeviceInfo(String xToken) {
+        try {
+            ResponseEntity<DeviceInfoResponse> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getDeviceInfoUrl()), DeviceInfoResponse.class);
+            return deviceInfoMapper.responseToDeviceInfo(exchange.getBody());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     private RequestEntity<Void> buildRequestEntity(String xToken, String url) {

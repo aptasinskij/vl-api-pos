@@ -1,13 +1,13 @@
 package com.skysoft.vaultlogic.web.maya.clients.api;
 
-import com.skysoft.vaultlogic.web.maya.clients.responce.customer.GetCustomerInformationResponse;
-import com.skysoft.vaultlogic.web.maya.clients.responce.customer.SetCustomerInSessionResponse;
-import org.springframework.http.ResponseEntity;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.customer.CustomerSetInSessionInfo;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.customer.CustomerInfo;
+import com.skysoft.vaultlogic.web.maya.clients.requestModels.customer.CustomerInfoBody;
 
 public interface CustomerClient {
 
-    ResponseEntity<SetCustomerInSessionResponse> setCustomerInSession(String xToken);
+    CustomerSetInSessionInfo setCustomerInSession(String xToken, String phoneNumber);
 
-    ResponseEntity<GetCustomerInformationResponse> getCustomerInformation(String xToken);
+    CustomerInfo getCustomerInformation(String xToken, CustomerInfoBody customerInfo);
 
 }

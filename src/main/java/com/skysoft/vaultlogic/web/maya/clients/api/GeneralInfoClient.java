@@ -1,18 +1,15 @@
 package com.skysoft.vaultlogic.web.maya.clients.api;
 
-import com.skysoft.vaultlogic.web.maya.MayaException;
-import com.skysoft.vaultlogic.web.maya.clients.responce.BaseResponse;
-import com.skysoft.vaultlogic.web.maya.clients.responce.generalInfo.GetAllLocationsAndDevicesResponse;
-import org.springframework.http.ResponseEntity;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.DeviceInfo;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.general.AllLocationsAndDevicesInfo;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.general.DevicesInfo;
 
 public interface GeneralInfoClient {
 
-    ResponseEntity<GetAllLocationsAndDevicesResponse> getLocationAndDevices(String xToken) throws MayaException;
+    AllLocationsAndDevicesInfo getLocationAndDevices(String xToken);
 
-    // TODO: 01.10.18 finished response
-    ResponseEntity<BaseResponse> getDevice(String xToken);
+    DeviceInfo getGeneralDeviceInfo(String xToken, String deviceId);
 
-    // TODO: 01.10.18 finished response
-    ResponseEntity<BaseResponse> getDevices(String xToken);
+    DevicesInfo getGeneralDevicesInfo(String xToken);
 
 }

@@ -2,8 +2,10 @@ package com.skysoft.vaultlogic.web.maya.clients.impl;
 
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import com.skysoft.vaultlogic.web.maya.clients.api.ApplicationClient;
-import com.skysoft.vaultlogic.web.maya.clients.responce.BaseResponse;
-import com.skysoft.vaultlogic.web.controller.cloud.KeepAliveRequest;
+import com.skysoft.vaultlogic.web.maya.clients.mappers.BaseInfoMapper;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.BaseInfo;
+import com.skysoft.vaultlogic.web.maya.clients.requests.KeepAliveRequest;
+import com.skysoft.vaultlogic.web.maya.clients.responces.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -19,32 +21,55 @@ public class ApplicationClientImpl implements ApplicationClient {
 
     private final MayaProperties mayaProperties;
     private final OAuth2RestTemplate oAuth2RestTemplate;
+    private final BaseInfoMapper baseInfoMapper;
 
     @Autowired
     public ApplicationClientImpl(MayaProperties mayaProperties,
-                                 OAuth2RestTemplate oAuth2RestTemplate) {
+                                 OAuth2RestTemplate oAuth2RestTemplate,
+                                 BaseInfoMapper baseInfoMapper) {
         this.mayaProperties = mayaProperties;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
+        this.baseInfoMapper = baseInfoMapper;
     }
 
     @Override
-    public ResponseEntity<BaseResponse> launchApplication(String xToken) {
-        return oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getLaunchApplicationUrl()), BaseResponse.class);
+    public BaseInfo launchApplication(String xToken) {
+        try {
+            ResponseEntity<BaseResponse> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getLaunchApplicationUrl()), BaseResponse.class);
+            return baseInfoMapper.responseToBaseInfo(exchange.getBody());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
-    public ResponseEntity<BaseResponse> keepAlive(String xToken, String keepAliveToken) {
-        return oAuth2RestTemplate.exchange(buildKeepAliveRequestEntity(xToken, keepAliveToken), BaseResponse.class);
+    public BaseInfo keepAlive(String xToken, String keepAliveToken) {
+        try {
+            ResponseEntity<BaseResponse> exchange = oAuth2RestTemplate.exchange(buildKeepAliveRequestEntity(xToken, keepAliveToken), BaseResponse.class);
+            return baseInfoMapper.responseToBaseInfo(exchange.getBody());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
-    public ResponseEntity<BaseResponse> clientActivity(String xToken) {
-        return oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getClientActivityUrl()), BaseResponse.class);
+    public BaseInfo clientActivity(String xToken) {
+        try {
+            ResponseEntity<BaseResponse> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getClientActivityUrl()), BaseResponse.class);
+            return baseInfoMapper.responseToBaseInfo(exchange.getBody());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
-    public ResponseEntity<BaseResponse> closeApplication(String xToken) {
-        return oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getCloseApplicationUrl()), BaseResponse.class);
+    public BaseInfo closeApplication(String xToken) {
+        try {
+            ResponseEntity<BaseResponse> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getCloseApplicationUrl()), BaseResponse.class);
+            return baseInfoMapper.responseToBaseInfo(exchange.getBody());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     private RequestEntity<Void> buildRequestEntity(String xToken, String url) {

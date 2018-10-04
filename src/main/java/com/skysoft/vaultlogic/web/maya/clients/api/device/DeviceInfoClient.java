@@ -1,10 +1,9 @@
 package com.skysoft.vaultlogic.web.maya.clients.api.device;
 
-import com.skysoft.vaultlogic.web.maya.clients.responce.device.DeviceInfoResponse;
-import org.springframework.http.ResponseEntity;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.DeviceInfo;
 
 public interface DeviceInfoClient {
 
-    ResponseEntity<DeviceInfoResponse> getDeviceInfo(String xToken);
+    DeviceInfo getDeviceInfo(String xToken);
 
 }

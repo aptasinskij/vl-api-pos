@@ -1,16 +1,15 @@
 package com.skysoft.vaultlogic.web.maya.clients.api;
 
-import com.skysoft.vaultlogic.web.maya.clients.responce.BaseResponse;
-import org.springframework.http.ResponseEntity;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.BaseInfo;
 
 public interface ApplicationClient {
 
-    ResponseEntity<BaseResponse> launchApplication(String xToken);
+    BaseInfo launchApplication(String xToken);
 
-    ResponseEntity<BaseResponse> keepAlive(String xToken, String keepAliveToken);
+    BaseInfo keepAlive(String xToken, String keepAliveToken);
 
-    ResponseEntity<BaseResponse> clientActivity(String xToken);
+    BaseInfo clientActivity(String xToken);
 
-    ResponseEntity<BaseResponse> closeApplication(String xToken);
+    BaseInfo closeApplication(String xToken);
 
 }

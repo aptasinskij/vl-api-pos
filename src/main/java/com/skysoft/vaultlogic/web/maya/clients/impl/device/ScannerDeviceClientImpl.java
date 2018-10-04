@@ -2,7 +2,9 @@ package com.skysoft.vaultlogic.web.maya.clients.impl.device;
 
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import com.skysoft.vaultlogic.web.maya.clients.api.device.ScannerDeviceClient;
-import com.skysoft.vaultlogic.web.maya.clients.responce.device.scanner.GetScannerStatusResponse;
+import com.skysoft.vaultlogic.web.maya.clients.mappers.device.ScannerDeviceMapper;
+import com.skysoft.vaultlogic.web.maya.clients.responces.device.scanner.ScannerStatusResponse;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.scanner.ScannerStatusInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +20,25 @@ public class ScannerDeviceClientImpl implements ScannerDeviceClient {
 
     private final MayaProperties mayaProperties;
     private final OAuth2RestTemplate oAuth2RestTemplate;
+    private final ScannerDeviceMapper scannerMapper;
 
     @Autowired
     public ScannerDeviceClientImpl(MayaProperties mayaProperties,
-                                   OAuth2RestTemplate oAuth2RestTemplate) {
+                                   OAuth2RestTemplate oAuth2RestTemplate,
+                                   ScannerDeviceMapper scannerMapper) {
         this.mayaProperties = mayaProperties;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
+        this.scannerMapper = scannerMapper;
     }
 
     @Override
-    public ResponseEntity<GetScannerStatusResponse> getScannerDeviceStatus(String xToken) {
-        return oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getScannerStatusUrl()), GetScannerStatusResponse.class);
+    public ScannerStatusInfo getScannerDeviceStatus(String xToken) {
+        try {
+            ResponseEntity<ScannerStatusResponse> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getScannerStatusUrl()), ScannerStatusResponse.class);
+            return scannerMapper.responseToScannerStatusInfo(exchange.getBody());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     private RequestEntity<Void> buildRequestEntity(String xToken, String url) {

@@ -1,5 +1,8 @@
 package com.skysoft.vaultlogic.common.configuration;
 
+import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
+import com.skysoft.vaultlogic.web.configuration.security.MayaEnhancerRequestInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
@@ -10,16 +13,22 @@ import org.springframework.security.oauth2.client.token.grant.client.ClientCrede
 @Configuration
 public class OAuth2Configuration {
 
-    private static final String CLIENT_ID = "zlJLS7b3AdoCzwj4eQYvQ2K7x3KvDJlBKf3yqTPu";
-    private static final String CLIENT_SECRET = "wVgM1llhuNzTHTCU3NCZ9xpmz3Xmfn9VlRAPNNlu9sBo1A427gVtNLp3e8b3or1kqXwbSjlSXLQtg8nAMqfqBVNcFbV2IfiERI9vlKiAfkaeL6oLklVmkuBgujIstwSJ";
-    private static final String MAYA_AUTHORIZATION_URL = "https://sso.maya.tech/oauth2/token";
+    private final MayaProperties mayaProperties;
+    private final MayaEnhancerRequestInterceptor mayaEnhancerRequestInterceptor;
+
+    @Autowired
+    public OAuth2Configuration(MayaProperties mayaProperties, MayaEnhancerRequestInterceptor mayaEnhancerRequestInterceptor) {
+        this.mayaProperties = mayaProperties;
+        this.mayaEnhancerRequestInterceptor = mayaEnhancerRequestInterceptor;
+    }
 
     @Bean
     public OAuth2RestTemplate oAuth2RestTemplate() {
         ClientCredentialsResourceDetails resourceDetails = new ClientCredentialsResourceDetails();
-        resourceDetails.setAccessTokenUri(MAYA_AUTHORIZATION_URL);
-        resourceDetails.setClientId(CLIENT_ID);
-        resourceDetails.setClientSecret(CLIENT_SECRET);
+        resourceDetails.setAccessTokenUri(mayaProperties.getSso());
+        resourceDetails.setClientId(mayaProperties.getAccess().getClientId());
+        resourceDetails.setClientSecret(mayaProperties.getAccess().getClientSecret());
+//        this.oAuth2RestTemplate().getInterceptors().add(mayaEnhancerRequestInterceptor);
         return new OAuth2RestTemplate(resourceDetails, new DefaultOAuth2ClientContext(new DefaultAccessTokenRequest()));
     }
 

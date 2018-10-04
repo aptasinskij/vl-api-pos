@@ -1,13 +1,13 @@
 package com.skysoft.vaultlogic.web.maya.clients.api.device;
 
-import com.skysoft.vaultlogic.web.maya.clients.responce.BaseResponse;
-import com.skysoft.vaultlogic.web.maya.clients.responce.device.printer.CreateReceiptUrlResponse;
-import org.springframework.http.ResponseEntity;
+import com.skysoft.vaultlogic.web.maya.clients.requestModels.printerDevice.PrintReceiptBody;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.BaseInfo;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.printer.CreateReceiptUrlInfo;
 
 public interface PrinterDeviceClient {
 
-    ResponseEntity<CreateReceiptUrlResponse> createReceipt(String xToken);
+    CreateReceiptUrlInfo createReceipt(String xToken);
 
-    ResponseEntity<BaseResponse> printReceipt(String xToken);
+    BaseInfo printReceipt(String xToken, PrintReceiptBody printReceipt);
 
 }

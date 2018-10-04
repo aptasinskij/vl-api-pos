@@ -1,11 +1,16 @@
 package com.skysoft.vaultlogic.web.maya.clients.impl;
 
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
-import com.skysoft.vaultlogic.web.maya.MayaException;
-import com.skysoft.vaultlogic.web.maya.MayaStatus;
 import com.skysoft.vaultlogic.web.maya.clients.api.GeneralInfoClient;
-import com.skysoft.vaultlogic.web.maya.clients.responce.BaseResponse;
-import com.skysoft.vaultlogic.web.maya.clients.responce.generalInfo.GetAllLocationsAndDevicesResponse;
+import com.skysoft.vaultlogic.web.maya.clients.mappers.DeviceInfoMapper;
+import com.skysoft.vaultlogic.web.maya.clients.mappers.GeneralInfoMapper;
+import com.skysoft.vaultlogic.web.maya.clients.requests.GetDeviceInfoRequest;
+import com.skysoft.vaultlogic.web.maya.clients.responces.device.DeviceInfoResponse;
+import com.skysoft.vaultlogic.web.maya.clients.responces.general.AllLocationsAndDevicesResponse;
+import com.skysoft.vaultlogic.web.maya.clients.responces.general.DevicesInfoResponse;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.DeviceInfo;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.general.AllLocationsAndDevicesInfo;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.general.DevicesInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -13,37 +18,56 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
-import java.util.EmptyStackException;
 
 import static com.skysoft.vaultlogic.web.maya.MayaHeaders.getxTokenHeader;
-import static com.skysoft.vaultlogic.web.maya.MayaStatus.CORRECT_CODE;
 
 @Service
 public class GeneralInfoClientImpl implements GeneralInfoClient {
 
     private final MayaProperties mayaProperties;
     private final OAuth2RestTemplate oAuth2RestTemplate;
+    private final DeviceInfoMapper deviceInfoMapper;
+    private final GeneralInfoMapper generalInfoMapper;
 
     @Autowired
     public GeneralInfoClientImpl(MayaProperties mayaProperties,
-                                 OAuth2RestTemplate oAuth2RestTemplate) {
+                                 OAuth2RestTemplate oAuth2RestTemplate,
+                                 DeviceInfoMapper deviceInfoMapper,
+                                 GeneralInfoMapper generalInfoMapper) {
         this.mayaProperties = mayaProperties;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
+        this.deviceInfoMapper = deviceInfoMapper;
+        this.generalInfoMapper = generalInfoMapper;
     }
 
     @Override
-    public ResponseEntity<GetAllLocationsAndDevicesResponse> getLocationAndDevices(String xToken) throws MayaException {
-        return oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getLocationAndDevicesUrl()), GetAllLocationsAndDevicesResponse.class);
+    public AllLocationsAndDevicesInfo getLocationAndDevices(String xToken) {
+        try {
+            ResponseEntity<AllLocationsAndDevicesResponse> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getLocationAndDevicesUrl()), AllLocationsAndDevicesResponse.class);
+            return generalInfoMapper.responseToAllLocationsAndDevicesInfo(exchange.getBody());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
-    public ResponseEntity<BaseResponse> getDevice(String xToken) {
-        return oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getDeviceUrl()), BaseResponse.class);
+    public DeviceInfo getGeneralDeviceInfo(String xToken, String deviceId) {
+        try {
+            ResponseEntity<DeviceInfoResponse> exchange = oAuth2RestTemplate.exchange(buildGetDeviceInfoRequestEntity(xToken, deviceId), DeviceInfoResponse.class);
+            return deviceInfoMapper.responseToDeviceInfo(exchange.getBody());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
-    public ResponseEntity<BaseResponse> getDevices(String xToken) {
-        return oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getDevicesUrl()), BaseResponse.class);
+    public DevicesInfo getGeneralDevicesInfo(String xToken) {
+        try {
+            ResponseEntity<DevicesInfoResponse> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getDevicesUrl()), DevicesInfoResponse.class);
+            return generalInfoMapper.responseToDevicesInfo(exchange.getBody());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     private RequestEntity<Void> buildRequestEntity(String xToken, String url) {
@@ -52,8 +76,10 @@ public class GeneralInfoClientImpl implements GeneralInfoClient {
                 .build();
     }
 
-    public boolean getStatus(ResponseEntity<GetAllLocationsAndDevicesResponse> exchange) {
-        return MayaStatus.getStatus(exchange.getBody().getErrorCode()).equals(CORRECT_CODE);
+    private RequestEntity<GetDeviceInfoRequest> buildGetDeviceInfoRequestEntity(String xToken, String deviceId) {
+        return RequestEntity.post(URI.create(mayaProperties.getDeviceUrl()))
+                .header(getxTokenHeader(), xToken)
+                .body(GetDeviceInfoRequest.of(deviceId));
     }
 
 }

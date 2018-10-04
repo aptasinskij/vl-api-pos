@@ -1,19 +1,20 @@
 package com.skysoft.vaultlogic.web.maya.clients.api.device;
 
-import com.skysoft.vaultlogic.web.maya.clients.responce.BaseResponse;
-import com.skysoft.vaultlogic.web.maya.clients.responce.device.camera.StartPreviewResponse;
-import com.skysoft.vaultlogic.web.maya.clients.responce.device.camera.TakePhotoResponse;
-import com.skysoft.vaultlogic.web.maya.clients.responce.device.camera.TakeScanResponse;
-import org.springframework.http.ResponseEntity;
+import com.skysoft.vaultlogic.web.maya.clients.requestModels.cameraDevice.StartPreviewBody;
+import com.skysoft.vaultlogic.web.maya.clients.requestModels.cameraDevice.TakeScanBody;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.BaseInfo;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.camera.StartPreviewInfo;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.camera.TakePhotoInfo;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.camera.TakeScanInfo;
 
 public interface CameraDeviceClient {
 
-    ResponseEntity<TakePhotoResponse> takePhoto(String xToken);
+    TakePhotoInfo takePhoto(String xToken);
 
-    ResponseEntity<TakeScanResponse> takeScan(String xToken);
+    TakeScanInfo takeScan(String xToken, TakeScanBody takeScan);
 
-    ResponseEntity<StartPreviewResponse> startPreview(String xToken);
+    StartPreviewInfo startPreview(String xToken, StartPreviewBody startPreview);
 
-    ResponseEntity<BaseResponse> stopPreview(String xToken);
+    BaseInfo stopPreview(String xToken);
 
 }

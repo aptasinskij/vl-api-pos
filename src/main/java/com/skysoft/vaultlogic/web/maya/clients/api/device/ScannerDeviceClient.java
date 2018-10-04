@@ -1,10 +1,9 @@
 package com.skysoft.vaultlogic.web.maya.clients.api.device;
 
-import com.skysoft.vaultlogic.web.maya.clients.responce.device.scanner.GetScannerStatusResponse;
-import org.springframework.http.ResponseEntity;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.scanner.ScannerStatusInfo;
 
 public interface ScannerDeviceClient {
 
-    ResponseEntity<GetScannerStatusResponse> getScannerDeviceStatus(String xToken);
+    ScannerStatusInfo getScannerDeviceStatus(String xToken);
 
 }

@@ -28,6 +28,11 @@ public class MayaProperties {
 
     private GeneralInfo generalInfo;
 
+    //get access token
+    public String getAccessTokenUrl(){
+        return sso;
+    }
+
     //access
     public String getClientIdUrl(){
         return String.format("%s%s", getBaseUrl(), access.getClientId());

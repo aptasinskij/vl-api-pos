@@ -1,21 +1,23 @@
 package com.skysoft.vaultlogic.web.maya.clients.api.device;
 
-import com.skysoft.vaultlogic.web.maya.clients.responce.BaseResponse;
-import com.skysoft.vaultlogic.web.maya.clients.responce.device.cash.*;
-import org.springframework.http.ResponseEntity;
+import com.skysoft.vaultlogic.web.maya.clients.requestModels.cashDevice.DispenseCashBody;
+import com.skysoft.vaultlogic.web.maya.clients.requestModels.cashDevice.EnableCashAcceptorBody;
+import com.skysoft.vaultlogic.web.maya.clients.requestModels.cashDevice.GetDispensableAmountBody;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.BaseInfo;
+import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.cash.*;
 
 public interface CashDeviceClient {
 
-    ResponseEntity<CashDeviceStatusResponse> getCashDeviceStatus(String xToken);
+    CashDeviceStatusInfo getCashDeviceStatus(String xToken);
 
-    ResponseEntity<RecyclerDeviceStatusResponse> getRecyclerDeviceStatus(String xToken);
+    RecyclerDeviceStatusInfo getRecyclerDeviceStatus(String xToken);
 
-    ResponseEntity<EnableCashAcceptorResponse> enableCashAcceptor(String xToken);
+    EnableCashAcceptorInfo enableCashAcceptor(String xToken, EnableCashAcceptorBody enableCashAcceptor);
 
-    ResponseEntity<DisableCashAcceptorResponse> disableCashAcceptor(String xToken);
+    DisableCashAcceptorInfo disableCashAcceptor(String xToken);
 
-    ResponseEntity<GetDispensableAmountResponse> getDispensableAmount(String xToken);
+    GetDispensableAmountInfo getDispensableAmount(String xToken, GetDispensableAmountBody getDispensableAmount);
 
-    ResponseEntity<BaseResponse> dispenseCash(String xToken);
+    BaseInfo dispenseCash(String xToken, DispenseCashBody dispenseCash);
 
 }
