@@ -72,10 +72,10 @@ public class KioskCameraHttpClient implements KioskCamera {
                 .body(takeScan);
     }
 
-    private RequestEntity<StartPreviewRequest> buildStartPreviewRequestEntity(String xToken, PreviewConfig startPreview) {
+    private RequestEntity<PreviewConfig> buildStartPreviewRequestEntity(String xToken, PreviewConfig startPreview) {
         return RequestEntity.post(URI.create(mayaProperties.getStartPreviewUrl()))
                 .header(X_TOKEN_HEADER, xToken)
-                .body(StartPreviewRequest.of(startPreview));
+                .body(startPreview);
     }
 
 }
