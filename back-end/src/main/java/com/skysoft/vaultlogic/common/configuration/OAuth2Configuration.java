@@ -1,8 +1,7 @@
 package com.skysoft.vaultlogic.common.configuration;
 
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
-import com.skysoft.vaultlogic.web.configuration.security.MayaEnhancerRequestInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
@@ -11,16 +10,11 @@ import org.springframework.security.oauth2.client.token.DefaultAccessTokenReques
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 
 @Configuration
+@AllArgsConstructor
 public class OAuth2Configuration {
 
     private final MayaProperties mayaProperties;
     private final MayaEnhancerRequestInterceptor mayaEnhancerRequestInterceptor;
-
-    @Autowired
-    public OAuth2Configuration(MayaProperties mayaProperties, MayaEnhancerRequestInterceptor mayaEnhancerRequestInterceptor) {
-        this.mayaProperties = mayaProperties;
-        this.mayaEnhancerRequestInterceptor = mayaEnhancerRequestInterceptor;
-    }
 
     @Bean
     public OAuth2RestTemplate oAuth2RestTemplate() {

@@ -1,6 +1,6 @@
 package com.skysoft.vaultlogic.clients.requestModels.cameraDevice;
 
-import com.skysoft.vaultlogic.web.maya.clients.Light;
+import com.skysoft.vaultlogic.clients.Light;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

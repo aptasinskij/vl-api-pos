@@ -1,7 +1,9 @@
 package com.skysoft.vaultlogic.clients.impl.device;
 
+import com.skysoft.vaultlogic.clients.api.device.CashDeviceClient;
+import com.skysoft.vaultlogic.clients.responces.device.cash.*;
+import com.skysoft.vaultlogic.clients.responseModels.device.cash.*;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
-import com.skysoft.vaultlogic.web.maya.clients.api.device.CashDeviceClient;
 import com.skysoft.vaultlogic.clients.mappers.BaseInfoMapper;
 import com.skysoft.vaultlogic.clients.mappers.device.CashDeviceMapper;
 import com.skysoft.vaultlogic.clients.requestModels.cashDevice.DispenseCashBody;
@@ -11,9 +13,7 @@ import com.skysoft.vaultlogic.clients.requests.cashDevice.GetDispensableAmountRe
 import com.skysoft.vaultlogic.clients.requestModels.cashDevice.EnableCashAcceptorBody;
 import com.skysoft.vaultlogic.clients.requestModels.cashDevice.GetDispensableAmountBody;
 import com.skysoft.vaultlogic.clients.responces.BaseResponse;
-import com.skysoft.vaultlogic.web.maya.clients.responces.device.cash.*;
 import com.skysoft.vaultlogic.clients.responseModels.BaseInfo;
-import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.cash.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.web.maya.MayaHeaders.getxTokenHeader;
+import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
+
 
 @Service
 public class CashDeviceClientImpl implements CashDeviceClient {

@@ -1,7 +1,7 @@
 package com.skysoft.vaultlogic.clients.impl.device;
 
+import com.skysoft.vaultlogic.clients.api.device.ScannerDeviceClient;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
-import com.skysoft.vaultlogic.web.maya.clients.api.device.ScannerDeviceClient;
 import com.skysoft.vaultlogic.clients.mappers.device.ScannerDeviceMapper;
 import com.skysoft.vaultlogic.clients.responces.device.scanner.ScannerStatusResponse;
 import com.skysoft.vaultlogic.clients.responseModels.device.scanner.ScannerStatusInfo;
@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.web.maya.MayaHeaders.getxTokenHeader;
+import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
+
 
 @Service
 public class ScannerDeviceClientImpl implements ScannerDeviceClient {

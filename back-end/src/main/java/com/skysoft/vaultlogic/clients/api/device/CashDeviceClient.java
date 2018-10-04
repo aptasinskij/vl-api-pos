@@ -4,7 +4,7 @@ import com.skysoft.vaultlogic.clients.requestModels.cashDevice.DispenseCashBody;
 import com.skysoft.vaultlogic.clients.requestModels.cashDevice.EnableCashAcceptorBody;
 import com.skysoft.vaultlogic.clients.requestModels.cashDevice.GetDispensableAmountBody;
 import com.skysoft.vaultlogic.clients.responseModels.BaseInfo;
-import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.cash.*;
+import com.skysoft.vaultlogic.clients.responseModels.device.cash.*;
 
 public interface CashDeviceClient {
 

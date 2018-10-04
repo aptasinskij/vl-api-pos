@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MayaHeaders {
 
-    private static final String X_TOKEN_HEADER = "X-Token";
-    private static final String X_NONCE_HEADER = "X-Nonce";
+    public static final String X_TOKEN_HEADER = "X-Token";
+    public static final String X_NONCE_HEADER = "X-Nonce";
 
     public static String getxTokenHeader() {
         return X_TOKEN_HEADER;

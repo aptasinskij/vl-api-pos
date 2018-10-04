@@ -1,7 +1,7 @@
 package com.skysoft.vaultlogic.clients.impl;
 
+import com.skysoft.vaultlogic.clients.api.AccessClient;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
-import com.skysoft.vaultlogic.web.maya.clients.api.AccessClient;
 import com.skysoft.vaultlogic.clients.responces.BaseResponse;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.web.maya.MayaHeaders.getxTokenHeader;
+import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
+
 
 @Service
 public class AccessClientImpl implements AccessClient {

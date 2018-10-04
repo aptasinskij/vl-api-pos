@@ -1,7 +1,7 @@
 package com.skysoft.vaultlogic.clients.impl;
 
+import com.skysoft.vaultlogic.clients.api.ApplicationClient;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
-import com.skysoft.vaultlogic.web.maya.clients.api.ApplicationClient;
 import com.skysoft.vaultlogic.clients.mappers.BaseInfoMapper;
 import com.skysoft.vaultlogic.clients.responseModels.BaseInfo;
 import com.skysoft.vaultlogic.clients.requests.KeepAliveRequest;
@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.web.maya.MayaHeaders.getxTokenHeader;
+import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
+
 
 @Service
 public class ApplicationClientImpl implements ApplicationClient {

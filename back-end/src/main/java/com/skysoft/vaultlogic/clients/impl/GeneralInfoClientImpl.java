@@ -1,7 +1,8 @@
 package com.skysoft.vaultlogic.clients.impl;
 
+import com.skysoft.vaultlogic.clients.api.GeneralInfoClient;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
-import com.skysoft.vaultlogic.web.maya.clients.api.GeneralInfoClient;
+
 import com.skysoft.vaultlogic.clients.mappers.DeviceInfoMapper;
 import com.skysoft.vaultlogic.clients.mappers.GeneralInfoMapper;
 import com.skysoft.vaultlogic.clients.requests.GetDeviceInfoRequest;
@@ -19,7 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.web.maya.MayaHeaders.getxTokenHeader;
+import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
+
 
 @Service
 public class GeneralInfoClientImpl implements GeneralInfoClient {

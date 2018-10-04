@@ -1,7 +1,7 @@
 package com.skysoft.vaultlogic.clients.responces.general;
 
 import com.skysoft.vaultlogic.clients.responces.BaseResponse;
-import com.skysoft.vaultlogic.web.maya.clients.responces.device.DeviceInfoResponse;
+import com.skysoft.vaultlogic.clients.responces.device.DeviceInfoResponse;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 

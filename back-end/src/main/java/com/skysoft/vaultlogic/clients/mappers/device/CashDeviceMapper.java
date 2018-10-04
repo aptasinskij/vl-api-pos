@@ -1,7 +1,7 @@
 package com.skysoft.vaultlogic.clients.mappers.device;
 
-import com.skysoft.vaultlogic.web.maya.clients.responces.device.cash.*;
-import com.skysoft.vaultlogic.web.maya.clients.responseModels.device.cash.*;
+import com.skysoft.vaultlogic.clients.responces.device.cash.*;
+import com.skysoft.vaultlogic.clients.responseModels.device.cash.*;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

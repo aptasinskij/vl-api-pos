@@ -1,7 +1,7 @@
 package com.skysoft.vaultlogic.clients.impl.device;
 
+import com.skysoft.vaultlogic.clients.api.device.PrinterDeviceClient;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
-import com.skysoft.vaultlogic.web.maya.clients.api.device.PrinterDeviceClient;
 import com.skysoft.vaultlogic.clients.mappers.BaseInfoMapper;
 import com.skysoft.vaultlogic.clients.mappers.device.PrinterDeviceMapper;
 import com.skysoft.vaultlogic.clients.requests.printerDevice.PrintReceiptRequest;
@@ -18,7 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 
-import static com.skysoft.vaultlogic.web.maya.MayaHeaders.getxTokenHeader;
+import static com.skysoft.vaultlogic.clients.MayaHeaders.getxTokenHeader;
+
 
 @Service
 public class PrinterDeviceClientImpl implements PrinterDeviceClient {

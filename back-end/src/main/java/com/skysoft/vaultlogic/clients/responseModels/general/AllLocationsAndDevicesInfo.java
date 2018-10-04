@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 public class AllLocationsAndDevicesInfo extends BaseInfo {
 
     // FIXME: 03.10.18 cannot map response to boby
