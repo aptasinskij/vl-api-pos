@@ -26,9 +26,9 @@ public class MayaEnhancerRequestInterceptor implements ClientHttpRequestIntercep
     @Override
     @SuppressWarnings("unchecked")
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        LinkedHashMap map = objectMapper.readValue(body, LinkedHashMap.class);
-//        map.put(getxNonceHeader(), valueOf(System.currentTimeMillis()));
-        return execution.execute(request, objectMapper.writeValueAsBytes(map));
+        /*LinkedHashMap map = objectMapper.readValue(body, LinkedHashMap.class);
+//        map.put(getxNonceHeader(), valueOf(System.currentTimeMillis()));*/
+        return execution.execute(request, body);
     }
 
 }

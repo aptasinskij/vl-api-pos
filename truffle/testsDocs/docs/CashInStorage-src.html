@@ -143,8 +143,8 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
          - (uint256) fee - fee amount
         \*&#47;
         it(&#39;setVLFee&#39;, () =&#62; {
-            assert.notEqual(resSetVLFee.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
-            assert.isAbove(resSetVLFee.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            assert.notEqual(resSetVLFee.receiptIdUrl.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resSetVLFee.receiptIdUrl.gasUsed, 0, &#39;gasUsed is 0&#39;);
             &#47;* getVLFee *&#47;
             assert.strictEqual(resGetVLFee, 1000, &#39;fee amount is not equal&#39;);
         });
@@ -169,8 +169,8 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
          - (uint256) balance - application balance
         \*&#47;
         it(&#39;setApplicationBalance&#39;, () =&#62; {
-            assert.notEqual(resSetApplicationBalance.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
-            assert.isAbove(resSetApplicationBalance.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            assert.notEqual(resSetApplicationBalance.receiptIdUrl.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resSetApplicationBalance.receiptIdUrl.gasUsed, 0, &#39;gasUsed is 0&#39;);
             &#47;* getVLFee *&#47;
             assert.strictEqual(resGetApplicationBalance, 15000, &#39;application balance is not equal&#39;);
         });
@@ -311,8 +311,8 @@ contract(&#39;CashInStorage&#39;, () =&#62; {
          - (uint256[]) amounts - array of cashInChannel parties fee size
         \*&#47;
         it(&#39;addSplits&#39;, () =&#62; {
-            assert.notEqual(resAddSplits.receipt.transactionHash, &#39;&#39;, &#39;transactionHash is empty&#39;);
-            assert.isAbove(resAddSplits.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            assert.notEqual(resAddSplits.receiptIdUrl.transactionHash, &#39;&#39;, &#39;transactionHash is empty&#39;);
+            assert.isAbove(resAddSplits.receiptIdUrl.gasUsed, 0, &#39;gasUsed is 0&#39;);
         });
 
         &#47;*\

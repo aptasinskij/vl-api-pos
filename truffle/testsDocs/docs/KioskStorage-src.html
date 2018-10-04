@@ -32,8 +32,8 @@ contract(&#39;KioskStorage&#39;, () =&#62; {
         \*&#47;
         it(&#39;saveKiosk&#39;, () =&#62; {
             &#47;* from saveKiosk method *&#47;
-            assert.notEqual(resSaveKiosk.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
-            assert.isAbove(resSaveKiosk.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            assert.notEqual(resSaveKiosk.receiptIdUrl.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resSaveKiosk.receiptIdUrl.gasUsed, 0, &#39;gasUsed is 0&#39;);
             &#47;* from retrieveKiosk method *&#47;
             assert.strictEqual(resRetrieveKiosk[0], &#39;Kyiv&#39;, &#39;kiosk location address is not equal&#39;);
             assert.strictEqual(resRetrieveKiosk[1], &#39;KyivStar&#39;, &#39;kiosk name is not equal&#39;);
