@@ -35,111 +35,111 @@ public class MayaProperties {
 
     //access
     public String getClientIdUrl(){
-        return String.format("%s%s", getBaseUrl(), access.getClientId());
+        return String.format(URI_FORMAT, getBaseUrl(), access.getClientId());
     }
 
     public String getClientSecretUrl(){
-        return String.format("%s%s", getBaseUrl(), access.getClientSecret());
+        return String.format(URI_FORMAT, getBaseUrl(), access.getClientSecret());
     }
 
     //application
     public String getLaunchApplicationUrl(){
-        return String.format("%s%s", getBaseUrl(), application.getLaunchApplication());
+        return String.format(URI_FORMAT, getBaseUrl(), application.getLaunchApplication());
     }
 
     public String getKeepAliveUrl(){
-        return String.format("%s%s", getBaseUrl(), application.getKeepAlive());
+        return String.format(URI_FORMAT, getBaseUrl(), application.getKeepAlive());
     }
 
     public String getClientActivityUrl(){
-        return String.format("%s%s", getBaseUrl(), application.getClientActivity());
+        return String.format(URI_FORMAT, getBaseUrl(), application.getClientActivity());
     }
 
     public String getCloseApplicationUrl(){
-        return String.format("%s%s", getBaseUrl(), application.getCloseApplication());
+        return String.format(URI_FORMAT, getBaseUrl(), application.getCloseApplication());
     }
 
     //device info
     public String getDeviceInfoUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getInfo());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getInfo());
     }
 
     //cash
     public String getCashDeviceStatusUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getCash().getCashDeviceStatus());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getCashDeviceStatus());
     }
 
     public String getRecyclerDeviceStatusUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getCash().getRecyclerDeviceStatus());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getRecyclerDeviceStatus());
     }
 
     public String getEnableCashAcceptorUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getCash().getEnableCashAcceptor());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getEnableCashAcceptor());
     }
 
     public String getDisableCashAcceptorUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getCash().getDisableCashAcceptor());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getDisableCashAcceptor());
     }
 
     public String getDispensableAmountUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getCash().getDispensableAmount());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getDispensableAmount());
     }
 
     public String getDispenseCashUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getCash().getDispenseCash());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getDispenseCash());
     }
 
     //scanner
     public String getScannerStatusUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getScanner().getStatus());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getScanner().getStatus());
     }
 
     //printer
     public String getCreateReceiptUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getPrinter().getCreateReceipt());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getPrinter().getCreateReceipt());
     }
 
     public String getPrintReceiptUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getPrinter().getPrintReceipt());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getPrinter().getPrintReceipt());
     }
 
     //camera
     public String getTakePhotoUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getCamera().getTakePhoto());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getTakePhoto());
     }
 
     public String getTakeScanUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getCamera().getTakeScan());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getTakeScan());
     }
 
     public String getStartPreviewUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getCamera().getStartPreview());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getStartPreview());
     }
 
     public String getStopPreviewUrl(){
-        return String.format("%s%s", getBaseUrl(), device.getCamera().getStopPreview());
+        return String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getStopPreview());
     }
 
     //customer
     public String getSetCustomerInSessionUrl(){
-        return String.format("%s%s", getBaseUrl(), customer.getSetCustomerInSession());
+        return String.format(URI_FORMAT, getBaseUrl(), customer.getSetCustomerInSession());
     }
 
     public String getCustomerInformationUrl(){
-        return String.format("%s%s", getBaseUrl(), customer.getCustomerInformation());
+        return String.format(URI_FORMAT, getBaseUrl(), customer.getCustomerInformation);
     }
 
     //general info
     public String getLocationAndDevicesUrl(){
-        return String.format("%s%s", getBaseUrl(), generalInfo.getLocationsAndDevices());
+        return String.format(URI_FORMAT, getBaseUrl(), generalInfo.getLocationsAndDevices());
     }
 
     public String getDeviceUrl(){
-        return String.format("%s%s", getBaseUrl(), generalInfo.getDevice());
+        return String.format(URI_FORMAT, getBaseUrl(), generalInfo.getDevice());
     }
 
     public String getDevicesUrl(){
-        return String.format("%s%s", getBaseUrl(), generalInfo.getDevices());
+        return String.format(URI_FORMAT, getBaseUrl(), generalInfo.getDevices());
     }
 
     @Data
@@ -169,7 +169,7 @@ public class MayaProperties {
         private String info;
         private CashDevice cash;
         private Scanner scanner;
-        private ReceiptDevice receipt;
+        private PrinterDevice printer;
         private CameraDevice camera;
 
         public String getCashDeviceStatus(){
