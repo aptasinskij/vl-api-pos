@@ -1,5 +1,6 @@
-package com.skysoft.vaultlogic.clients.api.model;
+package com.skysoft.vaultlogic.clients.api.model.responses;
 
+import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +12,19 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @JsonTest
 @RunWith(SpringRunner.class)
-public class KioskIdTest {
+public class StatusCodeTest {
 
     @Autowired
-    private JacksonTester<KioskId> json;
+    private JacksonTester<StatusCode> json;
 
     @Test
-    public void testSerialization() throws IOException {
-        KioskId kioskId = KioskId.of("kiosk_id");
-        assertThat(json.write(kioskId)).isEqualToJson("kioskId.json");
+    public void testDeserialization() throws IOException {
+        StatusCode statusCode = new StatusCode();
+        statusCode.setErrorCode("code");
+        statusCode.setStatus("status");
+        assertThat(json.write(statusCode)).isEqualToJson("statusCode.json");
     }
 
 }

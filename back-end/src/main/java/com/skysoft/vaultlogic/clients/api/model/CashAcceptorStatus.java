@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class CashAcceptorStatus extends StatusCode {
 
+    // TODO: 05.10.18 add test
     @JsonAlias({"disabled", "enabled"})
     private boolean status;
 

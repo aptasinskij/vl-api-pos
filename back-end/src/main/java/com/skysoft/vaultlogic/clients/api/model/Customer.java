@@ -19,7 +19,7 @@ public class Customer extends StatusCode {
     @JsonProperty("middle_name")
     private String middleName;
 
-    @JsonProperty("lact_name")
+    @JsonProperty("last_name")
     private String lastName;
 
     private String email;
