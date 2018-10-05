@@ -19,11 +19,4 @@ public class CashAcceptorConfig {
     @JsonProperty("acceptance_control")
     private boolean acceptanceControl;
 
-    @Value(staticConstructor = "of")
-    public static class KeepAlive {
-
-        @JsonProperty("keepalive")
-        private final String token;
-
-    }
 }

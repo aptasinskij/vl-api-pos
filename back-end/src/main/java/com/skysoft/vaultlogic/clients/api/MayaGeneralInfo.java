@@ -6,7 +6,7 @@ import com.skysoft.vaultlogic.clients.api.model.KiosksInfo;
 
 public interface MayaGeneralInfo {
 
-    LocationsAndDevices getLocationAndDevices(String xToken);
+    LocationsAndDevices getLocationAndDevices();
 
     KioskDevice getDevice(String deviceId);
 

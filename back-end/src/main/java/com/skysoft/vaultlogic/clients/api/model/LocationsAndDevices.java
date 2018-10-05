@@ -1,7 +1,5 @@
 package com.skysoft.vaultlogic.clients.api.model;
 
-import com.skysoft.vaultlogic.clients.api.model.Location;
-import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

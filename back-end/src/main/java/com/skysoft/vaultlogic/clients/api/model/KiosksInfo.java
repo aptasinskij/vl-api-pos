@@ -1,7 +1,5 @@
 package com.skysoft.vaultlogic.clients.api.model;
 
-import com.skysoft.vaultlogic.clients.api.model.StatusCode;
-import com.skysoft.vaultlogic.clients.api.model.KioskDevice;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
