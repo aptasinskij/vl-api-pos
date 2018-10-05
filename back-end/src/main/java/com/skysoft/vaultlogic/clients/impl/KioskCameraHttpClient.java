@@ -78,4 +78,6 @@ public class KioskCameraHttpClient implements KioskCamera {
                 .body(startPreview);
     }
 
+
+
 }

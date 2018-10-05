@@ -63,9 +63,8 @@ public class KioskCashDevicesHttpClient implements KioskCashDevices {
     @Override
     public DispensableAmount getDispensableAmount(String xToken, DispensableAmount amountToDispense) {
         try {
-            return null;
-           // ResponseEntity<DispensableAmount> exchange = oAuth2RestTemplate.exchange(buildGetDispensableAmountRequestEntity(xToken, amountToDispense), GetDispensableAmountResponse.class);
-//            return  cashMapper.responseToGetDispensableAmountInfo(exchange.getBody());
+            ResponseEntity<DispensableAmount> exchange = oAuth2RestTemplate.exchange(buildGetDispensableAmountRequestEntity(xToken, amountToDispense), DispensableAmount.class);
+            return  exchange.getBody();
         } catch (Exception e) {
             throw e;
         }
@@ -91,6 +90,12 @@ public class KioskCashDevicesHttpClient implements KioskCashDevices {
         return RequestEntity.post(URI.create(mayaProperties.getEnableCashAcceptorUrl()))
                 .header(X_TOKEN_HEADER, xToken)
                 .body(acceptorConfig);
+    }
+
+    private RequestEntity<DispensableAmount> buildGetDispensableAmountRequestEntity(String xToken, DispensableAmount amountToDispense) {
+        return RequestEntity.post(URI.create(mayaProperties.getDispensableAmountUrl()))
+                .header(X_TOKEN_HEADER, xToken)
+                .body(amountToDispense);
     }
 
     private RequestEntity<DispenseCash> buildDispenseCashRequestEntity(String xToken, DispenseCash dispenseCash) {

@@ -24,9 +24,9 @@ public class MayaGeneralInfoHttpClient implements MayaGeneralInfo {
     private final OAuth2RestTemplate oAuth2RestTemplate;
 
     @Override
-    public LocationsAndDevices getLocationAndDevices(String xToken) {
+    public LocationsAndDevices getLocationAndDevices() {
         try {
-            ResponseEntity<LocationsAndDevices> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getLocationAndDevicesUrl()), LocationsAndDevices.class);
+            ResponseEntity<LocationsAndDevices> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(mayaProperties.getLocationAndDevicesUrl()), LocationsAndDevices.class);
             return exchange.getBody();
         } catch (Exception e) {
             throw e;
@@ -35,35 +35,31 @@ public class MayaGeneralInfoHttpClient implements MayaGeneralInfo {
 
     @Override
     public KioskDevice getDevice(String deviceId) {
-//        try {
-//            ResponseEntity<DeviceInfoResponse> exchange = oAuth2RestTemplate.exchange(buildGetDeviceInfoRequestEntity(xToken, deviceId), DeviceInfoResponse.class);
-//            return deviceInfoMapper.responseToDeviceInfo(exchange.getBody());
-//        } catch (Exception e) {
-//            throw e;
-//        }
-        return null;
+        try {
+            ResponseEntity<KioskDevice> exchange = oAuth2RestTemplate.exchange(buildGetDeviceInfoRequestEntity(deviceId), KioskDevice.class);
+            return exchange.getBody();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
     public KiosksInfo getDevices() {
-        return null;
-        /*try {
-            ResponseEntity<DevicesInfoResponse> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(xToken, mayaProperties.getDevicesUrl()), DevicesInfoResponse.class);
-            return generalInfoMapper.responseToDevicesInfo(exchange.getBody());
+        try {
+            ResponseEntity<KiosksInfo> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(mayaProperties.getDevicesUrl()), KiosksInfo.class);
+            return exchange.getBody();
         } catch (Exception e) {
             throw e;
-        }*/
+        }
     }
 
-    private RequestEntity<Void> buildRequestEntity(String xToken, String url) {
+    private RequestEntity<Void> buildRequestEntity(String url) {
         return RequestEntity.post(URI.create(url))
-                .header(X_TOKEN_HEADER, xToken)
                 .build();
     }
 
-    private RequestEntity<KioskId> buildGetDeviceInfoRequestEntity(String xToken, String deviceId) {
+    private RequestEntity<KioskId> buildGetDeviceInfoRequestEntity(String deviceId) {
         return RequestEntity.post(URI.create(mayaProperties.getDeviceUrl()))
-                .header(X_TOKEN_HEADER, xToken)
                 .body(KioskId.of(deviceId));
     }
 

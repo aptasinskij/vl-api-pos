@@ -1,7 +1,7 @@
 package com.skysoft.vaultlogic.clients.impl;
 
 import com.skysoft.vaultlogic.clients.api.KioskApplication;
-import com.skysoft.vaultlogic.clients.api.model.CashAcceptorConfig;
+import com.skysoft.vaultlogic.clients.api.model.KeepAlive;
 import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import lombok.AllArgsConstructor;
@@ -67,10 +67,10 @@ public class KioskApplicationHttpClient implements KioskApplication {
                 .build();
     }
 
-    private RequestEntity<CashAcceptorConfig.KeepAlive> buildKeepAliveRequestEntity(String xToken, String keepAliveToken) {
+    private RequestEntity<KeepAlive> buildKeepAliveRequestEntity(String xToken, String keepAliveToken) {
         return RequestEntity.post(URI.create(mayaProperties.getKeepAliveUrl()))
                 .header(X_TOKEN_HEADER, xToken)
-                .body(CashAcceptorConfig.KeepAlive.of(keepAliveToken));
+                .body(KeepAlive.of(keepAliveToken));
     }
 
 }
