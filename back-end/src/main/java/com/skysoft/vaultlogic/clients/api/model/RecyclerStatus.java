@@ -12,7 +12,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class RecyclerStatus extends StatusCode {
 
-    // TODO: 05.10.18 add test
     private boolean enabled;
 
     private List<Cassette> cassettes = new ArrayList<>();
