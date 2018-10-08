@@ -12,8 +12,6 @@ public interface ApplicationService {
 
     Application findByName(String name);
 
-    SmartContractApplication findSmartContractApplicationByName(String name);
-
     URI getApplicationUri(BigInteger applicationId);
 
 }

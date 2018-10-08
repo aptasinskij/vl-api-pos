@@ -5,6 +5,6 @@ import lombok.Value;
 @Value(staticConstructor = "of")
 public class SessionCreating {
 
-    public String xToken;
+    public final String xToken;
 
 }

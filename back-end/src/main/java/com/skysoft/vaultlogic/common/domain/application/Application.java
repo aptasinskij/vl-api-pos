@@ -1,6 +1,6 @@
 package com.skysoft.vaultlogic.common.domain.application;
 
-import com.skysoft.vaultlogic.common.domain.application.events.AppRegistered;
+import com.skysoft.vaultlogic.common.domain.application.events.ApplicationCreated;
 import com.skysoft.vaultlogic.common.domain.user.User;
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
@@ -61,43 +61,37 @@ public class Application extends AbstractAggregateRoot<Application> {
         return new Application(name, uri, owner, address);
     }
 
-    public Application submitApplication() {
+    public Application publishCreated() {
         this.status = Status.UNCONFIRMED;
-        registerEvent(AppRegistered.of(name));
-        return this;
+        return andEvent(ApplicationCreated.of(name));
     }
 
     public void setAddress(String address) {
         this.address = requireNonNull(address, "Address field can't be null");
     }
 
-    public void setStatus(Status status) {
-        this.status = requireNonNull(status, "Status field can't be null");
-    }
-
     public enum Status {
 
-        UNCONFIRMED(1), CONFIRMED(2), ENABLED(3), DISABLED(4);
+        UNCONFIRMED(BigInteger.ZERO), CONFIRMED(BigInteger.ONE), ENABLED(BigInteger.valueOf(2)), DISABLED(BigInteger.valueOf(3));
 
-        private final int representation;
+        private final BigInteger value;
 
-        Status(int representation) {
-            this.representation = representation;
+        Status(BigInteger value) {
+            this.value = value;
         }
 
-        public int getRepresentation() {
-            return representation;
+        public BigInteger getValue() {
+            return value;
         }
 
-        public static Status from(int value) {
+        public static Status from(BigInteger value) {
             return Stream.of(values()).filter(equalTo(value)).findAny().orElseThrow(RuntimeException::new);
         }
 
-        private static Predicate<Status> equalTo(int value) {
-            return status -> status.getRepresentation() == value;
+        private static Predicate<Status> equalTo(BigInteger value) {
+            return status -> status.getValue().compareTo(value) == 0;
         }
 
     }
 
 }
-

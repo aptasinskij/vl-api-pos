@@ -1,37 +1,41 @@
 package com.skysoft.vaultlogic.listeners;
 
-import com.skysoft.vaultlogic.services.BlockchainAppService;
-import com.skysoft.vaultlogic.common.domain.application.events.AppRegistered;
-import com.skysoft.vaultlogic.services.ApplicationService;
+import com.skysoft.vaultlogic.common.domain.application.Application;
+import com.skysoft.vaultlogic.common.domain.application.ApplicationRepository;
+import com.skysoft.vaultlogic.common.domain.application.events.ApplicationCreated;
+import com.skysoft.vaultlogic.contracts.ApplicationStorage;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
-
-import static org.springframework.transaction.annotation.Propagation.NESTED;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class ApplicationDomainEventsListener {
 
-    private final BlockchainAppService blockchainAppService;
-
-    private final ApplicationService applicationService;
-
-    @Autowired
-    public ApplicationDomainEventsListener(BlockchainAppService blockchainAppService, ApplicationService applicationService) {
-        this.blockchainAppService = blockchainAppService;
-        this.applicationService = applicationService;
-    }
+    private final ApplicationStorage applicationStorage;
+    private final ApplicationRepository applicationRepository;
 
     @Async
     @TransactionalEventListener
-    @Transactional(propagation = NESTED)
-    public void registered(AppRegistered event) {
-        log.info("[x]---> Handling application registered event for app with name: {}", event.name);
-        blockchainAppService.saveApplication(applicationService.findSmartContractApplicationByName(event.name));
+    @Transactional(readOnly = true)
+    public void registered(ApplicationCreated event) {
+        Application application = applicationRepository.findByNameJoinOwner(event.name).orElseThrow(RuntimeException::new);
+        applicationStorage.save(application.getId(), application.getName(), application.getOwner().getAddress(), application.getUri(), application.getAddress(), application.getStatus().getValue())
+                .observable()
+                .subscribe(this::onNext, this::onError);
+    }
+
+    private void onNext(TransactionReceipt transactionReceipt) {
+        log.info("[x] --> Application registered. TX: {}", transactionReceipt.getTransactionHash());
+    }
+
+    private void onError(Throwable throwable) {
+        log.error("[x]---> Error during app registration. {}", throwable.getMessage());
     }
 
 }

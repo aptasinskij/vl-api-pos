@@ -52,6 +52,10 @@ contract CapitalHero is IApplication, RegistryDependent {
         emit SessionClosed(now, sessionId);
     }
 
+    function getKioskInfo(uint256 _sessionId) public view returns (string memory _id, string memory _location, string memory _name, string memory _timezone) {
+        return ASessionController(componentForName(SESSION_CONTROLLER)).getKiosk(_sessionId);
+    }
+
     event QRCodeScanned(uint256 sessionId, string url);
     event QRScanningStopped(uint256 sessionId);
     event ReceiptURLReceived(uint256 sessionId, string id, string url);

@@ -5,7 +5,9 @@ import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel;
 import com.skysoft.vaultlogic.common.domain.kiosk.Kiosk;
 import com.skysoft.vaultlogic.common.domain.session.events.*;
 import lombok.Getter;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
@@ -23,6 +25,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate(value = false)
 public class Session extends AbstractAggregateRoot<Session> {
 
     @Id
@@ -42,7 +46,7 @@ public class Session extends AbstractAggregateRoot<Session> {
     @Column(nullable = false)
     private Status status;
 
-    @OneToMany(mappedBy = "session", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "session")
     private List<CashInChannel> cashInChannels = new ArrayList<>();
 
     @JoinColumn(name = "kiosk_id")

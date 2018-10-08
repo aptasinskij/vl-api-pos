@@ -1,14 +1,16 @@
 package com.skysoft.vaultlogic.observers.oracles.ganache;
 
+import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel;
+import com.skysoft.vaultlogic.common.domain.cashin.CashInRepository;
 import com.skysoft.vaultlogic.contracts.CashInOracle;
 import com.skysoft.vaultlogic.contracts.CashInOracle.CloseCashAcceptorEventResponse;
 import com.skysoft.vaultlogic.observers.api.AbstractContractEventObserver;
 import com.skysoft.vaultlogic.observers.api.EventObservable;
-import com.skysoft.vaultlogic.services.CashInService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.web3j.abi.datatypes.Event;
 
 import java.util.function.Function;
@@ -20,12 +22,12 @@ import static com.skysoft.vaultlogic.contracts.CashInOracle.CLOSECASHACCEPTOR_EV
 @Profile("ganache")
 public class CloseCashAcceptorEventObserver extends AbstractContractEventObserver<CloseCashAcceptorEventResponse, CashInOracle> {
 
-    private final CashInService cashInService;
+    private final CashInRepository cashInRepository;
 
     @Autowired
-    public CloseCashAcceptorEventObserver(CashInOracle cashInOracle, CashInService cashInService) {
+    public CloseCashAcceptorEventObserver(CashInOracle cashInOracle, CashInRepository cashInRepository) {
         super(cashInOracle);
-        this.cashInService = cashInService;
+        this.cashInRepository = cashInRepository;
         subscribe();
     }
 
@@ -45,9 +47,10 @@ public class CloseCashAcceptorEventObserver extends AbstractContractEventObserve
     }
 
     @Override
+    @Transactional
     public void onNext(CloseCashAcceptorEventResponse event) {
-        log.info("[x] CLOSE CASH ACCEPTOR: Channel: {}, XToken: {}", event.channelId, event.sessionId);
-        cashInService.closeCashInChannel(event.channelId, event.sessionId);
+        log.info("[x] CLOSE CASH-IN CHANNEL ID: {}", event.channelId);
+        cashInRepository.findById(event.channelId).map(CashInChannel::markCloseRequested).ifPresent(cashInRepository::save);
     }
 
     @Override

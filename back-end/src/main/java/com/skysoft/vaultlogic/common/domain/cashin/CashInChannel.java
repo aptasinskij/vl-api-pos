@@ -3,6 +3,8 @@ package com.skysoft.vaultlogic.common.domain.cashin;
 import com.skysoft.vaultlogic.common.domain.cashin.events.*;
 import com.skysoft.vaultlogic.common.domain.session.Session;
 import lombok.Getter;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
@@ -19,6 +21,8 @@ import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate(value = false)
 public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
 
     @Id
