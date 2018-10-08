@@ -9,8 +9,6 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,8 +21,21 @@ public class CashAcceptorStatusTest {
     private JacksonTester<CashAcceptorStatus> json;
 
     @Test
-    public void testSerialization() throws IOException {
+    public void testDeserializationDisableCashAcceptorStatus() throws IOException {
+        CashAcceptorStatus cashAcceptorStatus = new CashAcceptorStatus();
+        cashAcceptorStatus.setAcceptorStatus(true);
+        cashAcceptorStatus.setStatus("status");
+        cashAcceptorStatus.setErrorCode("code");
+        assertThat(json.read("disableCashAcceptorStatus.json")).isEqualTo(cashAcceptorStatus);
+    }
 
+    @Test
+    public void testDeserializationEnableCashAcceptorStatus() throws IOException {
+        CashAcceptorStatus cashAcceptorStatus = new CashAcceptorStatus();
+        cashAcceptorStatus.setAcceptorStatus(false);
+        cashAcceptorStatus.setStatus("status");
+        cashAcceptorStatus.setErrorCode("code");
+        assertThat(json.read("enableCashAcceptorStatus.json")).isEqualTo(cashAcceptorStatus);
     }
 
 }

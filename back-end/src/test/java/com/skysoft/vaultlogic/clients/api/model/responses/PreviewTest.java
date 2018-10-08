@@ -27,7 +27,7 @@ public class PreviewTest {
         preview.setHref("preview_href");
         preview.setErrorCode("code");
         preview.setStatus("status");
-        assertThat(json.write(preview)).isEqualToJson("preview.json");
+        assertThat(json.read("preview.json")).isEqualTo(preview);
     }
 
 }

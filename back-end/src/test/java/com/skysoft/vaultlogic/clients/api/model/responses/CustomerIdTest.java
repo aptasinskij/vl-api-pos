@@ -1,7 +1,6 @@
 package com.skysoft.vaultlogic.clients.api.model.responses;
 
 import com.skysoft.vaultlogic.clients.api.model.CustomerId;
-import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class CustomerIdTest {
         customerId.setCustomerId("customer_id");
         customerId.setErrorCode("code");
         customerId.setStatus("status");
-        assertThat(json.write(customerId)).isEqualToJson("customerId.json");
+        assertThat(json.read("customerId.json")).isEqualTo(customerId);
     }
 
 }

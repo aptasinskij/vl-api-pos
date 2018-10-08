@@ -23,7 +23,7 @@ public class KiosksInfoTest {
 
     @Test
     public void testDeserialization() throws IOException {
-        KiosksInfo kioskInfo = new KiosksInfo();
+        KiosksInfo kiosksInfo = new KiosksInfo();
 
         KioskDevice kioskDevice1 = new KioskDevice();
         kioskDevice1.setDeviceId("device_id_1");
@@ -67,10 +67,11 @@ public class KiosksInfoTest {
         kioskDevice2.setDescription("description_2");
         kioskDevice2.setTimezone("timezone_2");
 
-        kioskInfo.setDevices(Arrays.asList(kioskDevice1, kioskDevice2));
-        kioskInfo.setErrorCode("code");
-        kioskInfo.setStatus("status");
-        assertThat(json.write(kioskInfo)).isEqualToJson("kiosksInfo.json");
+        kiosksInfo.setDevices(Arrays.asList(kioskDevice1, kioskDevice2));
+        kiosksInfo.setErrorCode("code");
+        kiosksInfo.setStatus("status");
+
+        assertThat(json.read("kiosksInfo.json")).isEqualTo(kiosksInfo);
     }
 
 }

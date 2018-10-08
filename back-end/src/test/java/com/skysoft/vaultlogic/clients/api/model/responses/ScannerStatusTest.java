@@ -26,7 +26,7 @@ public class ScannerStatusTest {
         scannerStatus.setQr("scanner_qr");
         scannerStatus.setErrorCode("code");
         scannerStatus.setStatus("status");
-        assertThat(json.write(scannerStatus)).isEqualToJson("scannerStatus.json");
+        assertThat(json.read("scannerStatus.json")).isEqualTo(scannerStatus);
     }
 
 }

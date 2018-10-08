@@ -44,7 +44,7 @@ public class KioskDeviceTest {
         kioskDevice.setTimezone("timezone");
         kioskDevice.setErrorCode("code");
         kioskDevice.setStatus("status");
-        assertThat(json.write(kioskDevice)).isEqualToJson("kioskDevice.json");
+        assertThat(json.read("kioskDevice.json")).isEqualTo(kioskDevice);
     }
 
 }

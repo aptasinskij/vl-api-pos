@@ -26,7 +26,7 @@ public class ReceiptIdUrlTest {
         receiptIdUrl.setUrl("receipt_url");
         receiptIdUrl.setErrorCode("code");
         receiptIdUrl.setStatus("status");
-        assertThat(json.write(receiptIdUrl)).isEqualToJson("receiptIdUrl.json");
+        assertThat(json.read("receiptIdUrl.json")).isEqualTo(receiptIdUrl);
     }
 
 }

@@ -24,7 +24,7 @@ public class StatusCodeTest {
         StatusCode statusCode = new StatusCode();
         statusCode.setErrorCode("code");
         statusCode.setStatus("status");
-        assertThat(json.write(statusCode)).isEqualToJson("statusCode.json");
+        assertThat(json.read("statusCode.json")).isEqualTo(statusCode);
     }
 
 }

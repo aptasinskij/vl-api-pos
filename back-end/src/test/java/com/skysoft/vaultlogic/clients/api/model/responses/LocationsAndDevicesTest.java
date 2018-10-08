@@ -11,8 +11,8 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.Arrays;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
@@ -87,13 +87,17 @@ public class LocationsAndDevicesTest {
         kioskDevice2.setErrorCode("code_2");
         kioskDevice2.setStatus("status_2");
 
-        location.setDevices(Arrays.asList(kioskDevice1, kioskDevice2));
+        location.setDevices(asList(kioskDevice1, kioskDevice2));
 
-        locationsAndDevices.setLocations(Arrays.asList(location));
+        locationsAndDevices.setLocations(asList(location));
         locationsAndDevices.setErrorCode("code");
         locationsAndDevices.setStatus("status");
 
+        //works
         assertThat(json.write(locationsAndDevices)).isEqualToJson("locationsAndDevices.json");
+
+        //doesn't work
+        assertThat(json.read("locationsAndDevices.json")).isSameAs(locationsAndDevices);
     }
 
 }

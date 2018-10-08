@@ -31,7 +31,7 @@ public class CustomerTest {
         customer.setEmail("email");
         customer.setErrorCode("code");
         customer.setStatus("status");
-        assertThat(json.write(customer)).isEqualToJson("customer.json");
+        assertThat(json.read("customer.json")).isEqualTo(customer);
     }
 
 }

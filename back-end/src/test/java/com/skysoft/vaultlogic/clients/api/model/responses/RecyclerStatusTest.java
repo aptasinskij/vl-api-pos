@@ -53,7 +53,7 @@ public class RecyclerStatusTest {
         recyclerStatus.setErrorCode("code");
         recyclerStatus.setStatus("status");
 
-        assertThat(json.write(recyclerStatus)).isEqualToJson("recyclerStatus.json");
+        assertThat(json.read("recyclerStatus.json")).isEqualTo((recyclerStatus));
     }
 
 }

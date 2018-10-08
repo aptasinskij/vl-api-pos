@@ -25,7 +25,7 @@ public class ScanIdTest {
         scanId.setId("scan_id");
         scanId.setErrorCode("code");
         scanId.setStatus("status");
-        assertThat(json.write(scanId)).isEqualToJson("scanId.json");
+        assertThat(json.read("scanId.json")).isEqualTo(scanId);
     }
 
 }

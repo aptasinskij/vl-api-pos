@@ -25,7 +25,7 @@ public class PhotoIdTest {
         photoId.setId("photo_id");
         photoId.setErrorCode("code");
         photoId.setStatus("status");
-        assertThat(json.write(photoId)).isEqualToJson("photoId.json");
+        assertThat(json.read("photoId.json")).isEqualTo(photoId);
     }
 
 }

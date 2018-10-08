@@ -30,7 +30,7 @@ public class CashDevicesStatusTest {
         cashDevicesStatus.setRequestedAmount(BigDecimal.valueOf(50));
         cashDevicesStatus.setErrorCode("code");
         cashDevicesStatus.setStatus("status");
-        assertThat(json.write(cashDevicesStatus)).isEqualToJson("cashDevicesStatus.json");
+        assertThat(json.read("cashDevicesStatus.json")).isEqualTo(cashDevicesStatus);
     }
 
 }
