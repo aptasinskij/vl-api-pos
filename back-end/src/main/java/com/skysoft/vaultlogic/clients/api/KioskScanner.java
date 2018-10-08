@@ -1,9 +1,10 @@
 package com.skysoft.vaultlogic.clients.api;
 
 import com.skysoft.vaultlogic.clients.api.model.ScannerStatus;
+import io.vavr.control.Either;
 
 public interface KioskScanner {
 
-    ScannerStatus getStatus(String xToken);
+    Either<Throwable, ScannerStatus> getStatus(String xToken);
 
 }
