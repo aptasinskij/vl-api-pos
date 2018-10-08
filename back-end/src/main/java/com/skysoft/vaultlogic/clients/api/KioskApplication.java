@@ -8,7 +8,7 @@ public interface KioskApplication {
 
     Either<Throwable, StatusCode> launchApplication(String xToken);
 
-    Either<Throwable, StatusCode> keepAlive(Tuple2<String, String> tokens);
+    Either<Throwable, StatusCode> keepAlive(String xToken, String keepAlive);
 
     Either<Throwable, StatusCode> clientActivity(String xToken);
 
