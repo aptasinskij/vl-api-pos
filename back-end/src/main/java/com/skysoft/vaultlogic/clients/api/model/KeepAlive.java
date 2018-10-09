@@ -1,12 +1,18 @@
 package com.skysoft.vaultlogic.clients.api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
 
-@Value(staticConstructor = "of")
 public class KeepAlive {
 
     @JsonProperty("keepalive")
-    private final String token;
+    public final String token;
+
+    public KeepAlive(String token) {
+        this.token = token;
+    }
+
+    public static KeepAlive of(String token) {
+        return new KeepAlive(token);
+    }
 
 }

@@ -1,10 +1,15 @@
 package com.skysoft.vaultlogic.clients.api.model;
 
-import lombok.Value;
-
-@Value(staticConstructor = "of")
 public class CustomerPhone {
 
-    private final String phone;
+    public final String phone;
+
+    public CustomerPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public static CustomerPhone of(String phone) {
+        return new CustomerPhone(phone);
+    }
 
 }
