@@ -1,44 +1,38 @@
-package com.skysoft.vaultlogic.services;
+package com.skysoft.vaultlogic.services.quorum;
 
+import com.skysoft.vaultlogic.clients.api.KioskApplication;
 import com.skysoft.vaultlogic.common.domain.application.Application;
 import com.skysoft.vaultlogic.common.domain.application.ApplicationRepository;
 import com.skysoft.vaultlogic.common.domain.kiosk.Kiosk;
 import com.skysoft.vaultlogic.common.domain.session.Session;
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
+import com.skysoft.vaultlogic.services.KioskService;
+import com.skysoft.vaultlogic.services.SessionService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.function.Supplier;
 
+@Slf4j
 @Service
+@Profile("quorum")
 @AllArgsConstructor
-public class JpaSessionService implements SessionService {
+public class QuorumSessionService implements SessionService {
 
     private final SessionRepository sessionRepo;
     private final ApplicationRepository applicationRepo;
     private final KioskService kioskService;
-
-    @Override
-    @Transactional
-    public Session createApplicationSession(BigInteger applicationId, String xToken) {
-        Application app = applicationRepo.getOne(applicationId);
-        Kiosk kiosk = kioskService.resolveKioskForSession(xToken).orElseThrow(RuntimeException::new);
-        Session session = Session.session(app, kiosk, xToken).markCreating();
-        return sessionRepo.save(session);
-    }
+    private final KioskApplication kioskApplication;
 
     @Override
     @Transactional
     public void closeSession(BigInteger sessionId) {
         sessionRepo.findById(sessionId).map(Session::markCloseRequested).ifPresent(sessionRepo::save);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String getSessionXToken(BigInteger sessionId) {
-        return sessionRepo.findSessionXTokenById(sessionId).getXToken();
     }
 
     @Override
@@ -50,13 +44,8 @@ public class JpaSessionService implements SessionService {
 
     @Override
     @Transactional
-    public void failedToCreate(Session session) {
-        sessionRepo.save(session.markFailedToCreate());
-    }
-
-    @Override
-    @Transactional
     public Pair<String, BigInteger> createSession(BigInteger applicationId, String xToken) {
+        kioskApplication.launchApplication(xToken).getOrElseThrow((Supplier<RuntimeException>) RuntimeException::new);
         Kiosk kiosk = kioskService.resolveKioskForSession(xToken).orElseThrow(RuntimeException::new);
         Application application = applicationRepo.findById(applicationId).orElseThrow(RuntimeException::new);
         Session session = sessionRepo.save(Session.session(application, kiosk, xToken).markCreating());

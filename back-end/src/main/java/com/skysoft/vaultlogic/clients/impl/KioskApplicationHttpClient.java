@@ -4,6 +4,7 @@ import com.skysoft.vaultlogic.clients.api.KioskApplication;
 import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import io.vavr.control.Either;
+import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,9 @@ public class KioskApplicationHttpClient implements KioskApplication {
     }
 
     @Override
-    public Either<Throwable, StatusCode> launchApplication(String xToken) {
+    public Try<StatusCode> launchApplication(String xToken) {
         return Try(() -> exchange(post(xToken, maya::launchApplicationURI), StatusCode.class))
-                .map(getBody())
-                .toEither();
+                .map(getBody());
     }
 
     @Override
