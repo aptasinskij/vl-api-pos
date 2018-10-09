@@ -28,7 +28,7 @@ public class KioskDomainEventsListener {
     }
 
     private void onNext(TransactionReceipt transactionReceipt) {
-        log.info("[x]---> KioskDevices saved into blockchain. TX HASH: {}", transactionReceipt.getTransactionHash());
+        log.info("[x]---> KioskDevicesClient saved into blockchain. TX HASH: {}", transactionReceipt.getTransactionHash());
     }
 
     private void onError(Throwable throwable) {

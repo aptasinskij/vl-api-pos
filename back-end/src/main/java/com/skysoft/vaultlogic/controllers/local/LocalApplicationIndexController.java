@@ -1,16 +1,14 @@
 package com.skysoft.vaultlogic.controllers.local;
 
-import com.skysoft.vaultlogic.common.domain.session.Session;
-import com.skysoft.vaultlogic.services.ApplicationService;
 import com.skysoft.vaultlogic.services.SessionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.math.BigInteger;
-import java.net.URI;
 
 import static java.lang.String.format;
 
@@ -21,15 +19,13 @@ import static java.lang.String.format;
 @RequestMapping("/index/{appId}")
 public class LocalApplicationIndexController {
 
-    private final ApplicationService applicationService;
     private final SessionService sessionService;
 
     @GetMapping
     public RedirectView getApplicationIndexPage(@PathVariable BigInteger appId, @RequestParam("token") String xToken) {
-        URI appIndexUri = applicationService.getApplicationUri(appId);
-        Session session = sessionService.createApplicationSession(appId, xToken);
-        sessionService.activate(session.getId());
-        return new RedirectView(format("%s?token=%d", appIndexUri.toString(), session.getId()));
+        Pair<String, BigInteger> appUrlSessionId = sessionService.createSession(appId, xToken);
+        sessionService.activate(appUrlSessionId.getSecond());
+        return new RedirectView(format("%s?token=%d", appUrlSessionId.getFirst(), appUrlSessionId.getSecond()));
     }
 
 }

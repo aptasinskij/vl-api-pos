@@ -1,49 +1,60 @@
 package com.skysoft.vaultlogic.services;
 
-import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
+import com.skysoft.vaultlogic.clients.api.KioskDevicesClient;
+import com.skysoft.vaultlogic.clients.api.model.KioskDevice;
 import com.skysoft.vaultlogic.common.domain.kiosk.Kiosk;
 import com.skysoft.vaultlogic.common.domain.kiosk.KioskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.skysoft.vaultlogic.common.domain.kiosk.mapper.KioskMapper;
+import com.skysoft.vaultlogic.contracts.KioskStorage;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.RequestEntity;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import rx.Subscription;
+import rx.functions.Action1;
 
-import java.net.URI;
+import java.util.Optional;
 
+import static io.vavr.API.*;
+import static io.vavr.Patterns.$Failure;
+import static io.vavr.Patterns.$Success;
+
+@Slf4j
 @Service
+@AllArgsConstructor
 @Profile("cloud-quorum")
 public class KioskServiceImpl implements KioskService {
 
-    private static final String URL_FORMAT = "%s%s";
-
-    private final MayaProperties mayaProperties;
-    private final OAuth2RestTemplate restTemplate;
+    private final KioskDevicesClient kioskDevices;
     private final KioskRepository kioskRepository;
+    private final KioskMapper kioskMapper;
+    private final KioskStorage kioskStorage;
 
-    @Autowired
-    public KioskServiceImpl(MayaProperties mayaProperties, OAuth2RestTemplate restTemplate, KioskRepository kioskRepository) {
-        this.mayaProperties = mayaProperties;
-        this.restTemplate = restTemplate;
-        this.kioskRepository = kioskRepository;
-    }
+    private Action1<Throwable> onError = throwable -> log.warn("[x] error save kiosk: {}", throwable.getMessage());
+    private Action1<TransactionReceipt> onNext = tx -> log.info("[x] kiosk saved {}", tx.getTransactionHash());
 
     @Override
     @Transactional
-    //fixme: USE KioskClient implementation to retrieve current session deviceInfo and custom mapper to map from KioskDevice to KioskDevices
-    public Kiosk resolveKioskForSession(String xToken) {
-        RequestEntity<Void> request = RequestEntity.post(deviceInfoURI()).header("X-Token", xToken).build();
-        DeviceInfo deviceInfo = restTemplate.exchange(request, DeviceInfo.class).getBody();
-        return kioskRepository.findByShortId(deviceInfo.shortId).orElse(kioskRepository.save(fromDeviceInfoResponse(deviceInfo)));
+    public Optional<Kiosk> resolveKioskForSession(String xToken) {
+        return Match(kioskDevices.getKioskInfo(xToken)).option(
+                Case($Success($()), this::resolveFromRepository),
+                Case($Failure($()), error -> null)
+        ).toJavaOptional();
     }
 
-    private Kiosk fromDeviceInfoResponse(DeviceInfo deviceInfo) {
-        return Kiosk.kiosk(deviceInfo.shortId, deviceInfo.formattedAddress, deviceInfo.info, deviceInfo.timezone);
+    private Kiosk resolveFromRepository(KioskDevice device) {
+        Kiosk kiosk = kioskMapper.fromKioskDevice(device);
+        return kioskRepository.findByShortId(kiosk.getShortId()).orElseGet(() -> {
+            saveToSmartContract(kiosk);
+            return kioskRepository.save(kiosk);
+        });
     }
 
-    private URI deviceInfoURI() {
-        return URI.create(String.format(URL_FORMAT, mayaProperties.getBaseUrl(), mayaProperties.getDevice().getInfo()));
+    private Subscription saveToSmartContract(Kiosk kiosk) {
+        return kioskStorage.save(kiosk.getShortId(), kiosk.getAddress(), kiosk.getName(), kiosk.getTimezone()).observable()
+                .subscribe(onNext, onError);
     }
 
 }
