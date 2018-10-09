@@ -34,7 +34,7 @@ public class ImMemoryKioskService implements KioskService {
                     Kiosk kiosk = Kiosk.kiosk(KIOSK_SHORT_ID, "Vinnitsa", "Oduvanchik", "UTC");
                     kioskStorage.save(kiosk.getShortId(), kiosk.getAddress(), kiosk.getName(), kiosk.getTimezone())
                             .sendAsync()
-                            .thenAccept(tx -> log.info("[x] New Kiosk saved. Hash: {}", tx.getTransactionHash()))
+                            .thenAccept(tx -> log.info("[x] New KioskDevices saved. Hash: {}", tx.getTransactionHash()))
                             .exceptionally(throwable -> {
                                 log.error("[x] Error when save kiosk: {}", throwable);
                                 return null;

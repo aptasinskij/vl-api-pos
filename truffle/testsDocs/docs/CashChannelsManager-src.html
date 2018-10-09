@@ -152,9 +152,9 @@ contract(&#39;CashChannelsManager&#39;, (accounts) =&#62; {
         \*&#47;
         it(&#39;openCashInChannel&#39;, () =&#62; {
             &#47;* from CashChannelsManager logs *&#47;
-            assert.isAbove(resOpenCashInChannel.receipt.logs.length, 0, &#39;transaction logs are empty&#39;);
-            assert.notEqual(resOpenCashInChannel.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
-            assert.isAbove(resOpenCashInChannel.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            assert.isAbove(resOpenCashInChannel.receiptIdUrl.logs.length, 0, &#39;transaction logs are empty&#39;);
+            assert.notEqual(resOpenCashInChannel.receiptIdUrl.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resOpenCashInChannel.receiptIdUrl.gasUsed, 0, &#39;gasUsed is 0&#39;);
             &#47;* from cashInStorage event *&#47;
             assert.strictEqual(CashInSavedEvents[0].channelId, 0, &#39;channel id is not equal&#39;);
             assert.strictEqual(CashInSavedEvents[0].sessionId, 1, &#39;session id is not equal&#39;);
@@ -177,9 +177,9 @@ contract(&#39;CashChannelsManager&#39;, (accounts) =&#62; {
         \*&#47;
         it(&#39;confirmOpen&#39;, () =&#62; {
             &#47;* from CashChannelsManager logs *&#47;
-            assert.isAbove(resConfirmOpen.receipt.logs.length, 0, &#39;transaction logs are empty&#39;);
-            assert.notEqual(resConfirmOpen.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
-            assert.isAbove(resConfirmOpen.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            assert.isAbove(resConfirmOpen.receiptIdUrl.logs.length, 0, &#39;transaction logs are empty&#39;);
+            assert.notEqual(resConfirmOpen.receiptIdUrl.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resConfirmOpen.receiptIdUrl.gasUsed, 0, &#39;gasUsed is 0&#39;);
             &#47;* from cashInStorage event *&#47;
             assert.strictEqual(CashInStatusUpdatedEvents[0].channelId, 0, &#39;channel id is not equal&#39;);
             assert.strictEqual(CashInStatusUpdatedEvents[0].status, 1, &#39;channel status is not equal&#39;);
@@ -201,9 +201,9 @@ contract(&#39;CashChannelsManager&#39;, (accounts) =&#62; {
         \*&#47;
         it(&#39;updateCashInBalance&#39;, () =&#62; {
             &#47;* from CashChannelsManager logs *&#47;
-            assert.isAbove(resUpdateCashInBalance.receipt.logs.length, 0, &#39;transaction logs are empty&#39;);
-            assert.notEqual(resUpdateCashInBalance.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
-            assert.isAbove(resUpdateCashInBalance.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            assert.isAbove(resUpdateCashInBalance.receiptIdUrl.logs.length, 0, &#39;transaction logs are empty&#39;);
+            assert.notEqual(resUpdateCashInBalance.receiptIdUrl.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resUpdateCashInBalance.receiptIdUrl.gasUsed, 0, &#39;gasUsed is 0&#39;);
             &#47;* from cashInStorage event *&#47;
             assert.strictEqual(CashInBalanceUpdatedEvents[0].channelId, 0, &#39;channel id is not equal&#39;);
             assert.strictEqual(CashInBalanceUpdatedEvents[0].amount, 100000, &#39;channel amount is not equal&#39;);
@@ -250,9 +250,9 @@ contract(&#39;CashChannelsManager&#39;, (accounts) =&#62; {
         \*&#47;
         it(&#39;closeCashInChannel&#39;, () =&#62; {
             &#47;* from CashChannelsManager logs *&#47;
-            assert.isAbove(resCloseCashInChannel.receipt.logs.length, 0, &#39;transaction logs are empty&#39;);
-            assert.notEqual(resCloseCashInChannel.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
-            assert.isAbove(resCloseCashInChannel.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            assert.isAbove(resCloseCashInChannel.receiptIdUrl.logs.length, 0, &#39;transaction logs are empty&#39;);
+            assert.notEqual(resCloseCashInChannel.receiptIdUrl.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resCloseCashInChannel.receiptIdUrl.gasUsed, 0, &#39;gasUsed is 0&#39;);
             &#47;* from cashInStorage event *&#47;
             assert.strictEqual(CashInStatusUpdatedEvents[1].channelId, 0, &#39;channel id is not equal&#39;);
             assert.strictEqual(CashInStatusUpdatedEvents[1].status, 3, &#39;channel status is not equal&#39;);
@@ -282,9 +282,9 @@ contract(&#39;CashChannelsManager&#39;, (accounts) =&#62; {
         \*&#47;
         it(&#39;confirmClose&#39;, () =&#62; {
             &#47;* from CashChannelsManager logs *&#47;
-            assert.isAbove(resConfirmClose.receipt.logs.length, 0, &#39;transaction logs are empty&#39;);
-            assert.notEqual(resConfirmClose.receipt.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
-            assert.isAbove(resConfirmClose.receipt.gasUsed, 0, &#39;gasUsed is 0&#39;);
+            assert.isAbove(resConfirmClose.receiptIdUrl.logs.length, 0, &#39;transaction logs are empty&#39;);
+            assert.notEqual(resConfirmClose.receiptIdUrl.transactionHash, &#39;&#39;, &#39;transaction hash is empty&#39;);
+            assert.isAbove(resConfirmClose.receiptIdUrl.gasUsed, 0, &#39;gasUsed is 0&#39;);
             &#47;* from cashInStorage event *&#47;
             assert.strictEqual(CashInStatusUpdatedEvents[2].channelId, 0, &#39;channel id is not equal&#39;);
             assert.strictEqual(CashInStatusUpdatedEvents[2].status, 4, &#39;channel status is not equal&#39;);
