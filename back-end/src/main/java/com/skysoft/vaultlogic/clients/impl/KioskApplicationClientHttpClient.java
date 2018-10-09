@@ -1,6 +1,6 @@
 package com.skysoft.vaultlogic.clients.impl;
 
-import com.skysoft.vaultlogic.clients.api.KioskApplication;
+import com.skysoft.vaultlogic.clients.api.KioskApplicationClient;
 import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import io.vavr.control.Either;
@@ -19,7 +19,7 @@ import static io.vavr.API.Try;
 
 @Service
 @AllArgsConstructor
-public class KioskApplicationHttpClient implements KioskApplication {
+public class KioskApplicationClientHttpClient implements KioskApplicationClient {
 
     private final MayaProperties maya;
     private final OAuth2RestTemplate rest;

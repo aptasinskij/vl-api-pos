@@ -4,7 +4,7 @@ import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
 
-public interface KioskApplication {
+public interface KioskApplicationClient {
 
     Try<StatusCode> launchApplication(String xToken);
 

@@ -1,6 +1,6 @@
 package com.skysoft.vaultlogic.services.quorum;
 
-import com.skysoft.vaultlogic.clients.api.KioskApplication;
+import com.skysoft.vaultlogic.clients.api.KioskApplicationClient;
 import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import com.skysoft.vaultlogic.common.domain.application.Application;
 import com.skysoft.vaultlogic.common.domain.application.ApplicationRepository;
@@ -29,7 +29,7 @@ public class QuorumSessionService implements SessionService {
     private final SessionRepository sessionRepo;
     private final ApplicationRepository applicationRepo;
     private final KioskService kioskService;
-    private final KioskApplication kioskApplication;
+    private final KioskApplicationClient kioskApplicationClient;
 
     @Override
     @Transactional
@@ -47,7 +47,7 @@ public class QuorumSessionService implements SessionService {
     @Override
     @Transactional
     public Pair<String, BigInteger> createSession(BigInteger applicationId, String xToken) {
-        return kioskApplication.launchApplication(xToken).toJavaOptional()
+        return kioskApplicationClient.launchApplication(xToken).toJavaOptional()
                 .flatMap(resolveKiosk(xToken))
                 .flatMap(appAndKioskPair(applicationId))
                 .map(sessionObject(xToken))
