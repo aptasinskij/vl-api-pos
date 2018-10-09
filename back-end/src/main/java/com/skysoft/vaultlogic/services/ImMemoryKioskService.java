@@ -45,7 +45,7 @@ public class ImMemoryKioskService implements KioskService {
     private void saveToSmartContract() {
         Action1<Throwable> onError = throwable -> log.warn("[x] error save kiosk: {}", throwable.getMessage());
         Action1<TransactionReceipt> onNext = tx -> log.info("[x] kiosk saved {}", tx.getTransactionHash());
-        kioskStorage.save(SHORT_ID, ADDRESS, NAME, TIMEZONE).observable().subscribe(onNext, onError);
+        kioskStorage.save(SHORT_ID, ADDRESS, NAME, TIMEZONE).observable().take(1).subscribe(onNext, onError);
     }
 
 }

@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import rx.Subscription;
 import rx.functions.Action1;
 
 import java.util.Optional;
@@ -52,8 +51,9 @@ public class KioskServiceImpl implements KioskService {
         });
     }
 
-    private Subscription saveToSmartContract(Kiosk kiosk) {
-        return kioskStorage.save(kiosk.getShortId(), kiosk.getAddress(), kiosk.getName(), kiosk.getTimezone()).observable()
+    private void saveToSmartContract(Kiosk kiosk) {
+        kioskStorage.save(kiosk.getShortId(), kiosk.getAddress(), kiosk.getName(), kiosk.getTimezone()).observable()
+                .take(1)
                 .subscribe(onNext, onError);
     }
 
