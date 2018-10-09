@@ -23,7 +23,7 @@ public class DataInitializer {
     private final CapitalHero capitalHero;
 
     private static final String APPLICATION_NAME = "CapitalHero";
-    private static final String APPLICATION_URL = "http://localhost:9090/index";
+    private static final String APPLICATION_URL = "http://192.168.15.200:8888";
 
     @Autowired
     public DataInitializer(UserRepository userRepository, ApplicationService applicationService, CapitalHero capitalHero) {
