@@ -2,65 +2,56 @@ package com.skysoft.vaultlogic.clients.impl;
 
 import com.skysoft.vaultlogic.clients.api.MayaGeneralInfo;
 import com.skysoft.vaultlogic.clients.api.model.KioskDevice;
-import com.skysoft.vaultlogic.clients.api.model.KioskId;
 import com.skysoft.vaultlogic.clients.api.model.KiosksInfo;
 import com.skysoft.vaultlogic.clients.api.model.LocationsAndDevices;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
+import io.vavr.control.Either;
 import lombok.AllArgsConstructor;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
+import java.util.function.Function;
 
-import static com.skysoft.vaultlogic.clients.MayaHeaders.X_TOKEN_HEADER;
+import static com.skysoft.vaultlogic.clients.RequestFactory.post;
+import static com.skysoft.vaultlogic.clients.api.model.KioskId.of;
+import static io.vavr.API.Try;
 
 @Service
 @AllArgsConstructor
 public class MayaGeneralInfoHttpClient implements MayaGeneralInfo {
 
-    private final MayaProperties mayaProperties;
-    private final OAuth2RestTemplate oAuth2RestTemplate;
+    private final MayaProperties maya;
+    private final OAuth2RestTemplate rest;
 
-    @Override
-    public LocationsAndDevices getLocationAndDevices() {
-        try {
-            ResponseEntity<LocationsAndDevices> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(mayaProperties.getLocationAndDevicesUrl()), LocationsAndDevices.class);
-            return exchange.getBody();
-        } catch (Exception e) {
-            throw e;
-        }
+    private <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType) {
+        return rest.exchange(request, responseType);
     }
 
     @Override
-    public KioskDevice getDevice(String deviceId) {
-        try {
-            ResponseEntity<KioskDevice> exchange = oAuth2RestTemplate.exchange(buildGetDeviceInfoRequestEntity(deviceId), KioskDevice.class);
-            return exchange.getBody();
-        } catch (Exception e) {
-            throw e;
-        }
+    public Either<Throwable, LocationsAndDevices> getLocationAndDevices() {
+        return Try(() -> exchange(post(maya::locationsAndDevicesURI), LocationsAndDevices.class))
+                .map(getBody())
+                .toEither();
     }
 
     @Override
-    public KiosksInfo getDevices() {
-        try {
-            ResponseEntity<KiosksInfo> exchange = oAuth2RestTemplate.exchange(buildRequestEntity(mayaProperties.getDevicesUrl()), KiosksInfo.class);
-            return exchange.getBody();
-        } catch (Exception e) {
-            throw e;
-        }
+    public Either<Throwable, KioskDevice> getDevice(String deviceId) {
+        return Try(() -> exchange(post(maya::deviceURI, of(deviceId)), KioskDevice.class))
+                .map(getBody())
+                .toEither();
     }
 
-    private RequestEntity<Void> buildRequestEntity(String url) {
-        return RequestEntity.post(URI.create(url))
-                .build();
+    @Override
+    public Either<Throwable, KiosksInfo> getDevices() {
+        return Try(() -> exchange(post(maya::devicesURI), KiosksInfo.class))
+                .map(getBody())
+                .toEither();
     }
 
-    private RequestEntity<KioskId> buildGetDeviceInfoRequestEntity(String deviceId) {
-        return RequestEntity.post(URI.create(mayaProperties.getDeviceUrl()))
-                .body(KioskId.of(deviceId));
+    private <T> Function<ResponseEntity<T>, T> getBody() {
+        return ResponseEntity::getBody;
     }
 
 }

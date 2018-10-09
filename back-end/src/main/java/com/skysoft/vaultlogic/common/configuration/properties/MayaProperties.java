@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
+import java.net.URI;
 
 @Data
 @Validated
@@ -29,7 +30,7 @@ public class MayaProperties {
     private GeneralInfo generalInfo;
 
     //get access token
-    public String getAccessTokenUrl(){
+    public String getdAccessTokenUrl(){
         return sso;
     }
 
@@ -43,103 +44,103 @@ public class MayaProperties {
     }
 
     //application
-    public String getLaunchApplicationUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), application.getLaunchApplication());
+    public URI launchApplicationURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), application.getLaunchApplication()));
     }
 
-    public String getKeepAliveUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), application.getKeepAlive());
+    public URI keepAliveURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), application.getKeepAlive()));
     }
 
-    public String getClientActivityUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), application.getClientActivity());
+    public URI clientActivityURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), application.getClientActivity()));
     }
 
-    public String getCloseApplicationUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), application.getCloseApplication());
+    public URI closeApplicationURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), application.getCloseApplication()));
     }
 
     //device info
-    public String getDeviceInfoUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getInfo());
+    public URI deviceInfoURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getInfo()));
     }
 
     //cash
-    public String getCashDeviceStatusUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getCashDeviceStatus());
+    public URI cashDeviceStatusURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getCash().getCashDeviceStatus()));
     }
 
-    public String getRecyclerDeviceStatusUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getRecyclerDeviceStatus());
+    public URI recyclerDeviceStatusURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getCash().getRecyclerDeviceStatus()));
     }
 
-    public String getEnableCashAcceptorUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getEnableCashAcceptor());
+    public URI enableCashAcceptorURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getCash().getEnableCashAcceptor()));
     }
 
-    public String getDisableCashAcceptorUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getDisableCashAcceptor());
+    public URI disableCashAcceptorURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getCash().getDisableCashAcceptor()));
     }
 
-    public String getDispensableAmountUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getDispensableAmount());
+    public URI dispensableAmountURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getCash().getDispensableAmount()));
     }
 
-    public String getDispenseCashUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getCash().getDispenseCash());
+    public URI dispenseCashURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getCash().getDispenseCash()));
     }
 
     //scanner
-    public String getScannerStatusUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getScanner().getStatus());
+    public URI scannerStatusURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getScanner().getStatus()));
     }
 
     //printer
-    public String getCreateReceiptUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getPrinter().getCreateReceipt());
+    public URI createReceiptURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getPrinter().getCreateReceipt()));
     }
 
-    public String getPrintReceiptUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getPrinter().getPrintReceipt());
+    public URI printReceiptURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getPrinter().getPrintReceipt()));
     }
 
     //camera
-    public String getTakePhotoUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getTakePhoto());
+    public URI takePhotoURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getTakePhoto()));
     }
 
-    public String getTakeScanUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getTakeScan());
+    public URI takeScanURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getTakeScan()));
     }
 
-    public String getStartPreviewUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getStartPreview());
+    public URI startPreviewURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getStartPreview()));
     }
 
-    public String getStopPreviewUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getStopPreview());
+    public URI stopPreviewURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), device.getCamera().getStopPreview()));
     }
 
     //customer
-    public String getSetCustomerInSessionUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), customer.getSetCustomerInSession());
+    public URI setCustomerInSessionURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), customer.getSetCustomerInSession()));
     }
 
-    public String getCustomerInformationUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), customer.getCustomerInformation);
+    public URI customerInformationURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), customer.getGetCustomerInformation()));
     }
 
     //general info
-    public String getLocationAndDevicesUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), generalInfo.getLocationsAndDevices());
+    public URI locationsAndDevicesURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), generalInfo.getLocationsAndDevices()));
     }
 
-    public String getDeviceUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), generalInfo.getDevice());
+    public URI deviceURI(){
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), generalInfo.getDevice()));
     }
 
-    public String getDevicesUrl(){
-        return String.format(URI_FORMAT, getBaseUrl(), generalInfo.getDevices());
+    public URI devicesURI() {
+        return URI.create(String.format(URI_FORMAT, getBaseUrl(), generalInfo.getDevices()));
     }
 
     @Data
