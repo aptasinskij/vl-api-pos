@@ -12,6 +12,10 @@ import static java.lang.System.currentTimeMillis;
 
 public class RequestFactory {
 
+    private RequestFactory() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+
     public static RequestEntity<Void> post(URI uri) {
         return template(uri).build();
     }
