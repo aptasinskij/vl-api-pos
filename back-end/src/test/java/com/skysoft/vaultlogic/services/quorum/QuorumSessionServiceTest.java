@@ -70,8 +70,19 @@ public class QuorumSessionServiceTest {
     @Autowired
     private QuorumSessionService quorumSessionService;
 
+    private StatusCode statusCode = new StatusCode();
+    private BigInteger applicationId = BigInteger.ONE;
+    private BigInteger sessionId = BigInteger.valueOf(1L);
+    private String xToken = UUID.randomUUID().toString();
+    private Kiosk kiosk = Kiosk.kiosk("shortId", "address", "name", "timezone");
+    private User user = User.newUser("username", "secret", "0x0");
+    private Application application = Application.newApplication("test", "http", user, "0x0");
+    private Session session = Mockito.mock(Session.class);
+
     @Test(expected = RuntimeException.class)
     public void givenFailedToLaunchApplication_whenError_thanCorrect() {
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(kioskService.resolveKioskForSession(xToken)).thenReturn(Optional.of(kiosk));
         when(kioskApplicationClient.launchApplication(anyString())).thenReturn(Try.failure(new RuntimeException()));
         quorumSessionService.createSession(ZERO, "xToken");
         verify(kioskService, never()).resolveKioskForSession(anyString());
@@ -92,34 +103,19 @@ public class QuorumSessionServiceTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void givenKioskApplicationLaunchedKioskResolvedApplicationNotFound_whenError_thanCorrect() {
+    public void givenApplicationNotFound_whenError_thanCorrect() {
         BigInteger applicationId = BigInteger.ONE;
-        String xToken = UUID.randomUUID().toString();
-        StatusCode statusCode = new StatusCode();
-        Kiosk kiosk = Kiosk.kiosk("shortId", "address", "name", "timezone");
-
-        when(kioskApplicationClient.launchApplication(xToken)).thenReturn(Try.success(statusCode));
-        when(kioskService.resolveKioskForSession(xToken)).thenReturn(Optional.of(kiosk));
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.empty());
-
         quorumSessionService.createSession(applicationId, xToken);
-
-        verify(kioskApplicationClient, times(1)).launchApplication(xToken);
-        verify(kioskService, times(1)).resolveKioskForSession(xToken);
         verify(applicationRepository, times(1)).findById(applicationId);
+        verify(kioskApplicationClient, never()).launchApplication(xToken);
+        verify(kioskService, never()).resolveKioskForSession(xToken);
         verify(sessionRepository, never()).save(any(Session.class));
     }
 
     @Test
     public void givenApplicationLaunchedKioskResolved_whenSuccess_thanCorrect() {
-        StatusCode statusCode = new StatusCode();
-        BigInteger applicationId = BigInteger.ONE;
-        BigInteger sessionId = BigInteger.valueOf(1L);
-        String xToken = UUID.randomUUID().toString();
-        Kiosk kiosk = Kiosk.kiosk("shortId", "address", "name", "timezone");
-        User user = User.newUser("username", "secret", "0x0");
-        Application application = Application.newApplication("test", "http", user, "0x0");
-        Session session = Mockito.mock(Session.class);
+
         when(session.getId()).thenReturn(sessionId);
         when(session.getApplication()).thenReturn(application);
         when(kioskApplicationClient.launchApplication(anyString())).thenReturn(Try.success(statusCode));
