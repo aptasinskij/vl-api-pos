@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: default
   datasource:
     url: jdbc:h2:mem:vault
     username: sa
@@ -14,6 +16,16 @@ spring:
       enabled: true
       settings:
         web-allow-others: true
+---
+spring:
+  profiles: local
+blockchain:
+  network:
+    id: 77142
+    url: http://127.0.0.1:22000
+---
+spring:
+  profiles: cloud
 maya:
   base-url: https://api-staging.maya.tech/open
   sso: https://sso.maya.tech/oauth2/token
