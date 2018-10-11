@@ -7,10 +7,12 @@ import com.skysoft.vaultlogic.postback.impl.factories.markers.ApplicationActionH
 import com.skysoft.vaultlogic.postback.impl.protocol.data.ApplicationClose;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@Profile("cloud")
 public class ApplicationClosedActionHandler extends AbstractEventHandler<ApplicationClose, EventEmptyResponse> implements ApplicationActionHandler {
 
     private static final String APPLICATION_CLOSE_HANDLER = "close";
