@@ -639,6 +639,34 @@ library CashOutLib {
         Database(self).setUintValue(CASH_OUT_INDEX, index + 1);
     }
 
+    /// @dev size of both arrays (e.g. parties and fees) stored in separate field 'splitSize'
+    function get(address self, uint256 index) internal view returns (
+        string kioskId,
+        uint256 sessionId,
+        address application,
+        uint256 status,
+        uint256 vaultLogicPercent,
+        uint256 vaultLogicAmount,
+        uint256 withdrawAmount,
+        uint256 reservedAmount,
+        uint256 splitSize
+    ) {
+        kioskId = Database(self).getStringValue(string256(KIOSK_ID, index));
+        sessionId = Database(self).getUintValue(string256(SESSION_ID, index));
+        application = Database(self).getAddressValue(string256(APPLICATION, index));
+        status = Database(self).getUintValue(string256(STATUS, index));
+        vaultLogicPercent = Database(self).getUintValue(string256(VL_FEE, index));
+        vaultLogicAmount = Database(self).getUintValue(string256(VL_AMOUNT, index));
+        withdrawAmount = Database(self).getUintValue(string256(WITHDRAW_AMOUNT, index));
+        reservedAmount = Database(self).getUintValue(string256(RESERVED_AMOUNT, index));
+        splitSize = Database(self).getUintValue(string256(SPLIT_SIZE, index));
+    }
+
+    function retrieveCashOutKiosk(address self, uint256 index) internal view returns (KioskLib.Kiosk memory) {
+        require(cashOutExists(self, index), "Cash out channel not exists");
+        return self.retrieveKiosk(getKioskId(self, index));
+    }
+
     function setKioskId(address self, uint256 index, string kioskId) internal {
         Database(self).setStringValue(string256(KIOSK_ID, index), string(kioskId));
     }
@@ -647,18 +675,16 @@ library CashOutLib {
         return Database(self).getStringValue(string256(KIOSK_ID, index));
     }
 
-    function retrieveCashOutKiosk(address self, uint256 index) internal view returns (KioskLib.Kiosk memory) {
-        require(cashOutExists(self, index), "Cash out channel not exists");
-        return self.retrieveKiosk(getKioskId(self, index));
-    }
-
-
     function setSessionId(address self, uint256 index, uint256 sessionId) internal {
         Database(self).setUintValue(string256(SESSION_ID, index), uint256(sessionId));
     }
 
     function getSessionId(address self, uint256 index) internal view returns (uint256) {
         return Database(self).getUintValue(string256(SESSION_ID, index));
+    }
+
+    function getApplication(address self, uint256 index) internal view returns (address) {
+        return Database(self).getAddressValue(string256(APPLICATION, index));
     }
 
     function setStatus(address self, uint256 index, uint256 status) internal {
@@ -685,11 +711,19 @@ library CashOutLib {
         return Database(self).getUintValue(string256(RESERVED_AMOUNT, index));
     }
 
-    function setVLFee(address self, uint256 index, uint256 vlFee) internal {
+    function setVaultLogicAmount(address self, uint256 index, uint256 vaultLogicAmount) internal {
+        Database(self).setUintValue(string256(VL_AMOUNT, index), uint256(vaultLogicAmount));
+    }
+
+    function getVaultLogicAmount(address self, uint256 index) internal view returns (uint256) {
+        return Database(self).getUintValue(string256(VL_AMOUNT, index));
+    }
+
+    function setVaultLogicPercent(address self, uint256 index, uint256 vaultLogicPercent) internal {
         Database(self).setUintValue(string256(VL_FEE, index), uint256(vlFee));
     }
 
-    function getVLFee(address self, uint256 index) internal view returns (uint256) {
+    function getVaultLogicPercent(address self, uint256 index) internal view returns (uint256) {
         return Database(self).getUintValue(string256(VL_FEE, index));
     }
 
