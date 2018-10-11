@@ -17,8 +17,8 @@ import rx.functions.Action1;
 
 @Slf4j
 @Component
+@Profile("local")
 @AllArgsConstructor
-@Profile({"ganache", "local-quorum"})
 public class LocalCashInDomainEventsListener {
 
     private final CashInOracle cashInOracle;

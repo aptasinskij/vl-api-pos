@@ -19,8 +19,8 @@ import rx.functions.Action1;
 
 @Slf4j
 @Component
+@Profile("local")
 @AllArgsConstructor
-@Profile({"ganache", "local-quorum"})
 public class LocalSessionDomainEventsListener {
 
     private final SessionManager sessionManager;

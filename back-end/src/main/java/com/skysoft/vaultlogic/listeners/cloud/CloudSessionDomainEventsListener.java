@@ -21,7 +21,7 @@ import java.net.URI;
 
 @Slf4j
 @Component
-@Profile("cloud-quorum")
+@Profile("cloud")
 public class CloudSessionDomainEventsListener {
 
     private static final String CLOSE_APPLICATION_URL = String.format("%s%s", "https://api-staging.maya.tech/open", "/application/close");
