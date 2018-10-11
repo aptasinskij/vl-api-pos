@@ -19,7 +19,7 @@ import java.math.BigInteger;
 @Slf4j
 @Service
 @AllArgsConstructor
-@Profile("ganache")
+@Profile({"ganache", "local-quorum"})
 public class GanacheSessionService implements SessionService {
 
     private final SessionRepository sessionRepo;

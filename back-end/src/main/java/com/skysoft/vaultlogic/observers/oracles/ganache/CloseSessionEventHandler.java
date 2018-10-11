@@ -19,7 +19,7 @@ import static com.skysoft.vaultlogic.contracts.SessionOracle.CLOSESESSION_EVENT;
 
 @Slf4j
 @Component
-@Profile("ganache")
+@Profile({"ganache", "local-quorum"})
 public class CloseSessionEventHandler extends AbstractContractEventObserver<CloseSessionEventResponse, SessionOracle> {
 
     private final SessionRepository sessionRepository;
@@ -41,10 +41,10 @@ public class CloseSessionEventHandler extends AbstractContractEventObserver<Clos
         return contract::closeSessionEventObservable;
     }
 
-    @Override
+   /* @Override
     protected Function<SessionOracle, String> getAddress() {
         return contract -> contract.getContractAddress().substring(2);
-    }
+    }*/
 
     @Override
     @Transactional

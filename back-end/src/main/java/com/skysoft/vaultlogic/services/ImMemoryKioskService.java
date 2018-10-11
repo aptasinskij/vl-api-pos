@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@Profile("ganache")
+@Profile({"ganache", "local-quorum"})
 @AllArgsConstructor
 public class ImMemoryKioskService implements KioskService {
 

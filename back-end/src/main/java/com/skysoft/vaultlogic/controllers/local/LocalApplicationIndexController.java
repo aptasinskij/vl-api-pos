@@ -14,9 +14,9 @@ import static java.lang.String.format;
 
 @Slf4j
 @RestController
-@Profile("ganache")
 @AllArgsConstructor
 @RequestMapping("/index/{appId}")
+@Profile({"ganache", "local-quorum"})
 public class LocalApplicationIndexController {
 
     private final SessionService sessionService;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 
 @RestController
-@Profile("ganache")
+@Profile({"ganache", "local-quorum"})
 @RequestMapping("/cash-in/increase-balance")
 public class CashInController {
 
