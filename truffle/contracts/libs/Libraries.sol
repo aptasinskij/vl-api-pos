@@ -525,6 +525,170 @@ library CashInLib {
 
 }
 
+library CashOutLib {
+
+    bytes32 constant CASH_OUT_INDEX = keccak256(abi.encode("CashOutIndex"));
+
+    string constant EXISTS = "cash-out.exists";
+    string constant KIOSK_ID = "cash-out.kiosk.id";
+    string constant SESSION_ID = "cash-out.session.id";
+    string constant APPLICATION = "cash-out.application.address";
+    string constant STATUS = "cash-out.status";
+    string constant VL_FEE = "cash-out.vl-fee";
+    string constant WITHDRAW_AMOUNT = "cash-out.withdraw_amount";
+    string constant RESERVED_AMOUNT = "cash-out.balance.reserved_amount";
+
+    string constant SPLIT_SIZE = "cash_out_split_size";
+    string constant SPLIT_PARTIES = "cash_out_split_parties";
+    string constant SPLIT_FEES = "cash_out_split_fees";
+
+    enum Status {ACTIVE, VALIDATING, NOT_ABLE_TO_CLOSE, ABLE_TO_CLOSE, CLOSE_REQUESTED, CLOSED, CANCELED}
+
+    struct CashOut {
+        uint256 id;
+        uint256 kioskId;
+        uint256 sessionId;
+        address application;
+        Status status;
+        uint256 withdrawAmount;
+        uint256 reservedAmount;
+        uint256 vlFee;
+        uint256 splitSize;
+        address[] parties;
+        uint256[] fees;
+    }
+
+    function getCounter(address self) internal view returns (uint256) {
+        Database(self).getUintValue(CASH_OUT_INDEX);
+    }
+
+    function cashOutExists(address self, uint256 cashOutId) internal view returns (bool) {
+        return Database(self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, cashOutId)));
+    }
+
+    function createCashOut(address self, CashOut memory cashOut) internal returns (uint256 index) {
+        index = Database(self).getUintValue(CASH_OUT_INDEX);
+        Database(self).setUintValue(keccak256(abi.encodePacked(KIOSK_ID, index)), cashOut.kioskId);
+        Database(self).setUintValue(keccak256(abi.encodePacked(SESSION_ID, index)), uint256(cashOut.sessionId));
+        Database(self).setAddressValue(keccak256(abi.encodePacked(APPLICATION, index)), cashOut.application);
+        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, index)), uint256(cashOut.status));
+        Database(self).setUintValue(keccak256(abi.encodePacked(VL_FEE, index)), cashOut.vlFee);
+        Database(self).setUintValue(keccak256(abi.encodePacked(WITHDRAW_AMOUNT, index)), cashOut.withdrawAmount);
+        Database(self).setUintValue(keccak256(abi.encodePacked(RESERVED_AMOUNT, index)), cashOut.reservedAmount);
+        addSplits(self, index, cashOut.parties, cashOut.fees);
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, index)), true);
+        Database(self).setUintValue(CASH_OUT_INDEX, index + 1);
+    }
+
+    function retrieveCashOut(address self, uint256 cashOutId) internal view returns (CashOut memory) {
+        require(cashOutExists(self, cashOutId), "Not exists");
+        CashOut memory cashOut;
+        cashOut.id = cashOutId;
+        cashOut.kioskId = Database(self).getUintValue(keccak256(abi.encodePacked(KIOSK_ID, cashOutId)));
+        cashOut.sessionId = Database(self).getUintValue(keccak256(abi.encodePacked(SESSION_ID, cashOutId)));
+        cashOut.application = Database(self).getAddressValue(keccak256(abi.encodePacked(APPLICATION, cashOutId)));
+        cashOut.status = Status(Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, cashOutId))));
+        cashOut.withdrawAmount = Database(self).getUintValue(keccak256(abi.encodePacked(WITHDRAW_AMOUNT, cashOutId)));
+        cashOut.reservedAmount = Database(self).getUintValue(keccak256(abi.encodePacked(RESERVED_AMOUNT, cashOutId)));
+        cashOut.splitSize = Database(self).getUintValue(keccak256(abi.encodePacked(SPLIT_SIZE, cashOutId)));
+        if (cashOut.splitSize == 0) return cashOut;
+        cashOut.parties = new address[](cashOut.splitSize);
+        cashOut.fees = new uint256[](cashOut.splitSize);
+        for (uint256 i = 0; i < cashOut.splitSize; i++) {
+            cashOut.parties[i] = Database(self).getAddressValue(keccak256(abi.encodePacked(SPLIT_PARTIES, cashOutId, i)));
+            cashOut.fees[i] = Database(self).getUintValue(keccak256(abi.encodePacked(SPLIT_FEES, cashOutId, i)));
+        }
+        return cashOut;
+    }
+
+    function save(address self, uint256 sessionId, address application, uint256 status) internal returns (uint256 index) {
+        index = Database(self).getUintValue(CASH_OUT_INDEX);
+        Database(self).setUintValue(string256(SESSION_ID, index), sessionId);
+        Database(self).setAddressValue(string256(APPLICATION, index), application);
+        Database(self).setUintValue(string256(STATUS, index), status);
+        Database(self).setUintValue(CASH_OUT_INDEX, index + 1);
+    }
+
+    function setKioskId(address self, uint256 index, uint256 kioskId) internal {
+        Database(self).setUintValue(string256(KIOSK_ID, index), uint256(kioskId));
+    }
+
+    function getKioskId(address self, uint256 index) internal view returns (uint256) {
+        return Database(self).getUintValue(string256(KIOSK_ID, index));
+    }
+
+    function setSessionId(address self, uint256 index, uint256 sessionId) internal {
+        Database(self).setUintValue(string256(SESSION_ID, index), uint256(sessionId));
+    }
+
+    function getSessionId(address self, uint256 index) internal view returns (uint256) {
+        return Database(self).getUintValue(string256(SESSION_ID, index));
+    }
+
+    function setStatus(address self, uint256 index, uint256 status) internal {
+        Database(self).setUintValue(string256(STATUS, index), uint256(status));
+    }
+
+    function getStatus(address self, uint256 index) internal view returns (uint256) {
+        return Database(self).getUintValue(string256(STATUS, index));
+    }
+
+    function setWithdrawAmount(address self, uint256 index, uint256 withdrawAmount) internal {
+        Database(self).setUintValue(string256(WITHDRAW_AMOUNT, index), withdrawAmount);
+    }
+
+    function getWithdrawAmount(address self, uint256 index) internal view returns (uint256) {
+        return Database(self).getUintValue(string256(WITHDRAW_AMOUNT, index));
+    }
+
+    function setReservedAmount(address self, uint256 index, uint256 reservedAmount) internal {
+        Database(self).setUintValue(string256(RESERVED_AMOUNT, index), reservedAmount);
+    }
+
+    function getReservedAmount(address self, uint256 index) internal view returns (uint256) {
+        return Database(self).getUintValue(string256(RESERVED_AMOUNT, index));
+    }
+
+    function setVLFee(address self, uint256 index, uint256 vlFee) internal {
+        Database(self).setUintValue(string256(VL_FEE, index), uint256(vlFee));
+    }
+
+    function getVLFee(address self, uint256 index) internal view returns (uint256) {
+        return Database(self).getUintValue(string256(VL_FEE, index));
+    }
+
+    function addSplits(address self, uint256 index, address[] receivers, uint256[] amounts) internal {
+        for (uint256 i = 0; i < receivers.length; i++) {
+            addSplit(self, index, receivers[i], amounts[i]);
+        }
+    }
+
+    function addSplit(address self, uint256 index, address receiver, uint256 amount) internal {
+        uint256 splitSize = Database(self).getUintValue(string256(SPLIT_SIZE, index));
+        Database(self).setAddressValue(string256x2(SPLIT_PARTIES, index, splitSize), receiver);
+        Database(self).setUintValue(string256x2(SPLIT_FEES, index, splitSize), amount);
+        Database(self).setUintValue(string256(SPLIT_SIZE, index), splitSize + 1);
+    }
+
+    function getSplitSize(address self, uint256 index) internal view returns (uint256) {
+        return Database(self).getUintValue(string256(SPLIT_SIZE, index));
+    }
+
+    function getSplit(address self, uint256 index, uint256 subIndex) internal view returns (address party, uint256 fee) {
+        party = Database(self).getAddressValue(string256x2(SPLIT_PARTIES, index, subIndex));
+        fee = Database(self).getUintValue(string256x2(SPLIT_FEES, index, subIndex));
+    }
+
+    function string256(string field, uint256 index) private pure returns (bytes32) {
+        return keccak256(abi.encodePacked(field, index));
+    }
+
+    function string256x2(string field, uint256 index, uint256 counter) private pure returns (bytes32) {
+        return keccak256(abi.encodePacked(field, index, counter));
+    }
+
+}
+
 library ParameterLib {
 
     string constant VAULT_LOGIC_FEE_PERCENT = "vault_logic_fee_percent";
