@@ -7,6 +7,7 @@ import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import io.vavr.control.Either;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -17,8 +18,8 @@ import java.util.function.Function;
 import static com.skysoft.vaultlogic.clients.RequestFactory.post;
 import static io.vavr.API.Try;
 
-
 @Service
+@Profile("cloud")
 @AllArgsConstructor
 public class KioskPrinterHttpClient implements KioskPrinter {
 

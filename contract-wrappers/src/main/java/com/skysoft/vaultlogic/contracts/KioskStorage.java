@@ -55,7 +55,7 @@ public class KioskStorage extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("77142", "0x43f74d0398dced22ed821b30fc1e417d0546e006");
+        _addresses.put("77142", "0x96095a293d0df67f0ae557b828ac912319cc49b0");
     }
 
     protected KioskStorage(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {

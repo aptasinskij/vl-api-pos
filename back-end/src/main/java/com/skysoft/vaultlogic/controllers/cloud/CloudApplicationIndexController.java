@@ -14,8 +14,8 @@ import static java.lang.String.format;
 
 @Slf4j
 @RestController
+@Profile("cloud")
 @AllArgsConstructor
-@Profile("cloud-quorum")
 @RequestMapping("/index/{appId}")
 public class CloudApplicationIndexController {
 

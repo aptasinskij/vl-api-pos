@@ -20,7 +20,7 @@ import static java.lang.System.currentTimeMillis;
 
 @Slf4j
 @RestController
-@Profile("cloud-quorum")
+@Profile("cloud")
 @RequestMapping("/keep-alive")
 public class KeepAliveController {
 

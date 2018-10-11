@@ -1,12 +1,12 @@
 package com.skysoft.vaultlogic.listeners.cloud;
 
-import com.skysoft.vaultlogic.common.protocol.request.EnableCashAcceptorRequest;
-import com.skysoft.vaultlogic.contracts.CashInOracle;
 import com.skysoft.vaultlogic.common.domain.cashin.CashInChannel;
 import com.skysoft.vaultlogic.common.domain.cashin.CashInRepository;
 import com.skysoft.vaultlogic.common.domain.cashin.events.*;
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
 import com.skysoft.vaultlogic.common.domain.session.projections.SessionXToken;
+import com.skysoft.vaultlogic.common.protocol.request.EnableCashAcceptorRequest;
+import com.skysoft.vaultlogic.contracts.CashInOracle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -25,7 +25,7 @@ import static java.net.URI.create;
 
 @Slf4j
 @Component
-@Profile("cloud-quorum")
+@Profile("cloud")
 public class CloudCashInDomainEventsListener {
 
     private static final String ENABLE_CASH_ACCEPTOR_URL = String.format("%s%s", "https://api-staging.maya.tech/open", "/device/cash/enable");

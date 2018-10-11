@@ -1,5 +1,6 @@
 package com.skysoft.vaultlogic;
 
+import com.skysoft.vaultlogic.common.configuration.properties.BlockchainNetwork;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @EnableAsync
-@EnableConfigurationProperties(MayaProperties.class)
+@EnableConfigurationProperties({MayaProperties.class, BlockchainNetwork.class})
 @SpringBootApplication(exclude = {OAuth2AutoConfiguration.class, SecurityAutoConfiguration.class})
 public class VaultLogicApiApplication {
 

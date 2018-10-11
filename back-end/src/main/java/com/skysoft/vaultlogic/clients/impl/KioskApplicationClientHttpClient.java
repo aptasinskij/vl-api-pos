@@ -6,6 +6,7 @@ import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -18,6 +19,7 @@ import static com.skysoft.vaultlogic.clients.api.model.KeepAlive.of;
 import static io.vavr.API.Try;
 
 @Service
+@Profile("cloud")
 @AllArgsConstructor
 public class KioskApplicationClientHttpClient implements KioskApplicationClient {
 

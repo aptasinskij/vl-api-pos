@@ -5,9 +5,11 @@ import com.skysoft.vaultlogic.postback.api.factory.HandlerFactory;
 import com.skysoft.vaultlogic.postback.impl.factories.markers.DeviceTypeRouter;
 import com.skysoft.vaultlogic.postback.impl.factories.markers.EventTypeRouter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("cloud")
 public class DeviceEventRouter extends AbstractEventRouter<DeviceTypeRouter> implements EventTypeRouter {
 
     private static final String DEVICE_EVENT_ROUTER = "device";
