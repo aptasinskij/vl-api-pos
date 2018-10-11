@@ -82,7 +82,7 @@ public class SessionStorage extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("5777", "0x5afa70f5e68539894e756ed30c52c544f35b0ed1");
+        _addresses.put("77142", "0x40ef13cdf0958c64ed4694842cd09092a46768e5");
     }
 
     protected SessionStorage(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {

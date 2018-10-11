@@ -51,7 +51,7 @@ public class SessionOracle extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("5777", "0x9f472b2a2d7641bc34d0b62991b2b1207e88283e");
+        _addresses.put("77142", "0x030bfc1f8e4a60782058cc834f444bb455d7e258");
     }
 
     protected SessionOracle(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
