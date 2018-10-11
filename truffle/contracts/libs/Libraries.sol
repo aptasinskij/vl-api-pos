@@ -720,7 +720,7 @@ library CashOutLib {
     }
 
     function setVaultLogicPercent(address self, uint256 index, uint256 vaultLogicPercent) internal {
-        Database(self).setUintValue(string256(VL_FEE, index), uint256(vlFee));
+        Database(self).setUintValue(string256(VL_FEE, index), uint256(vaultLogicPercent));
     }
 
     function getVaultLogicPercent(address self, uint256 index) internal view returns (uint256) {
