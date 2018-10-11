@@ -1,4 +1,4 @@
-package com.skysoft.vaultlogic.common.configuration;
+package com.skysoft.vaultlogic.common.configuration.quorum;
 
 import com.skysoft.vaultlogic.contracts.*;
 import org.springframework.context.annotation.Bean;

@@ -11,6 +11,13 @@ module.exports = {
             network_id: "*",
             gasPrice: 0,
             gas: 4500000
+        },
+        quorum_local: {
+            host: "127.0.0.1",
+            port: 22000,
+            network_id: "*",
+            gasPrice: 0,
+            gas: 45000000
         }
     }
 };

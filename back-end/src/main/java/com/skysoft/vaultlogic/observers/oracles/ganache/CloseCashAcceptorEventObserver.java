@@ -13,13 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.web3j.abi.datatypes.Event;
 
-import java.util.function.Function;
-
 import static com.skysoft.vaultlogic.contracts.CashInOracle.CLOSECASHACCEPTOR_EVENT;
 
 @Slf4j
 @Component
-@Profile("ganache")
+@Profile({"ganache", "local-quorum"})
 public class CloseCashAcceptorEventObserver extends AbstractContractEventObserver<CloseCashAcceptorEventResponse, CashInOracle> {
 
     private final CashInRepository cashInRepository;
@@ -41,11 +39,11 @@ public class CloseCashAcceptorEventObserver extends AbstractContractEventObserve
         return contract::closeCashAcceptorEventObservable;
     }
 
-    @Override
+    /*@Override
     protected Function<CashInOracle, String> getAddress() {
         return contract -> contract.getContractAddress().substring(2);
     }
-
+*/
     @Override
     @Transactional
     public void onNext(CloseCashAcceptorEventResponse event) {

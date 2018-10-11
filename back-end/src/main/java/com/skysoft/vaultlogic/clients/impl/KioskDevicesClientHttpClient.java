@@ -1,11 +1,10 @@
 package com.skysoft.vaultlogic.clients.impl;
 
-import com.skysoft.vaultlogic.clients.api.KioskDevices;
+import com.skysoft.vaultlogic.clients.api.KioskDevicesClient;
 import com.skysoft.vaultlogic.clients.api.model.KioskDevice;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
-import io.vavr.control.Either;
+import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
@@ -15,20 +14,15 @@ import static io.vavr.API.Try;
 
 @Service
 @AllArgsConstructor
-public class DeviceInfoHttpClient implements KioskDevices {
+public class KioskDevicesClientHttpClient implements KioskDevicesClient {
 
     private final MayaProperties maya;
     private final OAuth2RestTemplate rest;
 
-    private <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType) {
-        return rest.exchange(request, responseType);
-    }
-
     @Override
-    public Either<Throwable, KioskDevice> getKioskInfo(String xToken) {
-        return Try(() -> exchange(post(xToken, maya::deviceInfoURI), KioskDevice.class))
-                .map(ResponseEntity::getBody)
-                .toEither();
+    public Try<KioskDevice> getKioskInfo(String xToken) {
+        return Try(() -> rest.exchange(post(xToken, maya::deviceInfoURI), KioskDevice.class))
+                .map(ResponseEntity::getBody);
     }
 
 }

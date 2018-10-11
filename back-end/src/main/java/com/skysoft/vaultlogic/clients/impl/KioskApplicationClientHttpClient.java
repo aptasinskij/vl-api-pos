@@ -1,9 +1,10 @@
 package com.skysoft.vaultlogic.clients.impl;
 
-import com.skysoft.vaultlogic.clients.api.KioskApplication;
+import com.skysoft.vaultlogic.clients.api.KioskApplicationClient;
 import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import io.vavr.control.Either;
+import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import static io.vavr.API.Try;
 
 @Service
 @AllArgsConstructor
-public class KioskApplicationHttpClient implements KioskApplication {
+public class KioskApplicationClientHttpClient implements KioskApplicationClient {
 
     private final MayaProperties maya;
     private final OAuth2RestTemplate rest;
@@ -28,10 +29,9 @@ public class KioskApplicationHttpClient implements KioskApplication {
     }
 
     @Override
-    public Either<Throwable, StatusCode> launchApplication(String xToken) {
+    public Try<StatusCode> launchApplication(String xToken) {
         return Try(() -> exchange(post(xToken, maya::launchApplicationURI), StatusCode.class))
-                .map(getBody())
-                .toEither();
+                .map(getBody());
     }
 
     @Override
