@@ -63,7 +63,7 @@ public class CashInOracle extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("77142", "0xecec80ebd17e2dfa2f28f8ae5d72c66dc3bbcf9f");
+        _addresses.put("77142", "0x9b6a0fb3f64177572d10bab61e2519fbad6b8d88");
     }
 
     protected CashInOracle(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {

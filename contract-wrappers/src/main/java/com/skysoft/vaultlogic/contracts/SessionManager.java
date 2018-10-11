@@ -48,7 +48,7 @@ public class SessionManager extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("77142", "0x7f44612bbf042bfb729d6b59e5ec4d1523f69021");
+        _addresses.put("77142", "0x323297182758249878a21e81526c93dc1eb16b1c");
     }
 
     protected SessionManager(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {

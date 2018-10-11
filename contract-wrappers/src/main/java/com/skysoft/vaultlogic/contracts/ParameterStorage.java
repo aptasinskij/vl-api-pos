@@ -40,7 +40,7 @@ public class ParameterStorage extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("77142", "0x8c0710691de0df36bc19503659e74fbdf884207e");
+        _addresses.put("77142", "0xa75516c526d4403619e543ae3ad7adb334255b3a");
     }
 
     protected ParameterStorage(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {

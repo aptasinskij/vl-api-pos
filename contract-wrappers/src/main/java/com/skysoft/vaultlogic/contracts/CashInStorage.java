@@ -98,7 +98,7 @@ public class CashInStorage extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("77142", "0x99ccafc19df1489a6f79136a8f8c8403f2dd3b25");
+        _addresses.put("77142", "0xc70b1cef831565008930e219dc92f40bb4254a6e");
     }
 
     protected CashInStorage(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {

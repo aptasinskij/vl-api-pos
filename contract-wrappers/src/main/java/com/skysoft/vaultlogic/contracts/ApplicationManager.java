@@ -39,7 +39,7 @@ public class ApplicationManager extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("77142", "0x9a9a213c6dab49ecd872a6dbe99319522f3b478e");
+        _addresses.put("77142", "0x9867e207cf9822e574efc22008fa621e4326c333");
     }
 
     protected ApplicationManager(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
