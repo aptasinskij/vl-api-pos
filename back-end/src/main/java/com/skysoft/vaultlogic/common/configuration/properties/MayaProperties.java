@@ -3,6 +3,7 @@ package com.skysoft.vaultlogic.common.configuration.properties;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Profile;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
@@ -10,6 +11,7 @@ import java.net.URI;
 
 @Data
 @Validated
+@Profile("cloud")
 @ConfigurationProperties("maya")
 public class MayaProperties {
 

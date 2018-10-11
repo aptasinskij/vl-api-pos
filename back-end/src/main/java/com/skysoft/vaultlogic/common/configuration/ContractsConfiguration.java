@@ -1,10 +1,9 @@
-package com.skysoft.vaultlogic.common.configuration.localquorum;
+package com.skysoft.vaultlogic.common.configuration;
 
-import com.skysoft.vaultlogic.common.configuration.BlockchainNetwork;
+import com.skysoft.vaultlogic.common.configuration.properties.BlockchainNetwork;
 import com.skysoft.vaultlogic.contracts.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.http.HttpService;
@@ -21,8 +20,7 @@ import static java.math.BigInteger.ZERO;
 import static org.web3j.tx.gas.DefaultGasProvider.GAS_LIMIT;
 
 @Configuration
-@Profile("local-quorum")
-public class LocalQuorumConfiguration {
+public class ContractsConfiguration {
 
     @Bean
     public Web3jService web3jService(BlockchainNetwork network) {
