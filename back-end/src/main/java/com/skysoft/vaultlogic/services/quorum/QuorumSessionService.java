@@ -1,7 +1,6 @@
 package com.skysoft.vaultlogic.services.quorum;
 
 import com.skysoft.vaultlogic.clients.api.KioskApplicationClient;
-import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import com.skysoft.vaultlogic.common.domain.application.Application;
 import com.skysoft.vaultlogic.common.domain.application.ApplicationRepository;
 import com.skysoft.vaultlogic.common.domain.kiosk.Kiosk;
@@ -47,30 +46,34 @@ public class QuorumSessionService implements SessionService {
     @Override
     @Transactional
     public Pair<String, BigInteger> createSession(BigInteger applicationId, String xToken) {
-        return kioskApplicationClient.launchApplication(xToken).toJavaOptional()
-                .flatMap(resolveKiosk(xToken))
-                .flatMap(appAndKioskPair(applicationId))
-                .map(sessionObject(xToken))
+        return applicationRepo.findById(applicationId)
+                .flatMap(toApplicationAndResolvedKiosk(xToken))
+                .flatMap(launchKioskApplication(xToken))
+                .map(buildSessionObject(xToken))
                 .map(Session::markCreating)
                 .map(sessionRepo::save)
-                .map(this::applicationUrlAndSessionId)
+                .map(appUrlSessionIdPair())
                 .orElseThrow(RuntimeException::new);
     }
 
-    private Function<Kiosk, Optional<Pair<Application, Kiosk>>> appAndKioskPair(BigInteger applicationId) {
-        return kiosk -> applicationRepo.findById(applicationId).map(app -> Pair.of(app, kiosk));
+    private Function<Session, Pair<String, BigInteger>> appUrlSessionIdPair() {
+        return session -> Pair.of(session.getApplication().getUri(), session.getId());
     }
 
-    private Function<StatusCode, Optional<Kiosk>> resolveKiosk(String xToken) {
-        return ignore -> kioskService.resolveKioskForSession(xToken);
-    }
-
-    private Function<Pair<Application, Kiosk>, Session> sessionObject(String xToken) {
+    private Function<Pair<Application, Kiosk>, Session> buildSessionObject(String xToken) {
         return pair -> Session.session(pair.getFirst(), pair.getSecond(), xToken);
     }
 
-    private Pair<String, BigInteger> applicationUrlAndSessionId(Session session) {
-        return Pair.of(session.getApplication().getUri(), session.getId());
+    private Function<Pair<Application, Kiosk>, Optional<Pair<Application, Kiosk>>> launchKioskApplication(String xToken) {
+        return pair -> kioskApplicationClient.launchApplication(xToken).toJavaOptional().map(statusCode -> pair);
+    }
+
+    private Function<Application, Optional<Pair<Application, Kiosk>>> toApplicationAndResolvedKiosk(String xToken) {
+        return application -> kioskService.resolveKioskForSession(xToken).map(toApplicationKioskPair(application));
+    }
+
+    private Function<Kiosk, Pair<Application, Kiosk>> toApplicationKioskPair(Application application) {
+        return kiosk -> Pair.of(application, kiosk);
     }
 
 }
