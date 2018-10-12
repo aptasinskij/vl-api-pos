@@ -1,8 +1,9 @@
 pragma solidity 0.4.24;
 
 import {ACameraController} from "./Controllers.sol";
+import {Named} from "../Platform.sol";
 
-contract CameraController is ACameraController {
+contract CameraController is ACameraController, Named("camera-controller") {
 
     string constant COMPONENT_NAME = "camera-controller";
 

@@ -2,8 +2,9 @@ pragma solidity 0.4.24;
 
 import {ACashInController} from "./Controllers.sol";
 import {ACashChannelsManager} from "../managers/Managers.sol";
+import {Named} from "../Platform.sol";
 
-contract CashInController is ACashInController {
+contract CashInController is ACashInController, Named("cash-in-controller") {
 
     string constant COMPONENT_NAME = "cash-in-controller";
 

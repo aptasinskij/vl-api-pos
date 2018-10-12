@@ -2,8 +2,9 @@ pragma solidity 0.4.24;
 
 import {ASessionController} from "./Controllers.sol";
 import {KioskLib, SessionLib} from "../libs/Libraries.sol";
+import {Named} from "../Platform.sol";
 
-contract SessionController is ASessionController {
+contract SessionController is ASessionController, Named("session-controller") {
 
     using SessionLib for address;
 
