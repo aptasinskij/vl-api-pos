@@ -7,6 +7,7 @@ import "../oracles/ICashInOracle.sol";
 import "../Owned.sol";
 import "../storages/Storages.sol";
 import "../managers/Managers.sol";
+import "../oracles/Oracles.sol";
 
 ///@dev base contract for all registry components
 contract Component is Owned {
@@ -30,6 +31,9 @@ contract Component is Owned {
 
     string constant PARAMETER_STORAGE = "parameter-storage";
     string constant PARAMETER_MANAGER = "parameter-manager";
+
+    string constant CAMERA_ORACLE = "camera-oracle";
+    string constant CAMERA_MANAGER = "camera-manager";
 
     string constant DATABASE = "database";
 
@@ -110,6 +114,15 @@ contract Component is Owned {
 
     function _parameterManager() internal view returns(AParameterManager) {
         return AParameterManager(lookup(PARAMETER_MANAGER));
+    }
+
+    /// camera components
+    function _cameraOracle() internal view returns (ACameraOracle) {
+        return ACameraOracle(lookup(CAMERA_ORACLE));
+    }
+
+    function _cameraManager() internal view returns (ACameraManager) {
+        return ACameraManager(lookup(CAMERA_MANAGER));
     }
 
 }
