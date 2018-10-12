@@ -1,9 +1,19 @@
 pragma solidity 0.4.24;
 
-contract ACameraOracle {
+import "../registry/Component.sol";
+
+contract AbstractOracle is Component {
+
+    constructor(address registry) Component(registry) internal {}
+
+}
+
+contract ACameraOracle is AbstractOracle {
 
     event StartScanQR(uint256 _commandId, uint256 _sessionId, bool _lights);
     event StopScanQR(uint256 _commandId, uint256 _sessionId);
+
+    constructor(address registry) AbstractOracle(registry) internal {}
 
     function onNextStartQRScan(uint256 _commandId) public returns (bool _accepted);
 
