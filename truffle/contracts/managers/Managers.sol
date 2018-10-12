@@ -84,11 +84,27 @@ contract ACameraManager {
         function(uint256) external _fail
     ) public returns (bool _accepted);
 
+    function confirmStart(uint256 _sessionId, function(uint256) external _callback);
+
+    function confirmFailStart(uint256 _sessionId, function(uint256) external _callback);
+
+    function confirmScanned(
+        uint256 _sessionId,
+        string memory _port,
+        string memory _url,
+        string memory _href,
+        function(uint256, string memory, string memory, string memory) external _callback
+    ) public;
+
     function stopQRScanning(
         address application,
         uint256 _sessionId,
         function(uint256) external _success,
         function(uint256) external _fail
     ) public returns (bool _accepted);
+
+    function confirmStop(uint256 _sessionId, function(uint256) external _callback) public;
+
+    function confirmFailStop(uint256 _sessionId, function(uint256) external _callback) public;
 
 }
