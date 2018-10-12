@@ -558,6 +558,7 @@ library CameraLib {
     string constant START_QR_SCAN_LIGHTS = "scan-qr.lights";
     string constant START_QR_SCAN_SUCCESS = "scan-qr.success";
     string constant START_QR_SCAN_FAIL = "scan-qr.fail";
+    string constant START_QR_SCAN_BY_SESSION_ID = "scan-qr.id:sessionId";
 
     string constant STOP_QR_SCAN_EXISTS = "stop-qr-scan.exists";
     string constant STOP_QR_SCAN_SESSION_ID = "stop-qr-scan.session.id";
@@ -598,11 +599,17 @@ library CameraLib {
     function createStartQRScan(address self, StartQRScan memory command) internal {
         require(!startQRScanExists(self, command.id), "Start QR scan already exists");
         Database(self).setBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_EXISTS, command.id)), true);
+        Database(self).setUintValue(keccak256(abi.encodePacked(START_QR_SCAN_BY_SESSION_ID, command.sessionId)), command.id);
         Database(self).setUintValue(keccak256(abi.encodePacked(START_QR_SCAN_SESSION_ID, command.id)), command.sessionId);
         Database(self).setBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_LIGHTS, command.id)), command.lights);
         Database(self).setUint256stringX3Function(keccak256(abi.encodePacked(START_QR_SCAN_SUCCESS, command.id)), command.success);
         Database(self).setUint256Function(keccak256(abi.encodePacked(START_QR_SCAN_FAIL, command.id)), command.fail);
         Database(self).setUintValue(START_QR_SCAN_ID, command.id + 1);
+    }
+
+    function retrieveStartQRScanBySessionId(address self, uint256 _sessionId) internal view returns (StartQRScan memory) {
+        uint256 id = Database(self).getUintValue(keccak256(abi.encodePacked(START_QR_SCAN_BY_SESSION_ID, _sessionId)));
+        return retrieveStartQRScan(self, id);
     }
 
     function retrieveStartQRScan(address self, uint256 _id) internal view returns (StartQRScan memory) {
