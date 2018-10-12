@@ -84,9 +84,9 @@ contract ACameraManager {
         function(uint256) external _fail
     ) public returns (bool _accepted);
 
-    function confirmStart(uint256 _sessionId, function(uint256) external _callback);
+    function confirmStart(uint256 _sessionId, function(uint256) external _callback) public;
 
-    function confirmFailStart(uint256 _sessionId, function(uint256) external _callback);
+    function confirmFailStart(uint256 _sessionId, function(uint256) external _callback) public;
 
     function confirmScanned(
         uint256 _sessionId,

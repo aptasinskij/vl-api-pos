@@ -1,15 +1,16 @@
 pragma solidity 0.4.24;
 
 import "../application/IApplication.sol";
-import "../oracles/ICashInOracle.sol";
+import {ACashInOracle} from "../oracles/Oracles.sol";
 
 import {SafeMath} from "../libs/Libraries.sol";
 import {ACashChannelsManager, ASessionManager, ATokenManager} from "./Managers.sol";
 
 import "../registry/Component.sol";
 import "../storages/Storages.sol";
+import {Owned} from "../Platform.sol";
 
-contract CashChannelsManager is ACashChannelsManager, Component {
+contract CashChannelsManager is ACashChannelsManager, Component, Owned {
 
     string constant COMPONENT_NAME = "cash-channels-manager";
 
@@ -45,7 +46,7 @@ contract CashChannelsManager is ACashChannelsManager, Component {
         address application = AnApplicationStorage(_applicationStorage()).getApplicationAddress(ASessionStorage(_sessionStorage()).getAppId(_sessionId));
         require(application == _application, "Illegal access");
         channelId = ACashInStorage(_cashInStorage()).save(_sessionId, application, uint256(CashInStatus.CREATING));
-        ICashInOracle(_cashInOracle()).open(_sessionId, channelId, uint256(CashInStatus.CREATING));
+        ACashInOracle(_cashInOracle()).open(_sessionId, channelId, uint256(CashInStatus.CREATING));
     }
 
     function updateCashInBalance(uint256 channelId, uint256 amount) public cashInActive(channelId) {
@@ -75,7 +76,7 @@ contract CashChannelsManager is ACashChannelsManager, Component {
         ACashInStorage(_cashInStorage()).setApplicationBalance(_channelId, channelBalance.sub(vaultLogicFee).sub(feesAmount));
         ACashInStorage(_cashInStorage()).addSplits(_channelId, parties, fees);
         ACashInStorage(_cashInStorage()).setStatus(_channelId, uint256(CashInStatus.CLOSE_REQUESTED));
-        ICashInOracle(_cashInOracle()).close(_sessionId, _channelId);
+        ACashInOracle(_cashInOracle()).close(_sessionId, _channelId);
         return true;
     }
 

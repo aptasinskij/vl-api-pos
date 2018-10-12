@@ -26,16 +26,16 @@ contract CameraManager is ACameraManager, Component {
     )   // @formatter:off
         public
         returns (bool _accepted)
+        // @formatter:on
     {
         uint256 startQRScanId = _database().getNextStartQRScanId();
-        _database().createStartQRScan(
-            CameraLib.StartQRScan({
-                id : startQRScanId,
-                sessionId : _sessionId,
-                lights : true,
-                scanned : _scanned,
-                success : _success,
-                fail : _fail
+        _database().createStartQRScan(CameraLib.StartQRScan({
+            id : startQRScanId,
+            sessionId : _sessionId,
+            lights : true,
+            scanned : _scanned,
+            success : _success,
+            fail : _fail
             })
         );
         // @formatter:on
@@ -51,10 +51,10 @@ contract CameraManager is ACameraManager, Component {
     )   // @formatter:off
         public
         returns (bool _accepted)
+        // @formatter:on
     {
         uint256 startQRScanId = _database().getNextStartQRScanId();
-        _database().createStartQRScan(
-            CameraLib.StartQRScan({
+        _database().createStartQRScan(CameraLib.StartQRScan({
             id : startQRScanId,
             sessionId : _sessionId,
             lights : false,
@@ -63,7 +63,6 @@ contract CameraManager is ACameraManager, Component {
             fail : _fail
             })
         );
-        // @formatter:on
         _accepted = ACameraOracle(_cameraOracle()).onNextStartQRScan(startQRScanId);
     }
 
@@ -93,15 +92,15 @@ contract CameraManager is ACameraManager, Component {
     )   // @formatter:off
         public
         returns (bool _accepted)
+        // @formatter:on
     {
         uint256 stopQRScanId = _database().getNextStopQRScanId();
         _database().createStopQRScan(CameraLib.StopQRScan({
-            id: stopQRScanId,
-            sessionId: _sessionId,
-            success: _success,
-            fail: _fail
-        }));
-        // @formatter:on
+            id : stopQRScanId,
+            sessionId : _sessionId,
+            success : _success,
+            fail : _fail
+            }));
         _accepted = ACameraOracle(_cameraOracle()).onNextStopQRScan(stopQRScanId);
     }
 

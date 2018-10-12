@@ -1,10 +1,9 @@
 pragma solidity 0.4.24;
 
 import "./IRegistry.sol";
-import {Owned} from "../Platform.sol";
 
 ///@dev base contract for all registry components
-contract Component is Owned {
+contract Component {
 
     address registry;
 

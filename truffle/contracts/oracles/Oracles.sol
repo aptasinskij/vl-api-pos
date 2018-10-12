@@ -16,6 +16,30 @@ contract AnApplicationOracle is AbstractOracle {
 
 }
 
+contract ACashInOracle is AbstractOracle {
+
+    constructor(address registry) AbstractOracle(registry) internal {}
+
+    function open(uint256 sessionId, uint256 channelId, uint256 channelStatus) public;
+
+    function close(uint256 sessionId, uint256 channelId) public;
+
+    function confirmOpen(uint256 channelId) public;
+
+    function confirmClose(uint256 channelId) public;
+
+    function increaseBalance(uint256 channelId, uint256 amount) public;
+
+}
+
+contract ASessionOracle is AbstractOracle {
+
+    constructor(address registry) AbstractOracle(registry) internal {}
+
+    function closeSession(uint256 sessionId) public;
+
+}
+
 contract ACameraOracle is AbstractOracle {
 
     event StartScanQR(uint256 _commandId, uint256 _sessionId, bool _lights);

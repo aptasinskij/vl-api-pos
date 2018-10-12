@@ -1,11 +1,11 @@
 pragma solidity 0.4.24;
 
 import "../application/IApplication.sol";
-import "../oracles/ISessionOracle.sol";
 import "../application/IApplication.sol";
 import "../registry/Component.sol";
 import {ASessionManager} from "./Managers.sol";
 import {SessionLib} from "../libs/Libraries.sol";
+import {ASessionOracle} from "../oracles/Oracles.sol";
 
 contract SessionManager is Component, ASessionManager {
 
@@ -30,7 +30,7 @@ contract SessionManager is Component, ASessionManager {
         SessionLib.Status status = _database().getStatus(_sessionId);
         require(status == SessionLib.Status.ACTIVE, "Session request close failed. Required ACTIVE state.");
         _database().setStatus(_sessionId, SessionLib.Status.CLOSE_REQUESTED);
-        ISessionOracle(_sessionOracle()).closeSession(_sessionId);
+        ASessionOracle(_sessionOracle()).closeSession(_sessionId);
     }
 
     function confirmClose(uint256 _sessionId) public {

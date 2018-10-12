@@ -19,6 +19,7 @@ contract CameraOracle is ACameraOracle {
     function onNextStartQRScan(uint256 _commandId) public returns (bool _accepted) {
         CameraLib.StartQRScan memory command = _database().retrieveStartQRScan(_commandId);
         emit StartScanQR(command.id, command.sessionId, command.lights);
+        _accepted = true;
     }
 
     function successStart(uint256 _commandId) public {
@@ -39,6 +40,7 @@ contract CameraOracle is ACameraOracle {
     function onNextStopQRScan(uint256 _commandId) public returns (bool _accepted) {
         CameraLib.StopQRScan memory command = _database().retrieveStopQRScan(_commandId);
         emit StopScanQR(command.id, command.sessionId);
+        _accepted = true;
     }
 
     function successStopQRScan(uint256 _commandId) public {
