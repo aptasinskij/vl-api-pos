@@ -14,8 +14,9 @@ contract CameraController is ACameraController {
 
     function scanQRCodeWithLights(
         uint256 _sessionId,
-        function(uint256, string memory, string memory, string memory) external _success,
-        function(uint256) external fail
+        function(uint256, string memory, string memory, string memory) external _scanned,
+        function(uint256) external _success,
+        function(uint256) external _fail
     )   // @formatter:off
         public
         onlyRegisteredApp
@@ -27,8 +28,9 @@ contract CameraController is ACameraController {
 
     function scanQRCode(
         uint256 _sessionId,
-        function(uint256, string memory, string memory, string memory) external _success,
-        function(uint256) external fail
+        function(uint256, string memory, string memory, string memory) external _scanned,
+        function(uint256) external _success,
+        function(uint256) external _fail
     )   // @formatter:off
         public
         onlyRegisteredApp
@@ -40,8 +42,8 @@ contract CameraController is ACameraController {
 
     function stopQRScanning(
         uint256 _sessionId,
-        function(uint256) external success,
-        function(uint256) external fail
+        function(uint256) external _success,
+        function(uint256) external _fail
     )   // @formatter:off
         public
         onlyRegisteredApp
