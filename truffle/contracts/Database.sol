@@ -7,8 +7,8 @@ contract Database is Component {
     string constant DATABASE = "database";
 
     constructor(address regAddr) Component(regAddr) public {}
-    
-    function getName() internal pure returns(string name) {
+
+    function getName() internal pure returns (string name) {
         return DATABASE;
     }
 
@@ -76,7 +76,7 @@ contract Database is Component {
 
 
     /// BYTES32 STORAGE
-    mapping (bytes32 => bytes32) bytes32Storage;
+    mapping(bytes32 => bytes32) bytes32Storage;
 
     function getBytes32Value(bytes32 _key) public view returns (bytes32) {
         return bytes32Storage[_key];
@@ -92,7 +92,7 @@ contract Database is Component {
 
 
     ///BOOLEAN STORAGE
-    mapping (bytes32 => bool) booleanStorage;
+    mapping(bytes32 => bool) booleanStorage;
 
     function getBooleanValue(bytes32 _key) public view returns (bool) {
         return booleanStorage[_key];
@@ -122,19 +122,34 @@ contract Database is Component {
         delete intStorage[_key];
     }
 
-     ///SINGLE STRING ARGUMENT FUNCTION STORAGE
-    mapping(bytes32 => function(string memory) external) singleStringArgFunctionStorage;
+    // function(uint256) external storage
+    mapping(bytes32 => function(uint256) external) uint256functions;
 
-    function setSingleStringFunction(bytes32 key, function(string memory) external func) public {
-        singleStringArgFunctionStorage[key] = func;
+    function setUint256Function(bytes32 _key, function(uint256) external func) public {
+        uint256functions[_key] = func;
     }
 
-    function getSingleStringFunction(bytes32 key) public view returns(function(string memory) external) {
-        return singleStringArgFunctionStorage[key];
+    function getUint256Function(bytes32 _key) public view returns (function(uint256) external) {
+        return uint256functions[_key];
     }
 
-    function deleteSingleStringFunction(bytes32 key) public {
-        delete singleStringArgFunctionStorage[key];
+    // function(uint256, string memory, string memory, string memory) external storage
+    mapping(bytes32 => function(uint256, string memory, string memory, string memory) external) uint256stringX3Functions;
+
+    function setUint256stringX3Function(
+        bytes32 _key,
+        function(uint256, string memory, string memory, string memory) external func
+    ) public {
+        uint256stringX3Functions[_key] = func;
+    }
+
+    function getUint256stringX3Functions(
+        bytes32 _key
+    )
+    public view
+    returns (function(uint256, string memory, string memory, string memory) external)
+    {
+        return uint256stringX3Functions[_key];
     }
 
 }
