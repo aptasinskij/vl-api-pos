@@ -16,8 +16,9 @@ contract CameraManager is ACameraManager, Component {
     function scanQRCodeWithLights(
         address application,
         uint256 _sessionId,
-        function(uint256, string memory, string memory, string memory) external _success,
-        function(uint256) external fail
+        function(uint256, string memory, string memory, string memory) external _scanned,
+        function(uint256) external _success,
+        function(uint256) external _fail
     )   // @formatter:off
         public
         returns (bool _accepted)
@@ -29,8 +30,9 @@ contract CameraManager is ACameraManager, Component {
     function scanQRCode(
         address application,
         uint256 _sessionId,
-        function(uint256, string memory, string memory, string memory) external _success,
-        function(uint256) external fail
+        function(uint256, string memory, string memory, string memory) external _scanned,
+        function(uint256) external _success,
+        function(uint256) external _fail
     )   // @formatter:off
         public
         returns (bool _accepted)
@@ -42,8 +44,8 @@ contract CameraManager is ACameraManager, Component {
     function stopQRScanning(
         address application,
         uint256 _sessionId,
-        function(uint256) external success,
-        function(uint256) external fail
+        function(uint256) external _success,
+        function(uint256) external _fail
     )   // @formatter:off
         public
         returns (bool _accepted)
