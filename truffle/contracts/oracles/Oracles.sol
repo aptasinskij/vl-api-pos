@@ -5,7 +5,7 @@ contract ACameraOracle {
     event StartScanQR(uint256 _commandId, uint256 _sessionId, bool _lights);
     event StopScanQR(uint256 _commandId, uint256 _sessionId);
 
-    function onNextStartQRScan(uint256 _commandId) public;
+    function onNextStartQRScan(uint256 _commandId) public returns (bool _accepted);
 
     function successStart(uint256 _commandId) public;
 
@@ -13,7 +13,7 @@ contract ACameraOracle {
 
     function failQRScan(uint256 _commandId) public;
 
-    function onNextStopQRScan(uint256 _commandId) public;
+    function onNextStopQRScan(uint256 _commandId) public returns (bool _accepted);
 
     function successStopQRScan(uint256 _commandId) public;
 
