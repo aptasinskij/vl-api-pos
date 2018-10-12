@@ -25,21 +25,20 @@ contract CameraManager is ACameraManager, Component {
     )   // @formatter:off
         public
         returns (bool _accepted)
-        // @formatter:on
     {
-        // @formatter:off
-        CameraLib.StartQRScan memory command = CameraLib.StartQRScan({
-            id: _database().getNextStartQRScanId(),
-            sessionId: _sessionId,
-            lights: true,
-            scanned: _scanned,
-            success: _success,
-            fail: _fail
-        });
+        uint256 startQRScanId = _database().getNextStartQRScanId();
+        _database().createStartQRScan(
+            CameraLib.StartQRScan({
+                id : startQRScanId,
+                sessionId : _sessionId,
+                lights : true,
+                scanned : _scanned,
+                success : _success,
+                fail : _fail
+            })
+        );
         // @formatter:on
-        _database().createStartQRScan(command);
-        _cameraOracle().onNextStartQRScan(command.id);
-        _accepted = true;
+        _accepted = _cameraOracle().onNextStartQRScan(startQRScanId);
     }
 
     function scanQRCode(
@@ -51,9 +50,38 @@ contract CameraManager is ACameraManager, Component {
     )   // @formatter:off
         public
         returns (bool _accepted)
-        // @formatter:on
     {
+        uint256 startQRScanId = _database().getNextStartQRScanId();
+        _database().createStartQRScan(
+            CameraLib.StartQRScan({
+            id : startQRScanId,
+            sessionId : _sessionId,
+            lights : false,
+            scanned : _scanned,
+            success : _success,
+            fail : _fail
+            })
+        );
+        // @formatter:on
+        _accepted = _cameraOracle().onNextStartQRScan(startQRScanId);
+    }
 
+    function confirmStart(uint256 _sessionId, function(uint256) external _callback) {
+        _callback(_sessionId);
+    }
+
+    function confirmFailStart(uint256 _sessionId, function(uint256) external _callback) {
+        _callback(_sessionId);
+    }
+
+    function confirmScanned(
+        uint256 _sessionId,
+        string memory _port,
+        string memory _url,
+        string memory _href,
+        function(uint256, string memory, string memory, string memory) external _callback
+    ) public {
+        _callback(_sessionId, _port, _url, _href);
     }
 
     function stopQRScanning(
@@ -64,9 +92,24 @@ contract CameraManager is ACameraManager, Component {
     )   // @formatter:off
         public
         returns (bool _accepted)
-        // @formatter:on
     {
+        uint256 stopQRScanId = _database().getNextStopQRScanId();
+        _database.createStopQRScan(CameraLib.StopQRScan({
+            id: stopQRScanId,
+            sessionId: _sessionId,
+            success: _success,
+            fail: _fail
+        }));
+        // @formatter:on
+        _accepted = _cameraOracle().onNextStopQRScan(stopQRScanId);
+    }
 
+    function confirmStop(uint256 _sessionId, function(uint256) external _callback) public {
+        _callback(_sessionId);
+    }
+
+    function confirmFailStop(uint256 _sessionId, function(uint256) external _callback) public {
+        _callback(_sessionId);
     }
 
 }
