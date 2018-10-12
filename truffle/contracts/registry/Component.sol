@@ -1,13 +1,7 @@
 pragma solidity 0.4.24;
 
 import "./IRegistry.sol";
-import "../oracles/IApplicationOracle.sol";
-import "../oracles/ISessionOracle.sol";
-import "../oracles/ICashInOracle.sol";
-import "../Owned.sol";
-import "../storages/Storages.sol";
-import "../managers/Managers.sol";
-import "../oracles/Oracles.sol";
+import {Owned} from "../Platform.sol";
 
 ///@dev base contract for all registry components
 contract Component is Owned {
@@ -63,66 +57,66 @@ contract Component is Owned {
         return lookup(DATABASE);
     }
 
-    function _applicationStorage() internal view returns(AnApplicationStorage) {
-        return AnApplicationStorage(lookup(APPLICATION_STORAGE));
+    function _applicationStorage() internal view returns(address) {
+        return lookup(APPLICATION_STORAGE);
     }
 
-    function _applicationOracle() internal view returns(IApplicationOracle) {
-        return IApplicationOracle(lookup(APPLICATION_ORACLE));
+    function _applicationOracle() internal view returns(address) {
+        return lookup(APPLICATION_ORACLE);
     }
 
     /// session components
-    function _sessionStorage() internal view returns(ASessionStorage) {
-        return ASessionStorage(lookup(SESSION_STORAGE));
+    function _sessionStorage() internal view returns(address) {
+        return lookup(SESSION_STORAGE);
     }
 
-    function _sessionManager() internal view returns(ASessionManager) {
-        return ASessionManager(lookup(SESSION_MANAGER));
+    function _sessionManager() internal view returns(address) {
+        return lookup(SESSION_MANAGER);
     }
 
-    function _sessionOracle() internal view returns(ISessionOracle) {
-        return ISessionOracle(lookup(SESSION_ORACLE));
+    function _sessionOracle() internal view returns(address) {
+        return lookup(SESSION_ORACLE);
     }
 
     /// cash-in-channel components
-    function _cashInStorage() internal view returns(ACashInStorage) {
-        return ACashInStorage(lookup(CASH_IN_STORAGE));
+    function _cashInStorage() internal view returns(address) {
+        return lookup(CASH_IN_STORAGE);
     }
 
-    function _cashInOracle() internal view returns(ICashInOracle) {
-        return ICashInOracle(lookup(CASH_IN_ORACLE));
+    function _cashInOracle() internal view returns(address) {
+        return lookup(CASH_IN_ORACLE);
     }
 
     /// cash channels manager
-    function _cashChannelsManager() internal view returns(ACashChannelsManager) {
-        return ACashChannelsManager(lookup(CASH_CHANNELS_MANAGER));
+    function _cashChannelsManager() internal view returns(address) {
+        return lookup(CASH_CHANNELS_MANAGER);
     }
 
     /// token components
-    function _tokenStorage() internal view returns(ATokenStorage) {
-        return ATokenStorage(lookup(TOKEN_STORAGE));
+    function _tokenStorage() internal view returns(address) {
+        return lookup(TOKEN_STORAGE);
     }
 
-    function _tokenManager() internal view returns(ATokenManager) {
-        return ATokenManager(lookup(TOKEN_MANAGER));
+    function _tokenManager() internal view returns(address) {
+        return lookup(TOKEN_MANAGER);
     }
 
     /// parameter components
-    function _parameterStorage() internal view returns(AParameterStorage) {
-        return AParameterStorage(lookup(PARAMETER_STORAGE));
+    function _parameterStorage() internal view returns(address) {
+        return lookup(PARAMETER_STORAGE);
     }
 
-    function _parameterManager() internal view returns(AParameterManager) {
-        return AParameterManager(lookup(PARAMETER_MANAGER));
+    function _parameterManager() internal view returns(address) {
+        return lookup(PARAMETER_MANAGER);
     }
 
     /// camera components
-    function _cameraOracle() internal view returns (ACameraOracle) {
-        return ACameraOracle(lookup(CAMERA_ORACLE));
+    function _cameraOracle() internal view returns (address) {
+        return lookup(CAMERA_ORACLE);
     }
 
-    function _cameraManager() internal view returns (ACameraManager) {
-        return ACameraManager(lookup(CAMERA_MANAGER));
+    function _cameraManager() internal view returns (address) {
+        return lookup(CAMERA_MANAGER);
     }
 
 }

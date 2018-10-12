@@ -618,7 +618,7 @@ library CameraLib {
     function retrieveStartQRScan(address self, uint256 _id) internal view returns (StartQRScan memory) {
         require(startQRScanExists(self, _id), "Start QR scan is not exists");
         // @formatter:off
-        return StartQrScan({
+        return StartQRScan({
             id: _id,
             sessionId: Database(self).getUintValue(keccak256(abi.encodePacked(START_QR_SCAN_SESSION_ID, _id))),
             lights: Database(self).getBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_LIGHTS, _id))),
@@ -639,9 +639,9 @@ library CameraLib {
     }
 
     function retrieveStopQRScan(address self, uint256 _id) internal view returns (StopQRScan memory) {
-        require(stopQRScanExists(self, command.id), "Stop QR scan is not exists");
+        require(stopQRScanExists(self, _id), "Stop QR scan is not exists");
         // @formatter:off
-        return StopQrScan({
+        return StopQRScan({
             id: _id,
             sessionId: Database(self).getUintValue(keccak256(abi.encodePacked(STOP_QR_SCAN_SESSION_ID, _id))),
             success: Database(self).getUint256Function(keccak256(abi.encodePacked(STOP_QR_SCAN_SUCCESS, _id))),

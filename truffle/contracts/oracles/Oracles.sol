@@ -8,6 +8,14 @@ contract AbstractOracle is Component {
 
 }
 
+contract AnApplicationOracle is AbstractOracle {
+
+    constructor(address registry) AbstractOracle(registry) internal {}
+
+    function register(uint256 index, string name, address owner, string url, address appAddr, uint256 status) public;
+
+}
+
 contract ACameraOracle is AbstractOracle {
 
     event StartScanQR(uint256 _commandId, uint256 _sessionId, bool _lights);

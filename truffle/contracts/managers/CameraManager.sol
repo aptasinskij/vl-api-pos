@@ -2,6 +2,7 @@ pragma solidity 0.4.24;
 
 import {CameraLib} from "../libs/Libraries.sol";
 import {ACameraManager} from "./Managers.sol";
+import {ACameraOracle} from "../oracles/Oracles.sol";
 import "../registry/Component.sol";
 
 contract CameraManager is ACameraManager, Component {
@@ -38,7 +39,7 @@ contract CameraManager is ACameraManager, Component {
             })
         );
         // @formatter:on
-        _accepted = _cameraOracle().onNextStartQRScan(startQRScanId);
+        _accepted = ACameraOracle(_cameraOracle()).onNextStartQRScan(startQRScanId);
     }
 
     function scanQRCode(
@@ -63,7 +64,7 @@ contract CameraManager is ACameraManager, Component {
             })
         );
         // @formatter:on
-        _accepted = _cameraOracle().onNextStartQRScan(startQRScanId);
+        _accepted = ACameraOracle(_cameraOracle()).onNextStartQRScan(startQRScanId);
     }
 
     function confirmStart(uint256 _sessionId, function(uint256) external _callback) {
@@ -94,14 +95,14 @@ contract CameraManager is ACameraManager, Component {
         returns (bool _accepted)
     {
         uint256 stopQRScanId = _database().getNextStopQRScanId();
-        _database.createStopQRScan(CameraLib.StopQRScan({
+        _database().createStopQRScan(CameraLib.StopQRScan({
             id: stopQRScanId,
             sessionId: _sessionId,
             success: _success,
             fail: _fail
         }));
         // @formatter:on
-        _accepted = _cameraOracle().onNextStopQRScan(stopQRScanId);
+        _accepted = ACameraOracle(_cameraOracle()).onNextStopQRScan(stopQRScanId);
     }
 
     function confirmStop(uint256 _sessionId, function(uint256) external _callback) public {

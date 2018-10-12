@@ -25,15 +25,15 @@ contract CashInOracle is Component {
     }
 
     function confirmOpen(uint256 channelId) external {
-        _cashChannelsManager().confirmOpen(channelId);
+        ACashChannelsManager(_cashChannelsManager()).confirmOpen(channelId);
     }
 
     function confirmClose(uint256 channelId) external {
-        _cashChannelsManager().confirmClose(channelId);
+        ACashChannelsManager(_cashChannelsManager()).confirmClose(channelId);
     }
 
     function increaseBalance(uint256 channelId, uint256 amount) external {
-        _cashChannelsManager().updateCashInBalance(channelId, amount);
+        ACashChannelsManager(_cashChannelsManager()).updateCashInBalance(channelId, amount);
     }
 
 }

@@ -30,7 +30,7 @@ contract SessionManager is Component, ASessionManager {
         SessionLib.Status status = _database().getStatus(_sessionId);
         require(status == SessionLib.Status.ACTIVE, "Session request close failed. Required ACTIVE state.");
         _database().setStatus(_sessionId, SessionLib.Status.CLOSE_REQUESTED);
-        _sessionOracle().closeSession(_sessionId);
+        ISessionOracle(_sessionOracle()).closeSession(_sessionId);
     }
 
     function confirmClose(uint256 _sessionId) public {

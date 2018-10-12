@@ -2,6 +2,7 @@ pragma solidity 0.4.24;
 
 import "../registry/Component.sol";
 import {AnApplicationManager} from "./Managers.sol";
+import {AnApplicationStorage} from "../storages/Storages.sol";
 
 contract ApplicationManager is Component, AnApplicationManager {
 
@@ -14,11 +15,11 @@ contract ApplicationManager is Component, AnApplicationManager {
     }
 
     function registerApplication(uint256 appId, string name, address owner, string url, address appAddr) public {
-        _applicationStorage().save(appId, name, owner, url, appAddr, uint256(ApplicationStatus.PENDING));
+        AnApplicationStorage(_applicationStorage()).save(appId, name, owner, url, appAddr, uint256(ApplicationStatus.PENDING));
     }
 
     function enableApplication(uint256 applicationId) public {
-        _applicationStorage().setApplicationStatus(applicationId, uint256(ApplicationStatus.ENABLED));
+        AnApplicationStorage(_applicationStorage()).setApplicationStatus(applicationId, uint256(ApplicationStatus.ENABLED));
     }
 
 }

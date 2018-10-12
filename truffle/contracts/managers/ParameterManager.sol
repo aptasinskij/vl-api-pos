@@ -2,6 +2,7 @@ pragma solidity 0.4.24;
 
 import "../registry/Component.sol";
 import {AParameterManager} from "./Managers.sol";
+import {AParameterStorage} from "../storages/Storages.sol";
 
 contract ParameterManager is Component, AParameterManager {
 
@@ -15,11 +16,11 @@ contract ParameterManager is Component, AParameterManager {
 
     function setVLFee(uint256 percent) public {
         require(percent >= 0, "The fee percent for vault logic cannot be less then zero");
-        _parameterStorage().setVLFee(percent);
+        AParameterStorage(_parameterStorage()).setVLFee(percent);
     }
 
     function getVLFee() public view returns (uint256) {
-        return _parameterStorage().getVLFee();
+        return AParameterStorage(_parameterStorage()).getVLFee();
     }
 
 }

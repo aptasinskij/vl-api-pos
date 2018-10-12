@@ -2,11 +2,12 @@ pragma solidity 0.4.24;
 
 import "../registry/Component.sol";
 import "../application/IApplication.sol";
+import {AnApplicationStorage} from "../storages/Storages.sol";
 
 contract AbstractController is Component {
 
     modifier onlyRegisteredApp {
-        require(_applicationStorage().isRegistered(msg.sender), "Illegal access");
+        require(AnApplicationStorage(_applicationStorage()).isRegistered(msg.sender), "Illegal access");
         _;
     }
 

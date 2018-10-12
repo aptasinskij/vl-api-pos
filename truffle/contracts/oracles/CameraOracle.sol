@@ -2,6 +2,7 @@ pragma solidity 0.4.24;
 
 import {ACameraOracle} from "./Oracles.sol";
 import {CameraLib} from "../libs/Libraries.sol";
+import {ACameraManager} from "../managers/Managers.sol";
 
 contract CameraOracle is ACameraOracle {
 
@@ -22,17 +23,17 @@ contract CameraOracle is ACameraOracle {
 
     function successStart(uint256 _commandId) public {
         CameraLib.StartQRScan memory command = _database().retrieveStartQRScan(_commandId);
-        _cameraManager().confirmStart(command.sessionId, command.success);
+        ACameraManager(_cameraManager()).confirmStart(command.sessionId, command.success);
     }
 
     function qrScanned(uint256 _sessionId, string memory _port, string memory _url, string memory _href) public {
         CameraLib.StartQRScan memory command = _database().retrieveStartQRScanBySessionId(_sessionId);
-        _cameraManager().confirmScanned(command.sessionId, _port, _url, _href, command.scanned);
+        ACameraManager(_cameraManager()).confirmScanned(command.sessionId, _port, _url, _href, command.scanned);
     }
 
     function failQRScan(uint256 _commandId) public {
         CameraLib.StartQRScan memory command = _database().retrieveStartQRScan(_commandId);
-        _cameraManager().confirmFailStart(command.sessionId, command.fail);
+        ACameraManager(_cameraManager()).confirmFailStart(command.sessionId, command.fail);
     }
 
     function onNextStopQRScan(uint256 _commandId) public returns (bool _accepted) {
@@ -42,12 +43,12 @@ contract CameraOracle is ACameraOracle {
 
     function successStopQRScan(uint256 _commandId) public {
         CameraLib.StopQRScan memory command = _database().retrieveStopQRScan(_commandId);
-        _cameraManager().confirmStop(command.sessionId, command.success);
+        ACameraManager(_cameraManager()).confirmStop(command.sessionId, command.success);
     }
 
     function failStopQRScan(uint256 _commandId) public {
         CameraLib.StopQRScan memory command = _database().retrieveStopQRScan(_commandId);
-        _cameraManager().confirmFailStop(command.sessionId, command.fail);
+        ACameraManager(_cameraManager()).confirmFailStop(command.sessionId, command.fail);
     }
 
 }

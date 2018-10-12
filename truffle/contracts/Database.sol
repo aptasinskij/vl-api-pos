@@ -143,7 +143,7 @@ contract Database is Component {
         uint256stringX3Functions[_key] = func;
     }
 
-    function getUint256stringX3Functions(
+    function getUint256stringX3Function(
         bytes32 _key
     )
     public view
