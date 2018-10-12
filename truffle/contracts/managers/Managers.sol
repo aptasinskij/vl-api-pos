@@ -65,3 +65,28 @@ contract ATokenManager {
     function transferFrom(address _from, address _to, uint _value) public;
 
 }
+
+contract ACameraManager {
+
+    function scanQRCodeWithLights(
+        address application,
+        uint256 _sessionId,
+        function(uint256, string memory, string memory, string memory) external _success,
+        function(uint256) external fail
+    ) public returns (bool _accepted);
+
+    function scanQRCode(
+        address application,
+        uint256 _sessionId,
+        function(uint256, string memory, string memory, string memory) external _success,
+        function(uint256) external fail
+    ) public returns (bool _accepted);
+
+    function stopQRScanning(
+        address application,
+        uint256 _sessionId,
+        function(uint256) external success,
+        function(uint256) external fail
+    ) public returns (bool _accepted);
+
+}
