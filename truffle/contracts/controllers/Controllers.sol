@@ -44,3 +44,45 @@ contract ASessionController is AbstractController {
     function printReceipt(uint256 _sessionId, string _id, string _data) public view returns (bool _success);
 
 }
+
+contract APrinterController is AbstractController {
+
+    function createReceipt(
+        uint256 _sessionId,
+        function(string memory, string memory) external _success,
+        function(uint256) external _fail
+    ) public returns (bool _accepted);
+
+    function printReceipt(
+        uint256 _sessionId,
+        string memory _id,
+        string memory _data,
+        function(uint256) external success,
+        function(uint256) external fail
+    ) public returns (bool _accepted);
+
+}
+
+contract ACameraController is AbstractController {
+
+    constructor(address registry) AbstractController(registry) internal {}
+
+    function scanQRCodeWithLights(
+        uint256 _sessionId,
+        function(uint256, string memory, string memory, string memory) external _success,
+        function(uint256) external fail
+    ) public returns (bool _accepted);
+
+    function scanQRCode(
+        uint256 _sessionId,
+        function(uint256, string memory, string memory, string memory) external _success,
+        function(uint256) external fail
+    ) public returns (bool _accepted);
+
+    function stopQRScanning(
+        uint256 _sessionId,
+        function(uint256) external success,
+        function(uint256) external fail
+    ) public returns (bool _accepted);
+
+}
