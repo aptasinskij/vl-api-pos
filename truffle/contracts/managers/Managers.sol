@@ -68,43 +68,34 @@ contract ATokenManager {
 
 contract ACameraManager {
 
-    function scanQRCodeWithLights(
-        address application,
-        uint256 _sessionId,
-        function(uint256, string memory, string memory, string memory) external _scanned,
-        function(uint256) external _success,
-        function(uint256) external _fail
-    ) public returns (bool _accepted);
-
     function scanQRCode(
-        address application,
+        address _application,
         uint256 _sessionId,
+        bool _lights,
         function(uint256, string memory, string memory, string memory) external _scanned,
         function(uint256) external _success,
         function(uint256) external _fail
-    ) public returns (bool _accepted);
+    ) 
+        public 
+        returns (bool _accepted);
 
-    function confirmStart(uint256 _sessionId, function(uint256) external _callback) public;
+    function confirmStart(uint256 _commandId) public;
 
-    function confirmFailStart(uint256 _sessionId, function(uint256) external _callback) public;
+    function confirmFailStart(uint256 _commandId) public;
 
-    function confirmScanned(
-        uint256 _sessionId,
-        string memory _port,
-        string memory _url,
-        string memory _href,
-        function(uint256, string memory, string memory, string memory) external _callback
-    ) public;
+    function confirmScanned(uint256 _sessionId, string memory _port, string memory _url, string memory _href) public;
 
     function stopQRScanning(
-        address application,
+        address _application,
         uint256 _sessionId,
         function(uint256) external _success,
         function(uint256) external _fail
-    ) public returns (bool _accepted);
+    ) 
+        public 
+        returns (bool _accepted);
 
-    function confirmStop(uint256 _sessionId, function(uint256) external _callback) public;
+    function confirmStop(uint256 _commandId) public;
 
-    function confirmFailStop(uint256 _sessionId, function(uint256) external _callback) public;
+    function confirmFailStop(uint256 _commandId) public;
 
 }

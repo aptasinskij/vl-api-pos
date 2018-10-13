@@ -44,12 +44,12 @@ contract ACameraOracle {
 
     function qrScanned(uint256 _sessionId, string memory _port, string memory _url, string memory _href) public;
 
-    function failQRScan(uint256 _commandId) public;
+    function failStart(uint256 _commandId) public;
 
     function onNextStopQRScan(uint256 _commandId) public returns (bool _accepted);
 
-    function successStopQRScan(uint256 _commandId) public;
+    function successStop(uint256 _commandId) public;
 
-    function failStopQRScan(uint256 _commandId) public;
+    function failStop(uint256 _commandId) public;
 
 }

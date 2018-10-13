@@ -341,12 +341,17 @@ library SessionLib {
 
     //update
     function setHasActiveCashIn(address _self, uint256 _sessionId, bool _flag) internal {
-        require(sessionExists(_self, _sessionId), "Session is already exists");
+        require(sessionExists(_self, _sessionId), "Session is not exists");
         Database(_self).setBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, _sessionId)), _flag);
     }
 
     function setStatus(address self, uint256 index, Status status) internal {
         Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, index)), uint256(status));
+    }
+
+    function sessionIsActive(address self, uint256 _sessionId) internal view returns (bool _active) {
+        uint256 statusIndex = Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, _sessionId)));
+        _active = Status(statusIndex) == Status.ACTIVE;
     }
 
 }
@@ -629,6 +634,12 @@ library CameraLib {
         // @formatter:on
     }
 
+    function retrieveStartQRScanIdSessionIdLights(address self, uint256 _id) internal view returns (uint256 _sessionId, bool _lights) {
+        require(startQRScanExists(self, _id), "Start QR scan is not exists");
+        _sessionId = Database(self).getUintValue(keccak256(abi.encodePacked(START_QR_SCAN_SESSION_ID, _id)));
+        _lights = Database(self).getBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_LIGHTS, _id)));
+    }
+
     function createStopQRScan(address self, StopQRScan memory command) internal {
         require(!stopQRScanExists(self, command.id), "Stop QR scan is already exists");
         Database(self).setBooleanValue(keccak256(abi.encodePacked(STOP_QR_SCAN_EXISTS, command.id)), true);
@@ -648,6 +659,11 @@ library CameraLib {
             fail: Database(self).getUint256Function(keccak256(abi.encodePacked(STOP_QR_SCAN_FAIL, _id)))
         });
         // @formatter:on
+    }
+
+    function retrieveStopQRScanSessionId(address _self, uint256 _id) internal view returns (uint256 _sessionId) {
+        require(stopQRScanExists(_self, _id), "Stop QR scan is not exists");
+        _sessionId = Database(_self).getUintValue(keccak256(abi.encodePacked(STOP_QR_SCAN_SESSION_ID, _id)));
     }
 
 }

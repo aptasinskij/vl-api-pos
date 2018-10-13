@@ -52,7 +52,9 @@ contract APrinterController is AbstractController {
         uint256 _sessionId,
         function(string memory, string memory) external _success,
         function(uint256) external _fail
-    ) public returns (bool _accepted);
+    ) 
+        public 
+        returns (bool _accepted);
 
     function printReceipt(
         uint256 _sessionId,
@@ -60,32 +62,55 @@ contract APrinterController is AbstractController {
         string memory _data,
         function(uint256) external success,
         function(uint256) external fail
-    ) public returns (bool _accepted);
+    ) 
+        public 
+        returns (bool _accepted);
 
 }
 
-contract ACameraController is AbstractController {
-
-    constructor(address registry) AbstractController(registry) internal {}
+contract ACameraController {
 
     function scanQRCodeWithLights(
         uint256 _sessionId,
         function(uint256, string memory, string memory, string memory) external _scanned,
         function(uint256) external _success,
         function(uint256) external _fail
-    ) public returns (bool _accepted);
+    ) 
+        public 
+        returns (bool _accepted);
 
     function scanQRCode(
         uint256 _sessionId,
         function(uint256, string memory, string memory, string memory) external _scanned,
         function(uint256) external _success,
         function(uint256) external _fail
-    ) public returns (bool _accepted);
+    ) 
+        public 
+        returns (bool _accepted);
+
+    function respondStart(uint256 _sessionId, function(uint256) external _callback) public;
+
+    function respondFailStart(uint256 _sessionId, function(uint256) external _callback) public;
+
+    function respondScanned(
+        uint256 _sessionId, 
+        string memory _port,
+        string memory _url,
+        string memory _href,
+        function(uint, string memory, string memory, string memory) external _callback
+    ) 
+        public;
 
     function stopQRScanning(
         uint256 _sessionId,
         function(uint256) external _success,
         function(uint256) external _fail
-    ) public returns (bool _accepted);
+    ) 
+        public 
+        returns (bool _accepted);
+
+    function respondStop(uint256 _sessionId, function(uint256) external _callback) public;
+
+    function respondFailStop(uint256 _sessionId, function(uint256) external _callback) public;
 
 }

@@ -1,17 +1,27 @@
 pragma solidity 0.4.24;
 
+import "../Platform.sol";
 import {ACameraController} from "./Controllers.sol";
-import {Named} from "../Platform.sol";
+import {ApplicationLib} from "../libs/Libraries.sol";
+import {ACameraManager} from "../managers/Managers.sol";
 
-contract CameraController is ACameraController, Named("camera-controller") {
+contract CameraController is ACameraController, Named("camera-controller"), Mortal, Component {
 
-    string constant COMPONENT_NAME = "camera-controller";
+    using ApplicationLib for address;
 
-    constructor(address registry) ACameraController(registry) public {}
+    string constant MANAGER = "camera-manager";
 
-    function getName() internal pure returns (string name) {
-        return COMPONENT_NAME;
+    modifier isRegistered {
+        require(database.isRegistered(msg.sender), "only registered allowed");
+        _;
     }
+
+    modifier onlyManager {
+        require(msg.sender == context.get(MANAGER), "only manager allowed");
+        _;
+    }
+
+    constructor(address _config) Component(_config) public {}
 
     function scanQRCodeWithLights(
         uint256 _sessionId,
@@ -20,11 +30,11 @@ contract CameraController is ACameraController, Named("camera-controller") {
         function(uint256) external _fail
     )   // @formatter:off
         public
-        onlyRegisteredApp
+        isRegistered
         returns (bool _accepted)
         // @formatter:on
     {
-
+        return ACameraManager(context.get(MANAGER)).scanQRCode(msg.sender, _sessionId, true, _scanned, _success, _fail);
     }
 
     function scanQRCode(
@@ -34,11 +44,32 @@ contract CameraController is ACameraController, Named("camera-controller") {
         function(uint256) external _fail
     )   // @formatter:off
         public
-        onlyRegisteredApp
+        isRegistered
         returns (bool _accepted)
         // @formatter:on
     {
+        return ACameraManager(context.get(MANAGER)).scanQRCode(msg.sender, _sessionId, false, _scanned, _success, _fail);
+    }
 
+    function respondStart(uint256 _sessionId, function(uint256) external _callback) public onlyManager {
+        _callback(_sessionId);
+    }
+
+    function respondFailStart(uint256 _sessionId, function(uint256) external _callback) public onlyManager {
+        _callback(_sessionId);
+    }
+
+    function respondScanned(
+        uint256 _sessionId, 
+        string memory _port,
+        string memory _url,
+        string memory _href,
+        function(uint, string memory, string memory, string memory) external _callback
+    ) 
+        public 
+        onlyManager
+    {
+        _callback(_sessionId, _port, _url, _href);
     }
 
     function stopQRScanning(
@@ -47,11 +78,19 @@ contract CameraController is ACameraController, Named("camera-controller") {
         function(uint256) external _fail
     )   // @formatter:off
         public
-        onlyRegisteredApp
+        isRegistered
         returns (bool _accepted)
         // @formatter:on
     {
+        return ACameraManager(context.get(MANAGER)).stopQRScanning(msg.sender, _sessionId, _success, _fail);
+    }
 
+    function respondStop(uint256 _sessionId, function(uint256) external _callback) public onlyManager {
+        _callback(_sessionId);
+    }
+
+    function respondFailStop(uint256 _sessionId, function(uint256) external _callback) public onlyManager {
+        _callback(_sessionId);
     }
 
 }

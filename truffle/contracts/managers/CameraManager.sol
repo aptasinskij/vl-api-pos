@@ -1,92 +1,68 @@
 pragma solidity 0.4.24;
 
-import {CameraLib} from "../libs/Libraries.sol";
+import {CameraLib, SessionLib} from "../libs/Libraries.sol";
 import {ACameraManager} from "./Managers.sol";
 import {ACameraOracle} from "../oracles/Oracles.sol";
-import {Named} from "../Platform.sol";
-import "../registry/Component.sol";
+import {ACameraController} from "../controllers/Controllers.sol";
+import "../Platform.sol";
 
-contract CameraManager is ACameraManager, Component, Named("camera-manager") {
+contract CameraManager is ACameraManager, Mortal, Named("camera-manager"), Component {
 
     using CameraLib for address;
+    using SessionLib for address;
 
-    string constant COMPONENT_NAME = "camera-manager";
+    string constant ORACLE = "camera-oracle";
+    string constant CONTROLLER = "camera-controller";
 
-    constructor(address registry) Component(registry) public {}
-
-    function getName() internal pure returns (string name) {
-        return COMPONENT_NAME;
-    }
-
-    function scanQRCodeWithLights(
-        address application,
-        uint256 _sessionId,
-        function(uint256, string memory, string memory, string memory) external _scanned,
-        function(uint256) external _success,
-        function(uint256) external _fail
-    )   // @formatter:off
-        public
-        returns (bool _accepted)
-        // @formatter:on
-    {
-        uint256 startQRScanId = _database().getNextStartQRScanId();
-        _database().createStartQRScan(CameraLib.StartQRScan({
-            id : startQRScanId,
-            sessionId : _sessionId,
-            lights : true,
-            scanned : _scanned,
-            success : _success,
-            fail : _fail
-            })
-        );
-        // @formatter:on
-        _accepted = ACameraOracle(_cameraOracle()).onNextStartQRScan(startQRScanId);
-    }
+    constructor(address _config) Component(_config) public {}
 
     function scanQRCode(
-        address application,
+        address _application,
         uint256 _sessionId,
+        bool _lights,
         function(uint256, string memory, string memory, string memory) external _scanned,
         function(uint256) external _success,
         function(uint256) external _fail
-    )   // @formatter:off
-        public
-        returns (bool _accepted)
-        // @formatter:on
+    )
+        public 
+        returns (bool _accepted) 
     {
-        uint256 startQRScanId = _database().getNextStartQRScanId();
-        _database().createStartQRScan(CameraLib.StartQRScan({
+        address sessionOwner = database.retrieveSessionApplicationDeployedAddress(_sessionId);
+        require(sessionOwner == _application, "illegal session access");
+        require(database.sessionIsActive(_sessionId), "session is not active");
+        uint256 startQRScanId = database.getNextStartQRScanId();
+        database.createStartQRScan(CameraLib.StartQRScan({
             id : startQRScanId,
             sessionId : _sessionId,
-            lights : false,
+            lights : _lights,
             scanned : _scanned,
             success : _success,
             fail : _fail
             })
         );
-        _accepted = ACameraOracle(_cameraOracle()).onNextStartQRScan(startQRScanId);
+        _accepted = ACameraOracle(context.get(ORACLE)).onNextStartQRScan(startQRScanId);
     }
 
-    function confirmStart(uint256 _sessionId, function(uint256) external _callback) {
-        _callback(_sessionId);
+    function confirmStart(uint256 _commandId) public {
+        //here can be some logic
+        CameraLib.StartQRScan memory command = database.retrieveStartQRScan(_commandId);
+        ACameraController(context.get(CONTROLLER)).respondStart(command.sessionId, command.success);
     }
 
-    function confirmFailStart(uint256 _sessionId, function(uint256) external _callback) {
-        _callback(_sessionId);
+    function confirmFailStart(uint256 _commandId) public {
+        //here can be some logic
+        CameraLib.StartQRScan memory command = database.retrieveStartQRScan(_commandId);
+        ACameraController(context.get(CONTROLLER)).respondFailStart(command.sessionId, command.fail);
     }
 
-    function confirmScanned(
-        uint256 _sessionId,
-        string memory _port,
-        string memory _url,
-        string memory _href,
-        function(uint256, string memory, string memory, string memory) external _callback
-    ) public {
-        _callback(_sessionId, _port, _url, _href);
+    function confirmScanned(uint256 _sessionId, string memory _port, string memory _url, string memory _href) public {
+        //here can be some logic
+        CameraLib.StartQRScan memory command = database.retrieveStartQRScanBySessionId(_sessionId);
+        ACameraController(context.get(CONTROLLER)).respondScanned(_sessionId, _port, _url, _href, command.scanned);
     }
 
     function stopQRScanning(
-        address application,
+        address _application,
         uint256 _sessionId,
         function(uint256) external _success,
         function(uint256) external _fail
@@ -95,22 +71,29 @@ contract CameraManager is ACameraManager, Component, Named("camera-manager") {
         returns (bool _accepted)
         // @formatter:on
     {
-        uint256 stopQRScanId = _database().getNextStopQRScanId();
-        _database().createStopQRScan(CameraLib.StopQRScan({
+        address sessionOwner = database.retrieveSessionApplicationDeployedAddress(_sessionId);
+        require(sessionOwner == _application, "illegal session access");
+        require(database.sessionIsActive(_sessionId), "session is not active");
+        uint256 stopQRScanId = database.getNextStopQRScanId();
+        database.createStopQRScan(CameraLib.StopQRScan({
             id : stopQRScanId,
             sessionId : _sessionId,
             success : _success,
             fail : _fail
             }));
-        _accepted = ACameraOracle(_cameraOracle()).onNextStopQRScan(stopQRScanId);
+        _accepted = ACameraOracle(context.get(ORACLE)).onNextStopQRScan(stopQRScanId);
     }
 
-    function confirmStop(uint256 _sessionId, function(uint256) external _callback) public {
-        _callback(_sessionId);
+    function confirmStop(uint256 _commandId) public {
+        //here can be some logic
+        CameraLib.StopQRScan memory command = database.retrieveStopQRScan(_commandId);
+        ACameraController(context.get(CONTROLLER)).respondStop(command.sessionId, command.success);
     }
 
-    function confirmFailStop(uint256 _sessionId, function(uint256) external _callback) public {
-        _callback(_sessionId);
+    function confirmFailStop(uint256 _commandId) public {
+        //here can be some logic
+        CameraLib.StopQRScan memory command = database.retrieveStopQRScan(_commandId);
+        ACameraController(context.get(CONTROLLER)).respondFailStop(command.sessionId, command.fail);
     }
 
 }
