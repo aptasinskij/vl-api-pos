@@ -1,30 +1,21 @@
 pragma solidity 0.4.24;
 
-import "../registry/Component.sol";
-
 import {TokenLib} from "../libs/Libraries.sol";
 import {ATokenStorage} from "./Storages.sol";
-import {Named} from "../Platform.sol";
+import "../Platform.sol";
 
-contract TokenStorage is Component, ATokenStorage, Named("token-storage") {
-
-    string constant COMPONENT_NAME = "token-storage";
-    string constant DATABASE = "database";
+contract TokenStorage is ATokenStorage, Named("token-storage"), Mortal, Component {
 
     using TokenLib for address;
 
-    constructor(address registryAddress) Component(registryAddress) public {}
-
-    function getName() internal pure returns(string) {
-        return COMPONENT_NAME;
-    }
+    constructor(address _config) Component(_config) public {}
 
     function set(address customer, uint256 amount) public {
-        lookup(DATABASE).set(customer, amount);
+        database.set(customer, amount);
     }
 
     function get(address consumer) public view returns (uint256) {
-        return lookup(DATABASE).get(consumer);
+        return database.get(consumer);
     }
 
 }

@@ -20,8 +20,8 @@ contract CameraManager is ACameraManager, Mortal, Named("camera-manager"), Compo
         address _application,
         uint256 _sessionId,
         bool _lights,
-        function(uint256, string memory, string memory, string memory) external _scanned,
-        function(uint256) external _success,
+        function(uint256, string memory, string memory, string memory) external _success,
+        /*function(uint256) external _success,*/
         function(uint256) external _fail
     )
         public 
@@ -35,7 +35,7 @@ contract CameraManager is ACameraManager, Mortal, Named("camera-manager"), Compo
             id : startQRScanId,
             sessionId : _sessionId,
             lights : _lights,
-            scanned : _scanned,
+            /*scanned : _scanned,*/
             success : _success,
             fail : _fail
             })
@@ -43,11 +43,11 @@ contract CameraManager is ACameraManager, Mortal, Named("camera-manager"), Compo
         _accepted = ACameraOracle(context.get(ORACLE)).onNextStartQRScan(startQRScanId);
     }
 
-    function confirmStart(uint256 _commandId) public {
+    /*function confirmStart(uint256 _commandId) public {
         //here can be some logic
         CameraLib.StartQRScan memory command = database.retrieveStartQRScan(_commandId);
         ACameraController(context.get(CONTROLLER)).respondStart(command.sessionId, command.success);
-    }
+    }*/
 
     function confirmFailStart(uint256 _commandId) public {
         //here can be some logic
@@ -55,10 +55,10 @@ contract CameraManager is ACameraManager, Mortal, Named("camera-manager"), Compo
         ACameraController(context.get(CONTROLLER)).respondFailStart(command.sessionId, command.fail);
     }
 
-    function confirmScanned(uint256 _sessionId, string memory _port, string memory _url, string memory _href) public {
+    function confirmStart(uint256 _sessionId, string memory _port, string memory _url, string memory _href) public {
         //here can be some logic
         CameraLib.StartQRScan memory command = database.retrieveStartQRScanBySessionId(_sessionId);
-        ACameraController(context.get(CONTROLLER)).respondScanned(_sessionId, _port, _url, _href, command.scanned);
+        ACameraController(context.get(CONTROLLER)).respondStart(_sessionId, _port, _url, _href, command.success);
     }
 
     function stopQRScanning(

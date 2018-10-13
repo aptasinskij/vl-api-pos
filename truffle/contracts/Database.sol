@@ -1,16 +1,8 @@
 pragma solidity 0.4.24;
 
-import "./registry/Component.sol";
+import {Owned} from "./Platform.sol";
 
-contract Database is Component {
-
-    string constant DATABASE = "database";
-
-    constructor(address regAddr) Component(regAddr) public {}
-
-    function getName() internal pure returns (string name) {
-        return DATABASE;
-    }
+contract Database is Owned {
 
     /// UINT STORAGE
     mapping(bytes32 => uint256) uintStorage;

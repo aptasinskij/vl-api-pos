@@ -562,7 +562,6 @@ library CameraLib {
     string constant START_QR_SCAN_SESSION_ID = "scan-qr.session.id";
     string constant START_QR_SCAN_LIGHTS = "scan-qr.lights";
     string constant START_QR_SCAN_SUCCESS = "scan-qr.success";
-    string constant START_QR_SCAN_SCANNED = "scan-qr.scanned";
     string constant START_QR_SCAN_FAIL = "scan-qr.fail";
     string constant START_QR_SCAN_BY_SESSION_ID = "scan-qr.id:sessionId";
 
@@ -575,8 +574,7 @@ library CameraLib {
         uint256 id;
         uint256 sessionId;
         bool lights;
-        function(uint256, string memory, string memory, string memory) external scanned;
-        function(uint256) external success;
+        function(uint256, string memory, string memory, string memory) external success;
         function(uint256) external fail;
     }
 
@@ -609,8 +607,7 @@ library CameraLib {
         Database(self).setUintValue(keccak256(abi.encodePacked(START_QR_SCAN_BY_SESSION_ID, command.sessionId)), command.id);
         Database(self).setUintValue(keccak256(abi.encodePacked(START_QR_SCAN_SESSION_ID, command.id)), command.sessionId);
         Database(self).setBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_LIGHTS, command.id)), command.lights);
-        Database(self).setUint256Function(keccak256(abi.encodePacked(START_QR_SCAN_SUCCESS, command.id)), command.success);
-        Database(self).setUint256stringX3Function(keccak256(abi.encodePacked(START_QR_SCAN_SCANNED, command.id)), command.scanned);
+        Database(self).setUint256stringX3Function(keccak256(abi.encodePacked(START_QR_SCAN_SUCCESS, command.id)), command.success);
         Database(self).setUint256Function(keccak256(abi.encodePacked(START_QR_SCAN_FAIL, command.id)), command.fail);
         Database(self).setUintValue(START_QR_SCAN_ID, command.id + 1);
     }
@@ -627,8 +624,7 @@ library CameraLib {
             id: _id,
             sessionId: Database(self).getUintValue(keccak256(abi.encodePacked(START_QR_SCAN_SESSION_ID, _id))),
             lights: Database(self).getBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_LIGHTS, _id))),
-            scanned: Database(self).getUint256stringX3Function(keccak256(abi.encodePacked(START_QR_SCAN_SCANNED, _id))),
-            success: Database(self).getUint256Function(keccak256(abi.encodePacked(START_QR_SCAN_SUCCESS, _id))),
+            success: Database(self).getUint256stringX3Function(keccak256(abi.encodePacked(START_QR_SCAN_SUCCESS, _id))),
             fail: Database(self).getUint256Function(keccak256(abi.encodePacked(START_QR_SCAN_FAIL, _id)))
         });
         // @formatter:on

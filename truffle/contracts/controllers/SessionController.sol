@@ -1,47 +1,59 @@
 pragma solidity 0.4.24;
 
 import {ASessionController} from "./Controllers.sol";
-import {KioskLib, SessionLib} from "../libs/Libraries.sol";
-import {Named} from "../Platform.sol";
+import {KioskLib, SessionLib, ApplicationLib} from "../libs/Libraries.sol";
+import "../Platform.sol";
 
-contract SessionController is ASessionController, Named("session-controller") {
+contract SessionController is ASessionController, Named("session-controller"), Mortal, Component {
 
     using SessionLib for address;
+    using ApplicationLib for address;
 
-    string constant COMPONENT_NAME = "session-controller";
-
-    constructor(address registry) ASessionController(registry) public {}
-
-    function getName() internal pure returns (string name) {
-        return COMPONENT_NAME;
+    modifier isRegistered {
+        require(database.isRegistered(msg.sender), "only registered allowed");
+        _;
     }
 
-    function getKiosk(uint256 _sessionId) public onlyRegisteredApp view returns (string memory _id, string memory _location, string memory _name, string memory _timezone) {
-        KioskLib.Kiosk memory kiosk = lookup("database").retrieveSessionKiosk(_sessionId);
+    constructor(address _config) Component(_config) public {}
+
+    function getKiosk(
+        uint256 _sessionId
+    ) 
+        public 
+        isRegistered 
+        view 
+        returns (
+            string memory _id, 
+            string memory _location, 
+            string memory _name, 
+            string memory _timezone
+        ) 
+    {
+        KioskLib.Kiosk memory kiosk = database.retrieveSessionKiosk(_sessionId);
         return (kiosk.id, kiosk.location, kiosk.name, kiosk.timezone);
     }
 
-    function scanQRCodeWithLights(uint256 _sessionId) public view onlyRegisteredApp returns (bool _success, string memory _url) {
+    function scanQRCodeWithLights(uint256 _sessionId) public view isRegistered returns (bool _success, string memory _url) {
         _success = true;
         _url = "http://vaultlogic.com/preview-with-light-url-123asd";
     }
 
-    function scanQRCode(uint256 _sessionId) public view onlyRegisteredApp returns (bool _success, string memory _url) {
+    function scanQRCode(uint256 _sessionId) public view isRegistered returns (bool _success, string memory _url) {
         _success = true;
         _url = "http://vaultlogic.com/preview-url-123asd";
     }
 
-    function stopQRScanning(uint256 _sessionId) public view onlyRegisteredApp returns (bool _success) {
+    function stopQRScanning(uint256 _sessionId) public view isRegistered returns (bool _success) {
         _success = true;
     }
 
-    function getReceiptUrl(uint256 _sessionId) public view onlyRegisteredApp returns (bool _success, string memory _id, string memory _url) {
+    function getReceiptUrl(uint256 _sessionId) public view isRegistered returns (bool _success, string memory _id, string memory _url) {
         _success = true;
         _id = "qwerty";
         _url = "http://vaultlogic.com/receipt-12345";
     }
 
-    function printReceipt(uint256 _sessionId, string _id, string _data) public view onlyRegisteredApp returns (bool _success) {
+    function printReceipt(uint256 _sessionId, string _id, string _data) public view isRegistered returns (bool _success) {
         _success = true;
     }
 

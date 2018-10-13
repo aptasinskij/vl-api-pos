@@ -19,12 +19,8 @@ contract CameraOracle is ACameraOracle, Mortal, Named("camera-oracle"), Componen
         _accepted = true;
     }
 
-    function successStart(uint256 _commandId) public {
-        ACameraManager(context.get(MANAGER)).confirmStart(_commandId);
-    }
-
-    function qrScanned(uint256 _sessionId, string memory _port, string memory _url, string memory _href) public {
-        ACameraManager(context.get(MANAGER)).confirmScanned(_sessionId, _port, _url, _href);
+    function successStart(uint256 _sessionId, string memory _port, string memory _url, string memory _href) public {
+        ACameraManager(context.get(MANAGER)).confirmStart(_sessionId, _port, _url, _href);
     }
 
     function failStart(uint256 _commandId) public {

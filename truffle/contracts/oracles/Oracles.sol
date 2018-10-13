@@ -40,9 +40,7 @@ contract ACameraOracle {
 
     function onNextStartQRScan(uint256 _commandId) public returns (bool _accepted);
 
-    function successStart(uint256 _commandId) public;
-
-    function qrScanned(uint256 _sessionId, string memory _port, string memory _url, string memory _href) public;
+    function successStart(uint256 _sessionId, string memory _port, string memory _url, string memory _href) public;
 
     function failStart(uint256 _commandId) public;
 

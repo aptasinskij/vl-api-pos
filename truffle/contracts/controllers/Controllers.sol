@@ -15,9 +15,7 @@ contract AbstractController is Component {
 
 }
 
-contract ACashInController is AbstractController {
-
-    constructor(address registry) AbstractController(registry) internal {}
+contract ACashInController {
 
     function open(uint256 _sessionId) public returns (uint256);
 
@@ -28,9 +26,7 @@ contract ACashInController is AbstractController {
 }
 
 //TODO redesign in future
-contract ASessionController is AbstractController {
-
-    constructor(address registry) AbstractController(registry) internal {}
+contract ASessionController {
 
     function getKiosk(uint256 _sessionId) public view returns (string memory _id, string memory _location, string memory _name, string memory _timezone);
 
@@ -52,8 +48,8 @@ contract APrinterController is AbstractController {
         uint256 _sessionId,
         function(string memory, string memory) external _success,
         function(uint256) external _fail
-    ) 
-        public 
+    )
+        public
         returns (bool _accepted);
 
     function printReceipt(
@@ -62,8 +58,8 @@ contract APrinterController is AbstractController {
         string memory _data,
         function(uint256) external success,
         function(uint256) external fail
-    ) 
-        public 
+    )
+        public
         returns (bool _accepted);
 
 }
@@ -72,41 +68,39 @@ contract ACameraController {
 
     function scanQRCodeWithLights(
         uint256 _sessionId,
-        function(uint256, string memory, string memory, string memory) external _scanned,
-        function(uint256) external _success,
+        function(uint256, string memory, string memory, string memory) external _success,
+        /*function(uint256) external _success,*/
         function(uint256) external _fail
-    ) 
-        public 
+    )
+        public
         returns (bool _accepted);
 
     function scanQRCode(
         uint256 _sessionId,
-        function(uint256, string memory, string memory, string memory) external _scanned,
-        function(uint256) external _success,
+        function(uint256, string memory, string memory, string memory) external _success,
+        /*function(uint256) external _success,*/
         function(uint256) external _fail
-    ) 
-        public 
+    )
+        public
         returns (bool _accepted);
-
-    function respondStart(uint256 _sessionId, function(uint256) external _callback) public;
 
     function respondFailStart(uint256 _sessionId, function(uint256) external _callback) public;
 
-    function respondScanned(
-        uint256 _sessionId, 
+    function respondStart(
+        uint256 _sessionId,
         string memory _port,
         string memory _url,
         string memory _href,
         function(uint, string memory, string memory, string memory) external _callback
-    ) 
+    )
         public;
 
     function stopQRScanning(
         uint256 _sessionId,
         function(uint256) external _success,
         function(uint256) external _fail
-    ) 
-        public 
+    )
+        public
         returns (bool _accepted);
 
     function respondStop(uint256 _sessionId, function(uint256) external _callback) public;
