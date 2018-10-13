@@ -1,11 +1,11 @@
 pragma solidity 0.4.24;
 
 import "../registry/Component.sol";
-
 import {SessionLib} from "../libs/Libraries.sol";
 import {ASessionStorage} from "./Storages.sol";
+import {Named} from "../Platform.sol";
 
-contract SessionStorage is Component, ASessionStorage {
+contract SessionStorage is Component, ASessionStorage, Named("session-storage") {
     
     string constant COMPONENT_NAME = "session-storage";
     string constant DATABASE = "database";

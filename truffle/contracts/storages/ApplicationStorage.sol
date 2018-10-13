@@ -4,8 +4,9 @@ import "../registry/Component.sol";
 
 import {ApplicationLib} from "../libs/Libraries.sol";
 import {AnApplicationStorage} from "./Storages.sol";
+import {Named} from "../Platform.sol";
 
-contract ApplicationStorage is AnApplicationStorage, Component {
+contract ApplicationStorage is AnApplicationStorage, Component, Named("application-storage") {
 
     string constant COMPONENT_NAME = "application-storage";
     string constant DATABASE = "database";

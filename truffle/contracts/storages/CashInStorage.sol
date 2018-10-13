@@ -3,8 +3,9 @@ pragma solidity 0.4.24;
 import "../registry/Component.sol";
 import {CashInLib} from "../libs/Libraries.sol";
 import {ACashInStorage} from "./Storages.sol";
+import {Named} from "../Platform.sol";
 
-contract CashInStorage is Component, ACashInStorage {
+contract CashInStorage is Component, ACashInStorage, Named("cash-in-storage") {
 
     string constant COMPONENT_NAME = "cash-in-storage";
     string constant DATABASE = "database";

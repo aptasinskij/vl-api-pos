@@ -4,8 +4,9 @@ import "../registry/Component.sol";
 
 import {TokenLib} from "../libs/Libraries.sol";
 import {ATokenStorage} from "./Storages.sol";
+import {Named} from "../Platform.sol";
 
-contract TokenStorage is Component, ATokenStorage {
+contract TokenStorage is Component, ATokenStorage, Named("token-storage") {
 
     string constant COMPONENT_NAME = "token-storage";
     string constant DATABASE = "database";

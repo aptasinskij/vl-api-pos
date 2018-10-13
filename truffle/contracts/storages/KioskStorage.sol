@@ -3,8 +3,9 @@ pragma solidity 0.4.24;
 import "../registry/Component.sol";
 import {KioskLib} from "../libs/Libraries.sol";
 import {AKioskStorage} from "./Storages.sol";
+import {Named} from "../Platform.sol";
 
-contract KioskStorage is Component, AKioskStorage {
+contract KioskStorage is Component, AKioskStorage, Named("kiosk-storage") {
 
     string constant COMPONENT_NAME = "kiosk-storage";
     string constant DATABASE = "database";
