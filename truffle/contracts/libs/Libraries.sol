@@ -634,7 +634,7 @@ library CameraLib {
         // @formatter:on
     }
 
-    function retrieveStartQRScanIdSessionIdLights(address self, uint256 _id) internal view returns (uint256 _sessionId, bool _lights) {
+    function retrieveStartQRScanSessionIdLights(address self, uint256 _id) internal view returns (uint256 _sessionId, bool _lights) {
         require(startQRScanExists(self, _id), "Start QR scan is not exists");
         _sessionId = Database(self).getUintValue(keccak256(abi.encodePacked(START_QR_SCAN_SESSION_ID, _id)));
         _lights = Database(self).getBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_LIGHTS, _id)));

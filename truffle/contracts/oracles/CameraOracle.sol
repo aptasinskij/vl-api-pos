@@ -14,7 +14,7 @@ contract CameraOracle is ACameraOracle, Mortal, Named("camera-oracle"), Componen
     constructor(address _config) Component(_config) public {}
 
     function onNextStartQRScan(uint256 _commandId) public returns (bool _accepted) {
-        (uint256 sessionId, bool lights) = database.retrieveStartQRScanIdSessionIdLights(_commandId);
+        (uint256 sessionId, bool lights) = database.retrieveStartQRScanSessionIdLights(_commandId);
         emit StartScanQR(_commandId, sessionId, lights);
         _accepted = true;
     }
@@ -38,13 +38,11 @@ contract CameraOracle is ACameraOracle, Mortal, Named("camera-oracle"), Componen
     }
 
     function successStop(uint256 _commandId) public {
-        CameraLib.StopQRScan memory command = database.retrieveStopQRScan(_commandId);
-        ACameraManager(context.get(MANAGER)).confirmStop(command.sessionId);
+        ACameraManager(context.get(MANAGER)).confirmStop(_commandId);
     }
 
     function failStop(uint256 _commandId) public {
-        CameraLib.StopQRScan memory command = database.retrieveStopQRScan(_commandId);
-        ACameraManager(context.get(MANAGER)).confirmFailStop(command.sessionId);
+        ACameraManager(context.get(MANAGER)).confirmFailStop(_commandId);
     }
 
 }
