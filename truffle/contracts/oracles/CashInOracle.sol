@@ -2,8 +2,9 @@ pragma solidity 0.4.24;
 
 import {ACashChannelsManager} from "../managers/Managers.sol";
 import {ACashInOracle} from "./Oracles.sol";
+import {Named} from "../Platform.sol";
 
-contract CashInOracle is ACashInOracle {
+contract CashInOracle is ACashInOracle, Named("cash-in-oracle") {
 
     string constant COMPONENT_NAME = "cash-in-oracle";
     

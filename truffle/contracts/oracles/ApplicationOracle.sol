@@ -2,8 +2,9 @@ pragma solidity 0.4.24;
 
 import "../registry/Component.sol";
 import {AnApplicationOracle} from "./Oracles.sol";
+import {Named} from "../Platform.sol";
 
-contract ApplicationOracle is AnApplicationOracle {
+contract ApplicationOracle is AnApplicationOracle, Named("application-oracle") {
 
     event ApplicationRegistered(uint256 index, string name, address owner, string url, address appAddr, uint256 status);
 

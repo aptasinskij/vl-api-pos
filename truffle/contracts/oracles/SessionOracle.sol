@@ -1,8 +1,9 @@
 pragma solidity 0.4.24;
 
 import {ASessionOracle} from "./Oracles.sol";
+import {Named} from "../Platform.sol";
 
-contract SessionOracle is ASessionOracle {
+contract SessionOracle is ASessionOracle, Named("session-oracle") {
 
     string constant COMPONENT_NAME = "session-oracle";
 
