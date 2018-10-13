@@ -1,19 +1,11 @@
 pragma solidity 0.4.24;
 
 import {ASessionOracle} from "./Oracles.sol";
-import {Named} from "../Platform.sol";
+import "../Platform.sol";
 
-contract SessionOracle is ASessionOracle, Named("session-oracle") {
+contract SessionOracle is ASessionOracle, Named("session-oracle"), Mortal, Component  {
 
-    string constant COMPONENT_NAME = "session-oracle";
-
-    event CloseSession(uint256 sessionId);
-
-    constructor(address regAddr) ASessionOracle(regAddr) public {}
-
-    function getName() internal pure returns(string) {
-        return COMPONENT_NAME;
-    }
+    constructor(address _config) Component(_config) public {}
 
     function closeSession(uint256 sessionId) public {
         emit CloseSession(sessionId);

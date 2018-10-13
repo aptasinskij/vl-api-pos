@@ -1,24 +1,17 @@
 pragma solidity 0.4.24;
 
-import "../registry/Component.sol";
+contract AnApplicationOracle {
 
-contract AbstractOracle is Component {
-
-    constructor(address registry) Component(registry) internal {}
-
-}
-
-contract AnApplicationOracle is AbstractOracle {
-
-    constructor(address registry) AbstractOracle(registry) internal {}
+    event ApplicationRegistered(uint256 index, string name, address owner, string url, address appAddr, uint256 status);
 
     function register(uint256 index, string name, address owner, string url, address appAddr, uint256 status) public;
 
 }
 
-contract ACashInOracle is AbstractOracle {
+contract ACashInOracle {
 
-    constructor(address registry) AbstractOracle(registry) internal {}
+    event OpenCashAcceptor(uint256 sessionId, uint256 channelId, uint256 channelStatus);
+    event CloseCashAcceptor(uint256 sessionId, uint256 channelId);
 
     function open(uint256 sessionId, uint256 channelId, uint256 channelStatus) public;
 
@@ -32,20 +25,18 @@ contract ACashInOracle is AbstractOracle {
 
 }
 
-contract ASessionOracle is AbstractOracle {
+contract ASessionOracle {
 
-    constructor(address registry) AbstractOracle(registry) internal {}
+    event CloseSession(uint256 sessionId);
 
     function closeSession(uint256 sessionId) public;
 
 }
 
-contract ACameraOracle is AbstractOracle {
+contract ACameraOracle {
 
     event StartScanQR(uint256 _commandId, uint256 _sessionId, bool _lights);
     event StopScanQR(uint256 _commandId, uint256 _sessionId);
-
-    constructor(address registry) AbstractOracle(registry) internal {}
 
     function onNextStartQRScan(uint256 _commandId) public returns (bool _accepted);
 

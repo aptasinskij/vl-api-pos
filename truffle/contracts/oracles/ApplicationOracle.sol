@@ -1,22 +1,20 @@
 pragma solidity 0.4.24;
 
-import "../registry/Component.sol";
 import {AnApplicationOracle} from "./Oracles.sol";
-import {Named} from "../Platform.sol";
+import "../Platform.sol";
 
-contract ApplicationOracle is AnApplicationOracle, Named("application-oracle") {
+contract ApplicationOracle is AnApplicationOracle, Mortal, Named("application-oracle"), Component {
 
-    event ApplicationRegistered(uint256 index, string name, address owner, string url, address appAddr, uint256 status);
+    constructor(address _config) Component(_config) public {}
 
-    string constant COMPONENT_NAME = "application-oracle";
-
-    constructor(address registryAddr) AnApplicationOracle(registryAddr) public {}
-
-    function getName() internal pure returns(string name) {
-        return COMPONENT_NAME;
-    }
-
-    function register(uint256 index, string name, address owner, string url, address appAddr, uint256 status) public {
+    function register(
+        uint256 index,
+        string name,
+        address owner,
+        string url,
+        address appAddr,
+        uint256 status
+    ) public {
         emit ApplicationRegistered(index, name, owner, url, appAddr, status);
     }
 

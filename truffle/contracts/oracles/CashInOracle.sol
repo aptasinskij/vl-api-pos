@@ -2,20 +2,13 @@ pragma solidity 0.4.24;
 
 import {ACashChannelsManager} from "../managers/Managers.sol";
 import {ACashInOracle} from "./Oracles.sol";
-import {Named} from "../Platform.sol";
+import "../Platform.sol";
 
-contract CashInOracle is ACashInOracle, Named("cash-in-oracle") {
+contract CashInOracle is ACashInOracle, Named("cash-in-oracle"), Mortal, Component {
 
-    string constant COMPONENT_NAME = "cash-in-oracle";
-    
-    event OpenCashAcceptor(uint256 sessionId, uint256 channelId, uint256 channelStatus);
-    event CloseCashAcceptor(uint256 sessionId, uint256 channelId);
+    string constant MANAGER = "cash-channels-manager";
 
-    constructor(address regAddr) ACashInOracle(regAddr) public {}
-
-    function getName() internal pure returns(string name) {
-        return COMPONENT_NAME;
-    }
+    constructor(address _config) Component(_config) public {}
 
     function open(uint256 sessionId, uint256 channelId, uint256 channelStatus) public {
         emit OpenCashAcceptor(sessionId, channelId, channelStatus);
@@ -26,15 +19,15 @@ contract CashInOracle is ACashInOracle, Named("cash-in-oracle") {
     }
 
     function confirmOpen(uint256 channelId) public {
-        ACashChannelsManager(_cashChannelsManager()).confirmOpen(channelId);
+        ACashChannelsManager(context.get(MANAGER)).confirmOpen(channelId);
     }
 
     function confirmClose(uint256 channelId) public {
-        ACashChannelsManager(_cashChannelsManager()).confirmClose(channelId);
+        ACashChannelsManager(context.get(MANAGER)).confirmClose(channelId);
     }
 
     function increaseBalance(uint256 channelId, uint256 amount) public {
-        ACashChannelsManager(_cashChannelsManager()).updateCashInBalance(channelId, amount);
+        ACashChannelsManager(context.get(MANAGER)).updateCashInBalance(channelId, amount);
     }
 
 }

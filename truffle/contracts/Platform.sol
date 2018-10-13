@@ -38,9 +38,18 @@ contract Named {
 
 }
 
-contract LateInitialized {
+contract Component is Named {
 
-    function initialize(address _config) public;
+    Context internal context;
+    address internal database;
+
+    constructor(address _config) internal {
+        database = Config(_config).database();
+        context = Context(Config(_config).context());
+        address deployed = context.get(name);
+        if (deployed != 0x0) Mortal(deployed).kill();
+        context.register(name);
+    }
 
 }
 
