@@ -6,8 +6,9 @@ import "../registry/Component.sol";
 import {ASessionManager} from "./Managers.sol";
 import {SessionLib} from "../libs/Libraries.sol";
 import {ASessionOracle} from "../oracles/Oracles.sol";
+import {Named} from "../Platform.sol";
 
-contract SessionManager is Component, ASessionManager {
+contract SessionManager is Component, ASessionManager, Named("session-manager") {
 
     using SessionLib for address;
 

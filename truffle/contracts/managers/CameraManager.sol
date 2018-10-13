@@ -3,9 +3,10 @@ pragma solidity 0.4.24;
 import {CameraLib} from "../libs/Libraries.sol";
 import {ACameraManager} from "./Managers.sol";
 import {ACameraOracle} from "../oracles/Oracles.sol";
+import {Named} from "../Platform.sol";
 import "../registry/Component.sol";
 
-contract CameraManager is ACameraManager, Component {
+contract CameraManager is ACameraManager, Component, Named("camera-manager") {
 
     using CameraLib for address;
 

@@ -8,9 +8,9 @@ import {ACashChannelsManager, ASessionManager, ATokenManager} from "./Managers.s
 
 import "../registry/Component.sol";
 import "../storages/Storages.sol";
-import {Owned} from "../Platform.sol";
+import {Owned, Named} from "../Platform.sol";
 
-contract CashChannelsManager is ACashChannelsManager, Component, Owned {
+contract CashChannelsManager is ACashChannelsManager, Component, Owned, Named("cash-channels-manager") {
 
     string constant COMPONENT_NAME = "cash-channels-manager";
 

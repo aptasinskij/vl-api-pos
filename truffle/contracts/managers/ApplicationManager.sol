@@ -3,8 +3,9 @@ pragma solidity 0.4.24;
 import "../registry/Component.sol";
 import {AnApplicationManager} from "./Managers.sol";
 import {AnApplicationStorage} from "../storages/Storages.sol";
+import {Named} from "../Platform.sol";
 
-contract ApplicationManager is Component, AnApplicationManager {
+contract ApplicationManager is Component, AnApplicationManager, Named("application-manager") {
 
     string constant COMPONENT_NAME = "application-manager";
 

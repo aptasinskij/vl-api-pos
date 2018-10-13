@@ -3,8 +3,9 @@ pragma solidity 0.4.24;
 import "../registry/Component.sol";
 import {AParameterManager} from "./Managers.sol";
 import {AParameterStorage} from "../storages/Storages.sol";
+import {Named} from "../Platform.sol";
 
-contract ParameterManager is Component, AParameterManager {
+contract ParameterManager is Component, AParameterManager, Named("parameter-manager") {
 
     string constant COMPONENT_NAME = "parameter-manager";
 

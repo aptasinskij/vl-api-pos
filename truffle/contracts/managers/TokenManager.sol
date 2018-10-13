@@ -4,8 +4,9 @@ import "../registry/Component.sol";
 import {SafeMath} from "../libs/Libraries.sol";
 import {ATokenManager} from "./Managers.sol";
 import {ATokenStorage} from "../storages/Storages.sol";
+import {Named} from "../Platform.sol";
 
-contract TokenManager is Component, ATokenManager {
+contract TokenManager is Component, ATokenManager, Named("token-manager") {
 
     string constant COMPONENT_NAME = "token-manager";
 
