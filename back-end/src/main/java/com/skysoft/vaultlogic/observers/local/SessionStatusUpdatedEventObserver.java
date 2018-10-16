@@ -33,10 +33,12 @@ public class SessionStatusUpdatedEventObserver extends AbstractContractEventObse
         return contract::statusUpdatedEventObservable;
     }
 
+    @Override
     public void onNext(StatusUpdatedEventResponse event) {
         log.info("[x] Session status updated: {}, {}", event.index, event.status);
     }
 
+    @Override
     public void onError(Throwable throwable) {
         log.error("[x] Error filtering Session Status Updated Event.", throwable);
     }

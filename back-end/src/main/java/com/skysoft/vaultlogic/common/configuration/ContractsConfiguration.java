@@ -93,4 +93,9 @@ public class ContractsConfiguration {
         return ParameterStorage.load(ParameterStorage.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
     }
 
+    @Bean
+    public CameraOracle cameraOracle(Quorum quorum, ClientTransactionManager transactionManager, BlockchainNetwork network) {
+        return CameraOracle.load(CameraOracle.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
+    }
+
 }
