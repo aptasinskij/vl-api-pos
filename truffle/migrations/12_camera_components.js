@@ -1,5 +1,5 @@
 const Config = artifacts.require("Config");
-const SessionLib = artifacts.require("CameraLib");
+const SessionLib = artifacts.require("SessionLib");
 const ApplicationLib = artifacts.require("ApplicationLib");
 const CameraLib = artifacts.require("CameraLib");
 const CameraManager = artifacts.require("CameraManager");
