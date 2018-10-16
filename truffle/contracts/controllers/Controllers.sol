@@ -66,26 +66,45 @@ contract APrinterController is AbstractController {
 
 contract ACameraController {
 
+    ///@dev function to trigger QR code scanning with lights
+    ///@param _sessionId - id of the session in which QR must occur
+    ///@param _success - callback function for informing about successful case of enabling camera
+    ///@param _scanned - callback function for informing about actual QR scanned data
+    ///@param _fail - callback function for informing about failed case of enabling camera
     function scanQRCodeWithLights(
         uint256 _sessionId,
         function(uint256, string memory, string memory, string memory) external _success,
-        /*function(uint256) external _success,*/
+        function(uint256, string memory) external _scanned,
         function(uint256) external _fail
     )
         public
         returns (bool _accepted);
 
+    ///@dev function to trigger QR code scanning without lights
+    ///@param _sessionId - id of the session in which QR must occur
+    ///@param _success - callback function for informing about successful case of enabling camera
+    ///@param _scanned - callback function for informing about actual QR scanned data
+    ///@param _fail - callback function for informing about failed case of enabling camera
     function scanQRCode(
         uint256 _sessionId,
         function(uint256, string memory, string memory, string memory) external _success,
-        /*function(uint256) external _success,*/
+        function(uint256, string memory) external _scanned,
         function(uint256) external _fail
     )
         public
         returns (bool _accepted);
 
+    ///@dev function to trigger actual fail start QR scanning callback
+    ///@param _sessionId - id of the session where fail occurred
+    ///@param _callback - the callback function that would be triggered
     function respondFailStart(uint256 _sessionId, function(uint256) external _callback) public;
 
+    ///@dev function to trigger actual success start QR scanning callback
+    ///@param _sessionId - id of the session in which camera was successfully enabled
+    ///@param _port - port of the camera preview
+    ///@param _url - host url of the camera preview
+    ///@param _href - link for pasting into front-end
+    ///@param _callback - the callback function that would be triggered
     function respondStart(
         uint256 _sessionId,
         string memory _port,
@@ -95,6 +114,15 @@ contract ACameraController {
     )
         public;
 
+    ///@dev function to trigger QR scanned callback
+    ///@param _sessionId - id of the session in which QR was scanned
+    ///@param _callback - the callback function that would be called
+    function respondScanned(uint256 _sessionId, string memory _qr, function(uint256, string memory) external _callback) public;
+
+    ///@dev function to disable QR scanning
+    ///@param _sessionId - id of the session in which camera must be disabled
+    ///@param _success - callback function to inform about camera successful disabling
+    ///@param _fail - callback function to inform about camera disabling fail
     function stopQRScanning(
         uint256 _sessionId,
         function(uint256) external _success,
@@ -103,8 +131,14 @@ contract ACameraController {
         public
         returns (bool _accepted);
 
+    ///@dev function to trigger actual success of disabling camera
+    ///@param _sessionId - the session id
+    ///@param _callback - function that would be called
     function respondStop(uint256 _sessionId, function(uint256) external _callback) public;
 
+    ///@dev function to trigger actual success of camera disabling fail
+    ///@param _sessionId - the session id
+    ///@param _callback - function that would be called
     function respondFailStop(uint256 _sessionId, function(uint256) external _callback) public;
 
 }

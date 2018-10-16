@@ -26,6 +26,7 @@ contract CameraController is ACameraController, Named("camera-controller"), Mort
     function scanQRCodeWithLights(
         uint256 _sessionId,
         function(uint256, string memory, string memory, string memory) external _success,
+        function(uint256, string memory) external _scanned,
         function(uint256) external _fail
     )   // @formatter:off
         public
@@ -33,12 +34,13 @@ contract CameraController is ACameraController, Named("camera-controller"), Mort
         returns (bool _accepted)
         // @formatter:on
     {
-        return ACameraManager(context.get(MANAGER)).scanQRCode(msg.sender, _sessionId, true, _success, _fail);
+        return ACameraManager(context.get(MANAGER)).scanQRCode(msg.sender, _sessionId, true, _success, _scanned, _fail);
     }
 
     function scanQRCode(
         uint256 _sessionId,
         function(uint256, string memory, string memory, string memory) external _success,
+        function(uint256, string memory) external _scanned,
         function(uint256) external _fail
     )   // @formatter:off
         public
@@ -46,7 +48,7 @@ contract CameraController is ACameraController, Named("camera-controller"), Mort
         returns (bool _accepted)
         // @formatter:on
     {
-        return ACameraManager(context.get(MANAGER)).scanQRCode(msg.sender, _sessionId, false, _success, _fail);
+        return ACameraManager(context.get(MANAGER)).scanQRCode(msg.sender, _sessionId, false, _success, _scanned, _fail);
     }
 
     function respondFailStart(uint256 _sessionId, function(uint256) external _callback) public onlyManager {
@@ -65,6 +67,17 @@ contract CameraController is ACameraController, Named("camera-controller"), Mort
         // @formatter:on
     {
         _callback(_sessionId, _port, _url, _href);
+    }
+
+    function respondScanned(
+        uint256 _sessionId,
+        string memory _qr,
+        function(uint256, string memory) external _callback
+    )
+        public
+        onlyManager
+    {
+        _callback(_sessionId, _qr);
     }
 
     function stopQRScanning(

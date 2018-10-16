@@ -144,4 +144,15 @@ contract Database is Owned {
         return uint256stringX3Functions[_key];
     }
 
+    // function(uint256, string memory) external storage
+    mapping(bytes32 => function(uint256, string memory) external) uint256X1StringX1functions;
+
+    function setUint256X1StringX1Function(bytes32 _key, function(uint256, string memory) external _func) public {
+        uint256X1StringX1functions[_key] = _func;
+    }
+
+    function getUint256X1StringX1Function(bytes32 _key) public view returns (function(uint256, string memory) external) {
+        return uint256X1StringX1functions[_key];
+    }
+
 }
