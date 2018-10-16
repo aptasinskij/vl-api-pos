@@ -667,3 +667,107 @@ library CameraLib {
     }
 
 }
+
+library PrinterLib {
+
+    //ReceiptCreate 'headers'
+    bytes32 constant RECEIPT_CREATE_ID = keccak256(abi.encode("ReceiptCreate:uint256"));
+    string constant RECEIPT_CREATE_EXISTS = "receipt-create.exists:boolean";
+    string constant RECEIPT_CREATE_SESSION_ID = "receipt-create.session.id:uint256";
+    string constant RECEIPT_CREATE_SUCCESS = "receipt-create.success:function";
+    string constant RECEIPT_CREATE_FAIL = "receipt-create.fail:function";
+
+    //ReceiptPrint 'headers'
+    bytes32 constant RECEIPT_PRINT_ID = keccak256(abi.encode("ReceiptPrint:uint256"));
+    string constant RECEIPT_PRINT_EXISTS = "receipt-print.exists:boolean";
+    string constant RECEIPT_PRINT_SESSION_ID = "receipt-print.session.id:uint256";
+    string constant RECEIPT_PRINT_RECEIPT_ID = "receipt-print.receipt_id:string";
+    string constant RECEIPT_PRINT_DATA = "receipt-print.data:string";
+    string constant RECEIPT_PRINT_PARAMS = "receipt-print.params:string";
+    string constant RECEIPT_PRINT_SUCCESS = "receipt-print.success:function";
+    string constant RECEIPT_PRINT_FAIL = "receipt-print.fail:function";
+
+    struct ReceiptCreate {
+        uint256 id;
+        uint256 sessionId;
+        function(uint256, string memory, string memory) external success;
+        function(uint256) external fail;
+    }
+
+    struct ReceiptPrint {
+        uint256 id;
+        uint256 sessionId;
+        string receiptId;
+        string data;
+        string params;
+        function(uint256) external success;
+        function(uint256) external fail;
+    }
+
+    function receiptCreateExists(address _self, uint256 _id) internal view returns (bool _exists) {
+        _exists = Database(_self).getBooleanValue(keccak256(abi.encodePacked(RECEIPT_CREATE_EXISTS, _id)));
+    }
+
+    function receiptPrintExists(address _self, uint256 _id) internal view returns (bool _exists) {
+        _exists = Database(_self).getBooleanValue(keccak256(abi.encodePacked(RECEIPT_PRINT_EXISTS, _id)));
+    }
+
+    function getNextReceiptCreateId(address _self) internal view returns (uint256 _id) {
+        _id = Database(_self).getUintValue(RECEIPT_CREATE_ID);
+    }
+
+    function getNextReceiptPrintId(address _self) internal view returns (uint256 _id) {
+        _id = Database(_self).getUintValue(RECEIPT_PRINT_ID);
+    }
+
+    function createReceiptCreate(address _self, ReceiptCreate memory _command) internal {
+        require(!receiptCreateExists(_self, _command.id), "receipt create already exists");
+        require(getNextReceiptCreateId(_self) == _command.id, "violation of receipt create id sequence");
+        Database(_self).setBooleanValue(keccak256(abi.encodePacked(RECEIPT_CREATE_EXISTS, _command.id)), true);
+        Database(_self).setUintValue(keccak256(abi.encodePacked(RECEIPT_CREATE_SESSION_ID, _command.id)), _command.sessionId);
+        Database(_self).setUint256X1StringX2Function(keccak256(abi.encodePacked(RECEIPT_CREATE_SUCCESS, _command.id)), _command.success);
+        Database(_self).setUint256Function(keccak256(abi.encodePacked(RECEIPT_CREATE_FAIL, _command.id)), _command.fail);
+        Database(_self).setUintValue(RECEIPT_CREATE_ID, _command.id + 1);
+    }
+
+    function retrieveReceiptCreate(address _self, uint256 _id) internal view returns (ReceiptCreate memory) {
+        require(receiptCreateExists(_self, _id), "receipt create is not exists");
+        // @formatter:off
+        return ReceiptCreate({
+            id: _id,
+            sessionId: Database(_self).getUintValue(keccak256(abi.encodePacked(RECEIPT_CREATE_SESSION_ID, _id))),
+            success: Database(_self).getUint256X1StringX2Function(keccak256(abi.encodePacked(RECEIPT_CREATE_SUCCESS, _id))),
+            fail: Database(_self).getUint256Function(keccak256(abi.encodePacked(RECEIPT_CREATE_FAIL, _id)))
+        });
+        // @formatter:on
+    }
+
+    function createReceiptPrint(address _self, ReceiptPrint memory _command) internal {
+        require(!receiptPrintExists(_self, _command.id), "receipt print already exists");
+        require(getNextReceiptPrintId(_self) == _command.id, "violation of receipt print id sequence");
+        Database(_self).setBooleanValue(keccak256(abi.encodePacked(RECEIPT_PRINT_EXISTS, _command.id)), true);
+        Database(_self).setUintValue(keccak256(abi.encodePacked(RECEIPT_PRINT_SESSION_ID, _command.id)), _command.sessionId);
+        Database(_self).setStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_RECEIPT_ID, _command.id)), _command.receiptId);
+        Database(_self).setStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_DATA, _command.id)), _command.data);
+        Database(_self).setStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_PARAMS, _command.id)), _command.params);
+        Database(_self).setUint256Function(keccak256(abi.encodePacked(RECEIPT_PRINT_SUCCESS, _command.id)), _command.success);
+        Database(_self).setUint256Function(keccak256(abi.encodePacked(RECEIPT_PRINT_FAIL, _command.id)), _command.fail);
+        Database(_self).setUintValue(RECEIPT_PRINT_ID, _command.id + 1);
+    }
+
+    function retrieveReceiptPrint(address _self, uint256 _id) internal view returns (ReceiptPrint memory) {
+        require(receiptPrintExists(_self, _id), "receipt print is not exists");
+        // @formatter:off
+        return ReceiptPrint({
+            id: _id,
+            sessionId: Database(_self).getUintValue(keccak256(abi.encodePacked(RECEIPT_PRINT_SESSION_ID, _id))),
+            receiptId: Database(_self).getStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_RECEIPT_ID, _id))),
+            data: Database(_self).getStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_DATA, _id))),
+            params: Database(_self).getStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_PARAMS, _id))),
+            success: Database(_self).getUint256Function(keccak256(abi.encodePacked(RECEIPT_PRINT_SUCCESS, _id))),
+            fail: Database(_self).getUint256Function(keccak256(abi.encodePacked(RECEIPT_PRINT_FAIL, _id)))
+        });
+        // @formatter:on
+    }
+
+}
