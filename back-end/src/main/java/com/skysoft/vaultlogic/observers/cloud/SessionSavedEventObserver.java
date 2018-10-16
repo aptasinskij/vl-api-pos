@@ -33,13 +33,14 @@ public class SessionSavedEventObserver extends AbstractContractEventObserver<Sav
         return contract::savedEventObservable;
     }
 
+    @Override
     public void onNext(SavedEventResponse event) {
         log.info("[x] Session saved: {}, {}", event.sessionId, event.xToken);
     }
 
+    @Override
     public void onError(Throwable throwable) {
         log.error("[x] Error filtering Session Saved Event: {}", throwable.getMessage());
     }
-
 
 }
