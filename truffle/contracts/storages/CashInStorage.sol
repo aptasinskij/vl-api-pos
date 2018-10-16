@@ -1,24 +1,17 @@
 pragma solidity 0.4.24;
 
-import "../registry/Component.sol";
 import {CashInLib} from "../libs/Libraries.sol";
 import {ACashInStorage} from "./Storages.sol";
+import "../Platform.sol";
 
-contract CashInStorage is Component, ACashInStorage {
-
-    string constant COMPONENT_NAME = "cash-in-storage";
-    string constant DATABASE = "database";
+contract CashInStorage is ACashInStorage, Named("cash-in-storage"), Mortal, Component {
 
     using CashInLib for address;
 
-    constructor(address registryAddr) Component(registryAddr) public {}
-
-    function getName() internal pure returns(string) {
-        return COMPONENT_NAME;
-    }
+    constructor(address _config) Component(_config) public {}
 
     function save(uint256 sessionId, address application, uint256 status) public returns(uint256 channelId) {
-        channelId = lookup(DATABASE).save(sessionId, application, status);
+        channelId = database.save(sessionId, application, status);
         emit CashInSaved(channelId, sessionId, application, status);
     }
 
@@ -30,71 +23,71 @@ contract CashInStorage is Component, ACashInStorage {
         uint256 status,
         uint256 splitSize
     ) {
-        return lookup(DATABASE).get(channelId);
+        return database.get(channelId);
     }
 
     function getSessionId(uint256 channelId) public view returns(uint256) {
-        return lookup(DATABASE).getSessionId(channelId);
+        return database.getSessionId(channelId);
     }
 
     function getApplication(uint256 channelId) public view returns(address) {
-        return lookup(DATABASE).getApplication(channelId);
+        return database.getApplication(channelId);
     }
 
     function getApplicationAndSessionId(uint256 channelId) public view returns(address application, uint256 sessionId) {
-        application = lookup(DATABASE).getApplication(channelId);
-        sessionId = lookup(DATABASE).getSessionId(channelId);
+        application = database.getApplication(channelId);
+        sessionId = database.getSessionId(channelId);
     }
 
     function setBalance(uint256 channelId, uint256 amount) public {
-        lookup(DATABASE).setBalance(channelId, amount);
+        database.setBalance(channelId, amount);
         emit CashInBalanceUpdated(channelId, amount);
     }
 
     function getBalance(uint256 channelId) public view returns(uint256) {
-        return lookup(DATABASE).getBalance(channelId);
+        return database.getBalance(channelId);
     }
 
     function setVLFee(uint256 channelId, uint256 fee) public {
-        lookup(DATABASE).setVLFee(channelId, fee);
+        database.setVLFee(channelId, fee);
     }
 
     function getVLFee(uint256 channelId) public view returns(uint256){
-        return lookup(DATABASE).getVLFee(channelId);
+        return database.getVLFee(channelId);
     }
 
     function setApplicationBalance(uint256 channelId, uint256 balance) public {
-        lookup(DATABASE).setApplicationBalance(channelId, balance);
+        database.setApplicationBalance(channelId, balance);
     }
 
     function getApplicationBalance(uint256 channelId) public view returns(uint256) {
-        return lookup(DATABASE).getApplicationBalance(channelId);
+        return database.getApplicationBalance(channelId);
     }
 
     function setStatus(uint256 channelId, uint256 status) public {
-        lookup(DATABASE).setStatus(channelId, status);
+        database.setStatus(channelId, status);
         emit CashInStatusUpdated(channelId, status);
     }
 
     function getStatus(uint256 channelId) public view returns(uint256) {
-        return lookup(DATABASE).getStatus(channelId);
+        return database.getStatus(channelId);
     }
 
     function addSplit(uint256 channelId, address party, uint256 amount) public {
-        lookup(DATABASE).addSplit(channelId, party, amount);
+        database.addSplit(channelId, party, amount);
         emit CashInSplitAdded(channelId, party, amount);
     }
 
     function addSplits(uint256 channelId, address[] parties, uint256[] amounts) public {
-        lookup(DATABASE).addSplits(channelId, parties, amounts);
+        database.addSplits(channelId, parties, amounts);
     }
 
     function getSplitSize(uint256 channelId) public view returns(uint256) {
-        return lookup(DATABASE).getSplitSize(channelId);
+        return database.getSplitSize(channelId);
     }
 
     function getSplit(uint256 channelId, uint256 subIndex) public view returns(address, uint256) {
-        return lookup(DATABASE).getSplit(channelId, subIndex);
+        return database.getSplit(channelId, subIndex);
     }
 
 }

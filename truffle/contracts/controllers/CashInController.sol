@@ -1,28 +1,34 @@
 pragma solidity 0.4.24;
 
+import {ApplicationLib} from "../libs/Libraries.sol";
 import {ACashInController} from "./Controllers.sol";
+import {ACashChannelsManager} from "../managers/Managers.sol";
+import "../Platform.sol";
 
-contract CashInController is ACashInController {
+contract CashInController is ACashInController, Named("cash-in-controller"), Mortal, Component {
 
-    string constant COMPONENT_NAME = "cash-in-controller";
+    using ApplicationLib for address;
 
-    constructor(address registry) ACashInController(registry) public {}
+    string constant MANAGER = "cash-channels-manager";
 
-    function getName() internal pure returns (string name) {
-        return COMPONENT_NAME;
+    modifier isRegistered {
+        require(database.isRegistered(msg.sender), "only registered allowed");
+        _;
     }
 
-    function open(uint256 _sessionId) public onlyRegisteredApp returns (uint256) {
-        return _cashChannelsManager().openCashInChannel(msg.sender, _sessionId);
+    constructor(address _config) Component(_config) public {}
+
+    function open(uint256 _sessionId) public isRegistered returns (uint256) {
+        return ACashChannelsManager(context.get(MANAGER)).openCashInChannel(msg.sender, _sessionId);
     }
 
-    function close(uint256 _sessionId, uint256 _channelId, uint256[] _fees, address[] _parties) public onlyRegisteredApp returns (bool) {
-        _cashChannelsManager().closeCashInChannel(msg.sender, _sessionId, _channelId, _fees, _parties);
+    function close(uint256 _sessionId, uint256 _channelId, uint256[] _fees, address[] _parties) public isRegistered returns (bool) {
+        ACashChannelsManager(context.get(MANAGER)).closeCashInChannel(msg.sender, _sessionId, _channelId, _fees, _parties);
         return true;
     }
 
-    function balanceOf(uint256 _channelId) public view onlyRegisteredApp returns (uint256) {
-        return _cashChannelsManager().balanceOf(msg.sender, _channelId);
+    function balanceOf(uint256 _channelId) public view isRegistered returns (uint256) {
+        return ACashChannelsManager(context.get(MANAGER)).balanceOf(msg.sender, _channelId);
     }
 
 }

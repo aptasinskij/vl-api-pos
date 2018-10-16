@@ -341,12 +341,17 @@ library SessionLib {
 
     //update
     function setHasActiveCashIn(address _self, uint256 _sessionId, bool _flag) internal {
-        require(sessionExists(_self, _sessionId), "Session is already exists");
+        require(sessionExists(_self, _sessionId), "Session is not exists");
         Database(_self).setBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, _sessionId)), _flag);
     }
 
     function setStatus(address self, uint256 index, Status status) internal {
         Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, index)), uint256(status));
+    }
+
+    function sessionIsActive(address self, uint256 _sessionId) internal view returns (bool _active) {
+        uint256 statusIndex = Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, _sessionId)));
+        _active = Status(statusIndex) == Status.ACTIVE;
     }
 
 }
@@ -544,6 +549,225 @@ library TokenLib {
 
     function get(address self, address customer) internal view returns (uint256) {
         return Database(self).getUintValue(keccak256(abi.encodePacked(TOKEN_AMOUNT, customer)));
+    }
+
+}
+
+library CameraLib {
+
+    bytes32 constant START_QR_SCAN_ID = keccak256(abi.encode("ScanQRRequest"));
+    bytes32 constant STOP_QR_SCAN_ID = keccak256(abi.encode("StopQRScanRequest"));
+
+    string constant START_QR_SCAN_EXISTS = "scan-qr.exists";
+    string constant START_QR_SCAN_SESSION_ID = "scan-qr.session.id";
+    string constant START_QR_SCAN_LIGHTS = "scan-qr.lights";
+    string constant START_QR_SCAN_SUCCESS = "scan-qr.success";
+    string constant START_QR_SCAN_SCANNED = "scan-qr.scanned";
+    string constant START_QR_SCAN_FAIL = "scan-qr.fail";
+    string constant START_QR_SCAN_BY_SESSION_ID = "scan-qr.id:sessionId";
+
+    string constant STOP_QR_SCAN_EXISTS = "stop-qr-scan.exists";
+    string constant STOP_QR_SCAN_SESSION_ID = "stop-qr-scan.session.id";
+    string constant STOP_QR_SCAN_SUCCESS = "stop-qr-scan.success";
+    string constant STOP_QR_SCAN_FAIL = "stop-qr-scan.fail";
+
+    struct StartQRScan {
+        uint256 id;
+        uint256 sessionId;
+        bool lights;
+        function(uint256, string memory, string memory, string memory) external success;
+        function(uint256, string memory) external scanned;
+        function(uint256) external fail;
+    }
+
+    struct StopQRScan {
+        uint256 id;
+        uint256 sessionId;
+        function(uint256) external success;
+        function(uint256) external fail;
+    }
+
+    function startQRScanExists(address self, uint256 _id) internal view returns (bool _exists) {
+        _exists = Database(self).getBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_EXISTS, _id)));
+    }
+
+    function stopQRScanExists(address self, uint256 _id) internal view returns (bool _exists) {
+        _exists = Database(self).getBooleanValue(keccak256(abi.encodePacked(STOP_QR_SCAN_EXISTS, _id)));
+    }
+
+    function getNextStartQRScanId(address self) internal view returns (uint256 _id) {
+        _id = Database(self).getUintValue(START_QR_SCAN_ID);
+    }
+
+    function getNextStopQRScanId(address self) internal view returns (uint256 _id) {
+        _id = Database(self).getUintValue(STOP_QR_SCAN_ID);
+    }
+
+    function createStartQRScan(address self, StartQRScan memory command) internal {
+        require(!startQRScanExists(self, command.id), "Start QR scan already exists");
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_EXISTS, command.id)), true);
+        Database(self).setUintValue(keccak256(abi.encodePacked(START_QR_SCAN_BY_SESSION_ID, command.sessionId)), command.id);
+        Database(self).setUintValue(keccak256(abi.encodePacked(START_QR_SCAN_SESSION_ID, command.id)), command.sessionId);
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_LIGHTS, command.id)), command.lights);
+        Database(self).setUint256stringX3Function(keccak256(abi.encodePacked(START_QR_SCAN_SUCCESS, command.id)), command.success);
+        Database(self).setUint256X1StringX1Function(keccak256(abi.encodePacked(START_QR_SCAN_SCANNED, command.id)), command.scanned);
+        Database(self).setUint256Function(keccak256(abi.encodePacked(START_QR_SCAN_FAIL, command.id)), command.fail);
+        Database(self).setUintValue(START_QR_SCAN_ID, command.id + 1);
+    }
+
+    function retrieveStartQRScanBySessionId(address self, uint256 _sessionId) internal view returns (StartQRScan memory) {
+        uint256 id = Database(self).getUintValue(keccak256(abi.encodePacked(START_QR_SCAN_BY_SESSION_ID, _sessionId)));
+        return retrieveStartQRScan(self, id);
+    }
+
+    function retrieveStartQRScan(address self, uint256 _id) internal view returns (StartQRScan memory) {
+        require(startQRScanExists(self, _id), "Start QR scan is not exists");
+        // @formatter:off
+        return StartQRScan({
+            id: _id,
+            sessionId: Database(self).getUintValue(keccak256(abi.encodePacked(START_QR_SCAN_SESSION_ID, _id))),
+            lights: Database(self).getBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_LIGHTS, _id))),
+            success: Database(self).getUint256stringX3Function(keccak256(abi.encodePacked(START_QR_SCAN_SUCCESS, _id))),
+            scanned: Database(self).getUint256X1StringX1Function(keccak256(abi.encodePacked(START_QR_SCAN_SCANNED, _id))),
+            fail: Database(self).getUint256Function(keccak256(abi.encodePacked(START_QR_SCAN_FAIL, _id)))
+        });
+        // @formatter:on
+    }
+
+    function retrieveStartQRScanSessionIdLights(address self, uint256 _id) internal view returns (uint256 _sessionId, bool _lights) {
+        require(startQRScanExists(self, _id), "Start QR scan is not exists");
+        _sessionId = Database(self).getUintValue(keccak256(abi.encodePacked(START_QR_SCAN_SESSION_ID, _id)));
+        _lights = Database(self).getBooleanValue(keccak256(abi.encodePacked(START_QR_SCAN_LIGHTS, _id)));
+    }
+
+    function createStopQRScan(address self, StopQRScan memory command) internal {
+        require(!stopQRScanExists(self, command.id), "Stop QR scan is already exists");
+        Database(self).setBooleanValue(keccak256(abi.encodePacked(STOP_QR_SCAN_EXISTS, command.id)), true);
+        Database(self).setUintValue(keccak256(abi.encodePacked(STOP_QR_SCAN_SESSION_ID, command.id)), command.sessionId);
+        Database(self).setUint256Function(keccak256(abi.encodePacked(STOP_QR_SCAN_SUCCESS, command.id)), command.success);
+        Database(self).setUint256Function(keccak256(abi.encodePacked(STOP_QR_SCAN_FAIL, command.id)), command.fail);
+        Database(self).setUintValue(STOP_QR_SCAN_ID, command.id + 1);
+    }
+
+    function retrieveStopQRScan(address self, uint256 _id) internal view returns (StopQRScan memory) {
+        require(stopQRScanExists(self, _id), "Stop QR scan is not exists");
+        // @formatter:off
+        return StopQRScan({
+            id: _id,
+            sessionId: Database(self).getUintValue(keccak256(abi.encodePacked(STOP_QR_SCAN_SESSION_ID, _id))),
+            success: Database(self).getUint256Function(keccak256(abi.encodePacked(STOP_QR_SCAN_SUCCESS, _id))),
+            fail: Database(self).getUint256Function(keccak256(abi.encodePacked(STOP_QR_SCAN_FAIL, _id)))
+        });
+        // @formatter:on
+    }
+
+    function retrieveStopQRScanSessionId(address _self, uint256 _id) internal view returns (uint256 _sessionId) {
+        require(stopQRScanExists(_self, _id), "Stop QR scan is not exists");
+        _sessionId = Database(_self).getUintValue(keccak256(abi.encodePacked(STOP_QR_SCAN_SESSION_ID, _id)));
+    }
+
+}
+
+library PrinterLib {
+
+    //ReceiptCreate 'headers'
+    bytes32 constant RECEIPT_CREATE_ID = keccak256(abi.encode("ReceiptCreate:uint256"));
+    string constant RECEIPT_CREATE_EXISTS = "receipt-create.exists:boolean";
+    string constant RECEIPT_CREATE_SESSION_ID = "receipt-create.session.id:uint256";
+    string constant RECEIPT_CREATE_SUCCESS = "receipt-create.success:function";
+    string constant RECEIPT_CREATE_FAIL = "receipt-create.fail:function";
+
+    //ReceiptPrint 'headers'
+    bytes32 constant RECEIPT_PRINT_ID = keccak256(abi.encode("ReceiptPrint:uint256"));
+    string constant RECEIPT_PRINT_EXISTS = "receipt-print.exists:boolean";
+    string constant RECEIPT_PRINT_SESSION_ID = "receipt-print.session.id:uint256";
+    string constant RECEIPT_PRINT_RECEIPT_ID = "receipt-print.receipt_id:string";
+    string constant RECEIPT_PRINT_DATA = "receipt-print.data:string";
+    string constant RECEIPT_PRINT_PARAMS = "receipt-print.params:string";
+    string constant RECEIPT_PRINT_SUCCESS = "receipt-print.success:function";
+    string constant RECEIPT_PRINT_FAIL = "receipt-print.fail:function";
+
+    struct ReceiptCreate {
+        uint256 id;
+        uint256 sessionId;
+        function(uint256, string memory, string memory) external success;
+        function(uint256) external fail;
+    }
+
+    struct ReceiptPrint {
+        uint256 id;
+        uint256 sessionId;
+        string receiptId;
+        string data;
+        string params;
+        function(uint256) external success;
+        function(uint256) external fail;
+    }
+
+    function receiptCreateExists(address _self, uint256 _id) internal view returns (bool _exists) {
+        _exists = Database(_self).getBooleanValue(keccak256(abi.encodePacked(RECEIPT_CREATE_EXISTS, _id)));
+    }
+
+    function receiptPrintExists(address _self, uint256 _id) internal view returns (bool _exists) {
+        _exists = Database(_self).getBooleanValue(keccak256(abi.encodePacked(RECEIPT_PRINT_EXISTS, _id)));
+    }
+
+    function getNextReceiptCreateId(address _self) internal view returns (uint256 _id) {
+        _id = Database(_self).getUintValue(RECEIPT_CREATE_ID);
+    }
+
+    function getNextReceiptPrintId(address _self) internal view returns (uint256 _id) {
+        _id = Database(_self).getUintValue(RECEIPT_PRINT_ID);
+    }
+
+    function createReceiptCreate(address _self, ReceiptCreate memory _command) internal {
+        require(!receiptCreateExists(_self, _command.id), "receipt create already exists");
+        require(getNextReceiptCreateId(_self) == _command.id, "violation of receipt create id sequence");
+        Database(_self).setBooleanValue(keccak256(abi.encodePacked(RECEIPT_CREATE_EXISTS, _command.id)), true);
+        Database(_self).setUintValue(keccak256(abi.encodePacked(RECEIPT_CREATE_SESSION_ID, _command.id)), _command.sessionId);
+        Database(_self).setUint256X1StringX2Function(keccak256(abi.encodePacked(RECEIPT_CREATE_SUCCESS, _command.id)), _command.success);
+        Database(_self).setUint256Function(keccak256(abi.encodePacked(RECEIPT_CREATE_FAIL, _command.id)), _command.fail);
+        Database(_self).setUintValue(RECEIPT_CREATE_ID, _command.id + 1);
+    }
+
+    function retrieveReceiptCreate(address _self, uint256 _id) internal view returns (ReceiptCreate memory) {
+        require(receiptCreateExists(_self, _id), "receipt create is not exists");
+        // @formatter:off
+        return ReceiptCreate({
+            id: _id,
+            sessionId: Database(_self).getUintValue(keccak256(abi.encodePacked(RECEIPT_CREATE_SESSION_ID, _id))),
+            success: Database(_self).getUint256X1StringX2Function(keccak256(abi.encodePacked(RECEIPT_CREATE_SUCCESS, _id))),
+            fail: Database(_self).getUint256Function(keccak256(abi.encodePacked(RECEIPT_CREATE_FAIL, _id)))
+        });
+        // @formatter:on
+    }
+
+    function createReceiptPrint(address _self, ReceiptPrint memory _command) internal {
+        require(!receiptPrintExists(_self, _command.id), "receipt print already exists");
+        require(getNextReceiptPrintId(_self) == _command.id, "violation of receipt print id sequence");
+        Database(_self).setBooleanValue(keccak256(abi.encodePacked(RECEIPT_PRINT_EXISTS, _command.id)), true);
+        Database(_self).setUintValue(keccak256(abi.encodePacked(RECEIPT_PRINT_SESSION_ID, _command.id)), _command.sessionId);
+        Database(_self).setStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_RECEIPT_ID, _command.id)), _command.receiptId);
+        Database(_self).setStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_DATA, _command.id)), _command.data);
+        Database(_self).setStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_PARAMS, _command.id)), _command.params);
+        Database(_self).setUint256Function(keccak256(abi.encodePacked(RECEIPT_PRINT_SUCCESS, _command.id)), _command.success);
+        Database(_self).setUint256Function(keccak256(abi.encodePacked(RECEIPT_PRINT_FAIL, _command.id)), _command.fail);
+        Database(_self).setUintValue(RECEIPT_PRINT_ID, _command.id + 1);
+    }
+
+    function retrieveReceiptPrint(address _self, uint256 _id) internal view returns (ReceiptPrint memory) {
+        require(receiptPrintExists(_self, _id), "receipt print is not exists");
+        // @formatter:off
+        return ReceiptPrint({
+            id: _id,
+            sessionId: Database(_self).getUintValue(keccak256(abi.encodePacked(RECEIPT_PRINT_SESSION_ID, _id))),
+            receiptId: Database(_self).getStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_RECEIPT_ID, _id))),
+            data: Database(_self).getStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_DATA, _id))),
+            params: Database(_self).getStringValue(keccak256(abi.encodePacked(RECEIPT_PRINT_PARAMS, _id))),
+            success: Database(_self).getUint256Function(keccak256(abi.encodePacked(RECEIPT_PRINT_SUCCESS, _id))),
+            fail: Database(_self).getUint256Function(keccak256(abi.encodePacked(RECEIPT_PRINT_FAIL, _id)))
+        });
+        // @formatter:on
     }
 
 }
