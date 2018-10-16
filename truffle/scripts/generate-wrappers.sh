@@ -9,4 +9,5 @@ web3j truffle generate build/contracts/KioskStorage.json -p com.skysoft.vaultlog
 web3j truffle generate build/contracts/SessionOracle.json -p com.skysoft.vaultlogic.contracts -o ../contract-wrappers/src/main/java
 web3j truffle generate build/contracts/SessionStorage.json -p com.skysoft.vaultlogic.contracts -o ../contract-wrappers/src/main/java
 web3j truffle generate build/contracts/ParameterStorage.json -p com.skysoft.vaultlogic.contracts -o ../contract-wrappers/src/main/java
+web3j truffle generate build/contracts/CameraOracle.json -p com.skysoft.vaultlogic.contracts -o ../contract-wrappers/src/main/java
 git add ../contract-wrappers/src/main/java*
