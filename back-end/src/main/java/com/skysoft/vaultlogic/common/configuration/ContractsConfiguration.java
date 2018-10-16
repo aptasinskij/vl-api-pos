@@ -98,4 +98,9 @@ public class ContractsConfiguration {
         return CameraOracle.load(CameraOracle.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
     }
 
+    @Bean
+    public PrinterOracle printerOracle(Quorum quorum, ClientTransactionManager transactionManager, BlockchainNetwork network) {
+        return PrinterOracle.load(PrinterOracle.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
+    }
+
 }
