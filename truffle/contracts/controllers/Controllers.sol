@@ -37,16 +37,29 @@ contract APrinterController {
         public
         returns (bool _accepted);
 
+    function respondCreate(
+        uint256 _sessionId,
+        string memory _receiptId,
+        string memory _url,
+        function(uint256, string memory, string memory) external _callback
+    ) public;
+
+    function respondFailCreate(uint256 _sessionId, function(uint256) external _callback) public;
+
     function printReceipt(
         uint256 _sessionId,
         string memory _receiptId,
         string memory _data,
         string memory _params,
-        function(uint256) external success,
-        function(uint256) external fail
+        function(uint256) external _success,
+        function(uint256) external _fail
     )
         public
         returns (bool _accepted);
+
+    function respondPrint(uint256 _sessionId, function(uint256) external _callback) public;
+
+    function respondFailPrint(uint256 _sessionId, function(uint256) external _callback) public;
 
 }
 

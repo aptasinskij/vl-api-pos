@@ -111,6 +111,10 @@ contract APrinterManager {
     public
     returns (bool _accepted);
 
+    function confirmCreate(uint256 _commandId, string memory _receiptId, string memory _url) public;
+
+    function confirmFailCreate(uint256 _commandId) public;
+
     function printReceipt(
         address _application,
         uint256 _sessionId,
@@ -122,5 +126,9 @@ contract APrinterManager {
     )
     public
     returns (bool _accepted);
+
+    function confirmPrint(uint256 _commandId) public;
+
+    function confirmFailPrint(uint256 _commandId) public;
 
 }
