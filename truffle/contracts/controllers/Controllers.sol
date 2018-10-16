@@ -1,20 +1,5 @@
 pragma solidity 0.4.24;
 
-import "../registry/Component.sol";
-import "../application/IApplication.sol";
-import {AnApplicationStorage} from "../storages/Storages.sol";
-
-contract AbstractController is Component {
-
-    modifier onlyRegisteredApp {
-        require(AnApplicationStorage(_applicationStorage()).isRegistered(msg.sender), "Illegal access");
-        _;
-    }
-
-    constructor(address registry) Component(registry) internal {}
-
-}
-
 contract ACashInController {
 
     function open(uint256 _sessionId) public returns (uint256);
@@ -42,11 +27,11 @@ contract ASessionController {
 
 }
 
-contract APrinterController is AbstractController {
+contract APrinterController {
 
     function createReceipt(
         uint256 _sessionId,
-        function(string memory, string memory) external _success,
+        function(uint256, string memory, string memory) external _success,
         function(uint256) external _fail
     )
         public
@@ -54,8 +39,9 @@ contract APrinterController is AbstractController {
 
     function printReceipt(
         uint256 _sessionId,
-        string memory _id,
+        string memory _receiptId,
         string memory _data,
+        string memory _params,
         function(uint256) external success,
         function(uint256) external fail
     )
