@@ -1,39 +1,33 @@
 pragma solidity 0.4.24;
 
-import "../registry/Component.sol";
 import {ACashChannelsManager} from "../managers/Managers.sol";
+import {ACashInOracle} from "./Oracles.sol";
+import "../Platform.sol";
 
-contract CashInOracle is Component {
+contract CashInOracle is ACashInOracle, Named("cash-in-oracle"), Mortal, Component {
 
-    string constant COMPONENT_NAME = "cash-in-oracle";
-    
-    event OpenCashAcceptor(uint256 sessionId, uint256 channelId, uint256 channelStatus);
-    event CloseCashAcceptor(uint256 sessionId, uint256 channelId);
+    string constant MANAGER = "cash-channels-manager";
 
-    constructor(address regAddr) Component(regAddr) public {}
+    constructor(address _config) Component(_config) public {}
 
-    function getName() internal pure returns(string name) {
-        return COMPONENT_NAME;
-    }
-
-    function open(uint256 sessionId, uint256 channelId, uint256 channelStatus) external {
+    function open(uint256 sessionId, uint256 channelId, uint256 channelStatus) public {
         emit OpenCashAcceptor(sessionId, channelId, channelStatus);
     }
 
-    function close(uint256 sessionId, uint256 channelId) external {
+    function close(uint256 sessionId, uint256 channelId) public {
         emit CloseCashAcceptor(sessionId, channelId);
     }
 
-    function confirmOpen(uint256 channelId) external {
-        _cashChannelsManager().confirmOpen(channelId);
+    function confirmOpen(uint256 channelId) public {
+        ACashChannelsManager(context.get(MANAGER)).confirmOpen(channelId);
     }
 
-    function confirmClose(uint256 channelId) external {
-        _cashChannelsManager().confirmClose(channelId);
+    function confirmClose(uint256 channelId) public {
+        ACashChannelsManager(context.get(MANAGER)).confirmClose(channelId);
     }
 
-    function increaseBalance(uint256 channelId, uint256 amount) external {
-        _cashChannelsManager().updateCashInBalance(channelId, amount);
+    function increaseBalance(uint256 channelId, uint256 amount) public {
+        ACashChannelsManager(context.get(MANAGER)).updateCashInBalance(channelId, amount);
     }
 
 }

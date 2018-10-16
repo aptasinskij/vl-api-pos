@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../registry/IRegistry.sol";
+import {Context} from "../Platform.sol";
 
 contract RegistryDependent {
 
@@ -10,8 +10,8 @@ contract RegistryDependent {
         registry = regAddr;
     }
 
-    function componentForName(string name) internal view returns(address componentAddress) {
-        componentAddress = IRegistry(registry).get(name);
+    function componentForName(string memory name) internal view returns(address componentAddress) {
+        componentAddress = Context(registry).get(name);
         require(componentAddress != 0x0, "Registry returned 0x0");
     }
 

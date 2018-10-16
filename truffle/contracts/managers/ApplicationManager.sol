@@ -1,24 +1,21 @@
 pragma solidity 0.4.24;
 
-import "../registry/Component.sol";
 import {AnApplicationManager} from "./Managers.sol";
+import {AnApplicationStorage} from "../storages/Storages.sol";
+import "../Platform.sol";
 
-contract ApplicationManager is Component, AnApplicationManager {
+contract ApplicationManager is AnApplicationManager, Named("application-manager"), Mortal, Component {
 
-    string constant COMPONENT_NAME = "application-manager";
+    string constant STORAGE = "application-storage";
 
-    constructor(address regAddr) Component(regAddr) public {}
-
-    function getName() internal pure returns(string name) {
-        return COMPONENT_NAME;
-    }
+    constructor(address _config) Component(_config) public {}
 
     function registerApplication(uint256 appId, string name, address owner, string url, address appAddr) public {
-        _applicationStorage().save(appId, name, owner, url, appAddr, uint256(ApplicationStatus.PENDING));
+        AnApplicationStorage(context.get(STORAGE)).save(appId, name, owner, url, appAddr, uint256(ApplicationStatus.PENDING));
     }
 
     function enableApplication(uint256 applicationId) public {
-        _applicationStorage().setApplicationStatus(applicationId, uint256(ApplicationStatus.ENABLED));
+        AnApplicationStorage(context.get(STORAGE)).setApplicationStatus(applicationId, uint256(ApplicationStatus.ENABLED));
     }
 
 }

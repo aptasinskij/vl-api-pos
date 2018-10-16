@@ -1,0 +1,2974 @@
+{
+  "contractName": "CashInOracle",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "kill",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_config",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "sessionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "channelId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "channelStatus",
+          "type": "uint256"
+        }
+      ],
+      "name": "OpenCashAcceptor",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "sessionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "channelId",
+          "type": "uint256"
+        }
+      ],
+      "name": "CloseCashAcceptor",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "sessionId",
+          "type": "uint256"
+        },
+        {
+          "name": "channelId",
+          "type": "uint256"
+        },
+        {
+          "name": "channelStatus",
+          "type": "uint256"
+        }
+      ],
+      "name": "open",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "sessionId",
+          "type": "uint256"
+        },
+        {
+          "name": "channelId",
+          "type": "uint256"
+        }
+      ],
+      "name": "close",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "channelId",
+          "type": "uint256"
+        }
+      ],
+      "name": "confirmOpen",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "channelId",
+          "type": "uint256"
+        }
+      ],
+      "name": "confirmClose",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "channelId",
+          "type": "uint256"
+        },
+        {
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "increaseBalance",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x60806040523480156200001157600080fd5b5060405160208062001134833981018060405281019080805190602001909291905050508060006040805190810160405280600e81526020017f636173682d696e2d6f7261636c65000000000000000000000000000000000000815250336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508060019080519060200190620000c6929190620005bf565b50508173ffffffffffffffffffffffffffffffffffffffff1663713b563f6040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b1580156200012d57600080fd5b505af115801562000142573d6000803e3d6000fd5b505050506040513d60208110156200015957600080fd5b8101908080519060200190929190505050600360006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508173ffffffffffffffffffffffffffffffffffffffff1663d0496d6a6040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b1580156200020f57600080fd5b505af115801562000224573d6000803e3d6000fd5b505050506040513d60208110156200023b57600080fd5b8101908080519060200190929190505050600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663693ec85e60016040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018080602001828103825283818154600181600116156101000203166002900481526020019150805460018160011615610100020316600290048015620003845780601f10620003585761010080835404028352916020019162000384565b820191906000526020600020905b8154815290600101906020018083116200036657829003601f168201915b505092505050602060405180830381600087803b158015620003a557600080fd5b505af1158015620003ba573d6000803e3d6000fd5b505050506040513d6020811015620003d157600080fd5b8101908080519060200190929190505050905060008173ffffffffffffffffffffffffffffffffffffffff1614151562000484578073ffffffffffffffffffffffffffffffffffffffff166341c0e1b56040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b1580156200046a57600080fd5b505af11580156200047f573d6000803e3d6000fd5b505050505b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663f2c298be60016040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180806020018281038252838181546001816001161561010002031660029004815260200191508054600181600116156101000203166002900480156200057c5780601f1062000550576101008083540402835291602001916200057c565b820191906000526020600020905b8154815290600101906020018083116200055e57829003601f168201915b505092505050600060405180830381600087803b1580156200059d57600080fd5b505af1158015620005b2573d6000803e3d6000fd5b505050505050506200066e565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f106200060257805160ff191683800117855562000633565b8280016001018555821562000633579182015b828111156200063257825182559160200191906001019062000615565b5b50905062000642919062000646565b5090565b6200066b91905b80821115620006675760008160009055506001016200064d565b5090565b90565b610ab6806200067e6000396000f30060806040526004361061008e576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806306fdde03146100935780633d57b2a91461012357806341c0e1b5146101645780635940c6551461017b578063596c8976146101a8578063882d5f7a146101df5780638da5cb5b1461020c578063f479d37714610263575b600080fd5b34801561009f57600080fd5b506100a861029a565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156100e85780820151818401526020810190506100cd565b50505050905090810190601f1680156101155780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561012f57600080fd5b50610162600480360381019080803590602001909291908035906020019092919080359060200190929190505050610338565b005b34801561017057600080fd5b50610179610384565b005b34801561018757600080fd5b506101a66004803603810190808035906020019092919050505061044c565b005b3480156101b457600080fd5b506101dd600480360381019080803590602001909291908035906020019092919050505061063b565b005b3480156101eb57600080fd5b5061020a6004803603810190808035906020019092919050505061067e565b005b34801561021857600080fd5b5061022161086d565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561026f57600080fd5b506102986004803603810190808035906020019092919080359060200190929190505050610892565b005b60018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156103305780601f1061030557610100808354040283529160200191610330565b820191906000526020600020905b81548152906001019060200180831161031357829003601f168201915b505050505081565b7fd5e06f715ea045b85ecbf99e39def109e0d16a5b56924190bcd2a388171d8ac483838360405180848152602001838152602001828152602001935050505060405180910390a1505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163273ffffffffffffffffffffffffffffffffffffffff16141515610448576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260128152602001807f6f6e6c79206f776e657220616c6c6f776564000000000000000000000000000081525060200191505060405180910390fd5b6000ff5b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663693ec85e6040805190810160405280601581526020017f636173682d6368616e6e656c732d6d616e6167657200000000000000000000008152506040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018080602001828103825283818151815260200191508051906020019080838360005b8381101561052b578082015181840152602081019050610510565b50505050905090810190601f1680156105585780820380516001836020036101000a031916815260200191505b5092505050602060405180830381600087803b15801561057757600080fd5b505af115801561058b573d6000803e3d6000fd5b505050506040513d60208110156105a157600080fd5b810190808051906020019092919050505073ffffffffffffffffffffffffffffffffffffffff16635940c655826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050600060405180830381600087803b15801561062057600080fd5b505af1158015610634573d6000803e3d6000fd5b5050505050565b7fe118fe67faa4f47f4ef978dcb745bb527acd9dcbae480e8ce8c3dcbd48607c078282604051808381526020018281526020019250505060405180910390a15050565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663693ec85e6040805190810160405280601581526020017f636173682d6368616e6e656c732d6d616e6167657200000000000000000000008152506040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018080602001828103825283818151815260200191508051906020019080838360005b8381101561075d578082015181840152602081019050610742565b50505050905090810190601f16801561078a5780820380516001836020036101000a031916815260200191505b5092505050602060405180830381600087803b1580156107a957600080fd5b505af11580156107bd573d6000803e3d6000fd5b505050506040513d60208110156107d357600080fd5b810190808051906020019092919050505073ffffffffffffffffffffffffffffffffffffffff1663882d5f7a826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050600060405180830381600087803b15801561085257600080fd5b505af1158015610866573d6000803e3d6000fd5b5050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663693ec85e6040805190810160405280601581526020017f636173682d6368616e6e656c732d6d616e6167657200000000000000000000008152506040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018080602001828103825283818151815260200191508051906020019080838360005b83811015610971578082015181840152602081019050610956565b50505050905090810190601f16801561099e5780820380516001836020036101000a031916815260200191505b5092505050602060405180830381600087803b1580156109bd57600080fd5b505af11580156109d1573d6000803e3d6000fd5b505050506040513d60208110156109e757600080fd5b810190808051906020019092919050505073ffffffffffffffffffffffffffffffffffffffff166354e027d883836040518363ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018083815260200182815260200192505050600060405180830381600087803b158015610a6e57600080fd5b505af1158015610a82573d6000803e3d6000fd5b5050505050505600a165627a7a72305820681f4ffeea1ffe3c79e657ee812400b6d3b5de008136416ee0748617890f9cb50029",
+  "deployedBytecode": "0x60806040526004361061008e576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806306fdde03146100935780633d57b2a91461012357806341c0e1b5146101645780635940c6551461017b578063596c8976146101a8578063882d5f7a146101df5780638da5cb5b1461020c578063f479d37714610263575b600080fd5b34801561009f57600080fd5b506100a861029a565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156100e85780820151818401526020810190506100cd565b50505050905090810190601f1680156101155780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561012f57600080fd5b50610162600480360381019080803590602001909291908035906020019092919080359060200190929190505050610338565b005b34801561017057600080fd5b50610179610384565b005b34801561018757600080fd5b506101a66004803603810190808035906020019092919050505061044c565b005b3480156101b457600080fd5b506101dd600480360381019080803590602001909291908035906020019092919050505061063b565b005b3480156101eb57600080fd5b5061020a6004803603810190808035906020019092919050505061067e565b005b34801561021857600080fd5b5061022161086d565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561026f57600080fd5b506102986004803603810190808035906020019092919080359060200190929190505050610892565b005b60018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156103305780601f1061030557610100808354040283529160200191610330565b820191906000526020600020905b81548152906001019060200180831161031357829003601f168201915b505050505081565b7fd5e06f715ea045b85ecbf99e39def109e0d16a5b56924190bcd2a388171d8ac483838360405180848152602001838152602001828152602001935050505060405180910390a1505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163273ffffffffffffffffffffffffffffffffffffffff16141515610448576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260128152602001807f6f6e6c79206f776e657220616c6c6f776564000000000000000000000000000081525060200191505060405180910390fd5b6000ff5b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663693ec85e6040805190810160405280601581526020017f636173682d6368616e6e656c732d6d616e6167657200000000000000000000008152506040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018080602001828103825283818151815260200191508051906020019080838360005b8381101561052b578082015181840152602081019050610510565b50505050905090810190601f1680156105585780820380516001836020036101000a031916815260200191505b5092505050602060405180830381600087803b15801561057757600080fd5b505af115801561058b573d6000803e3d6000fd5b505050506040513d60208110156105a157600080fd5b810190808051906020019092919050505073ffffffffffffffffffffffffffffffffffffffff16635940c655826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050600060405180830381600087803b15801561062057600080fd5b505af1158015610634573d6000803e3d6000fd5b5050505050565b7fe118fe67faa4f47f4ef978dcb745bb527acd9dcbae480e8ce8c3dcbd48607c078282604051808381526020018281526020019250505060405180910390a15050565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663693ec85e6040805190810160405280601581526020017f636173682d6368616e6e656c732d6d616e6167657200000000000000000000008152506040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018080602001828103825283818151815260200191508051906020019080838360005b8381101561075d578082015181840152602081019050610742565b50505050905090810190601f16801561078a5780820380516001836020036101000a031916815260200191505b5092505050602060405180830381600087803b1580156107a957600080fd5b505af11580156107bd573d6000803e3d6000fd5b505050506040513d60208110156107d357600080fd5b810190808051906020019092919050505073ffffffffffffffffffffffffffffffffffffffff1663882d5f7a826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050600060405180830381600087803b15801561085257600080fd5b505af1158015610866573d6000803e3d6000fd5b5050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663693ec85e6040805190810160405280601581526020017f636173682d6368616e6e656c732d6d616e6167657200000000000000000000008152506040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018080602001828103825283818151815260200191508051906020019080838360005b83811015610971578082015181840152602081019050610956565b50505050905090810190601f16801561099e5780820380516001836020036101000a031916815260200191505b5092505050602060405180830381600087803b1580156109bd57600080fd5b505af11580156109d1573d6000803e3d6000fd5b505050506040513d60208110156109e757600080fd5b810190808051906020019092919050505073ffffffffffffffffffffffffffffffffffffffff166354e027d883836040518363ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018083815260200182815260200192505050600060405180830381600087803b158015610a6e57600080fd5b505af1158015610a82573d6000803e3d6000fd5b5050505050505600a165627a7a72305820681f4ffeea1ffe3c79e657ee812400b6d3b5de008136416ee0748617890f9cb50029",
+  "sourceMap": "160:939:19:-;;;306:57;8:9:-1;5:2;;;30:1;27;20:12;5:2;306:57:19;;;;;;;;;;;;;;;;;;;;;;;;;;;;;345:7;823:16:1;501:71;;;;;;;;;;;;;;;;;;324:10;316:5;;:18;;;;;;;;;;;;;;;;;;560:5;553:4;:12;;;;;;;;;;;;:::i;:::-;;501:71;740:7;733:24;;;:26;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;733:26:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;733:26:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;733:26:1;;;;;;;;;;;;;;;;722:8;;:37;;;;;;;;;;;;;;;;;;794:7;787:23;;;:25;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;787:25:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;787:25:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;787:25:1;;;;;;;;;;;;;;;;769:7;;:44;;;;;;;;;;;;;;;;;;842:7;;;;;;;;;;;:11;;;854:4;842:17;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;842:17:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;842:17:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;842:17:1;;;;;;;;;;;;;;;;823:36;;885:3;873:8;:15;;;;869:44;;;897:8;890:21;;;:23;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;890:23:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;890:23:1;;;;869:44;923:7;;;;;;;;;;;:16;;;940:4;923:22;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;923:22:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;923:22:1;;;;674:278;;306:57:19;160:939;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;",
+  "deployedSourceMap": "160:939:19:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;476:18:1;;8:9:-1;5:2;;;30:1;27;20:12;5:2;476:18:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;476:18:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;369:157:19;;8:9:-1;5:2;;;30:1;27;20:12;5:2;369:157:19;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;378:71:1;;8:9:-1;5:2;;;30:1;27;20:12;5:2;378:71:1;;;;;;659:129:19;;8:9:-1;5:2;;;30:1;27;20:12;5:2;659:129:19;;;;;;;;;;;;;;;;;;;;;;;;;;532:121;;8:9:-1;5:2;;;30:1;27;20:12;5:2;532:121:19;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;794:131;;8:9:-1;5:2;;;30:1;27;20:12;5:2;794:131:19;;;;;;;;;;;;;;;;;;;;;;;;;;47:20:1;;8:9:-1;5:2;;;30:1;27;20:12;5:2;47:20:1;;;;;;;;;;;;;;;;;;;;;;;;;;;931:165:19;;8:9:-1;5:2;;;30:1;27;20:12;5:2;931:165:19;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;476:18:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;369:157:19:-;466:53;483:9;494;505:13;466:53;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;369:157;;;:::o;378:71:1:-;231:5;;;;;;;;;;;218:18;;:9;:18;;;210:49;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;438:3;425:17;659:129:19;737:7;;;;;;;;;;;:11;;;749:7;;;;;;;;;;;;;;;;;;737:20;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;737:20:19;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;737:20:19;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;737:20:19;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;737:20:19;;;;;;;;;;;;;;;;716:54;;;771:9;716:65;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;716:65:19;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;716:65:19;;;;659:129;:::o;532:121::-;607:39;625:9;636;607:39;;;;;;;;;;;;;;;;;;;;;;;;532:121;;:::o;794:131::-;873:7;;;;;;;;;;;:11;;;885:7;;;;;;;;;;;;;;;;;;873:20;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;873:20:19;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;873:20:19;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;873:20:19;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;873:20:19;;;;;;;;;;;;;;;;852:55;;;908:9;852:66;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;852:66:19;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;852:66:19;;;;794:131;:::o;47:20:1:-;;;;;;;;;;;;;:::o;931:165:19:-;1029:7;;;;;;;;;;;:11;;;1041:7;;;;;;;;;;;;;;;;;;1029:20;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;1029:20:19;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1029:20:19;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1029:20:19;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1029:20:19;;;;;;;;;;;;;;;;1008:62;;;1071:9;1082:6;1008:81;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1008:81:19;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1008:81:19;;;;931:165;;:::o",
+  "source": "pragma solidity 0.4.24;\n\nimport {ACashChannelsManager} from \"../managers/Managers.sol\";\nimport {ACashInOracle} from \"./Oracles.sol\";\nimport \"../Platform.sol\";\n\ncontract CashInOracle is ACashInOracle, Named(\"cash-in-oracle\"), Mortal, Component {\n\n    string constant MANAGER = \"cash-channels-manager\";\n\n    constructor(address _config) Component(_config) public {}\n\n    function open(uint256 sessionId, uint256 channelId, uint256 channelStatus) public {\n        emit OpenCashAcceptor(sessionId, channelId, channelStatus);\n    }\n\n    function close(uint256 sessionId, uint256 channelId) public {\n        emit CloseCashAcceptor(sessionId, channelId);\n    }\n\n    function confirmOpen(uint256 channelId) public {\n        ACashChannelsManager(context.get(MANAGER)).confirmOpen(channelId);\n    }\n\n    function confirmClose(uint256 channelId) public {\n        ACashChannelsManager(context.get(MANAGER)).confirmClose(channelId);\n    }\n\n    function increaseBalance(uint256 channelId, uint256 amount) public {\n        ACashChannelsManager(context.get(MANAGER)).updateCashInBalance(channelId, amount);\n    }\n\n}",
+  "sourcePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/oracles/CashInOracle.sol",
+  "ast": {
+    "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/oracles/CashInOracle.sol",
+    "exportedSymbols": {
+      "CashInOracle": [
+        8101
+      ]
+    },
+    "id": 8102,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 7994,
+        "literals": [
+          "solidity",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:19"
+      },
+      {
+        "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/managers/Managers.sol",
+        "file": "../managers/Managers.sol",
+        "id": 7996,
+        "nodeType": "ImportDirective",
+        "scope": 8102,
+        "sourceUnit": 7305,
+        "src": "25:62:19",
+        "symbolAliases": [
+          {
+            "foreign": 7995,
+            "local": null
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/oracles/Oracles.sol",
+        "file": "./Oracles.sol",
+        "id": 7998,
+        "nodeType": "ImportDirective",
+        "scope": 8102,
+        "sourceUnit": 8247,
+        "src": "88:44:19",
+        "symbolAliases": [
+          {
+            "foreign": 7997,
+            "local": null
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/Platform.sol",
+        "file": "../Platform.sol",
+        "id": 7999,
+        "nodeType": "ImportDirective",
+        "scope": 8102,
+        "sourceUnit": 613,
+        "src": "133:25:19",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 8000,
+              "name": "ACashInOracle",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 8181,
+              "src": "185:13:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ACashInOracle_$8181",
+                "typeString": "contract ACashInOracle"
+              }
+            },
+            "id": 8001,
+            "nodeType": "InheritanceSpecifier",
+            "src": "185:13:19"
+          },
+          {
+            "arguments": [
+              {
+                "argumentTypes": null,
+                "hexValue": "636173682d696e2d6f7261636c65",
+                "id": 8003,
+                "isConstant": false,
+                "isLValue": false,
+                "isPure": true,
+                "kind": "string",
+                "lValueRequested": false,
+                "nodeType": "Literal",
+                "src": "206:16:19",
+                "subdenomination": null,
+                "typeDescriptions": {
+                  "typeIdentifier": "t_stringliteral_c074e4beb5dc3379f61264254dc9ea187cfae86839246823f6fd2183e16e8e9f",
+                  "typeString": "literal_string \"cash-in-oracle\""
+                },
+                "value": "cash-in-oracle"
+              }
+            ],
+            "baseName": {
+              "contractScope": null,
+              "id": 8002,
+              "name": "Named",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 507,
+              "src": "200:5:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Named_$507",
+                "typeString": "contract Named"
+              }
+            },
+            "id": 8004,
+            "nodeType": "InheritanceSpecifier",
+            "src": "200:23:19"
+          },
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 8005,
+              "name": "Mortal",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 494,
+              "src": "225:6:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Mortal_$494",
+                "typeString": "contract Mortal"
+              }
+            },
+            "id": 8006,
+            "nodeType": "InheritanceSpecifier",
+            "src": "225:6:19"
+          },
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 8007,
+              "name": "Component",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 561,
+              "src": "233:9:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Component_$561",
+                "typeString": "contract Component"
+              }
+            },
+            "id": 8008,
+            "nodeType": "InheritanceSpecifier",
+            "src": "233:9:19"
+          }
+        ],
+        "contractDependencies": [
+          481,
+          494,
+          507,
+          561,
+          8181
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 8101,
+        "linearizedBaseContracts": [
+          8101,
+          561,
+          494,
+          507,
+          481,
+          8181
+        ],
+        "name": "CashInOracle",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": true,
+            "id": 8011,
+            "name": "MANAGER",
+            "nodeType": "VariableDeclaration",
+            "scope": 8101,
+            "src": "250:49:19",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_string_memory",
+              "typeString": "string"
+            },
+            "typeName": {
+              "id": 8009,
+              "name": "string",
+              "nodeType": "ElementaryTypeName",
+              "src": "250:6:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_string_storage_ptr",
+                "typeString": "string"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "636173682d6368616e6e656c732d6d616e61676572",
+              "id": 8010,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "string",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "276:23:19",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_stringliteral_a4c8190714a78f26504796a0d9b0bafac6a4fd53957e5833d036e3be3b358e09",
+                "typeString": "literal_string \"cash-channels-manager\""
+              },
+              "value": "cash-channels-manager"
+            },
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 8019,
+              "nodeType": "Block",
+              "src": "361:2:19",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 8020,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 8016,
+                    "name": "_config",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 8013,
+                    "src": "345:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  }
+                ],
+                "id": 8017,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 8015,
+                  "name": "Component",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 561,
+                  "src": "335:9:19",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_Component_$561_$",
+                    "typeString": "type(contract Component)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "335:18:19"
+              }
+            ],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8014,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8013,
+                  "name": "_config",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8020,
+                  "src": "318:15:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 8012,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "318:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "317:17:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8018,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "361:0:19"
+            },
+            "scope": 8101,
+            "src": "306:57:19",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 8035,
+              "nodeType": "Block",
+              "src": "451:75:19",
+              "statements": [
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 8030,
+                        "name": "sessionId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8022,
+                        "src": "483:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 8031,
+                        "name": "channelId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8024,
+                        "src": "494:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 8032,
+                        "name": "channelStatus",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8026,
+                        "src": "505:13:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 8029,
+                      "name": "OpenCashAcceptor",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 8141,
+                      "src": "466:16:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,uint256,uint256)"
+                      }
+                    },
+                    "id": 8033,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "466:53:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 8034,
+                  "nodeType": "EmitStatement",
+                  "src": "461:58:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 8036,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "open",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8027,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8022,
+                  "name": "sessionId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8036,
+                  "src": "383:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8021,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "383:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 8024,
+                  "name": "channelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8036,
+                  "src": "402:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8023,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "402:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 8026,
+                  "name": "channelStatus",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8036,
+                  "src": "421:21:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8025,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "421:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "382:61:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8028,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "451:0:19"
+            },
+            "scope": 8101,
+            "src": "369:157:19",
+            "stateMutability": "nonpayable",
+            "superFunction": 8156,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 8048,
+              "nodeType": "Block",
+              "src": "592:61:19",
+              "statements": [
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 8044,
+                        "name": "sessionId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8038,
+                        "src": "625:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 8045,
+                        "name": "channelId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8040,
+                        "src": "636:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 8043,
+                      "name": "CloseCashAcceptor",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 8147,
+                      "src": "607:17:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,uint256)"
+                      }
+                    },
+                    "id": 8046,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "607:39:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 8047,
+                  "nodeType": "EmitStatement",
+                  "src": "602:44:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 8049,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "close",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8041,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8038,
+                  "name": "sessionId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8049,
+                  "src": "547:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8037,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "547:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 8040,
+                  "name": "channelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8049,
+                  "src": "566:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8039,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "566:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "546:38:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8042,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "592:0:19"
+            },
+            "scope": 8101,
+            "src": "532:121:19",
+            "stateMutability": "nonpayable",
+            "superFunction": 8163,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 8064,
+              "nodeType": "Block",
+              "src": "706:82:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 8061,
+                        "name": "channelId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8051,
+                        "src": "771:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 8057,
+                                "name": "MANAGER",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 8011,
+                                "src": "749:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 8055,
+                                "name": "context",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 511,
+                                "src": "737:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_contract$_Context_$591",
+                                  "typeString": "contract Context"
+                                }
+                              },
+                              "id": 8056,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "get",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 590,
+                              "src": "737:11:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_address_$",
+                                "typeString": "function (string memory) view external returns (address)"
+                              }
+                            },
+                            "id": 8058,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "737:20:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          ],
+                          "id": 8054,
+                          "name": "ACashChannelsManager",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 7097,
+                          "src": "716:20:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_ACashChannelsManager_$7097_$",
+                            "typeString": "type(contract ACashChannelsManager)"
+                          }
+                        },
+                        "id": 8059,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "716:42:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_ACashChannelsManager_$7097",
+                          "typeString": "contract ACashChannelsManager"
+                        }
+                      },
+                      "id": 8060,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "confirmOpen",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 7075,
+                      "src": "716:54:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256) external"
+                      }
+                    },
+                    "id": 8062,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "716:65:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 8063,
+                  "nodeType": "ExpressionStatement",
+                  "src": "716:65:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 8065,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "confirmOpen",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8052,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8051,
+                  "name": "channelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8065,
+                  "src": "680:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8050,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "680:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "679:19:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8053,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "706:0:19"
+            },
+            "scope": 8101,
+            "src": "659:129:19",
+            "stateMutability": "nonpayable",
+            "superFunction": 8168,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 8080,
+              "nodeType": "Block",
+              "src": "842:83:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 8077,
+                        "name": "channelId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8067,
+                        "src": "908:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 8073,
+                                "name": "MANAGER",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 8011,
+                                "src": "885:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 8071,
+                                "name": "context",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 511,
+                                "src": "873:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_contract$_Context_$591",
+                                  "typeString": "contract Context"
+                                }
+                              },
+                              "id": 8072,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "get",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 590,
+                              "src": "873:11:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_address_$",
+                                "typeString": "function (string memory) view external returns (address)"
+                              }
+                            },
+                            "id": 8074,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "873:20:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          ],
+                          "id": 8070,
+                          "name": "ACashChannelsManager",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 7097,
+                          "src": "852:20:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_ACashChannelsManager_$7097_$",
+                            "typeString": "type(contract ACashChannelsManager)"
+                          }
+                        },
+                        "id": 8075,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "852:42:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_ACashChannelsManager_$7097",
+                          "typeString": "contract ACashChannelsManager"
+                        }
+                      },
+                      "id": 8076,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "confirmClose",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 7080,
+                      "src": "852:55:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256) external"
+                      }
+                    },
+                    "id": 8078,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "852:66:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 8079,
+                  "nodeType": "ExpressionStatement",
+                  "src": "852:66:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 8081,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "confirmClose",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8068,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8067,
+                  "name": "channelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8081,
+                  "src": "816:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8066,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "816:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "815:19:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8069,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "842:0:19"
+            },
+            "scope": 8101,
+            "src": "794:131:19",
+            "stateMutability": "nonpayable",
+            "superFunction": 8173,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 8099,
+              "nodeType": "Block",
+              "src": "998:98:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 8095,
+                        "name": "channelId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8083,
+                        "src": "1071:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 8096,
+                        "name": "amount",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8085,
+                        "src": "1082:6:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 8091,
+                                "name": "MANAGER",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 8011,
+                                "src": "1041:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 8089,
+                                "name": "context",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 511,
+                                "src": "1029:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_contract$_Context_$591",
+                                  "typeString": "contract Context"
+                                }
+                              },
+                              "id": 8090,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "get",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 590,
+                              "src": "1029:11:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_address_$",
+                                "typeString": "function (string memory) view external returns (address)"
+                              }
+                            },
+                            "id": 8092,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1029:20:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          ],
+                          "id": 8088,
+                          "name": "ACashChannelsManager",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 7097,
+                          "src": "1008:20:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_ACashChannelsManager_$7097_$",
+                            "typeString": "type(contract ACashChannelsManager)"
+                          }
+                        },
+                        "id": 8093,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1008:42:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_ACashChannelsManager_$7097",
+                          "typeString": "contract ACashChannelsManager"
+                        }
+                      },
+                      "id": 8094,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "updateCashInBalance",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 7087,
+                      "src": "1008:62:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,uint256) external"
+                      }
+                    },
+                    "id": 8097,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1008:81:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 8098,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1008:81:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 8100,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "increaseBalance",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8086,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8083,
+                  "name": "channelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8100,
+                  "src": "956:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8082,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "956:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 8085,
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8100,
+                  "src": "975:14:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8084,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "975:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "955:35:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8087,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "998:0:19"
+            },
+            "scope": 8101,
+            "src": "931:165:19",
+            "stateMutability": "nonpayable",
+            "superFunction": 8180,
+            "visibility": "public"
+          }
+        ],
+        "scope": 8102,
+        "src": "160:939:19"
+      }
+    ],
+    "src": "0:1099:19"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/oracles/CashInOracle.sol",
+    "exportedSymbols": {
+      "CashInOracle": [
+        8101
+      ]
+    },
+    "id": 8102,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 7994,
+        "literals": [
+          "solidity",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:19"
+      },
+      {
+        "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/managers/Managers.sol",
+        "file": "../managers/Managers.sol",
+        "id": 7996,
+        "nodeType": "ImportDirective",
+        "scope": 8102,
+        "sourceUnit": 7305,
+        "src": "25:62:19",
+        "symbolAliases": [
+          {
+            "foreign": 7995,
+            "local": null
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/oracles/Oracles.sol",
+        "file": "./Oracles.sol",
+        "id": 7998,
+        "nodeType": "ImportDirective",
+        "scope": 8102,
+        "sourceUnit": 8247,
+        "src": "88:44:19",
+        "symbolAliases": [
+          {
+            "foreign": 7997,
+            "local": null
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/Platform.sol",
+        "file": "../Platform.sol",
+        "id": 7999,
+        "nodeType": "ImportDirective",
+        "scope": 8102,
+        "sourceUnit": 613,
+        "src": "133:25:19",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 8000,
+              "name": "ACashInOracle",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 8181,
+              "src": "185:13:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ACashInOracle_$8181",
+                "typeString": "contract ACashInOracle"
+              }
+            },
+            "id": 8001,
+            "nodeType": "InheritanceSpecifier",
+            "src": "185:13:19"
+          },
+          {
+            "arguments": [
+              {
+                "argumentTypes": null,
+                "hexValue": "636173682d696e2d6f7261636c65",
+                "id": 8003,
+                "isConstant": false,
+                "isLValue": false,
+                "isPure": true,
+                "kind": "string",
+                "lValueRequested": false,
+                "nodeType": "Literal",
+                "src": "206:16:19",
+                "subdenomination": null,
+                "typeDescriptions": {
+                  "typeIdentifier": "t_stringliteral_c074e4beb5dc3379f61264254dc9ea187cfae86839246823f6fd2183e16e8e9f",
+                  "typeString": "literal_string \"cash-in-oracle\""
+                },
+                "value": "cash-in-oracle"
+              }
+            ],
+            "baseName": {
+              "contractScope": null,
+              "id": 8002,
+              "name": "Named",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 507,
+              "src": "200:5:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Named_$507",
+                "typeString": "contract Named"
+              }
+            },
+            "id": 8004,
+            "nodeType": "InheritanceSpecifier",
+            "src": "200:23:19"
+          },
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 8005,
+              "name": "Mortal",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 494,
+              "src": "225:6:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Mortal_$494",
+                "typeString": "contract Mortal"
+              }
+            },
+            "id": 8006,
+            "nodeType": "InheritanceSpecifier",
+            "src": "225:6:19"
+          },
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 8007,
+              "name": "Component",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 561,
+              "src": "233:9:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Component_$561",
+                "typeString": "contract Component"
+              }
+            },
+            "id": 8008,
+            "nodeType": "InheritanceSpecifier",
+            "src": "233:9:19"
+          }
+        ],
+        "contractDependencies": [
+          481,
+          494,
+          507,
+          561,
+          8181
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 8101,
+        "linearizedBaseContracts": [
+          8101,
+          561,
+          494,
+          507,
+          481,
+          8181
+        ],
+        "name": "CashInOracle",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": true,
+            "id": 8011,
+            "name": "MANAGER",
+            "nodeType": "VariableDeclaration",
+            "scope": 8101,
+            "src": "250:49:19",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_string_memory",
+              "typeString": "string"
+            },
+            "typeName": {
+              "id": 8009,
+              "name": "string",
+              "nodeType": "ElementaryTypeName",
+              "src": "250:6:19",
+              "typeDescriptions": {
+                "typeIdentifier": "t_string_storage_ptr",
+                "typeString": "string"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "636173682d6368616e6e656c732d6d616e61676572",
+              "id": 8010,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "string",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "276:23:19",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_stringliteral_a4c8190714a78f26504796a0d9b0bafac6a4fd53957e5833d036e3be3b358e09",
+                "typeString": "literal_string \"cash-channels-manager\""
+              },
+              "value": "cash-channels-manager"
+            },
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 8019,
+              "nodeType": "Block",
+              "src": "361:2:19",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 8020,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 8016,
+                    "name": "_config",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 8013,
+                    "src": "345:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  }
+                ],
+                "id": 8017,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 8015,
+                  "name": "Component",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 561,
+                  "src": "335:9:19",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_Component_$561_$",
+                    "typeString": "type(contract Component)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "335:18:19"
+              }
+            ],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8014,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8013,
+                  "name": "_config",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8020,
+                  "src": "318:15:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 8012,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "318:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "317:17:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8018,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "361:0:19"
+            },
+            "scope": 8101,
+            "src": "306:57:19",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 8035,
+              "nodeType": "Block",
+              "src": "451:75:19",
+              "statements": [
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 8030,
+                        "name": "sessionId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8022,
+                        "src": "483:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 8031,
+                        "name": "channelId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8024,
+                        "src": "494:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 8032,
+                        "name": "channelStatus",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8026,
+                        "src": "505:13:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 8029,
+                      "name": "OpenCashAcceptor",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 8141,
+                      "src": "466:16:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,uint256,uint256)"
+                      }
+                    },
+                    "id": 8033,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "466:53:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 8034,
+                  "nodeType": "EmitStatement",
+                  "src": "461:58:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 8036,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "open",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8027,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8022,
+                  "name": "sessionId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8036,
+                  "src": "383:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8021,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "383:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 8024,
+                  "name": "channelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8036,
+                  "src": "402:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8023,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "402:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 8026,
+                  "name": "channelStatus",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8036,
+                  "src": "421:21:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8025,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "421:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "382:61:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8028,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "451:0:19"
+            },
+            "scope": 8101,
+            "src": "369:157:19",
+            "stateMutability": "nonpayable",
+            "superFunction": 8156,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 8048,
+              "nodeType": "Block",
+              "src": "592:61:19",
+              "statements": [
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 8044,
+                        "name": "sessionId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8038,
+                        "src": "625:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 8045,
+                        "name": "channelId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8040,
+                        "src": "636:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 8043,
+                      "name": "CloseCashAcceptor",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 8147,
+                      "src": "607:17:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,uint256)"
+                      }
+                    },
+                    "id": 8046,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "607:39:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 8047,
+                  "nodeType": "EmitStatement",
+                  "src": "602:44:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 8049,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "close",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8041,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8038,
+                  "name": "sessionId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8049,
+                  "src": "547:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8037,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "547:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 8040,
+                  "name": "channelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8049,
+                  "src": "566:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8039,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "566:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "546:38:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8042,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "592:0:19"
+            },
+            "scope": 8101,
+            "src": "532:121:19",
+            "stateMutability": "nonpayable",
+            "superFunction": 8163,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 8064,
+              "nodeType": "Block",
+              "src": "706:82:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 8061,
+                        "name": "channelId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8051,
+                        "src": "771:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 8057,
+                                "name": "MANAGER",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 8011,
+                                "src": "749:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 8055,
+                                "name": "context",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 511,
+                                "src": "737:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_contract$_Context_$591",
+                                  "typeString": "contract Context"
+                                }
+                              },
+                              "id": 8056,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "get",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 590,
+                              "src": "737:11:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_address_$",
+                                "typeString": "function (string memory) view external returns (address)"
+                              }
+                            },
+                            "id": 8058,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "737:20:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          ],
+                          "id": 8054,
+                          "name": "ACashChannelsManager",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 7097,
+                          "src": "716:20:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_ACashChannelsManager_$7097_$",
+                            "typeString": "type(contract ACashChannelsManager)"
+                          }
+                        },
+                        "id": 8059,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "716:42:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_ACashChannelsManager_$7097",
+                          "typeString": "contract ACashChannelsManager"
+                        }
+                      },
+                      "id": 8060,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "confirmOpen",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 7075,
+                      "src": "716:54:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256) external"
+                      }
+                    },
+                    "id": 8062,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "716:65:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 8063,
+                  "nodeType": "ExpressionStatement",
+                  "src": "716:65:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 8065,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "confirmOpen",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8052,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8051,
+                  "name": "channelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8065,
+                  "src": "680:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8050,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "680:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "679:19:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8053,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "706:0:19"
+            },
+            "scope": 8101,
+            "src": "659:129:19",
+            "stateMutability": "nonpayable",
+            "superFunction": 8168,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 8080,
+              "nodeType": "Block",
+              "src": "842:83:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 8077,
+                        "name": "channelId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8067,
+                        "src": "908:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 8073,
+                                "name": "MANAGER",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 8011,
+                                "src": "885:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 8071,
+                                "name": "context",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 511,
+                                "src": "873:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_contract$_Context_$591",
+                                  "typeString": "contract Context"
+                                }
+                              },
+                              "id": 8072,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "get",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 590,
+                              "src": "873:11:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_address_$",
+                                "typeString": "function (string memory) view external returns (address)"
+                              }
+                            },
+                            "id": 8074,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "873:20:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          ],
+                          "id": 8070,
+                          "name": "ACashChannelsManager",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 7097,
+                          "src": "852:20:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_ACashChannelsManager_$7097_$",
+                            "typeString": "type(contract ACashChannelsManager)"
+                          }
+                        },
+                        "id": 8075,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "852:42:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_ACashChannelsManager_$7097",
+                          "typeString": "contract ACashChannelsManager"
+                        }
+                      },
+                      "id": 8076,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "confirmClose",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 7080,
+                      "src": "852:55:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256) external"
+                      }
+                    },
+                    "id": 8078,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "852:66:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 8079,
+                  "nodeType": "ExpressionStatement",
+                  "src": "852:66:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 8081,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "confirmClose",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8068,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8067,
+                  "name": "channelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8081,
+                  "src": "816:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8066,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "816:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "815:19:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8069,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "842:0:19"
+            },
+            "scope": 8101,
+            "src": "794:131:19",
+            "stateMutability": "nonpayable",
+            "superFunction": 8173,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 8099,
+              "nodeType": "Block",
+              "src": "998:98:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 8095,
+                        "name": "channelId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8083,
+                        "src": "1071:9:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 8096,
+                        "name": "amount",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 8085,
+                        "src": "1082:6:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 8091,
+                                "name": "MANAGER",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 8011,
+                                "src": "1041:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_string_memory",
+                                  "typeString": "string memory"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 8089,
+                                "name": "context",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 511,
+                                "src": "1029:7:19",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_contract$_Context_$591",
+                                  "typeString": "contract Context"
+                                }
+                              },
+                              "id": 8090,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "get",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 590,
+                              "src": "1029:11:19",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_address_$",
+                                "typeString": "function (string memory) view external returns (address)"
+                              }
+                            },
+                            "id": 8092,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1029:20:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          ],
+                          "id": 8088,
+                          "name": "ACashChannelsManager",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 7097,
+                          "src": "1008:20:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_ACashChannelsManager_$7097_$",
+                            "typeString": "type(contract ACashChannelsManager)"
+                          }
+                        },
+                        "id": 8093,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1008:42:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_ACashChannelsManager_$7097",
+                          "typeString": "contract ACashChannelsManager"
+                        }
+                      },
+                      "id": 8094,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "updateCashInBalance",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 7087,
+                      "src": "1008:62:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,uint256) external"
+                      }
+                    },
+                    "id": 8097,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1008:81:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 8098,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1008:81:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 8100,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "increaseBalance",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8086,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8083,
+                  "name": "channelId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8100,
+                  "src": "956:17:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8082,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "956:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 8085,
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8100,
+                  "src": "975:14:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8084,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "975:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "955:35:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 8087,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "998:0:19"
+            },
+            "scope": 8101,
+            "src": "931:165:19",
+            "stateMutability": "nonpayable",
+            "superFunction": 8180,
+            "visibility": "public"
+          }
+        ],
+        "scope": 8102,
+        "src": "160:939:19"
+      }
+    ],
+    "src": "0:1099:19"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {
+    "77142": {
+      "events": {},
+      "links": {},
+      "address": "0x9b6a0fb3f64177572d10bab61e2519fbad6b8d88",
+      "transactionHash": "0x0c0a9b3277399c32084f9ce05b1451ce111b0f698ac048b94f6244c397f3e032"
+    }
+  },
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-10-16T08:20:45.594Z"
+}
