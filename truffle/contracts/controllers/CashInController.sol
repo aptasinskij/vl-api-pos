@@ -18,8 +18,8 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
 
     constructor(address _config) Component(_config) public {}
 
-    function open(uint256 _sessionId) public isRegistered returns (uint256) {
-        return ACashChannelsManager(context.get(MANAGER)).openCashInChannel(msg.sender, _sessionId);
+    function open(uint256 _sessionId, uint256 _maxAmount) public isRegistered returns (uint256 _channelId) {
+        _channelId = ACashChannelsManager(context.get(MANAGER)).openCashInChannel(msg.sender, _sessionId, _maxAmount);
     }
 
     function close(uint256 _sessionId, uint256 _channelId, uint256[] _fees, address[] _parties) public isRegistered returns (bool) {

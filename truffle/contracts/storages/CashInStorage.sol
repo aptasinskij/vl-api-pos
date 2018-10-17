@@ -10,9 +10,9 @@ contract CashInStorage is ACashInStorage, Named("cash-in-storage"), Mortal, Comp
 
     constructor(address _config) Component(_config) public {}
 
-    function save(uint256 sessionId, address application, uint256 status) public returns(uint256 channelId) {
-        channelId = database.save(sessionId, application, status);
-        emit CashInSaved(channelId, sessionId, application, status);
+    function save(uint256 sessionId, address application, uint256 status, uint256 _vaultLogicFee, uint256 _maxAmount) public returns (uint256 _channelId) {
+        _channelId = database.save(sessionId, application, status, _vaultLogicFee, _maxAmount);
+        emit CashInSaved(_channelId, sessionId, application, status);
     }
 
     function get(uint256 channelId) public view

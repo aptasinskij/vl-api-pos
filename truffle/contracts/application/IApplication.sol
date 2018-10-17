@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 interface IApplication {
     
-    function openCashInChannel(uint256 sessionId) external;
+    function openCashInChannel(uint256 sessionId, uint256 _maxAmount) external;
 
     function closeCashInChannel(uint256 sessionId, uint256 channelId, uint256[] _fees, address[] _parties) external;
 

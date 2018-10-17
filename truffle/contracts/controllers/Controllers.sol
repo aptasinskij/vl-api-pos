@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 contract ACashInController {
 
-    function open(uint256 _sessionId) public returns (uint256);
+    function open(uint256 _sessionId, uint256 _maxAmount) public returns (uint256 _channelId);
 
     function close(uint256 _sessionId, uint256 _channelId, uint256[] _fees, address[] _parties) public returns (bool);
 

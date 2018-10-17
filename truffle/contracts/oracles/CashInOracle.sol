@@ -10,8 +10,8 @@ contract CashInOracle is ACashInOracle, Named("cash-in-oracle"), Mortal, Compone
 
     constructor(address _config) Component(_config) public {}
 
-    function open(uint256 sessionId, uint256 channelId, uint256 channelStatus) public {
-        emit OpenCashAcceptor(sessionId, channelId, channelStatus);
+    function open(uint256 sessionId, uint256 channelId, uint256 channelStatus, uint256 _maxAmount) public {
+        emit OpenCashAcceptor(sessionId, channelId, channelStatus, _maxAmount);
     }
 
     function close(uint256 sessionId, uint256 channelId) public {
