@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
 
+import javax.annotation.PostConstruct;
 import java.util.UUID;
 
 import static com.skysoft.vaultlogic.contracts.CameraOracle.STARTSCANQR_EVENT;
@@ -22,7 +23,12 @@ public class StartScanQREventObserver extends AbstractContractEventObserver<Star
     @Autowired
     public StartScanQREventObserver(CameraOracle cameraOracle) {
         super(cameraOracle);
-        subscribe();
+    }
+
+    @Override
+    @PostConstruct
+    protected void subscribe() {
+        super.subscribe();
     }
 
     @Override
@@ -38,13 +44,15 @@ public class StartScanQREventObserver extends AbstractContractEventObserver<Star
     @Override
     public void onNext(StartScanQREventResponse event) {
         log.info("[x] Start qr scanning: {}, {}", event._commandId, event._sessionId, event._lights);
-        String port = UUID.randomUUID().toString();
-        contract.successStart(event._sessionId, port, port, port).sendAsync()
-                .thenAccept(tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()))
-                .exceptionally(th -> {
-                    log.error("[x] Error during confirmation", th);
-                    return null;
-                });
+        String randomUUID = UUID.randomUUID().toString();
+        contract.successStart(event._sessionId, randomUUID, randomUUID, randomUUID).observable().take(1).subscribe(
+                tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()),
+                th -> log.error("[x] Error during confirmation", th)
+        );
+        contract.scanned(event._sessionId, randomUUID).observable().take(1).subscribe(
+                tx -> log.info("[x] QR DATA. {}, Confirmed: {}", randomUUID, tx.getTransactionHash()),
+                error -> log.error("[x] Error send scanned data", error)
+        );
     }
 
     @Override
