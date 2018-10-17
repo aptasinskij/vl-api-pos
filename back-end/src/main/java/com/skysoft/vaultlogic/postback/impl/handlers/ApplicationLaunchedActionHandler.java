@@ -23,7 +23,7 @@ public class ApplicationLaunchedActionHandler extends AbstractEventHandler<Appli
     }
 
     @Override
-    protected EventEmptyResponse handleEvent(ApplicationLaunch eventData, String xToken) {
+    public EventEmptyResponse handleEvent(ApplicationLaunch eventData, String xToken) {
         log.info("[x] ---> New application session started: {}", xToken);
         return new EventEmptyResponse();
     }

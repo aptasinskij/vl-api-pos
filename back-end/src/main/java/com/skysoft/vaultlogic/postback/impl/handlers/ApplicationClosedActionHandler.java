@@ -23,7 +23,7 @@ public class ApplicationClosedActionHandler extends AbstractEventHandler<Applica
     }
 
     @Override
-    protected EventEmptyResponse handleEvent(ApplicationClose eventData, String xToken) {
+    public EventEmptyResponse handleEvent(ApplicationClose eventData, String xToken) {
         log.info("[x] ---> Application session: {} closed", xToken);
         return new EventEmptyResponse();
     }

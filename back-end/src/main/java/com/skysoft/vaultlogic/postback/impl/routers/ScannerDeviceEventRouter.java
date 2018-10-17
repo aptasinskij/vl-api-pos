@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Profile("cloud")
 public class ScannerDeviceEventRouter extends AbstractEventRouter<ScannerActionHandler> implements DeviceTypeRouter {
 
-    private static final String CAMERA_EVENT_ROUTER = "scanner";
+    private static final String SCANNER_EVENT_ROUTER = "scanner";
 
     @Autowired
     protected ScannerDeviceEventRouter(HandlerFactory<ScannerActionHandler> handlerFactory) {
@@ -21,7 +21,7 @@ public class ScannerDeviceEventRouter extends AbstractEventRouter<ScannerActionH
 
     @Override
     public String getName() {
-        return CAMERA_EVENT_ROUTER;
+        return SCANNER_EVENT_ROUTER;
     }
 
 }
