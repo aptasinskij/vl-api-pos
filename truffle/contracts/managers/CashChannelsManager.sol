@@ -38,14 +38,15 @@ contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manag
 
     ///@dev cash-in channel could be created only if:
     ///session is active; application owns the session; there is no active channels in the session
-    function openCashInChannel(address _application, uint256 _sessionId) public returns (uint256 channelId) {
+    function openCashInChannel(address _application, uint256 _sessionId, uint256 _maxAmount) public returns (uint256 _channelId) {
         require(ASessionManager(context.get(SESSION_MANAGER)).isActive(_sessionId), "Illegal state of the session");
         require(!ASessionStorage(context.get(SESSION_STORAGE)).isHasActiveCashIn(_sessionId), "There is already opened cash-in channel");
         ASessionStorage(context.get(SESSION_STORAGE)).setHasActiveCashIn(_sessionId, true);
         address application = AnApplicationStorage(context.get(APPLICATION_STORAGE)).getApplicationAddress(ASessionStorage(context.get(SESSION_STORAGE)).getAppId(_sessionId));
         require(application == _application, "Illegal access");
-        channelId = ACashInStorage(context.get(CASH_IN_STORAGE)).save(_sessionId, application, uint256(CashInStatus.CREATING));
-        ACashInOracle(context.get(CASH_IN_ORACLE)).open(_sessionId, channelId, uint256(CashInStatus.CREATING));
+        uint256 vaultLogicFee = AParameterStorage(context.get(PARAMETER_STORAGE)).getVLFee();
+        _channelId = ACashInStorage(context.get(CASH_IN_STORAGE)).save(_sessionId, application, uint256(CashInStatus.CREATING), vaultLogicFee, _maxAmount);
+        ACashInOracle(context.get(CASH_IN_ORACLE)).open(_sessionId, _channelId, uint256(CashInStatus.CREATING), _maxAmount);
     }
 
     function updateCashInBalance(uint256 channelId, uint256 amount) public cashInActive(channelId) {

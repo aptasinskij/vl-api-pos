@@ -10,10 +10,10 @@ contract AnApplicationOracle {
 
 contract ACashInOracle {
 
-    event OpenCashAcceptor(uint256 sessionId, uint256 channelId, uint256 channelStatus);
+    event OpenCashAcceptor(uint256 sessionId, uint256 channelId, uint256 channelStatus, uint256 _maxAmount);
     event CloseCashAcceptor(uint256 sessionId, uint256 channelId);
 
-    function open(uint256 sessionId, uint256 channelId, uint256 channelStatus) public;
+    function open(uint256 sessionId, uint256 channelId, uint256 channelStatus, uint256 _maxAmount) public;
 
     function close(uint256 sessionId, uint256 channelId) public;
 

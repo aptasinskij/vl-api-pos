@@ -38,7 +38,15 @@ contract ACashInStorage {
     event CashInStatusUpdated(uint256 channelId, uint256 status);
     event CashInSplitAdded(uint256 channelId, address party, uint256 amount);
 
-    function save(uint256 sessionId, address application, uint256 status) public returns (uint256);
+    function save(
+        uint256 sessionId,
+        address application,
+        uint256 status,
+        uint256 _vaultLogicFee,
+        uint256 _maxAmount
+    )
+        public
+    returns (uint256 _channelId);
 
     function get(uint256 channelId) public view
     returns (
