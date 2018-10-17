@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.web3j.abi.datatypes.Event;
 
 import javax.annotation.PostConstruct;
-
 import java.math.BigInteger;
 import java.util.function.Consumer;
 
