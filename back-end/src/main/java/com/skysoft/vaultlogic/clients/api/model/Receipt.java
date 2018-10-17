@@ -13,4 +13,14 @@ public class Receipt {
     @JsonProperty("wkhtmltopdf_params")
     private String params;
 
+    public Receipt(String id, String data, String params) {
+        this.id = id;
+        this.data = data;
+        this.params = params;
+    }
+
+    public static Receipt of(String id, String data, String params) {
+        return new Receipt(id, data, params);
+    }
+
 }

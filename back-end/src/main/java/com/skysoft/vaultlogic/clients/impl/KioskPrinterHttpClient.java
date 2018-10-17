@@ -6,8 +6,10 @@ import com.skysoft.vaultlogic.clients.api.model.ReceiptIdUrl;
 import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import io.vavr.control.Either;
+import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -31,17 +33,15 @@ public class KioskPrinterHttpClient implements KioskPrinter {
     }
 
     @Override
-    public Either<Throwable, ReceiptIdUrl> createReceipt(String xToken) {
+    public Try<ReceiptIdUrl> createReceipt(String xToken) {
         return Try(() -> exchange(post(xToken, maya::createReceiptURI), ReceiptIdUrl.class))
-                .map(getBody())
-                .toEither();
+                .map(HttpEntity::getBody);
     }
 
     @Override
-    public Either<Throwable, StatusCode> printReceipt(String xToken, Receipt receipt) {
+    public Try<StatusCode> printReceipt(String xToken, Receipt receipt) {
         return Try(() -> exchange(post(xToken, maya::printReceiptURI, receipt), StatusCode.class))
-                .map(getBody())
-                .toEither();
+                .map(HttpEntity::getBody);
     }
 
     private <T> Function<ResponseEntity<T>, T> getBody() {
