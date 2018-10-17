@@ -14,6 +14,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.client.RestClientException;
 
@@ -41,6 +42,7 @@ public class CloudSessionDomainEventsListener {
 
     @Async
     @TransactionalEventListener
+    @Transactional(readOnly = true)
     public void handleSessionActivated(SessionActivated event) {
         log.info("[x]---> Session activated with XToken: {}", event.xToken);
         Session session = sessionRepository.findByXTokenJoinApplicationAndKiosk(event.getXToken()).orElseThrow(RuntimeException::new);
