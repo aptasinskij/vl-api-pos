@@ -4,8 +4,10 @@ import com.skysoft.vaultlogic.clients.api.KioskCamera;
 import com.skysoft.vaultlogic.clients.api.model.*;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import io.vavr.control.Either;
+import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -43,10 +45,9 @@ public class KioskCameraHttpClient implements KioskCamera {
     }
 
     @Override
-    public Either<Throwable, Preview> startPreview(String xToken, PreviewConfig startPreview) {
+    public Try<Preview> startPreview(String xToken, PreviewConfig startPreview) {
         return Try(() -> exchange(post(xToken, maya::startPreviewURI, startPreview), Preview.class))
-                .map(getBody())
-                .toEither();
+                .map(HttpEntity::getBody);
     }
 
     @Override
