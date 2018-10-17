@@ -27,7 +27,7 @@ public class CashInsertActionHandler extends AbstractEventHandler<CashInsert, Ev
     }
 
     @Override
-    protected EventEmptyResponse handleEvent(CashInsert eventData, String xToken) {
+    public EventEmptyResponse handleEvent(CashInsert eventData, String xToken) {
         log.info("[x] ---> More money inserted: {} for session: {}", eventData, xToken);
         cashInService.updateBalance(eventData, xToken);
         return new EventEmptyResponse();

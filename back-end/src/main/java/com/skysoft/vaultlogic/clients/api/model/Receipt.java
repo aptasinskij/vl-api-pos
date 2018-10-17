@@ -13,6 +13,9 @@ public class Receipt {
     @JsonProperty("wkhtmltopdf_params")
     private String params;
 
+    public Receipt() {
+    }
+
     public Receipt(String id, String data, String params) {
         this.id = id;
         this.data = data;

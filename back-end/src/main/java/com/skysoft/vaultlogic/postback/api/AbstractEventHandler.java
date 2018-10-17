@@ -26,6 +26,6 @@ public abstract class AbstractEventHandler<T extends EventData, R extends EventR
         return handleEvent(eventData, xToken);
     }
 
-    protected abstract R handleEvent(T eventData, String xToken);
+    public abstract R handleEvent(T eventData, String xToken);
 
 }
