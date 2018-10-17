@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
 
+import javax.annotation.PostConstruct;
+
 import static com.skysoft.vaultlogic.contracts.PrinterOracle.RECEIPTPRINT_EVENT;
 
 @Slf4j
@@ -20,7 +22,12 @@ public class ReceiptPrintEventObserver extends AbstractContractEventObserver<Rec
     @Autowired
     public ReceiptPrintEventObserver(PrinterOracle printerOracle) {
         super(printerOracle);
-        subscribe();
+    }
+
+    @Override
+    @PostConstruct
+    protected void subscribe() {
+        super.subscribe();
     }
 
     @Override
@@ -36,12 +43,10 @@ public class ReceiptPrintEventObserver extends AbstractContractEventObserver<Rec
     @Override
     public void onNext(ReceiptPrintEventResponse event) {
         log.info("[x] Receipt print: {}, {}", event._commandId, event._sessionId);
-        contract.successPrint(event._commandId).sendAsync()
-                .thenAccept(tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()))
-                .exceptionally(th -> {
-                    log.error("[x] Error during confirmation", th);
-                    return null;
-                });
+        contract.successPrint(event._commandId).observable().take(1).subscribe(
+                tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()),
+                th -> log.error("[x] Error during confirmation", th)
+        );
     }
 
     @Override

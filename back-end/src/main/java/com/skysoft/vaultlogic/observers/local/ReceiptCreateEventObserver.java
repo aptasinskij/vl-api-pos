@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
 
+import javax.annotation.PostConstruct;
 import java.util.UUID;
 
 import static com.skysoft.vaultlogic.contracts.PrinterOracle.RECEIPTCREATE_EVENT;
@@ -22,7 +23,12 @@ public class ReceiptCreateEventObserver extends AbstractContractEventObserver<Re
     @Autowired
     public ReceiptCreateEventObserver(PrinterOracle printerOracle) {
         super(printerOracle);
-        subscribe();
+    }
+
+    @Override
+    @PostConstruct
+    protected void subscribe() {
+        super.subscribe();
     }
 
     @Override
@@ -38,14 +44,11 @@ public class ReceiptCreateEventObserver extends AbstractContractEventObserver<Re
     @Override
     public void onNext(ReceiptCreateEventResponse event) {
         log.info("[x] Receipt create: {}, {}", event._commandId, event._sessionId);
-        String id = UUID.randomUUID().toString();
-        String url = "url";
-        contract.successCreate(event._commandId, id, url).sendAsync()
-                .thenAccept(tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()))
-                .exceptionally(th -> {
-                    log.error("[x] Error during confirmation", th);
-                    return null;
-                });
+        String randomUUID = UUID.randomUUID().toString();
+        contract.successCreate(event._commandId, randomUUID, randomUUID).observable().take(1).subscribe(
+                tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()),
+                error -> log.error("[x] Error during confirmation", error)
+        );
     }
 
     @Override
