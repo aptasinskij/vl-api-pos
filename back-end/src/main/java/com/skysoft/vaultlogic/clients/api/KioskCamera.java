@@ -7,6 +7,7 @@ import com.skysoft.vaultlogic.clients.api.model.PhotoId;
 import com.skysoft.vaultlogic.clients.api.model.Preview;
 import com.skysoft.vaultlogic.clients.api.model.ScanId;
 import io.vavr.control.Either;
+import io.vavr.control.Try;
 
 public interface KioskCamera {
 
@@ -14,8 +15,8 @@ public interface KioskCamera {
 
     Either<Throwable, ScanId> takeScan(String xToken, ScanLight scanLight);
 
-    Either<Throwable, Preview> startPreview(String xToken, PreviewConfig startPreview);
+    Try<Preview> startPreview(String xToken, PreviewConfig startPreview);
 
-    Either<Throwable, StatusCode> stopPreview(String xToken);
+    Try<StatusCode> stopPreview(String xToken);
 
 }

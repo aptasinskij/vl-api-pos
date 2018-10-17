@@ -4,14 +4,14 @@ import com.skysoft.vaultlogic.clients.api.KioskCamera;
 import com.skysoft.vaultlogic.clients.api.model.*;
 import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import io.vavr.control.Either;
+import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.function.Function;
 
 import static com.skysoft.vaultlogic.clients.RequestFactory.post;
 import static io.vavr.API.Try;
@@ -31,33 +31,27 @@ public class KioskCameraHttpClient implements KioskCamera {
     @Override
     public Either<Throwable, PhotoId> takePhoto(String xToken) {
         return Try(() -> exchange(post(xToken, maya::takePhotoURI), PhotoId.class))
-                .map(getBody())
+                .map(HttpEntity::getBody)
                 .toEither();
     }
 
     @Override
     public Either<Throwable, ScanId> takeScan(String xToken, ScanLight scanLight) {
         return Try(() -> exchange(post(xToken, maya::takeScanURI, scanLight), ScanId.class))
-                .map(getBody())
+                .map(HttpEntity::getBody)
                 .toEither();
     }
 
     @Override
-    public Either<Throwable, Preview> startPreview(String xToken, PreviewConfig startPreview) {
+    public Try<Preview> startPreview(String xToken, PreviewConfig startPreview) {
         return Try(() -> exchange(post(xToken, maya::startPreviewURI, startPreview), Preview.class))
-                .map(getBody())
-                .toEither();
+                .map(HttpEntity::getBody);
     }
 
     @Override
-    public Either<Throwable, StatusCode> stopPreview(String xToken) {
+    public Try<StatusCode> stopPreview(String xToken) {
         return Try(() -> exchange(post(xToken, maya::stopPreviewURI), StatusCode.class))
-                .map(getBody())
-                .toEither();
-    }
-
-    private <T> Function<ResponseEntity<T>, T> getBody() {
-        return ResponseEntity::getBody;
+                .map(HttpEntity::getBody);
     }
 
 }

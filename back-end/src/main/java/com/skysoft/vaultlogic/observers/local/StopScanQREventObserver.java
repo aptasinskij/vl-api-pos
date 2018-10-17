@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
 
+import javax.annotation.PostConstruct;
+
 import static com.skysoft.vaultlogic.contracts.CameraOracle.STOPSCANQR_EVENT;
 
 @Slf4j
@@ -20,7 +22,12 @@ public class StopScanQREventObserver extends AbstractContractEventObserver<StopS
     @Autowired
     public StopScanQREventObserver(CameraOracle cameraOracle) {
         super(cameraOracle);
-        subscribe();
+    }
+
+    @Override
+    @PostConstruct
+    protected void subscribe() {
+        super.subscribe();
     }
 
     @Override
@@ -36,12 +43,10 @@ public class StopScanQREventObserver extends AbstractContractEventObserver<StopS
     @Override
     public void onNext(StopScanQREventResponse event) {
         log.info("[x] Stop qr scanning: {}, {}", event._commandId, event._sessionId);
-        contract.successStop(event._commandId).sendAsync()
-                .thenAccept(tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()))
-                .exceptionally(th -> {
-                    log.error("[x] Error during confirmation", th);
-                    return null;
-                });
+        contract.successStop(event._commandId).observable().take(1).subscribe(
+                tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()),
+                error -> log.error("[x] Error during confirmation", error)
+        );
     }
 
     @Override
