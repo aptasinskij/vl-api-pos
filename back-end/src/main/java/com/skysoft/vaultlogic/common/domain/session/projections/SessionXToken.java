@@ -4,5 +4,5 @@ import lombok.Value;
 
 @Value
 public class SessionXToken {
-    String xToken;
+    public final String xToken;
 }
