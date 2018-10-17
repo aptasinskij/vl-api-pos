@@ -70,7 +70,6 @@ public class PrinterOracle extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("5777", "0xa9cbcc2c563cc91b53a6345084478debac411226");
     }
 
     protected PrinterOracle(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
