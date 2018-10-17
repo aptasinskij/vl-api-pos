@@ -360,19 +360,20 @@ library CashInLib {
 
     bytes32 constant CASH_IN_INDEX = keccak256(abi.encode("CashInIndex"));
 
-    string constant EXISTS = "cash-in.exists";
-    string constant SESSION_ID = "cash-in.session.id";
-    string constant APPLICATION = "cash-in.application.address";
-    string constant STATUS = "cash-in.status";
-    string constant BALANCE = "cash-in.balance";
-    string constant VL_FEE = "cash-in.vault_logic_fee_percent";
-    string constant VL_BALANCE = "cash-in.vault_logic_balance";
-    string constant APP_BALANCE = "cash-in.application_balance";
+    string constant EXISTS = "cash-in.exists:boolean";
+    string constant SESSION_ID = "cash-in.session.id:uint256";
+    string constant APPLICATION = "cash-in.application.address:address";
+    string constant STATUS = "cash-in.status:uint256";
+    string constant BALANCE = "cash-in.balance:uint256";
+    string constant MAX_BALANCE = "cash-in.max-balance:uint256";
+    string constant VL_FEE = "cash-in.vault_logic_fee_percent:uint256";
+    string constant VL_BALANCE = "cash-in.vault_logic_balance:uint256";
+    string constant APP_BALANCE = "cash-in.application_balance:uint256";
 
     ///@dev set of constants to store and retrieve dynamic sized arrays of splits
-    string constant SPLIT_SIZE = "cash-in.split_size";
-    string constant SPLIT_PARTIES = "cash-in.split_parties";
-    string constant SPLIT_FEES = "cash-in.split_fees";
+    string constant SPLIT_SIZE = "cash-in.split_size:uint256";
+    string constant SPLIT_PARTIES = "cash-in.split_parties:address";
+    string constant SPLIT_FEES = "cash-in.split_fees:uint256";
 
     enum Status {CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED, FAILED_TO_CLOSE}
 
@@ -382,6 +383,7 @@ library CashInLib {
         address application;
         Status status;
         uint256 balance;
+        uint256 maxBalance;
         uint256 vaultLogicPercent;
         uint256 vaultLogicBalance;
         uint256 applicationBalance;
@@ -404,6 +406,7 @@ library CashInLib {
         Database(self).setAddressValue(keccak256(abi.encodePacked(APPLICATION, index)), cashIn.application);
         Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, index)), uint256(cashIn.status));
         Database(self).setUintValue(keccak256(abi.encodePacked(VL_FEE, index)), cashIn.vaultLogicPercent);
+        Database(self).setUintValue(keccak256(abi.encodePacked(MAX_BALANCE, index)), cashIn.maxBalance);
         Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, index)), true);
         Database(self).setUintValue(CASH_IN_INDEX, index + 1);
     }
@@ -416,6 +419,7 @@ library CashInLib {
         cashIn.application = Database(self).getAddressValue(keccak256(abi.encodePacked(APPLICATION, cashInId)));
         cashIn.status = Status(Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, cashInId))));
         cashIn.balance = Database(self).getUintValue(keccak256(abi.encodePacked(BALANCE, cashInId)));
+        cashIn.maxBalance = Database(self).getUintValue(keccak256(abi.encodePacked(MAX_BALANCE, cashInId)));
         cashIn.vaultLogicPercent = Database(self).getUintValue(keccak256(abi.encodePacked(VL_FEE, cashInId)));
         cashIn.vaultLogicBalance = Database(self).getUintValue(keccak256(abi.encodePacked(VL_BALANCE, cashInId)));
         cashIn.applicationBalance = Database(self).getUintValue(keccak256(abi.encodePacked(APP_BALANCE, cashInId)));
@@ -430,12 +434,15 @@ library CashInLib {
         return cashIn;
     }
 
-    function save(address self, uint256 sessionId, address application, uint256 status) internal returns (uint256 index) {
-        index = Database(self).getUintValue(CASH_IN_INDEX);
-        Database(self).setUintValue(string256(SESSION_ID, index), sessionId);
-        Database(self).setAddressValue(string256(APPLICATION, index), application);
-        Database(self).setUintValue(string256(STATUS, index), status);
-        Database(self).setUintValue(CASH_IN_INDEX, index + 1);
+    function save(address _self, uint256 _sessionId, address _application, uint256 _status, uint256 _vlFee, uint256 _maxBalance) internal returns (uint256 _index) {
+        _index = Database(_self).getUintValue(CASH_IN_INDEX);
+        Database(_self).setUintValue(string256(SESSION_ID, _index), _sessionId);
+        Database(_self).setAddressValue(string256(APPLICATION, _index), _application);
+        Database(_self).setUintValue(string256(STATUS, _index), _status);
+        Database(_self).setUintValue(keccak256(abi.encodePacked(VL_FEE, _index)), _vlFee);
+        Database(_self).setUintValue(keccak256(abi.encodePacked(MAX_BALANCE, _index)), _maxBalance);
+        Database(_self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, _index)), true);
+        Database(_self).setUintValue(CASH_IN_INDEX, _index + 1);
     }
 
     /// @dev size of both arrays (e.g. parties and fees) stored in separate field 'splitSize'
