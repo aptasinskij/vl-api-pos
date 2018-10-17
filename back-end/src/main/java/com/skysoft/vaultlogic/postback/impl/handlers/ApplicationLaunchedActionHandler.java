@@ -1,5 +1,7 @@
 package com.skysoft.vaultlogic.postback.impl.handlers;
 
+import com.skysoft.vaultlogic.common.domain.session.Session;
+import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
 import com.skysoft.vaultlogic.postback.mapper.DataMapper;
 import com.skysoft.vaultlogic.postback.api.AbstractEventHandler;
 import com.skysoft.vaultlogic.postback.api.EventEmptyResponse;
@@ -9,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -17,14 +20,19 @@ public class ApplicationLaunchedActionHandler extends AbstractEventHandler<Appli
 
     private static final String APPLICATION_LAUNCH_HANDLER = "launch";
 
+    private final SessionRepository sessionRepository;
+
     @Autowired
-    protected ApplicationLaunchedActionHandler(DataMapper dataMapper) {
+    protected ApplicationLaunchedActionHandler(DataMapper dataMapper, SessionRepository sessionRepository) {
         super(ApplicationLaunch.class, dataMapper);
+        this.sessionRepository = sessionRepository;
     }
 
     @Override
+    @Transactional
     public EventEmptyResponse handleEvent(ApplicationLaunch eventData, String xToken) {
         log.info("[x] ---> New application session started: {}", xToken);
+        sessionRepository.findByXToken(xToken).map(Session::markActive).ifPresent(sessionRepository::save);
         return new EventEmptyResponse();
     }
 
