@@ -17,6 +17,6 @@ public interface KioskCamera {
 
     Try<Preview> startPreview(String xToken, PreviewConfig startPreview);
 
-    Either<Throwable, StatusCode> stopPreview(String xToken);
+    Try<StatusCode> stopPreview(String xToken);
 
 }
