@@ -356,6 +356,56 @@ library SessionLib {
 
 }
 
+library CashInOpenLib {
+
+    bytes32 constant OPEN_ID = keccak256(abi.encode("OpenCashInId"));
+    string constant OPEN_EXISTS = "open-cash-in.exists:bool";
+    string constant OPEN_SESSION_ID = "open-cash-in.session.id:uint256";
+    string constant OPEN_APPLICATION = "open-cash-in.application:address";
+    string constant OPEN_CASH_IN_ID = "open-cash-in.max-balance:uint256";
+    string constant OPEN_SUCCESS = "open-cash-in.success:function";
+    string constant OPEN_FAIL = "open-cash-in.fail:function";
+
+    struct OpenCashIn {
+        uint256 id;
+        uint256 sessionId;
+        uint256 cashInId;
+        function(uint256, uint256) external returns (function(uint256, uint256, uint256) external) _success;
+        function(uint256) external _fail;
+    }
+
+    function getNextOpenCashInId(address _self) internal view returns (uint256 _id) {
+        _id = Database(_self).getUintValue(OPEN_ID);
+    }
+
+    function openCashInExists(address _self, uint256 _id) internal view returns (bool _exists) {
+        _exists = Database(_self).getBooleanValue(keccak256(abi.encodePacked(OPEN_EXISTS, _id)));
+    }
+
+    function createOpenCashIn(address _self, OpenCashIn memory _command) internal {
+        require(!openCashInExists(_self, _command.id), "open cash in already exists");
+        require(getNextOpenCashInId(_self) == _command.id, "open cash in id sequence violation");
+        Database(_self).setUintValue(keccak256(abi.encodePacked(OPEN_SESSION_ID, _command.id)), _command.sessionId);
+        Database(_self).setUintValue(keccak256(abi.encodePacked(OPEN_CASH_IN_ID, _command.id)), _command.cashInId);
+        Database(_self).setUint256X2returnsFunctionUint256x3Function(keccak256(abi.encodePacked(OPEN_SUCCESS, _command.id)), _command.success);
+        Database(_self).setUint256Function(keccak256(abi.encodePacked(OPEN_FAIL, _command.id)), _command.fail);
+        Database(_self).setBooleanValue(keccak256(abi.encodePacked(OPEN_EXISTS, _command.id)), true);
+        Database(_self).setUintValue(OPEN_CASH_IN_ID, _command.id + 1);
+    }
+
+    function retrieveOpenCashIn(address _self, uint256 _id) internal view returns (OpenCashIn memory) {
+        require(openCashInExists(_self, _id), "open cash in is not exists");
+        return OpenCashIn({
+            id: _id,
+            sessionId: Database(_self).getUintValue(keccak256(abi.encodePacked(OPEN_SESSION_ID, _id))),
+            cashInId: Database(_self).getUintValue(keccak256(abi.encodePacked(OPEN_CASH_IN_ID, _id))),
+            success: Database(_self).getUint256X2returnsFunctionUint256x3Function(keccak256(abi.encodePacked(OPEN_SUCCESS, _id))),
+            fail: Database(_self).getUint256Function(keccak256(abi.encodePacked(OPEN_FAIL, _id)))
+        });
+    }
+
+}
+
 library CashInLib {
 
     bytes32 constant CASH_IN_INDEX = keccak256(abi.encode("CashInIndex"));
