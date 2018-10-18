@@ -2,6 +2,26 @@ pragma solidity 0.4.24;
 
 contract ACashInController {
 
+    function openCashInChannel(
+        uint256 _sessionId,
+        uint256 _maxBalance,
+        function(uint256, uint256) external returns (function(uint256, uint256, uint256) external) _success,
+        function(uint256) external _fail
+    )
+        public
+        returns (bool _accepted);
+
+    function closeCashInChannel(
+        uint256 _sessionId,
+        uint256 _channelId,
+        uint256[] _fees,
+        address[] _parties,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256) external _fail
+    )
+        public
+        returns (bool _accepted);
+
     function open(uint256 _sessionId, uint256 _maxAmount) public returns (uint256 _channelId);
 
     function close(uint256 _sessionId, uint256 _channelId, uint256[] _fees, address[] _parties) public returns (bool);
