@@ -7,12 +7,24 @@ contract ACashChannelsManager {
     function openCashInChannel(
         address _application,
         uint256 _sessionId,
-        uint256 _maxAmount
+        uint256 _maxBalance,
+        function(uint256, uint256) external returns (function(uint256, uint256, uint256) external) _success,
+        function(uint256) external _fail
     )
         public
-        returns (
-        uint256
-    );
+        returns (bool _accepted);
+
+    function closeCashInChannel(
+        address _application,
+        uint256 _sessionId,
+        uint256 _channelId,
+        uint256[] _fees,
+        address[] _parties,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256) external _fail
+    )
+        public
+        returns (bool _accepted);
 
     function closeCashInChannel(address _application, uint256 _sessionId, uint256 _channelId, uint256[] fees, address[] parties) public returns (bool);
 
