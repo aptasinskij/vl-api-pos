@@ -2,14 +2,19 @@ pragma solidity 0.4.24;
 
 import "../application/IApplication.sol";
 import {ACashInOracle} from "../oracles/Oracles.sol";
-import {SafeMath} from "../libs/Libraries.sol";
+import "../libs/Libraries.sol";
 import {ACashChannelsManager, ASessionManager, ATokenManager} from "./Managers.sol";
 import "../storages/Storages.sol";
 import "../Platform.sol";
+import {ACashInController} from "../controllers/Controllers.sol";
 
 contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manager"), Mortal, Component {
 
     using SafeMath for uint256;
+    using CashInLib for *;
+    using CashInOpenLib for address;
+    using CashInAccountLib for address;
+    using ParameterLib for address;
 
     string constant CASH_IN_STORAGE = "cash-in-storage";
     string constant SESSION_STORAGE = "session-storage";
@@ -18,6 +23,8 @@ contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manag
     string constant SESSION_MANAGER = "session-manager";
     string constant TOKEN_MANAGER = "token-manager";
     string constant CASH_IN_ORACLE = "cash-in-oracle";
+
+    string constant CONTROLLER = "cash-in-controller";
 
     modifier cashInActive(uint256 _channelId) {
         require(ACashInStorage(context.get(CASH_IN_STORAGE)).getStatus(_channelId) == uint256(CashInStatus.ACTIVE), "CashIn in illegal state");
@@ -36,30 +43,65 @@ contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manag
 
     constructor(address _config) Component(_config) public {}
 
-    ///@dev cash-in channel could be created only if:
-    ///session is active; application owns the session; there is no active channels in the session
-    function openCashInChannel(address _application, uint256 _sessionId, uint256 _maxAmount) public returns (uint256 _channelId) {
-        require(ASessionManager(context.get(SESSION_MANAGER)).isActive(_sessionId), "Illegal state of the session");
-        require(!ASessionStorage(context.get(SESSION_STORAGE)).isHasActiveCashIn(_sessionId), "There is already opened cash-in channel");
-        ASessionStorage(context.get(SESSION_STORAGE)).setHasActiveCashIn(_sessionId, true);
-        address application = AnApplicationStorage(context.get(APPLICATION_STORAGE)).getApplicationAddress(ASessionStorage(context.get(SESSION_STORAGE)).getAppId(_sessionId));
-        require(application == _application, "Illegal access");
-        uint256 vaultLogicFee = AParameterStorage(context.get(PARAMETER_STORAGE)).getVLFee();
-        _channelId = ACashInStorage(context.get(CASH_IN_STORAGE)).save(_sessionId, application, uint256(CashInStatus.CREATING), vaultLogicFee, _maxAmount);
-        ACashInOracle(context.get(CASH_IN_ORACLE)).open(_sessionId, _channelId, uint256(CashInStatus.CREATING), _maxAmount);
+    function openCashInChannel(
+        address _application,
+        uint256 _sessionId,
+        uint256 _maxBalance,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256, uint256) external _update,
+        function(uint256) external _fail
+    )
+        public
+        returns (bool _accepted)
+    {
+        require(database.sessionIsActive(_sessionId), "non active session");
+        require(database.retrieveSessionApplicationDeployedAddress(_sessionId) == _application, "illegal session access");
+        require(!database.getIsHasActiveCashIn(_sessionId), "there is already cash in channel in session");
+        database.setSessionHasActiveCashIn(_sessionId, true);
+        CashInLib.CashIn memory cashIn = CashInLib.CashIn(database.getNextCashInId(), _sessionId, _application, CashInLib.Status.CREATING);
+        CashInOpenLib.OpenCashIn memory openCashIn = CashInOpenLib.CashInOpen(database.getNextOpenCashInId(), _sessionId, cashIn.id, _maxBalance, _success, _update, _fail);
+        database.createCashIn(cashIn);
+        database.createOpenCashIn(openCashIn);
+        _accepted = ACashInOracle(context.get(CASH_IN_ORACLE)).onNextOpenCashIn(openCashIn.id);
     }
 
-    function updateCashInBalance(uint256 channelId, uint256 amount) public cashInActive(channelId) {
-        uint256 currentBalance = ACashInStorage(context.get(CASH_IN_STORAGE)).getBalance(channelId);
-        ACashInStorage(context.get(CASH_IN_STORAGE)).setBalance(channelId, currentBalance + amount);
-        (address application, uint256 sessionId) = ACashInStorage(context.get(CASH_IN_STORAGE)).getApplicationAndSessionId(channelId);
-        IApplication(application).cashInBalanceUpdate(channelId, amount, sessionId);
+    function confirmOpen(uint256 _commandId) public {
+        CashInOpenLib.OpenCashIn memory command = database.retrieveOpenCashIn(_commandId);
+        CashInLib.CashIn memory cashIn = database.retrieveCashIn(command.cashInId);
+        require(cashIn.isCreating(), "cash in must be in CREATING state");
+        CashInAccountLib.Account memory account = CashInAccountLib.Account(database.getNextCashInAccountId(), cashIn.id, 0, _maxBalance, database.getVLFee(), 0, 0, command.update);
+        database.createCashInAccount(account);
+        database.setCashInStatus(cashIn.id, CashInLib.Status.ACTIVE);
+        ACashInController(context.get(CONTROLLER)).respondOpened(cashIn.sessionId, cashIn.id, command.success);
     }
 
-    function balanceOf(address _application, uint256 _channelId) public view returns (uint256) {
-        ACashInStorage cashInStorage = ACashInStorage(context.get(CASH_IN_STORAGE));
-        require(cashInStorage.getApplication(_channelId) == _application, "Illegal access");
-        return cashInStorage.getBalance(_channelId);
+    function closeCashInChannel(
+        address _application,
+        uint256 _sessionId,
+        uint256 _channelId,
+        uint256[] _fees,
+        address[] _parties,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256) external _fail
+    )
+        public
+        returns (bool _accepted)
+    {
+        require(_fees.length == _parties.length, "Illegal arguments");
+        CashInLib.CashIn memory cashIn = database.retrieveCashIn(_channelId);
+        require(cashIn.isActive(), "cash-in is not active");
+        require(cashIn.application == _application, "illegal access");
+        require(cashIn.sessionId == _sessionId, "illegal access");
+        CashInAccountLib.Account memory account = database.retrieveCashInAccountByCashInId(cashIn.id);
+        uint256 vaultLogicFee = account.balance.mul(account.vaultLogicPercent).div(10000);
+        uint256 feesAmount = _sumOf(_fees);
+        require(feesAmount.add(vaultLogicFee) <= account.balance, "Channel balance overflow");
+        account.vaultLogicBalance = vaultLogicFee;
+        account.applicationBalance = account.balance.sub(vaultLogicFee).sub(feesAmount);
+        //TODO define split library
+        //TODO create Split structure, save and update CashInAccount
+        //TODO add call to CashInOracle::onNextCloseCashIn
+        _accepted = ACashInOracle(context.get(ORACLE)).onNextCloseCashIn(1); //TODO: pass actual command id
     }
 
     function closeCashInChannel(address _application, uint256 _sessionId, uint256 _channelId, uint256[] fees, address[] parties)
@@ -80,6 +122,21 @@ contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manag
         return true;
     }
 
+    function updateCashInBalance(uint256 channelId, uint256 amount) public cashInActive(channelId) {
+        uint256 currentBalance = ACashInStorage(context.get(CASH_IN_STORAGE)).getBalance(channelId);
+        ACashInStorage(context.get(CASH_IN_STORAGE)).setBalance(channelId, currentBalance + amount);
+        (address application, uint256 sessionId) = ACashInStorage(context.get(CASH_IN_STORAGE)).getApplicationAndSessionId(channelId);
+        IApplication(application).cashInBalanceUpdate(channelId, amount, sessionId);
+    }
+
+    function balanceOf(address _application, uint256 _channelId) public view returns (uint256) {
+        ACashInStorage cashInStorage = ACashInStorage(context.get(CASH_IN_STORAGE));
+        require(cashInStorage.getApplication(_channelId) == _application, "Illegal access");
+        return cashInStorage.getBalance(_channelId);
+    }
+
+
+
     function _sumOf(uint256[] _elements) private pure returns (uint256 _sum) {
         for (uint256 i = 0; i < _elements.length; i++) _sum = _sum.add(_elements[i]);
     }
@@ -90,13 +147,6 @@ contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manag
 
     function _transfer(address _recepient, uint256 amount) private {
         ATokenManager(context.get(TOKEN_MANAGER)).transfer(_recepient, amount);
-    }
-
-    function confirmOpen(uint256 channelId) public {
-        require(ACashInStorage(context.get(CASH_IN_STORAGE)).getStatus(channelId) == uint256(CashInStatus.CREATING));
-        (address application, uint256 sessionId) = ACashInStorage(context.get(CASH_IN_STORAGE)).getApplicationAndSessionId(channelId);
-        ACashInStorage(context.get(CASH_IN_STORAGE)).setStatus(channelId, uint256(CashInStatus.ACTIVE));
-        IApplication(application).cashInChannelOpened(channelId, sessionId);
     }
 
     function confirmClose(uint256 channelId) public {

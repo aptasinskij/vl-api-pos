@@ -5,11 +5,16 @@ contract ACashInController {
     function openCashInChannel(
         uint256 _sessionId,
         uint256 _maxBalance,
-        function(uint256, uint256) external returns (function(uint256, uint256, uint256) external) _success,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256, uint256) external _update,
         function(uint256) external _fail
     )
         public
         returns (bool _accepted);
+
+    function respondOpened(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public;
+
+    function respondFailOpen(uint256 _sessionId, function(uint256) external _callback) public;
 
     function closeCashInChannel(
         uint256 _sessionId,
@@ -22,9 +27,9 @@ contract ACashInController {
         public
         returns (bool _accepted);
 
-    function open(uint256 _sessionId, uint256 _maxAmount) public returns (uint256 _channelId);
+    function respondClosed(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public;
 
-    function close(uint256 _sessionId, uint256 _channelId, uint256[] _fees, address[] _parties) public returns (bool);
+    function respondFailClose(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public;
 
     function balanceOf(uint256 _channelId) public view returns (uint256);
 

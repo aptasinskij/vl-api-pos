@@ -12,12 +12,21 @@ contract ACashInOracle {
 
     event OpenCashAcceptor(uint256 sessionId, uint256 channelId, uint256 channelStatus, uint256 _maxAmount);
     event CloseCashAcceptor(uint256 sessionId, uint256 channelId);
+    event OpenCashIn(uint256 _commandId, uint256 _sessionId, uint256 _cashInId, uint256 _maxBalance);
 
-    function open(uint256 sessionId, uint256 channelId, uint256 channelStatus, uint256 _maxAmount) public;
+    function onNextOpenCashIn(uint256 _commandId) public returns (bool _accepted);
+
+    function successOpen(uint256 _commandId) public;
+
+    function failOpen(uint256 _commandId) public;
+
+    function onNextCloseCashIn(uint256 _commandId) public returns (bool _accepted);
+
+    function successClose(uint256 _commandId);
+
+    function failClose(uint256 _commandId);
 
     function close(uint256 sessionId, uint256 channelId) public;
-
-    function confirmOpen(uint256 channelId) public;
 
     function confirmClose(uint256 channelId) public;
 

@@ -2,13 +2,12 @@ pragma solidity 0.4.24;
 
 contract ACashChannelsManager {
 
-    enum CashInStatus {CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED, FAILED_TO_CLOSE}
-
     function openCashInChannel(
         address _application,
         uint256 _sessionId,
         uint256 _maxBalance,
-        function(uint256, uint256) external returns (function(uint256, uint256, uint256) external) _success,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256, uint256) external _update,
         function(uint256) external _fail
     )
         public
@@ -25,8 +24,6 @@ contract ACashChannelsManager {
     )
         public
         returns (bool _accepted);
-
-    function closeCashInChannel(address _application, uint256 _sessionId, uint256 _channelId, uint256[] fees, address[] parties) public returns (bool);
 
     function confirmOpen(uint256 channelId) public;
 
