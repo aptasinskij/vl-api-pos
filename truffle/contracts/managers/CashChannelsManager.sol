@@ -15,6 +15,8 @@ contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manag
     using CashInOpenLib for address;
     using CashInAccountLib for address;
     using ParameterLib for address;
+    using CashInSplit for address;
+    using CashInClose for address;
 
     string constant CASH_IN_STORAGE = "cash-in-storage";
     string constant SESSION_STORAGE = "session-storage";
@@ -22,24 +24,9 @@ contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manag
     string constant PARAMETER_STORAGE = "parameter-storage";
     string constant SESSION_MANAGER = "session-manager";
     string constant TOKEN_MANAGER = "token-manager";
-    string constant CASH_IN_ORACLE = "cash-in-oracle";
+    string constant ORACLE = "cash-in-oracle";
 
     string constant CONTROLLER = "cash-in-controller";
-
-    modifier cashInActive(uint256 _channelId) {
-        require(ACashInStorage(context.get(CASH_IN_STORAGE)).getStatus(_channelId) == uint256(CashInStatus.ACTIVE), "CashIn in illegal state");
-        _;
-    }
-
-    modifier appOwnsChannel(uint256 _channelId, address _application) {
-        require(ACashInStorage(context.get(CASH_IN_STORAGE)).getApplication(_channelId) == _application, "Illegal access");
-        _;
-    }
-
-    modifier channelBelongsToSession(uint256 _channelId, uint256 _sessionId) {
-        require(ACashInStorage(context.get(CASH_IN_STORAGE)).getSessionId(_channelId) == _sessionId, "Arguments mismatch");
-        _;
-    }
 
     constructor(address _config) Component(_config) public {}
 
@@ -62,7 +49,7 @@ contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manag
         CashInOpenLib.OpenCashIn memory openCashIn = CashInOpenLib.CashInOpen(database.getNextOpenCashInId(), _sessionId, cashIn.id, _maxBalance, _success, _update, _fail);
         database.createCashIn(cashIn);
         database.createOpenCashIn(openCashIn);
-        _accepted = ACashInOracle(context.get(CASH_IN_ORACLE)).onNextOpenCashIn(openCashIn.id);
+        _accepted = ACashInOracle(context.get(ORACLE)).onNextOpenCashIn(openCashIn.id);
     }
 
     function confirmOpen(uint256 _commandId) public {
@@ -96,30 +83,12 @@ contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manag
         uint256 vaultLogicFee = account.balance.mul(account.vaultLogicPercent).div(10000);
         uint256 feesAmount = _sumOf(_fees);
         require(feesAmount.add(vaultLogicFee) <= account.balance, "Channel balance overflow");
-        account.vaultLogicBalance = vaultLogicFee;
-        account.applicationBalance = account.balance.sub(vaultLogicFee).sub(feesAmount);
-        //TODO define split library
-        //TODO create Split structure, save and update CashInAccount
-        //TODO add call to CashInOracle::onNextCloseCashIn
-        _accepted = ACashInOracle(context.get(ORACLE)).onNextCloseCashIn(1); //TODO: pass actual command id
-    }
-
-    function closeCashInChannel(address _application, uint256 _sessionId, uint256 _channelId, uint256[] fees, address[] parties)
-    cashInActive(_channelId)
-    appOwnsChannel(_channelId, _application)
-    channelBelongsToSession(_channelId, _sessionId)
-    public returns (bool){
-        require(fees.length == parties.length, "Illegal arguments");
-        uint256 channelBalance = ACashInStorage(context.get(CASH_IN_STORAGE)).getBalance(_channelId);
-        uint256 vaultLogicFee = channelBalance.mul(AParameterStorage(context.get(PARAMETER_STORAGE)).getVLFee()).div(10000);
-        uint256 feesAmount = _sumOf(fees);
-        require(feesAmount.add(vaultLogicFee) <= channelBalance, "Channel balance overflow");
-        ACashInStorage(context.get(CASH_IN_STORAGE)).setVLFee(_channelId, vaultLogicFee);
-        ACashInStorage(context.get(CASH_IN_STORAGE)).setApplicationBalance(_channelId, channelBalance.sub(vaultLogicFee).sub(feesAmount));
-        ACashInStorage(context.get(CASH_IN_STORAGE)).addSplits(_channelId, parties, fees);
-        ACashInStorage(context.get(CASH_IN_STORAGE)).setStatus(_channelId, uint256(CashInStatus.CLOSE_REQUESTED));
-        ACashInOracle(context.get(CASH_IN_ORACLE)).close(_sessionId, _channelId);
-        return true;
+        database.setAccountVaultLogicBalance(account.id, vaultLogicFee);
+        database.setAccountApplicationBalance(account.id, account.balance.sub(vaultLogicFee).sub(feesAmount));
+        database.createCashInSplit(cashIn.id, _fees, _parties);
+        database.setCashInStatus(cashIn.id, CashInLib.Status.CLOSE_REQUESTED);
+        uint256 commandId = database.createCashInClose(cashIn.id, _sessionId, _success, _fail);
+        _accepted = ACashInOracle(context.get(ORACLE)).onNextCloseCashIn(commandId);
     }
 
     function updateCashInBalance(uint256 channelId, uint256 amount) public cashInActive(channelId) {
