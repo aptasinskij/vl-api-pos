@@ -285,20 +285,27 @@ library SessionLib {
         Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, sessionId)), true);
     }
 
-    // read
-    function retrieveSession(address self, uint256 sessionId) internal view returns (Session memory) {
-        require(sessionExists(self, sessionId), "Session is not exists");
-        // @formatter:off
-        return Session({
-            id : sessionId,
-            applicationId : Database(self).getUintValue(keccak256(abi.encodePacked(APPLICATION_ID, sessionId))),
-            kioskId : Database(self).getStringValue(keccak256(abi.encodePacked(KIOSK_ID, sessionId))),
-            xToken : Database(self).getStringValue(keccak256(abi.encodePacked(X_TOKEN, sessionId))),
-            status : Status(Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, sessionId)))),
-            hasActiveCashIn : Database(self).getBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, sessionId))),
-            hasActiveCashOut : Database(self).getBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_OUT, sessionId)))
-        });
-        // @formatter:on
+    function retrieveSession(address _self, uint256 _sessionId) internal view returns (Session memory _session) {
+        require(sessionExists(_self, _sessionId), "Session is not exists");
+        _session.id = _sessionId;
+        _session.applicationId = Database(_self).getUintValue(keccak256(abi.encodePacked(APPLICATION_ID, _sessionId)));
+        _session.kioskId = Database(_self).getStringValue(keccak256(abi.encodePacked(KIOSK_ID, _sessionId)));
+        _session.xToken = Database(_self).getStringValue(keccak256(abi.encodePacked(X_TOKEN, _sessionId)));
+        _session.status = Status(Database(_self).getUintValue(keccak256(abi.encodePacked(STATUS, _sessionId))));
+        _session.hasActiveCashIn = Database(_self).getBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, _sessionId)));
+        _session.hasActiveCashOut = Database(_self).getBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_OUT, _sessionId)));
+    }
+
+    function sessionIsNotActive(address _self, uint256 _sessionId) internal view returns (bool _isNotActive) {
+        _isNotActive = Status(Database(_self).getUintValue(keccak256(abi.encodePacked(STATUS, _sessionId)))) != Status.ACTIVE;
+    }
+
+    function sessionNotBelongsToApplication(address _self, uint256 _sessionId, address _application) internal view returns (bool) {
+        return retrieveSessionApplicationDeployedAddress(_self, _sessionId) != _application;
+    }
+
+    function sessionHasActiveCashIn(address _self, uint256 _sessionId) internal view returns (bool _hasActiveCashIn) {
+        _hasActiveCashIn = Database(_self).getBooleanValue(keccak256(abi.encodePacked(HAS_ACTIVE_CASH_IN, _sessionId)));
     }
 
     function retrieveSessionApplication(address self, uint256 sessionId) internal view returns (ApplicationLib.Application memory) {
@@ -355,269 +362,48 @@ library SessionLib {
 
 }
 
-library CashInOpenLib {
+library CashInLib {
 
-    bytes32 constant OPEN_ID = keccak256(abi.encode("OpenCashInId"));
-    string constant OPEN_EXISTS = "open.exists:bool";
-    string constant OPEN_SESSION_ID = "open.session.id:uint256";
-    string constant OPEN_APPLICATION = "open.application:address";
-    string constant OPEN_CASH_IN_ID = "open.cash-in.id:uint256";
-    string constant OPEN_MAX_BALANCE = "open.max-balance:uint256";
-    string constant OPEN_SUCCESS = "open.success:function";
-    string constant OPEN_UPDATE = "open.update:function";
-    string constant OPEN_FAIL = "open.fail:function";
+    bytes32 constant CASH_IN_ID = keccak256(abi.encode("CashInIndex"));
+    string constant SESSION_ID = "cash-in.session.id:uint256";
+    string constant APPLICATION = "cash-in.application.address:address";
+    string constant STATUS = "cash-in.status:uint256";
 
-    struct OpenCashIn {
-        uint256 id;
+    string constant SPLIT_SIZE = "cash-in.split.size:uint256";
+    string constant SPLIT_FEE = "cash-in.split.fee:uint256";
+    string constant SPLIT_PARTY = "cash-in.split.party:address";
+
+    string constant ACCOUNT_BALANCE = "cash-in.account.balance:uint256";
+    string constant ACCONT_MAX_BALANCE = "cash-in.account.max-balance:uint256";
+    string constant ACCOUNT_FEE_PERCENT = "cash-in.account.fee-percent:uint256";
+    string constant ACCOUNT_UPDATE = "cash-in.account.update:function";
+
+    string constant CLOSE_SESSION_ID = "cash-in.close.session.id:uint256";
+    string constant CLOSE_SUCCESS = "cash-in.close.success:function";
+    string constant CLOSE_FAIL = "cash-in.close.fail:function";
+
+    string constant OPEN_SESSION_ID = "cash-in.open.session.id:uint256";
+    string constant OPEN_MAX_BALANCE = "cash-in.open.max-amount:uint256";
+    string constant OPEN_SUCCESS = "cash-in.open.success:function";
+    string constant OPEN_UPDATE = "cash-in.open.update:function";
+    string constant OPEN_FAIL = "cash-in.open.fail:function";
+
+    enum Status {
+        CREATING,
+        ACTIVE,
+        FAILED_TO_CREATE,
+        CLOSE_REQUESTED,
+        CLOSED,
+        FAILED_TO_CLOSE
+    }
+
+    struct Open {
         uint256 sessionId;
-        uint256 cashInId;
         uint256 maxBalance;
         function(uint256, uint256) external success;
         function(uint256, uint256, uint256) external update;
         function(uint256) external fail;
     }
-
-    function getNextOpenCashInId(address _self) internal view returns (uint256 _id) {
-        _id = Database(_self).getUintValue(OPEN_ID);
-    }
-
-    function openCashInExists(address _self, uint256 _id) internal view returns (bool _exists) {
-        _exists = Database(_self).getBooleanValue(keccak256(abi.encodePacked(OPEN_EXISTS, _id)));
-    }
-
-    function createOpenCashIn(address _self, OpenCashIn memory _command) internal {
-        require(!openCashInExists(_self, _command.id), "open cash in already exists");
-        require(getNextOpenCashInId(_self) == _command.id, "open cash in id sequence violation");
-        Database(_self).setUintValue(keccak256(abi.encodePacked(OPEN_SESSION_ID, _command.id)), _command.sessionId);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(OPEN_CASH_IN_ID, _command.id)), _command.cashInId);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(OPEN_MAX_BALANCE, _command.id)), _command.maxBalance);
-        Database(_self).setUint256X2Function(keccak256(abi.encodePacked(OPEN_SUCCESS, _command.id)), _command.success);
-        Database(_self).setUint256Function(keccak256(abi.encodePacked(OPEN_FAIL, _command.id)), _command.fail);
-        Database(_self).setUint256X3Function(keccak256(abi.encodePacked(OPEN_UPDATE, _command.id)), _command.update);
-        Database(_self).setBooleanValue(keccak256(abi.encodePacked(OPEN_EXISTS, _command.id)), true);
-        Database(_self).setUintValue(OPEN_CASH_IN_ID, _command.id + 1);
-    }
-
-    function retrieveOpenCashIn(address _self, uint256 _id) internal view returns (OpenCashIn memory) {
-        require(openCashInExists(_self, _id), "open cash in is not exists");
-        return OpenCashIn({
-            id: _id,
-            sessionId: Database(_self).getUintValue(keccak256(abi.encodePacked(OPEN_SESSION_ID, _id))),
-            cashInId: Database(_self).getUintValue(keccak256(abi.encodePacked(OPEN_CASH_IN_ID, _id))),
-            maxBalance: Database(_self).getUintValue(keccak256(abi.encodePacked(OPEN_MAX_BALANCE, _id))),
-            success: Database(_self).getUint256X2Function(keccak256(abi.encodePacked(OPEN_SUCCESS, _id))),
-            update: Database(_self).getUint256X3Function(keccak256(abi.encodePacked(OPEN_UPDATE, _id))),
-            fail: Database(_self).getUint256Function(keccak256(abi.encodePacked(OPEN_FAIL, _id)))
-        });
-    }
-
-}
-
-//TODO: get rid of Account independent ID, use CashIn's id instead
-library CashInAccountLib {
-
-    bytes32 constant ACCOUNT_ID = keccak256(abi.encode("CashInAccountId"));
-    string constant EXISTS = "account.exists:boolean";
-    string constant CASH_IN_ID = "account.cash-in.id:uint256";
-    string constant EXISTS_BY_CASH_IN_ID = "account.exists-by-cash-in-id:boolean";
-    string constant BY_CASH_IN_ID = "account.by-cash-in-id:uint256";
-    string constant BALANCE = "account.balance:uint256";
-    string constant MAX_BALANCE = "account.max-balance:uint256";
-    string constant VL_FEE = "account.vault_logic_fee_percent:uint256";
-    string constant VL_BALANCE = "account.vault_logic_balance:uint256";
-    string constant APP_BALANCE = "account.application_balance:uint256";
-    string constant UPDATE = "account.update:function";
-
-    struct Account {
-        uint256 id;
-        uint256 cashInId;
-        uint256 balance;
-        uint256 maxBalance;
-        uint256 vaultLogicPercent;
-        uint256 vaultLogicBalance;
-        uint256 applicationBalance;
-        function(uint256, uint256, uint256) external update;
-    }
-
-    function cashInAccountExists(address _self, uint256 _id) internal view returns (bool _exists) {
-        _exists = Database(_self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, _id)));
-    }
-
-    function cashInAccountExistsByCashInId(address _self, uint256 _cashInId) internal view returns (bool _exists) {
-        _exists = Database(_self).getBooleanValue(keccak256(abi.encodePacked(EXISTS_BY_CASH_IN_ID, _cashInId)));
-    }
-
-    function getNextCashInAccountId(address _self) internal view returns (uint256 _id) {
-        _id = Database(_self).getUintValue(ACCOUNT_ID);
-    }
-
-    function setAccountVaultLogicBalance(address _self, uint256 _accountId, uint256 _balance) internal {
-        require(cashInAccountExists(_self, _accountId), "cash-in account is not exists");
-        Database(_self).setUintValue(keccak256(abi.encodePacked(VL_BALANCE, _accountId)), _balance);
-    }
-
-    function setAccountApplicationBalance(address _self, uint256 _accountId, uint256 _balance) internal {
-        require(cashInAccountExists(_self, _accountId), "cash-in account is not exists");
-        Database(_self).setUintValue(keccak256(abi.encodePacked(APP_BALANCE, _accountId)), _balance);
-    }
-
-    function createCashInAccount(address _self, Account memory _account) internal {
-        require(!cashInAccountExists(_self, _account.id), "cash in account already exists");
-        require(getNextCashInAccountId(_self) == _account.id, "cash in account id sequence violation");
-        Database(_self).setBooleanValue(keccak256(abi.encodePacked(EXISTS_BY_CASH_IN_ID, _account.cashInId)), _account.id);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(BY_CASH_IN_ID, _account.cashInId)), _account.id);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(CASH_IN_ID, _account.id)), _account.cashInId);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(BALANCE, _account.id)), _account.balance);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(MAX_BALANCE, _account.id)), _account.maxBalance);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(VL_FEE, _account.id)), _account.vaultLogicPercent);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(VL_BALANCE, _account.id)), _account.vaultLogicBalance);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(APP_BALANCE, _account.id)), _account.applicationBalance);
-        Database(_self).setUint256X3Function(keccak256(abi.encodePacked(UPDATE, _account.id)), _account.update);
-        Database(_self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, _account.id)), true);
-        Database(_self).setUintValue(ACCOUNT_ID, _account.id + 1);
-    }
-
-    function retrieveCashInAccount(address _self, uint256 _id) internal view returns (Account memory) {
-        require(cashInAccountExists(_self, _id), "cash in account is not exists");
-        return Account({
-            id: _id,
-            cashInId: Database(_self).getUintValue(keccak256(abi.encodePacked(CASH_IN_ID, _id))),
-            balance: Database(_self).getUintValue(keccak256(abi.encodePacked(BALANCE, _id))),
-            maxBalance: Database(_self).getUintValue(keccak256(abi.encodePacked(MAX_BALANCE, _id))),
-            vaultLogicPercent: Database(_self).getUintValue(keccak256(abi.encodePacked(VL_FEE, _id))),
-            vaultLogicBalance: Database(_self).getUintValue(keccak256(abi.encodePacked(VL_BALANCE, _id))),
-            applicationBalance: Database(_self).getUintValue(keccak256(abi.encodePacked(APP_BALANCE, _id))),
-            update: Database(_self).getUint256X3Function(keccak256(abi.encodePacked(UPDATE, _id)))
-        });
-    }
-
-    function retrieveCashInAccountByCashInId(address _self, uint256 _cashInId) internal view returns (Account memory) {
-        require(cashInAccountExistsByCashInId(_self, _cashInId), "cash in account is not exists");
-        uint256 accountId = Database(_self).getUintValue(keccak256(abi.encodePacked(BY_CASH_IN_ID, _cashInId)));
-        return retrieveCashInAccount(_self, accountId);
-    }
-
-}
-
-library CashInSplit {
-
-    string constant EXISTS = "split.exists:boolean";
-    string constant SIZE = "split.size:uint256";
-    string constant PARTIES = "split.parties:address[]";
-    string constant FEES = "split.fees:uint256[]";
-
-    struct Split {
-        uint256 id;
-        uint256 size;
-        uint256[] fees;
-        address[] parties;
-    }
-
-    function cashInSplitExists(address _self, uint256 _cashInId) internal view returns (bool _exists) {
-        _exists = Database(_self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, _cashInId)));
-    }
-
-    function createCashInSplit(address _self, uint256 _cashInId, uint256[] _fees, address[] _parties) internal {
-        require(!cashInSplitExists(_self, _cashInId), "cash in split already exists");
-        uint256 size = _fees.length;
-        Database(_self).setUintValue(keccak256(abi.encodePacked(SIZE, size)));
-        for (uint256 i = 0; i < size; i++) {
-            Database(_self).setUintValue(keccak256(abi.encodePacked(FEES, _cashInId, i)), _fees[i]);
-            Database(_self).setAddressValue(keccak256(abi.encodePacked(PARTIES, _cashInId, i)), _parties[i]);
-        }
-    }
-
-    function retrieveCashInSplit(address _self, uint256 _cashInId) internal view returns (Split memory) {
-        require(cashInSplitExists(_self, _cashInId), "cash in split is not exists");
-        uint256 size = Database(_self).getUintValue(keccak256(abi.encodePacked(SIZE, _cashInId)));
-        uint256[] fees = new uint256[](size);
-        address[] parties = new address[](size);
-        for (uint256 i = 0; i < size; i++) {
-            fees[i] = Database(_self).getUintValue(keccak256(abi.encodePacked(FEES, _cashInId, i)));
-            parties[i] = Database(_self).getAddressValue(keccak256(abi.encodePacked(PARTIES, _cashInId, i)));
-        }
-        return Split(_cashInId, size, fees, parties);
-    }
-
-}
-
-library CashInClose {
-
-    bytes32 constant ID = keccak256(abi.encode("CashInCloseId"));
-    string constant EXISTS = "cash-in-close.exists:boolean";
-    string constant CASH_IN_ID = "cash-in-close.cash-in.id:uint256";
-    string constant SESSION_ID = "cash-in-close.session.id:uint256";
-    string constant SUCCESS = "cash-in-close.success:function";
-    string constant FAIL = "cash-in-close.fail:function";
-
-    struct CloseCashIn {
-        uint256 id;
-        uint256 cashInId;
-        uint256 sessionId;
-        function(uint256, uint256) external _success;
-        function(uint256, uint256) external _fail;
-    }
-
-    function getNextCloseCashInId(address _self) internal view returns (uint256 _id) {
-        _id = Database(_self).getUintValue(ID);
-    }
-
-    function closeCashInExists(address _self, uint256 _id) internal view returns (bool _exists) {
-        _exists = Database(_self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, _id)));
-    }
-
-    function createCashInClose(
-        address _self,
-        uint256 _cashInId,
-        uint256 _sessionId,
-        function(uint256, uint256) external _success,
-        function(uint256, uint256) external _fail
-    ) internal returns (uint256 _id)
-    {
-        _id = getNextCloseCashInId(_self);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(CASH_IN_ID, _id)), _cashInId);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(SESSION_ID, _id)), _sessionId);
-        Database(_self).setUint256X2Function(keccak256(abi.encodePacked(SUCCESS, _id)), _success);
-        Database(_self).setUint256X2Function(keccak256(abi.encodePacked(FAIL, _id)), _fail);
-        Database(_self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, _id)), true);
-        Database(_self).setUintValue(ID, _id + 1);
-    }
-
-    function retrieveCashInClose(address _self, uint256 _commandId) internal view returns (CloseCashIn memory) {
-        require(closeCashInExists(_self, _commandId), "cash in close is not exits");
-        // @formatter:off
-        return CloseCashIn({
-            id: _commandId,
-            cashInId: Database(_self).getUintValue(keccak256(abi.encodePacked(CASH_IN_ID, _commandId))),
-            sessionId: Database(_self).getUintValue(keccak256(abi.encodePacked(SESSION_ID, _commandId))),
-            success: Database(_self).getUint256X2Function(keccak256(abi.encodePacked(SUCCESS, _commandId))),
-            fail: Database(_self).getUint256X2Function(keccak256(abi.encodePacked(FAIL, _commandId)))
-        });
-        // @formatter:on
-    }
-
-}
-
-library CashInLib {
-
-    bytes32 constant CASH_IN_INDEX = keccak256(abi.encode("CashInIndex"));
-
-    string constant EXISTS = "cash-in.exists:boolean";
-    string constant SESSION_ID = "cash-in.session.id:uint256";
-    string constant APPLICATION = "cash-in.application.address:address";
-    string constant STATUS = "cash-in.status:uint256";
-    string constant BALANCE = "cash-in.balance:uint256";
-    string constant MAX_BALANCE = "cash-in.max-balance:uint256";
-    string constant VL_FEE = "cash-in.vault_logic_fee_percent:uint256";
-    string constant VL_BALANCE = "cash-in.vault_logic_balance:uint256";
-    string constant APP_BALANCE = "cash-in.application_balance:uint256";
-
-    ///@dev set of constants to store and retrieve dynamic sized arrays of splits
-    string constant SPLIT_SIZE = "cash-in.split_size:uint256";
-    string constant SPLIT_PARTIES = "cash-in.split_parties:address";
-    string constant SPLIT_FEES = "cash-in.split_fees:uint256";
-
-    enum Status {CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED, FAILED_TO_CLOSE}
 
     struct CashIn {
         uint256 id;
@@ -626,160 +412,147 @@ library CashInLib {
         Status status;
     }
 
-    struct CloseCashIn {
-        uint256 id;
-        uint256 cashInId;
-        uint256 sessionId;
-        function(uint256, uint256) external _success;
-        function(uint256, uint256) external _fail;
-    }
-
     struct Account {
-        uint256 id;
-        uint256 cashInId;
         uint256 balance;
         uint256 maxBalance;
-        uint256 vaultLogicPercent;
-        uint256 vaultLogicBalance;
-        uint256 applicationBalance;
-        function(uint256, uint256, uint256) external _update;
+        uint256 fee;
+        function(uint256, uint256, uint256) external update;
     }
 
-    function isCreating(CashIn memory _self) internal pure returns (bool _isCreating) {
-        _isCreating = _self.status == Status.CREATING;
+    struct Close {
+        uint256 sessionId;
+        function(uint256, uint256) external success;
+        function(uint256, uint256) external fail;
     }
 
-    function isActive(CashIn memory _self) internal pure returns (bool _isActive) {
-        _isActive = _self.status == Status.ACTIVE;
+    struct Split {
+        uint256 size;
+        uint256[] fees;
+        address[] parties;
     }
 
-    function getCounter(address self) internal view returns (uint256) {
-        Database(self).getUintValue(CASH_IN_INDEX);
+    function createCashIn(address _self, uint256 _sessionId, address _application) internal returns (uint256 _cashInId) {
+        _cashInId = Database(_self).getUintValue(CASH_IN_ID);
+        Database(_self).setUintValue(keccak256(abi.encodePacked(SESSION_ID, _cashInId)), _sessionId);
+        Database(_self).setAddressValue(keccak256(abi.encodePacked(APPLICATION, _cashInId)), _application);
+        Database(_self).setUintValue(CASH_IN_ID, _cashInId + 1);
     }
 
-    function cashInExists(address self, uint256 cashInId) internal view returns (bool) {
-        return Database(self).getBooleanValue(keccak256(abi.encodePacked(EXISTS, cashInId)));
+    function retrieveCashIn(address _self, uint256 _cashInId) internal view returns (CashIn memory _cashIn) {
+        _cashIn.id = _cashInId;
+        _cashIn.sessionId = Database(_self).getUintValue(keccak256(abi.encodePacked(SESSION_ID, _cashInId)));
+        _cashIn.application = Database(_self).getAddressValue(keccak256(abi.encodePacked(APPLICATION, _cashInId)));
+        _cashIn.status = Status(Database(_self).getUintValue(keccak256(abi.encodePacked(STATUS, _cashInId))));
     }
 
-    function createCashIn(address self, CashIn memory cashIn) internal returns (uint256 index) {
-        index = Database(self).getUintValue(CASH_IN_INDEX);
-        Database(self).setUintValue(keccak256(abi.encodePacked(SESSION_ID, index)), cashIn.sessionId);
-        Database(self).setAddressValue(keccak256(abi.encodePacked(APPLICATION, index)), cashIn.application);
-        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, index)), uint256(cashIn.status));
-        Database(self).setUintValue(keccak256(abi.encodePacked(VL_FEE, index)), cashIn.vaultLogicPercent);
-        Database(self).setUintValue(keccak256(abi.encodePacked(MAX_BALANCE, index)), cashIn.maxBalance);
-        Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, index)), true);
-        Database(self).setUintValue(CASH_IN_INDEX, index + 1);
+    function cashInIsCreating(address _self, uint256 _cashInId) internal view returns (bool _isCreating) {
+        _isCreating = Status(Database(_self).getUintValue(keccak256(abi.encodePacked(STATUS, _cashInId)))) == Status.CREATING;
     }
 
-    function retrieveCashIn(address self, uint256 cashInId) internal view returns (CashIn memory) {
-        require(cashInExists(self, cashInId), "Cash in channel not exists");
-        return CashIn({
-            id: cashInId,
-            session: Database(self).getUintValue(keccak256(abi.encodePacked(SESSION_ID, cashInId))),
-            application: Database(self).getAddressValue(keccak256(abi.encodePacked(APPLICATION, cashInId))),
-            status: Status(Database(self).getUintValue(keccak256(abi.encodePacked(STATUS, cashInId))))
-        });
+    function cashInIsActive(address _self, uint256 _cashInId) internal view returns (bool _isActive) {
+        _isActive = Status(Database(_self).getUintValue(keccak256(abi.encodePacked(STATUS, _cashInId)))) == Status.ACTIVE;
     }
 
-    function save(address _self, uint256 _sessionId, address _application, uint256 _status, uint256 _vlFee, uint256 _maxBalance) internal returns (uint256 _index) {
-        _index = Database(_self).getUintValue(CASH_IN_INDEX);
-        Database(_self).setUintValue(string256(SESSION_ID, _index), _sessionId);
-        Database(_self).setAddressValue(string256(APPLICATION, _index), _application);
-        Database(_self).setUintValue(string256(STATUS, _index), _status);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(VL_FEE, _index)), _vlFee);
-        Database(_self).setUintValue(keccak256(abi.encodePacked(MAX_BALANCE, _index)), _maxBalance);
-        Database(_self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, _index)), true);
-        Database(_self).setUintValue(CASH_IN_INDEX, _index + 1);
+    function cashInInStatus(address _self, uint256 _cashInId, Status _status) internal view returns (bool _isInStatus) {
+        _isInStatus = Status(Database(_self).getUintValue(keccak256(abi.encodePacked(STATUS, _cashInId)))) == _status;
     }
 
-    /// @dev size of both arrays (e.g. parties and fees) stored in separate field 'splitSize'
-    function get(address self, uint256 index) internal view returns (
-        uint256 sessionId,
-        address application,
-        uint256 balance,
-        uint256 status,
-        uint256 splitSize
-    ) {
-        sessionId = Database(self).getUintValue(string256(SESSION_ID, index));
-        application = Database(self).getAddressValue(string256(APPLICATION, index));
-        balance = Database(self).getUintValue(string256(BALANCE, index));
-        status = Database(self).getUintValue(string256(STATUS, index));
-        splitSize = Database(self).getUintValue(string256(SPLIT_SIZE, index));
+    function setCashInStatus(address _self, uint256 _cashInId, Status _status) internal {
+        Database(_self).setUintValue(keccak256(abi.encodePacked(STATUS, _cashInId)), uint256(_status));
     }
 
-    function getSessionId(address self, uint256 index) internal view returns (uint256) {
-        return Database(self).getUintValue(string256(SESSION_ID, index));
-    }
-
-    function getApplication(address self, uint256 index) internal view returns (address) {
-        return Database(self).getAddressValue(string256(APPLICATION, index));
-    }
-
-    function setBalance(address self, uint256 index, uint256 amount) internal {
-        Database(self).setUintValue(string256(BALANCE, index), amount);
-    }
-
-    function getBalance(address self, uint256 index) internal view returns (uint256) {
-        return Database(self).getUintValue(string256(BALANCE, index));
-    }
-
-    function setVLFee(address self, uint256 index, uint256 fee) internal {
-        Database(self).setUintValue(keccak256(abi.encodePacked(VL_FEE, index)), fee);
-    }
-
-    function getVLFee(address self, uint256 index) internal view returns (uint256) {
-        return Database(self).getUintValue(keccak256(abi.encodePacked(VL_FEE, index)));
-    }
-
-    function setApplicationBalance(address self, uint256 index, uint256 balance) internal {
-        Database(self).setUintValue(string256(APP_BALANCE, index), balance);
-    }
-
-    function getApplicationBalance(address self, uint256 index) internal view returns (uint256) {
-        return Database(self).getUintValue(string256(APP_BALANCE, index));
-    }
-
-    function setStatus(address self, uint256 index, uint256 status) internal {
-        Database(self).setUintValue(string256(STATUS, index), uint256(status));
-    }
-
-    function setCashInStatus(address _self, uint256 _id, Status _status) internal {
-        Database(self).setUintValue(keccak256(abi.encodePacked(STATUS, _id)), uint256(_status));
-    }
-
-    function getStatus(address self, uint256 index) internal view returns (uint256) {
-        return Database(self).getUintValue(string256(STATUS, index));
-    }
-
-    function addSplit(address self, uint256 index, address receiver, uint256 amount) internal {
-        uint256 splitSize = Database(self).getUintValue(string256(SPLIT_SIZE, index));
-        Database(self).setAddressValue(string256x2(SPLIT_PARTIES, index, splitSize), receiver);
-        Database(self).setUintValue(string256x2(SPLIT_FEES, index, splitSize), amount);
-        Database(self).setUintValue(string256(SPLIT_SIZE, index), splitSize + 1);
-    }
-
-    function addSplits(address self, uint256 index, address[] receivers, uint256[] amounts) internal {
-        for (uint256 i = 0; i < receivers.length; i++) {
-            addSplit(self, index, receivers[i], amounts[i]);
+    function createCashInSplit(
+        address _self,
+        uint256 _cashInId,
+        uint256[] _fees,
+        address[] _parties
+    )
+        internal
+    {
+        Database(_self).setUintValue(keccak256(abi.encodePacked(SPLIT_SIZE, _cashInId)), _fees.length);
+        for (uint256 i = 0; i < _fees.length; i++) {
+            Database(_self).setUintValue(keccak256(abi.encodePacked(SPLIT_FEE, _cashInId, i)), _fees[i]);
+            Database(_self).setAddressValue(keccak256(abi.encodePacked(SPLIT_PARTY, _cashInId, i)), _parties[i]);
         }
     }
 
-    function getSplitSize(address self, uint256 index) internal view returns (uint256) {
-        return Database(self).getUintValue(string256(SPLIT_SIZE, index));
+    function retrieveCashInSplit(address _self, uint256 _cashInId) internal view returns (Split memory _split) {
+        _split.size = Database(_self).getUintValue(keccak256(abi.encodePacked(SPLIT_SIZE, _cashInId)));
+        for (uint256 i = 0; i < _split.size; i++) {
+            _split.fees[i] = Database(_self).getUintValue(keccak256(abi.encodePacked(SPLIT_FEE, _cashInId, i)));
+            _split.parties[i] = Database(_self).getAddressValue(keccak256(abi.encodePacked(SPLIT_PARTY, _cashInId, i)));
+        }
     }
 
-    function getSplit(address self, uint256 index, uint256 subIndex) internal view returns (address party, uint256 fee) {
-        party = Database(self).getAddressValue(string256x2(SPLIT_PARTIES, index, subIndex));
-        fee = Database(self).getUintValue(string256x2(SPLIT_FEES, index, subIndex));
+    function createCashInAccount(
+        address _self,
+        uint256 _cashInId,
+        uint256 _maxBalance,
+        uint256 _fee,
+        function(uint256, uint256, uint256) external _update
+    )
+        internal
+    {
+        Database(_self).setUintValue(keccak256(abi.encodePacked(ACCONT_MAX_BALANCE, _cashInId)), _maxBalance);
+        Database(_self).setUintValue(keccak256(abi.encodePacked(ACCOUNT_FEE_PERCENT, _cashInId)), _fee);
+        Database(_self).setUint256X3Function(keccak256(abi.encodePacked(ACCOUNT_UPDATE, _cashInId)), _update);
     }
 
-    function string256(string field, uint256 index) private pure returns (bytes32) {
-        return keccak256(abi.encodePacked(field, index));
+    function retrieveCashInAccount(address _self, uint256 _cashInId) internal view returns (Account memory _account) {
+        _account.balance = Database(_self).getUintValue(keccak256(abi.encodePacked(ACCOUNT_BALANCE, _cashInId)));
+        _account.maxBalance = Database(_self).getUintValue(keccak256(abi.encodePacked(ACCONT_MAX_BALANCE, _cashInId)));
+        _account.fee = Database(_self).getUintValue(keccak256(abi.encodePacked(ACCOUNT_FEE_PERCENT, _cashInId)));
+        _account.update = Database(_self).getUint256X3Function(keccak256(abi.encodePacked(ACCOUNT_UPDATE, _cashInId)));
     }
 
-    function string256x2(string field, uint256 index, uint256 counter) private pure returns (bytes32) {
-        return keccak256(abi.encodePacked(field, index, counter));
+    function setCashInAccountBalance(address _self, uint256 _cashInId, uint256 _balance) internal {
+        Database(_self).setUintValue(keccak256(abi.encodePacked(ACCOUNT_BALANCE, _cashInId)), _balance);
+    }
+
+    function createCashInClose(
+        address _self,
+        uint256 _cashInId,
+        uint256 _sessionId,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256) external _fail
+    )
+        internal
+    {
+        Database(_self).setUintValue(keccak256(abi.encodePacked(CLOSE_SESSION_ID, _cashInId)), _sessionId);
+        Database(_self).setUint256X2Function(keccak256(abi.encodePacked(CLOSE_SUCCESS, _cashInId)), _success);
+        Database(_self).setUint256X2Function(keccak256(abi.encodePacked(CLOSE_FAIL, _cashInId)), _fail);
+    }
+
+    function retrieveCashInClose(address _self, uint256 _cashInId) internal view returns (Close memory _close) {
+        _close.sessionId = Database(_self).getUintValue(keccak256(abi.encodePacked(CLOSE_SESSION_ID, _cashInId)));
+        _close.success = Database(_self).getUint256X2Function(keccak256(abi.encodePacked(CLOSE_SUCCESS, _cashInId)));
+        _close.fail = Database(_self).getUint256X2Function(keccak256(abi.encodePacked(CLOSE_FAIL, _cashInId)));
+    }
+
+    function createCashInOpen(
+        address _self,
+        uint256 _cashInId,
+        uint256 _sessionId,
+        uint256 _maxBalance,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256, uint256) external _update,
+        function(uint256) external _fail
+    )
+        internal
+    {
+        Database(_self).setUintValue(keccak256(abi.encodePacked(OPEN_SESSION_ID, _cashInId)), _sessionId);
+        Database(_self).setUintValue(keccak256(abi.encodePacked(OPEN_MAX_BALANCE, _cashInId)), _maxBalance);
+        Database(_self).setUint256X2Function(keccak256(abi.encodePacked(OPEN_SUCCESS, _cashInId)), _success);
+        Database(_self).setUint256X3Function(keccak256(abi.encodePacked(OPEN_UPDATE, _cashInId)), _update);
+        Database(_self).setUint256Function(keccak256(abi.encodePacked(OPEN_FAIL, _cashInId)), _fail);
+    }
+
+    function retrieveCashInOpen(address _self, uint256 _cashInId) internal view returns (Open memory _open) {
+        _open.sessionId = Database(_self).getUintValue(keccak256(abi.encodePacked(OPEN_SESSION_ID, _cashInId)));
+        _open.maxBalance = Database(_self).getUintValue(keccak256(abi.encodePacked(OPEN_MAX_BALANCE, _cashInId)));
+        _open.success = Database(_self).getUint256X2Function(keccak256(abi.encodePacked(OPEN_SUCCESS, _cashInId)));
+        _open.update = Database(_self).getUint256X3Function(keccak256(abi.encodePacked(OPEN_UPDATE, _cashInId)));
+        _open.fail = Database(_self).getUint256Function(keccak256(abi.encodePacked(OPEN_FAIL, _cashInId)));
     }
 
 }
@@ -883,7 +656,7 @@ library CashOutLib {
 
     function save(address self, string kioskId, uint256 sessionId, address application, uint256 status, uint256 vaultLogicPercent,
         uint256 vaultLogicAmount, uint256 withdrawAmount, uint256 reservedAmount, address[] parties, uint256[] fees)
-        internal returns (uint256 index) {
+    internal returns (uint256 index) {
         index = Database(self).getUintValue(CASH_OUT_INDEX);
         Database(self).setStringValue(keccak256(abi.encodePacked(KIOSK_ID, index)), kioskId);
         Database(self).setUintValue(keccak256(abi.encodePacked(SESSION_ID, index)), uint256(sessionId));
@@ -1009,12 +782,12 @@ library ParameterLib {
 
     string constant VAULT_LOGIC_FEE_PERCENT = "vault_logic_fee_percent";
 
-    function setVLFee(address self, uint256 percent) internal {
-        Database(self).setUintValue(keccak256(abi.encode(VAULT_LOGIC_FEE_PERCENT)), percent);
+    function setVLFee(address _self, uint256 _vlFee) internal {
+        Database(_self).setUintValue(keccak256(abi.encode(VAULT_LOGIC_FEE_PERCENT)), _vlFee);
     }
 
-    function getVLFee(address self) internal view returns (uint256) {
-        return Database(self).getUintValue(keccak256(abi.encode(VAULT_LOGIC_FEE_PERCENT)));
+    function getVLFee(address self) internal view returns (uint256 _vlFee) {
+        _vlFee = Database(self).getUintValue(keccak256(abi.encode(VAULT_LOGIC_FEE_PERCENT)));
     }
 
 }

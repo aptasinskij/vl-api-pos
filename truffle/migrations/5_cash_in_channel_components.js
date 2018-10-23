@@ -7,8 +7,9 @@ var CashInController = artifacts.require("CashInController");
 
 module.exports = function (deployer) {
   deployer.deploy(CashInLib);
-  deployer.link(CashInLib, CashInStorage);
-  deployer.deploy(CashInStorage, Config.address);
+  deployer.link(CashInLib, CashChannelsManager);
+  // deployer.link(CashInLib, CashInStorage);
+  // deployer.deploy(CashInStorage, Config.address);
   deployer.deploy(CashChannelsManager, Config.address);
   deployer.deploy(CashAcceptorOracle, Config.address);
   deployer.deploy(CashInController, Config.address);

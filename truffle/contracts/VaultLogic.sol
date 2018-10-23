@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 
 interface Registry {
 
-    function getByName(string memory _name) external view returns (address _apiAddress);
+    function getByName(string _name) external view returns (address _apiAddress);
 
 }
 
@@ -93,18 +93,18 @@ interface PrinterAPI {
         uint256 _sessionId,
         function(uint256, string memory, string memory) external _success, //sessionId, receiptId, url
         function(uint256) external _fail //sessionId
-    ) public returns (
+    ) external returns (
         bool _accepted
     );
 
     function printReceipt(
         uint256 _sessionId,
-        string memory _receiptId,
-        string memory _data,
-        string memory _params,
+        string _receiptId,
+        string _data,
+        string _params,
         function(uint256) external _success,
         function(uint256) external _fail
-    ) public returns (
+    ) external returns (
         bool _accepted
     );
 
@@ -119,7 +119,7 @@ interface CameraAPI {
         function(uint256, string memory, string memory, string memory) external _success, //sessionId, port, url, href
         function(uint256, string memory) external _scanned, //sessionId, data
         function(uint256) external _fail //sessionId
-    ) public returns (
+    ) external returns (
         bool _accepted
     );
 
@@ -128,7 +128,7 @@ interface CameraAPI {
         function(uint256, string memory, string memory, string memory) external _success,
         function(uint256, string memory) external _scanned,
         function(uint256) external _fail
-    ) public returns (
+    ) external returns (
         bool _accepted
     );
 
@@ -136,7 +136,7 @@ interface CameraAPI {
         uint256 _sessionId,
         function(uint256) external _success,
         function(uint256) external _fail
-    ) public returns (
+    ) external returns (
         bool _accepted
     );
 

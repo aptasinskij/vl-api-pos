@@ -38,11 +38,21 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
     }
 
     function respondOpened(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public onlyManager {
-        _successCallback(_sessionId, _cashInId);
+        _callback(_sessionId, _cashInId);
     }
 
     function respondFailOpen(uint256 _sessionId, function(uint256) external _callback) public onlyManager {
         _callback(_sessionId);
+    }
+
+    function respondUpdate(
+        uint256 _sessionId,
+        uint256 _cashInId,
+        uint256 _amount,
+        function(uint256, uint256, uint256) external _callback
+    ) public
+    {
+        _callback(_sessionId, _cashInId, _amount);
     }
 
     function closeCashInChannel(
@@ -57,6 +67,7 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
         isRegistered
         returns (bool _accepted)
     {
+        require(_fees.length == _parties.length, "split has not equals parameters");
         _accepted = ACashChannelsManager(context.get(MANAGER)).closeCashInChannel(msg.sender, _sessionId, _channelId, _fees, _parties, _success, _fail);
     }
 

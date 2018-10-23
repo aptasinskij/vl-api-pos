@@ -20,7 +20,7 @@ contract SessionStorage is ASessionStorage, Named("session-storage"), Mortal, Co
     }
 
     function setHasActiveCashIn(uint256 _sessionId, bool _flag) public {
-        database.setHasActiveCashIn(_sessionId, _flag);
+        database.setSessionHasActiveCashIn(_sessionId, _flag);
     }
 
     function isHasActiveCashIn(uint256 _sessionId) public view returns(bool) {

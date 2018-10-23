@@ -1,89 +1,87 @@
 pragma solidity 0.4.24;
 
-import "./IApplication.sol";
-import "./RegistryDependent.sol";
-import "../managers/Managers.sol";
-import {ASessionController} from "../controllers/Controllers.sol";
-import {ACashInController} from "../controllers/Controllers.sol";
+import "../Platform.sol";
+import "../controllers/Controllers.sol";
 
-contract CapitalHero is IApplication, RegistryDependent {
+contract CapitalHero {
+
+    event OpenAccepted(uint256 _sessionId);
+    event SuccessOpen(uint256 _sessionId, uint256 _cashInId);
+    event BalanceUpdate(uint256 _sessionId, uint256 _cashInId, uint256 _amount);
+    event FailOpen(uint256 _sessionId);
+
+    event CloseAccepted(uint256 _sessionId);
+    event SuccessClose(uint256 _sessionId, uint256 _cashInId);
+    event FailClose(uint256 _sessionId, uint256 _cashInId);
 
     string constant CASH_IN_CONTROLLER = "cash-in-controller";
-    string constant SESSION_MANAGER = "session-manager";
-    string constant SESSION_CONTROLLER = "session-controller";
 
-    event CashInOpened(uint256 channelId, uint256 sessionId);
-    event CashInClosed(uint256 channelId, uint256 sessionId);
-    event CashInBalanceUpdated(uint256 channelId, uint256 balance, uint256 sessionId);
-    event SessionCreated(uint256 timestamp, uint256 sessionId);
-    event SessionClosed(uint256 timestamp, uint256 sessionId);
+    Context private context;
 
-    constructor(address regAddr) RegistryDependent(regAddr) public {}
+    uint256 public lastOpenAcceptedSession;
 
-    function openCashInChannel(uint256 sessionId, uint256 _maxAmount) external {
-        ACashInController(componentForName(CASH_IN_CONTROLLER)).open(sessionId, _maxAmount);
+    uint256 public lastSuccessOpenSession;
+    uint256 public lastSuccessOpenChannel;
+
+    uint256 public lastBalanceUpdateSession;
+    uint256 public lastBalanceUpdateChannel;
+    uint256 public lastBalanceUpdateAmount;
+
+    constructor(address _context) public {
+        context = Context(_context);
     }
 
-    function closeCashInChannel(uint256 sessionId, uint256 channelId, uint256[] _fees, address[] _parties) external {
-        ACashInController(componentForName(CASH_IN_CONTROLLER)).close(sessionId, channelId, _fees, _parties);
+    function openCashInChannel(uint256 _sessionId, uint256 _maxAmount) external {
+        bool accepted = ACashInController(context.get(CASH_IN_CONTROLLER)).openCashInChannel(
+            _sessionId,
+            _maxAmount,
+            this.successOpen,
+            this.balanceUpdate,
+            this.failOpen
+        );
+        if (accepted) {
+            lastOpenAcceptedSession = _sessionId;
+            emit OpenAccepted(_sessionId);
+        }
     }
 
-    function cashInChannelOpened(uint256 channelId, uint256 sessionId) external {
-        emit CashInOpened(channelId, sessionId);
+    function successOpen(uint256 _sessionId, uint256 _cashInId) public {
+        lastSuccessOpenSession = _sessionId;
+        lastSuccessOpenChannel = _cashInId;
+        emit SuccessOpen(_sessionId, _cashInId);
     }
 
-    function cashInBalanceUpdate(uint256 channelId, uint256 balance, uint256 sessionId) external {
-        emit CashInBalanceUpdated(channelId, balance, sessionId);
+    function balanceUpdate(uint256 _sessionId, uint256 _cashInId, uint256 _amount) public {
+        lastBalanceUpdateSession = _sessionId;
+        lastBalanceUpdateChannel = _cashInId;
+        lastBalanceUpdateAmount = _amount;
+        emit BalanceUpdate(_sessionId, _cashInId, _amount);
     }
 
-    function cashInChannelClosed(uint256 channelId, uint256 sessionId) external {
-        emit CashInClosed(channelId, sessionId);
+    function failOpen(uint256 _sessionId) public {
+        emit FailOpen(_sessionId);
     }
 
-    function newSessionCreated(uint256 _sessionId) external {
-        emit SessionCreated(now, _sessionId);
+    function closeCashInChannel(uint256 _sessionId, uint256 _cashInId) public {
+        uint256[] memory fees = new uint256[](0);
+        address[] memory parties = new address[](0);
+        bool accepted = ACashInController(context.get(CASH_IN_CONTROLLER)).closeCashInChannel(
+            _sessionId,
+            _cashInId,
+            fees,
+            parties,
+            this.successClose,
+            this.failClose
+        );
+        if (accepted) emit CloseAccepted(_sessionId);
     }
 
-    function closeSession(uint256 sessionId) external {
-        ASessionManager(componentForName(SESSION_MANAGER)).closeSession(sessionId);
+    function successClose(uint256 _sessionId, uint256 _cashInId) public {
+        emit SuccessClose(_sessionId, _cashInId);
     }
 
-    function sessionClosed(uint256 sessionId) external {
-        emit SessionClosed(now, sessionId);
-    }
-
-    function getKioskInfo(uint256 _sessionId) public view returns (string memory _id, string memory _location, string memory _name, string memory _timezone) {
-        return ASessionController(componentForName(SESSION_CONTROLLER)).getKiosk(_sessionId);
-    }
-
-    event QRCodeScanned(uint256 sessionId, string url);
-    event QRScanningStopped(uint256 sessionId);
-    event ReceiptURLReceived(uint256 sessionId, string id, string url);
-    event ReceiptPrinted(uint256 sessionId, string id, string data);
-
-    function scanQRCodeWithLights(uint256 _sessionId) public {
-        (bool success, string memory url) = ASessionController(componentForName(SESSION_CONTROLLER)).scanQRCodeWithLights(_sessionId);
-        if (success) emit QRCodeScanned(_sessionId, url);
-    }
-
-    function scanQRCode(uint256 _sessionId) public {
-        (bool success, string memory url) = ASessionController(componentForName(SESSION_CONTROLLER)).scanQRCode(_sessionId);
-        if (success) emit QRCodeScanned(_sessionId, url);
-    }
-
-    function stopQRScanning(uint256 _sessionId) public {
-        bool success = ASessionController(componentForName(SESSION_CONTROLLER)).stopQRScanning(_sessionId);
-        if (success) emit QRScanningStopped(_sessionId);
-    }
-
-    function getReceiptUrl(uint256 _sessionId) public {
-        (bool success, string memory id, string memory url) = ASessionController(componentForName(SESSION_CONTROLLER)).getReceiptUrl(_sessionId);
-        if (success) emit ReceiptURLReceived(_sessionId, id, url);
-    }
-
-    function printReceipt(uint256 _sessionId, string _id, string _data) public {
-        bool success = ASessionController(componentForName(SESSION_CONTROLLER)).printReceipt(_sessionId, _id, _data);
-        if (success) emit ReceiptPrinted(_sessionId, _id, _data);
+    function failClose(uint256 _sessionId, uint256 _cashInId) public {
+        emit FailClose(_sessionId, _cashInId);
     }
 
 }

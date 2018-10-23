@@ -16,6 +16,13 @@ contract ACashInController {
 
     function respondFailOpen(uint256 _sessionId, function(uint256) external _callback) public;
 
+    function respondUpdate(
+        uint256 _sessionId,
+        uint256 _cashInId,
+        uint256 _amount,
+        function(uint256, uint256, uint256) external _callback
+    ) public;
+
     function closeCashInChannel(
         uint256 _sessionId,
         uint256 _channelId,
@@ -35,20 +42,9 @@ contract ACashInController {
 
 }
 
-//TODO redesign in future
 contract ASessionController {
 
     function getKiosk(uint256 _sessionId) public view returns (string memory _id, string memory _location, string memory _name, string memory _timezone);
-
-    function scanQRCodeWithLights(uint256 _sessionId) public view returns (bool _success, string memory _url);
-
-    function scanQRCode(uint256 _sessionId) public view returns (bool _success, string memory _url);
-
-    function stopQRScanning(uint256 _sessionId) public view returns (bool _success);
-
-    function getReceiptUrl(uint256 _sessionId) public view returns (bool _success, string memory _id, string memory _url);
-
-    function printReceipt(uint256 _sessionId, string _id, string _data) public view returns (bool _success);
 
 }
 

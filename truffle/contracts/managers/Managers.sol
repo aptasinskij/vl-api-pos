@@ -47,9 +47,9 @@ contract AnApplicationManager {
 
 contract AParameterManager {
 
-    function setVLFee(uint256 percent) public;
+    function setVLFee(uint256 _vlFee) public;
 
-    function getVLFee() public view returns (uint256);
+    function getVLFee() public view returns (uint256 _vlFee);
 
 }
 
@@ -65,7 +65,13 @@ contract ASessionManager {
 
     function isHasActiveCashIn(uint256 _sessionId) public view returns(bool);
 
-    function activate(uint256 _sessionId) public returns(bool);
+    function activate(uint256 _sessionId) public;
+
+    function validateCanOpenCashIn(uint256 _sessionId, address _application) public view returns (bool _canOpenCashIn);
+
+    function setSessionHasActiveCashIn(uint256 _sessionId) public;
+
+    function setSessionIsNotHasActiveCashIn(uint256 _sessionId) public;
 
 }
 

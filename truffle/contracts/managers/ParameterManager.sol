@@ -1,22 +1,22 @@
 pragma solidity 0.4.24;
 
-import {AParameterManager} from "./Managers.sol";
-import {AParameterStorage} from "../storages/Storages.sol";
 import "../Platform.sol";
+import {AParameterManager} from "./Managers.sol";
+import {ParameterLib} from "../libs/Libraries.sol";
 
 contract ParameterManager is AParameterManager, Named("parameter-manager"), Mortal, Component {
 
-    string constant STORAGE = "parameter-manager";
+    using ParameterLib for address;
 
-    constructor(address registryAddress) Component(registryAddress) public {}
+    constructor(address _config) Component(_config) public {}
 
-    function setVLFee(uint256 percent) public {
-        require(percent >= 0, "The fee percent for vault logic cannot be less then zero");
-        AParameterStorage(context.get(STORAGE)).setVLFee(percent);
+    function setVLFee(uint256 _vlFee) public {
+        require(_vlFee > 0, "The fee percent for vault logic cannot be zero");
+        database.setVLFee(_vlFee);
     }
 
-    function getVLFee() public view returns (uint256) {
-        return AParameterStorage(context.get(STORAGE)).getVLFee();
+    function getVLFee() public view returns (uint256 _vlFee) {
+        _vlFee = database.getVLFee();
     }
 
 }
