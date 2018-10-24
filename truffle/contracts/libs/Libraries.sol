@@ -189,20 +189,20 @@ library KioskLib {
     // create
     function createKiosk(address self, Kiosk memory kiosk) internal returns (bool) {
         require(!kioskExists(self, kiosk.id), "Kiosk already exists");
-        Database(self).setStringValue(keccak256(abi.encode(ID, kiosk.id)), kiosk.id);
-        Database(self).setStringValue(keccak256(abi.encode(LOCATION, kiosk.id)), kiosk.location);
-        Database(self).setStringValue(keccak256(abi.encode(NAME, kiosk.id)), kiosk.name);
-        Database(self).setStringValue(keccak256(abi.encode(TIME_ZONE, kiosk.id)), kiosk.timezone);
+        Database(self).setStringValue(keccak256(abi.encodePacked(ID, kiosk.id)), kiosk.id);
+        Database(self).setStringValue(keccak256(abi.encodePacked(LOCATION, kiosk.id)), kiosk.location);
+        Database(self).setStringValue(keccak256(abi.encodePacked(NAME, kiosk.id)), kiosk.name);
+        Database(self).setStringValue(keccak256(abi.encodePacked(TIME_ZONE, kiosk.id)), kiosk.timezone);
         Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, kiosk.id)), true);
         return true;
     }
 
     function save(address self, string memory _kioskId, string memory _location, string memory _name, string memory _timezone) internal returns (bool) {
         require(!kioskExists(self, _kioskId), "Kiosk already exists");
-        Database(self).setStringValue(keccak256(abi.encode(ID, _kioskId)), _kioskId);
-        Database(self).setStringValue(keccak256(abi.encode(LOCATION, _kioskId)), _location);
-        Database(self).setStringValue(keccak256(abi.encode(NAME, _kioskId)), _name);
-        Database(self).setStringValue(keccak256(abi.encode(TIME_ZONE, _kioskId)), _timezone);
+        Database(self).setStringValue(keccak256(abi.encodePacked(ID, _kioskId)), _kioskId);
+        Database(self).setStringValue(keccak256(abi.encodePacked(LOCATION, _kioskId)), _location);
+        Database(self).setStringValue(keccak256(abi.encodePacked(NAME, _kioskId)), _name);
+        Database(self).setStringValue(keccak256(abi.encodePacked(TIME_ZONE, _kioskId)), _timezone);
         Database(self).setBooleanValue(keccak256(abi.encodePacked(EXISTS, _kioskId)), true);
         return true;
     }
@@ -213,18 +213,18 @@ library KioskLib {
         // @formatter:off
         return Kiosk({
             id: _kioskId,
-            location: Database(self).getStringValue(keccak256(abi.encode(LOCATION, _kioskId))),
-            name: Database(self).getStringValue(keccak256(abi.encode(NAME, _kioskId))),
-            timezone: Database(self).getStringValue(keccak256(abi.encode(TIME_ZONE, _kioskId)))
+            location: Database(self).getStringValue(keccak256(abi.encodePacked(LOCATION, _kioskId))),
+            name: Database(self).getStringValue(keccak256(abi.encodePacked(NAME, _kioskId))),
+            timezone: Database(self).getStringValue(keccak256(abi.encodePacked(TIME_ZONE, _kioskId)))
         });
         // @formatter:on
     }
 
     function get(address self, string memory _kioskId) internal view returns (string memory _location, string memory _name, string memory _timezone) {
         require(kioskExists(self, _kioskId), "Kiosk is not exists");
-        _location = Database(self).getStringValue(keccak256(abi.encode(LOCATION, _kioskId)));
-        _name = Database(self).getStringValue(keccak256(abi.encode(NAME, _kioskId)));
-        _timezone = Database(self).getStringValue(keccak256(abi.encode(TIME_ZONE, _kioskId)));
+        _location = Database(self).getStringValue(keccak256(abi.encodePacked(LOCATION, _kioskId)));
+        _name = Database(self).getStringValue(keccak256(abi.encodePacked(NAME, _kioskId)));
+        _timezone = Database(self).getStringValue(keccak256(abi.encodePacked(TIME_ZONE, _kioskId)));
     }
 
 }

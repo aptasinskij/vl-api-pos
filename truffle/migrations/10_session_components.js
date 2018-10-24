@@ -1,5 +1,6 @@
 var Config = artifacts.require("Config");
 var SessionLib = artifacts.require("SessionLib");
+var KioskLib = artifacts.require("KioskLib");
 var ApplicationLib = artifacts.require("ApplicationLib");
 var SessionStorage = artifacts.require("SessionStorage");
 var SessionManager = artifacts.require("SessionManager");
@@ -11,6 +12,7 @@ module.exports = function (deployer) {
     deployer.link(SessionLib, SessionStorage);
     deployer.link(SessionLib, SessionManager);
     deployer.link(SessionLib, SessionController);
+    deployer.link(KioskLib, SessionController);
     deployer.link(ApplicationLib, SessionController);
     deployer.deploy(SessionController, Config.address);
     deployer.deploy(SessionStorage, Config.address);
