@@ -1,7 +1,7 @@
 package com.skysoft.vaultlogic.observers.local;
 
 import com.skysoft.vaultlogic.contracts.CashInOracle;
-import com.skysoft.vaultlogic.contracts.CashInOracle.OpenCashAcceptorEventResponse;
+import com.skysoft.vaultlogic.contracts.CashInOracle.OpenCashInEventResponse;
 import com.skysoft.vaultlogic.observers.api.AbstractContractEventObserver;
 import com.skysoft.vaultlogic.observers.api.EventObservable;
 import com.skysoft.vaultlogic.services.CashInService;
@@ -11,12 +11,14 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
 
+import java.math.BigInteger;
+
 import static com.skysoft.vaultlogic.contracts.CashInOracle.OPENCASHACCEPTOR_EVENT;
 
 @Slf4j
 @Component
 @Profile("local")
-public class OpenCashAcceptorEventHandler extends AbstractContractEventObserver<OpenCashAcceptorEventResponse, CashInOracle> {
+public class OpenCashAcceptorEventHandler extends AbstractContractEventObserver<OpenCashInEventResponse, CashInOracle> {
 
     private final CashInService cashInService;
 
@@ -33,14 +35,14 @@ public class OpenCashAcceptorEventHandler extends AbstractContractEventObserver<
     }
 
     @Override
-    protected EventObservable<OpenCashAcceptorEventResponse> getEventObservable() {
-        return contract::openCashAcceptorEventObservable;
+    protected EventObservable<OpenCashInEventResponse> getEventObservable() {
+        return contract::openCashInEventObservable;
     }
 
     @Override
-    public void onNext(OpenCashAcceptorEventResponse event) {
-        log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, Status: {}", event.channelId, event.sessionId, event.channelStatus);
-        cashInService.createCashInChannel(event.channelId, event.sessionId, event.channelStatus);
+    public void onNext(OpenCashInEventResponse event) {
+        log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, MAX_BALANCE: {}", event._commandId, event._sessionId, event._maxBalance);
+        cashInService.createCashInChannel(event._commandId, event._sessionId, BigInteger.ZERO);
     }
 
     @Override

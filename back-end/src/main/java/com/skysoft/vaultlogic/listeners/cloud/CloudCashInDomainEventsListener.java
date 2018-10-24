@@ -75,7 +75,7 @@ public class CloudCashInDomainEventsListener {
     @TransactionalEventListener
     public void opened(CashInActivated event) {
         log.info("[x]---> CASH IN OPENED EVENT. ID: {}", event.getChannelId());
-        cashInOracle.confirmOpen(event.getChannelId())
+        cashInOracle.successOpen(event.getChannelId())
                 .sendAsync()
                 .thenAccept(tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()))
                 .exceptionally(th -> {
@@ -109,7 +109,7 @@ public class CloudCashInDomainEventsListener {
     @TransactionalEventListener
     public void closed(CashInClosed event) {
         log.info("[x]---> CASH IN CLOSED EVENT. ID: {} ", event.getChannelId());
-        cashInOracle.confirmClose(event.getChannelId()).sendAsync()
+        cashInOracle.successClose(event.getChannelId()).sendAsync()
                 .thenAccept(tx -> log.info("[x] Confirmed, TX: {}", tx.getTransactionHash()))
                 .exceptionally(th -> {
                     log.error("[x] Error during confirmation", th);

@@ -5,6 +5,7 @@ import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
 import com.skysoft.vaultlogic.common.domain.session.events.SessionActivated;
 import com.skysoft.vaultlogic.common.domain.session.events.SessionCloseRequested;
 import com.skysoft.vaultlogic.common.domain.session.events.SessionClosed;
+import com.skysoft.vaultlogic.common.domain.session.events.SessionCreating;
 import com.skysoft.vaultlogic.contracts.SessionManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,20 @@ public class CloudSessionDomainEventsListener {
         this.sessionManager = sessionManager;
         this.sessionRepository = sessionRepository;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
+    }
+
+    @Async
+    @TransactionalEventListener
+    @Transactional(readOnly = true)
+    public void creating(SessionCreating event) {
+        log.info("[x]---> Session creating with XToken: {}", event.xToken);
+        Session session = sessionRepository.findByXTokenJoinApplicationAndKiosk(event.xToken).orElseThrow(RuntimeException::new);
+        sessionManager.createSession(session.getId(), session.getApplication().getId(), session.getXToken(), session.getKiosk().getShortId())
+                .observable()
+                .subscribe(
+                        tx -> log.info("[x] session created in smart contract: {}", tx.getTransactionHash()),
+                        error -> log.error("[x] error create session in smart contract: {}", error.getMessage())
+                );
     }
 
     @Async

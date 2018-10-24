@@ -7,7 +7,6 @@ import com.skysoft.vaultlogic.common.domain.kiosk.KioskRepository;
 import com.skysoft.vaultlogic.common.domain.kiosk.mapper.KioskMapper;
 import com.skysoft.vaultlogic.contracts.KioskStorage;
 import com.skysoft.vaultlogic.services.KioskService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,6 @@ import static io.vavr.Patterns.$Success;
 @Slf4j
 @Service
 @Profile("cloud")
-@AllArgsConstructor
 public class KioskServiceImpl implements KioskService {
 
     private final KioskDevicesClient kioskDevices;
@@ -34,6 +32,13 @@ public class KioskServiceImpl implements KioskService {
 
     private Action1<Throwable> onError = throwable -> log.warn("[x] error save kiosk: {}", throwable.getMessage());
     private Action1<TransactionReceipt> onNext = tx -> log.info("[x] kiosk saved {}", tx.getTransactionHash());
+
+    public KioskServiceImpl(KioskDevicesClient kioskDevices, KioskRepository kioskRepository, KioskMapper kioskMapper, KioskStorage kioskStorage) {
+        this.kioskDevices = kioskDevices;
+        this.kioskRepository = kioskRepository;
+        this.kioskMapper = kioskMapper;
+        this.kioskStorage = kioskStorage;
+    }
 
     @Override
     @Transactional
