@@ -42,7 +42,7 @@ public class OpenCashAcceptorEventHandler extends AbstractContractEventObserver<
     @Override
     public void onNext(OpenCashInEventResponse event) {
         log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, MAX_BALANCE: {}", event._commandId, event._sessionId, event._maxBalance);
-        cashInService.createCashInChannel(event._commandId, event._sessionId, BigInteger.ZERO);
+        cashInService.createCashInChannel(event._commandId, event._sessionId, event._maxBalance, BigInteger.ZERO);
     }
 
     @Override
