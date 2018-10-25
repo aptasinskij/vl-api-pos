@@ -1,5 +1,6 @@
 package com.skysoft.vaultlogic.common.domain.cashin;
 
+import com.skysoft.vaultlogic.common.domain.cashin.projections.CashInMaxBalance;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +13,7 @@ public interface CashInRepository extends JpaRepository<CashInChannel, BigIntege
     Optional<CashInChannel> findByChannelId(BigInteger channelId);
 
     Optional<CashInChannel> findBySession_xTokenAndStatus(String xToken, CashInChannel.Status status);
+
+    CashInMaxBalance findCashInMaxBalanceByChannelId(BigInteger channelId);
 
 }
