@@ -58,7 +58,7 @@ public class ReceiptPrintEventObserver extends AbstractContractEventObserver<Rec
     public void onNext(ReceiptPrintEventResponse event) {
         log.info("[x] Receipt print: {}, {}", event._commandId, event._sessionId);
         SessionXToken sessionXToken = sessionRepository.findSessionXTokenById(event._sessionId);
-        kioskPrinter.printReceipt(sessionXToken.xToken, Receipt.of(event._receiptId, event._data, event._params))
+        kioskPrinter.printReceipt(sessionXToken.getxToken(), Receipt.of(event._receiptId, event._data, event._params))
                 .onSuccess(confirmSuccessReceiptPrint(event._commandId))
                 .onFailure(confirmFailReceiptPrint(event._commandId));
     }

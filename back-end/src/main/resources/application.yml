@@ -2,7 +2,7 @@ spring:
   profiles:
     active: default
   datasource:
-    url: jdbc:h2:mem:vault
+    url: jdbc:h2:file:./vault
     username: sa
     password:
   jpa:
@@ -11,6 +11,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    hibernate:
+      ddl-auto: update
   h2:
     console:
       enabled: true
@@ -21,11 +23,15 @@ spring:
   profiles: local
 blockchain:
   network:
-    id: 77142
+    id: 37609
     url: http://127.0.0.1:22000
 ---
 spring:
   profiles: cloud
+blockchain:
+  network:
+    id: 37609
+    url: http://127.0.0.1:22000
 maya:
   base-url: https://api-staging.maya.tech/open
   sso: https://sso.maya.tech/oauth2/token

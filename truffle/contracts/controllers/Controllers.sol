@@ -2,28 +2,49 @@ pragma solidity 0.4.24;
 
 contract ACashInController {
 
-    function open(uint256 _sessionId, uint256 _maxAmount) public returns (uint256 _channelId);
+    function openCashInChannel(
+        uint256 _sessionId,
+        uint256 _maxBalance,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256, uint256) external _update,
+        function(uint256) external _fail
+    )
+        public
+        returns (bool _accepted);
 
-    function close(uint256 _sessionId, uint256 _channelId, uint256[] _fees, address[] _parties) public returns (bool);
+    function respondOpened(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public;
+
+    function respondFailOpen(uint256 _sessionId, function(uint256) external _callback) public;
+
+    function respondUpdate(
+        uint256 _sessionId,
+        uint256 _cashInId,
+        uint256 _amount,
+        function(uint256, uint256, uint256) external _callback
+    ) public;
+
+    function closeCashInChannel(
+        uint256 _sessionId,
+        uint256 _channelId,
+        uint256[] _fees,
+        address[] _parties,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256) external _fail
+    )
+        public
+        returns (bool _accepted);
+
+    function respondClosed(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public;
+
+    function respondFailClose(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public;
 
     function balanceOf(uint256 _channelId) public view returns (uint256);
 
 }
 
-//TODO redesign in future
 contract ASessionController {
 
     function getKiosk(uint256 _sessionId) public view returns (string memory _id, string memory _location, string memory _name, string memory _timezone);
-
-    function scanQRCodeWithLights(uint256 _sessionId) public view returns (bool _success, string memory _url);
-
-    function scanQRCode(uint256 _sessionId) public view returns (bool _success, string memory _url);
-
-    function stopQRScanning(uint256 _sessionId) public view returns (bool _success);
-
-    function getReceiptUrl(uint256 _sessionId) public view returns (bool _success, string memory _id, string memory _url);
-
-    function printReceipt(uint256 _sessionId, string _id, string _data) public view returns (bool _success);
 
 }
 

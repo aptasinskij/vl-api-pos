@@ -57,7 +57,7 @@ public class ReceiptCreateEventObserver extends AbstractContractEventObserver<Re
     public void onNext(ReceiptCreateEventResponse event) {
         log.info("[x] Receipt create: {}, {}", event._commandId, event._sessionId);
         SessionXToken sessionXToken = sessionRepository.findSessionXTokenById(event._sessionId);
-        kioskPrinter.createReceipt(sessionXToken.xToken)
+        kioskPrinter.createReceipt(sessionXToken.getxToken())
                 .onSuccess(confirmSuccessReceiptCreate(event._commandId))
                 .onFailure(confirmFailReceiptCreate(event._commandId));
     }

@@ -25,9 +25,9 @@ public class CashInServiceImpl implements CashInService {
 
     @Override
     @Transactional
-    public void createCashInChannel(BigInteger channelId, BigInteger sessionId, BigInteger status) {
+    public void createCashInChannel(BigInteger channelId, BigInteger sessionId, BigInteger maxBalance, BigInteger status) {
         sessionRepository.findById(sessionId)
-                .map(session -> CashInChannel.newChannel(channelId, session, Status.from(status)))
+                .map(session -> CashInChannel.newChannel(channelId, session, maxBalance, Status.from(status)))
                 .map(CashInChannel::markCreating)
                 .ifPresent(cashInRepository::save);
     }

@@ -33,28 +33,4 @@ contract SessionController is ASessionController, Named("session-controller"), M
         return (kiosk.id, kiosk.location, kiosk.name, kiosk.timezone);
     }
 
-    function scanQRCodeWithLights(uint256 _sessionId) public view isRegistered returns (bool _success, string memory _url) {
-        _success = true;
-        _url = "http://vaultlogic.com/preview-with-light-url-123asd";
-    }
-
-    function scanQRCode(uint256 _sessionId) public view isRegistered returns (bool _success, string memory _url) {
-        _success = true;
-        _url = "http://vaultlogic.com/preview-url-123asd";
-    }
-
-    function stopQRScanning(uint256 _sessionId) public view isRegistered returns (bool _success) {
-        _success = true;
-    }
-
-    function getReceiptUrl(uint256 _sessionId) public view isRegistered returns (bool _success, string memory _id, string memory _url) {
-        _success = true;
-        _id = "qwerty";
-        _url = "http://vaultlogic.com/receipt-12345";
-    }
-
-    function printReceipt(uint256 _sessionId, string _id, string _data) public view isRegistered returns (bool _success) {
-        _success = true;
-    }
-
 }

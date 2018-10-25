@@ -12,6 +12,6 @@ public interface KioskApplicationClient {
 
     Either<Throwable, StatusCode> clientActivity(String xToken);
 
-    Either<Throwable, StatusCode> closeApplication(String xToken);
+    Try<StatusCode> closeApplication(String xToken);
 
 }

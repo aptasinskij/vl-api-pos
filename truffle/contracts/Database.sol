@@ -166,4 +166,48 @@ contract Database is Owned {
         return uint256X1StringX2Functions[_key];
     }
 
+    //function(uint256, uint256) external storage
+    mapping(bytes32 => function(uint256, uint256) external) uint256X2Functions;
+
+    function setUint256X2Function(bytes32 _key, function(uint256, uint256) external _func) public {
+        uint256X2Functions[_key] = _func;
+    }
+
+    function getUint256X2Function(bytes32 _key) public view returns (function(uint256, uint256) external) {
+        return uint256X2Functions[_key];
+    }
+
+    //function(uint256, uint256, uint256) external storage
+    mapping(bytes32 => function(uint256, uint256, uint256) external) uint256X3Functions;
+
+    function setUint256X3Function(bytes32 _key, function(uint256, uint256, uint256) external _func) public {
+        uint256X3Functions[_key] = _func;
+    }
+
+    function getUint256X3Function(bytes32 _key) public view returns (function(uint256, uint256, uint256) external) {
+        return uint256X3Functions[_key];
+    }
+
+    //function(uint256, uint256) external returns (function(uint256, uint256, uint256) external) storage
+    mapping(bytes32 => function(uint256, uint256) external returns (function(uint256, uint256, uint256) external)) uint256X2returnsFunctionUint256x3Functions;
+
+    function setUint256X2returnsFunctionUint256x3Function(
+        bytes32 _key,
+        function(uint256, uint256) external returns (function(uint256, uint256, uint256) external) _func
+    )
+    public
+    {
+        uint256X2returnsFunctionUint256x3Functions[_key] = _func;
+    }
+
+    function getUint256X2returnsFunctionUint256x3Function(
+        bytes32 _key
+    )
+    public
+    view
+    returns (function(uint256, uint256) external returns (function(uint256, uint256, uint256) external))
+    {
+        return uint256X2returnsFunctionUint256x3Functions[_key];
+    }
+
 }

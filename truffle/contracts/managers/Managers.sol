@@ -2,19 +2,28 @@ pragma solidity 0.4.24;
 
 contract ACashChannelsManager {
 
-    enum CashInStatus {CREATING, ACTIVE, FAILED_TO_CREATE, CLOSE_REQUESTED, CLOSED, FAILED_TO_CLOSE}
-
     function openCashInChannel(
         address _application,
         uint256 _sessionId,
-        uint256 _maxAmount
+        uint256 _maxBalance,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256, uint256) external _update,
+        function(uint256) external _fail
     )
         public
-        returns (
-        uint256
-    );
+        returns (bool _accepted);
 
-    function closeCashInChannel(address _application, uint256 _sessionId, uint256 _channelId, uint256[] fees, address[] parties) public returns (bool);
+    function closeCashInChannel(
+        address _application,
+        uint256 _sessionId,
+        uint256 _channelId,
+        uint256[] _fees,
+        address[] _parties,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256) external _fail
+    )
+        public
+        returns (bool _accepted);
 
     function confirmOpen(uint256 channelId) public;
 
@@ -38,9 +47,9 @@ contract AnApplicationManager {
 
 contract AParameterManager {
 
-    function setVLFee(uint256 percent) public;
+    function setVLFee(uint256 _vlFee) public;
 
-    function getVLFee() public view returns (uint256);
+    function getVLFee() public view returns (uint256 _vlFee);
 
 }
 
@@ -56,7 +65,13 @@ contract ASessionManager {
 
     function isHasActiveCashIn(uint256 _sessionId) public view returns(bool);
 
-    function activate(uint256 _sessionId) public returns(bool);
+    function activate(uint256 _sessionId) public;
+
+    function validateCanOpenCashIn(uint256 _sessionId, address _application) public view returns (bool _canOpenCashIn);
+
+    function setSessionHasActiveCashIn(uint256 _sessionId) public;
+
+    function setSessionIsNotHasActiveCashIn(uint256 _sessionId) public;
 
 }
 

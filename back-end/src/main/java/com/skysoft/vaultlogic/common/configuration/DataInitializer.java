@@ -24,6 +24,7 @@ public class DataInitializer {
 
     private static final String APPLICATION_NAME = "CapitalHero";
     private static final String APPLICATION_URL = "http://192.168.15.200:8888";
+    private static final String APPLICATION_ADDRESS = "0x570e1cf83d3b500d72241dd453194c1be0fe01c6";
 
     @Autowired
     public DataInitializer(UserRepository userRepository, ApplicationService applicationService, CapitalHero capitalHero) {
@@ -32,11 +33,11 @@ public class DataInitializer {
         this.capitalHero = capitalHero;
     }
 
-    @Bean
+    /*@Bean
     public CommandLineRunner registerUserAndApplication() {
         return args -> {
             User user = User.newUser("aptasinskij", "secret", "0xbEf2b0D2e5C33710c7ECa40983960D52e79D21d1");
-            Application application = Application.newApplication(APPLICATION_NAME, APPLICATION_URL, user, capitalHero.getContractAddress());
+            Application application = Application.newApplication(APPLICATION_NAME, APPLICATION_URL, user, APPLICATION_ADDRESS);
             userRepository.save(user);
             applicationService.registerApplication(application);
         };
@@ -46,6 +47,6 @@ public class DataInitializer {
     public CommandLineRunner setUpSmartContractParameters(ParameterStorage parameterStorage) {
         return args -> parameterStorage.setVLFee(BigInteger.valueOf(1000)).observable()
                 .subscribe(next -> log.info("[x] VL FEE is set up"), error -> log.info("[x] Error set VL FEE"));
-    }
+    }*/
 
 }

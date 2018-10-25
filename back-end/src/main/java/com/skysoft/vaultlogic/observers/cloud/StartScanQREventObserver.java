@@ -59,7 +59,7 @@ public class StartScanQREventObserver extends AbstractContractEventObserver<Star
     public void onNext(StartScanQREventResponse event) {
         log.info("[x] Start qr scanning: Command: {}, Session: {}, Lights: {}", event._commandId, event._sessionId, event._lights);
         SessionXToken sessionXToken = sessionRepository.findSessionXTokenById(event._sessionId);
-        kioskCamera.startPreview(sessionXToken.xToken, PreviewConfig.of(true, event._lights))
+        kioskCamera.startPreview(sessionXToken.getxToken(), PreviewConfig.of(true, event._lights))
                 .onSuccess(confirmSuccessStartPreview(event._commandId))
                 .onFailure(confirmFailStartPreview(event._commandId));
     }

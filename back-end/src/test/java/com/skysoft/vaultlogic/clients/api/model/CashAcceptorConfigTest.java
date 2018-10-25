@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,10 +24,7 @@ public class CashAcceptorConfigTest {
 
     @Test
     public void testSerialization() throws IOException {
-        CashAcceptorConfig cashAcceptorConfig = new CashAcceptorConfig();
-        cashAcceptorConfig.setAcceptableDenominations(Collections.singletonList(1F));
-        cashAcceptorConfig.setAcceptanceControl(true);
-        cashAcceptorConfig.setRequestedAmount(BigDecimal.valueOf(100));
+        CashAcceptorConfig cashAcceptorConfig = CashAcceptorConfig.onlyTwentiesOf(BigInteger.valueOf(100L));
         assertThat(json.write(cashAcceptorConfig)).isEqualToJson("cashAcceptorConfig.json");
     }
 

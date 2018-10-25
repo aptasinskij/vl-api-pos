@@ -15,7 +15,7 @@ contract KioskStorage is AKioskStorage, Named("kiosk-storage"), Mortal, Componen
         emit Saved(_kioskId, _location, _name, _timezone);
     }
 
-    function get(string _kioskId) public view returns (string memory _location, string memory _name, string memory _timezone) {
+    function get(string memory _kioskId) public view returns (string memory _location, string memory _name, string memory _timezone) {
         return database.get(_kioskId);
     }
 

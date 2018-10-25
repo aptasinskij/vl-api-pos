@@ -23,8 +23,12 @@ public class CloudApplicationIndexController {
 
     @GetMapping
     public RedirectView getApplicationIndexPage(@PathVariable BigInteger appId, @RequestParam("token") String xToken) {
+        log.info("[x] Application index request. APP ID: {}, XToken: {}", appId, xToken);
         Pair<String, BigInteger> appUrlSessionId = sessionService.createSession(appId, xToken);
-        return new RedirectView(format("%s?token=%d", appUrlSessionId.getFirst(), appUrlSessionId.getSecond()));
+        String applicationUrl = appUrlSessionId.getFirst();
+        BigInteger token = appUrlSessionId.getSecond();
+        log.info("[x] Redirecting to: {}, token: {}", applicationUrl, token);
+        return new RedirectView(format("%s?token=%d", applicationUrl, token));
     }
 
 }

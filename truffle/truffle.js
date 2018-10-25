@@ -15,9 +15,15 @@ module.exports = {
         quorum_local: {
             host: "127.0.0.1",
             port: 22000,
-            network_id: "*",
+            network_id: "37609",
             gasPrice: 0,
             gas: 45000000
+        }
+    },
+    solc: {
+        optimizer: {
+            enabled: true,
+            runs: 200
         }
     }
 };

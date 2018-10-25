@@ -3,6 +3,7 @@ package com.skysoft.vaultlogic.clients.api;
 import com.skysoft.vaultlogic.clients.api.model.*;
 import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import io.vavr.control.Either;
+import io.vavr.control.Try;
 
 public interface KioskCashDevices {
 
@@ -10,9 +11,9 @@ public interface KioskCashDevices {
 
     Either<Throwable, RecyclerStatus> getRecyclerStatus(String xToken);
 
-    Either<Throwable, CashAcceptorStatus> enableCashAcceptor(String xToken, CashAcceptorConfig cashAcceptorConfig);
+    Try<CashAcceptorStatus> enableCashAcceptor(String xToken, CashAcceptorConfig cashAcceptorConfig);
 
-    Either<Throwable, CashAcceptorStatus> disableCashAcceptor(String xToken);
+    Try<CashAcceptorStatus> disableCashAcceptor(String xToken);
 
     Either<Throwable, DispensableAmount> getDispensableAmount(String xToken, DispensableAmount amountToDispense);
 

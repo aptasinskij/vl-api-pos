@@ -6,7 +6,7 @@ import java.math.BigInteger;
 
 public interface CashInService {
 
-    void createCashInChannel(BigInteger channelId, BigInteger sessionId, BigInteger status);
+    void createCashInChannel(BigInteger channelId, BigInteger sessionId, BigInteger maxBalance, BigInteger status);
 
     void confirmOpened(BigInteger channelId);
 

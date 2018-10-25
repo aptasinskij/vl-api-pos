@@ -11,7 +11,7 @@ contract CashInStorage is ACashInStorage, Named("cash-in-storage"), Mortal, Comp
     constructor(address _config) Component(_config) public {}
 
     function save(uint256 sessionId, address application, uint256 status, uint256 _vaultLogicFee, uint256 _maxAmount) public returns (uint256 _channelId) {
-        _channelId = database.save(sessionId, application, status, _vaultLogicFee, _maxAmount);
+        //_channelId = database.save(sessionId, application, status, _vaultLogicFee, _maxAmount);
         emit CashInSaved(_channelId, sessionId, application, status);
     }
 
@@ -23,71 +23,71 @@ contract CashInStorage is ACashInStorage, Named("cash-in-storage"), Mortal, Comp
         uint256 status,
         uint256 splitSize
     ) {
-        return database.get(channelId);
+        //return database.get(channelId);
     }
 
     function getSessionId(uint256 channelId) public view returns(uint256) {
-        return database.getSessionId(channelId);
+        //return database.getSessionId(channelId);
     }
 
     function getApplication(uint256 channelId) public view returns(address) {
-        return database.getApplication(channelId);
+        //return database.getApplication(channelId);
     }
 
     function getApplicationAndSessionId(uint256 channelId) public view returns(address application, uint256 sessionId) {
-        application = database.getApplication(channelId);
-        sessionId = database.getSessionId(channelId);
+        //application = database.getApplication(channelId);
+        //sessionId = database.getSessionId(channelId);
     }
 
     function setBalance(uint256 channelId, uint256 amount) public {
-        database.setBalance(channelId, amount);
-        emit CashInBalanceUpdated(channelId, amount);
+        //database.setBalance(channelId, amount);
+        //emit CashInBalanceUpdated(channelId, amount);
     }
 
     function getBalance(uint256 channelId) public view returns(uint256) {
-        return database.getBalance(channelId);
+        //return database.getBalance(channelId);
     }
 
     function setVLFee(uint256 channelId, uint256 fee) public {
-        database.setVLFee(channelId, fee);
+        //database.setVLFee(channelId, fee);
     }
 
     function getVLFee(uint256 channelId) public view returns(uint256){
-        return database.getVLFee(channelId);
+        //return database.getVLFee(channelId);
     }
 
     function setApplicationBalance(uint256 channelId, uint256 balance) public {
-        database.setApplicationBalance(channelId, balance);
+        //database.setApplicationBalance(channelId, balance);
     }
 
     function getApplicationBalance(uint256 channelId) public view returns(uint256) {
-        return database.getApplicationBalance(channelId);
+        //return database.getApplicationBalance(channelId);
     }
 
     function setStatus(uint256 channelId, uint256 status) public {
-        database.setStatus(channelId, status);
-        emit CashInStatusUpdated(channelId, status);
+        //database.setStatus(channelId, status);
+        //emit CashInStatusUpdated(channelId, status);
     }
 
     function getStatus(uint256 channelId) public view returns(uint256) {
-        return database.getStatus(channelId);
+        //return database.getStatus(channelId);
     }
 
     function addSplit(uint256 channelId, address party, uint256 amount) public {
-        database.addSplit(channelId, party, amount);
-        emit CashInSplitAdded(channelId, party, amount);
+        //database.addSplit(channelId, party, amount);
+        //emit CashInSplitAdded(channelId, party, amount);
     }
 
     function addSplits(uint256 channelId, address[] parties, uint256[] amounts) public {
-        database.addSplits(channelId, parties, amounts);
+        //database.addSplits(channelId, parties, amounts);
     }
 
     function getSplitSize(uint256 channelId) public view returns(uint256) {
-        return database.getSplitSize(channelId);
+        //return database.getSplitSize(channelId);
     }
 
     function getSplit(uint256 channelId, uint256 subIndex) public view returns(address, uint256) {
-        return database.getSplit(channelId, subIndex);
+        //return database.getSplit(channelId, subIndex);
     }
 
 }

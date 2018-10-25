@@ -40,7 +40,7 @@ public class LocalCashInDomainEventsListener {
     @TransactionalEventListener
     public void activated(CashInActivated event) {
         log.info("[x]---> CASH IN ACTIVATED EVENT. ID: {}", event.getChannelId());
-        cashInOracle.confirmOpen(event.getChannelId()).observable().subscribe(onSuccess, onError);
+        cashInOracle.successOpen(event.getChannelId()).observable().subscribe(onSuccess, onError);
     }
 
     @Async
@@ -63,7 +63,7 @@ public class LocalCashInDomainEventsListener {
     @TransactionalEventListener
     public void closed(CashInClosed event) {
         log.info("[x]---> CASH IN CLOSED EVENT. ID: {} ", event.getChannelId());
-        cashInOracle.confirmClose(event.getChannelId()).observable().subscribe(onSuccess, onError);
+        cashInOracle.successClose(event.getChannelId()).observable().subscribe(onSuccess, onError);
     }
 
     @Async

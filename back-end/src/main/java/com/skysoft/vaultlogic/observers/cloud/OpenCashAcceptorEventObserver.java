@@ -1,7 +1,6 @@
 package com.skysoft.vaultlogic.observers.cloud;
 
 import com.skysoft.vaultlogic.contracts.CashInOracle;
-import com.skysoft.vaultlogic.contracts.CashInOracle.OpenCashAcceptorEventResponse;
 import com.skysoft.vaultlogic.observers.api.AbstractContractEventObserver;
 import com.skysoft.vaultlogic.observers.api.EventObservable;
 import com.skysoft.vaultlogic.services.CashInService;
@@ -11,12 +10,15 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
 
+import javax.annotation.PostConstruct;
+import java.math.BigInteger;
+
 import static com.skysoft.vaultlogic.contracts.CashInOracle.OPENCASHACCEPTOR_EVENT;
 
 @Slf4j
 @Component
 @Profile("cloud")
-public class OpenCashAcceptorEventObserver extends AbstractContractEventObserver<OpenCashAcceptorEventResponse, CashInOracle> {
+public class OpenCashAcceptorEventObserver extends AbstractContractEventObserver<CashInOracle.OpenCashInEventResponse, CashInOracle> {
 
     private final CashInService cashInService;
 
@@ -24,7 +26,12 @@ public class OpenCashAcceptorEventObserver extends AbstractContractEventObserver
     public OpenCashAcceptorEventObserver(CashInOracle cashInOracle, CashInService cashInService) {
         super(cashInOracle);
         this.cashInService = cashInService;
-        subscribe();
+    }
+
+    @Override
+    @PostConstruct
+    protected void subscribe() {
+        super.subscribe();
     }
 
     @Override
@@ -33,14 +40,14 @@ public class OpenCashAcceptorEventObserver extends AbstractContractEventObserver
     }
 
     @Override
-    protected EventObservable<OpenCashAcceptorEventResponse> getEventObservable() {
-        return contract::openCashAcceptorEventObservable;
+    protected EventObservable<CashInOracle.OpenCashInEventResponse> getEventObservable() {
+        return contract::openCashInEventObservable;
     }
 
     @Override
-    public void onNext(OpenCashAcceptorEventResponse event) {
-        log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, Status: {}", event.channelId, event.sessionId, event.channelStatus);
-        cashInService.createCashInChannel(event.channelId, event.sessionId, event.channelStatus);
+    public void onNext(CashInOracle.OpenCashInEventResponse event) {
+        log.info("[x] Open Cash ACCEPTOR: Channel: {}, Session: {}, Max balance: {}", event._commandId, event._sessionId, event._maxBalance);
+        cashInService.createCashInChannel(event._commandId, event._sessionId, event._maxBalance, BigInteger.ZERO);
     }
 
     @Override
