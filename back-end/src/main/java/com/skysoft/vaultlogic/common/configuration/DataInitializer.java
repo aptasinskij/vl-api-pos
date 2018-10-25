@@ -33,7 +33,7 @@ public class DataInitializer {
         this.capitalHero = capitalHero;
     }
 
-    @Bean
+    /*@Bean
     public CommandLineRunner registerUserAndApplication() {
         return args -> {
             User user = User.newUser("aptasinskij", "secret", "0xbEf2b0D2e5C33710c7ECa40983960D52e79D21d1");
@@ -47,6 +47,6 @@ public class DataInitializer {
     public CommandLineRunner setUpSmartContractParameters(ParameterStorage parameterStorage) {
         return args -> parameterStorage.setVLFee(BigInteger.valueOf(1000)).observable()
                 .subscribe(next -> log.info("[x] VL FEE is set up"), error -> log.info("[x] Error set VL FEE"));
-    }
+    }*/
 
 }

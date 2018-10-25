@@ -56,7 +56,7 @@ public class StopScanQREventObserver extends AbstractContractEventObserver<StopS
     public void onNext(StopScanQREventResponse event) {
         log.info("[x] Stop qr scanning: Command: {}, Session: {}", event._commandId, event._sessionId);
         SessionXToken sessionXToken = sessionRepository.findSessionXTokenById(event._sessionId);
-        kioskCamera.stopPreview(sessionXToken.xToken)
+        kioskCamera.stopPreview(sessionXToken.getxToken())
                 .onSuccess(confirmSuccessStopPreview(event._commandId))
                 .onFailure(confirmFailStopPreview(event._commandId));
     }

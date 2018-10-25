@@ -48,7 +48,6 @@ public class SessionServiceImpl implements SessionService {
     public Pair<String, BigInteger> createSession(BigInteger applicationId, String xToken) {
         return applicationRepo.findById(applicationId)
                 .flatMap(toApplicationAndResolvedKiosk(xToken))
-                .flatMap(launchKioskApplication(xToken))
                 .map(buildSessionObject(xToken))
                 .map(Session::markCreating)
                 .map(sessionRepo::save)
@@ -62,10 +61,6 @@ public class SessionServiceImpl implements SessionService {
 
     private Function<Pair<Application, Kiosk>, Session> buildSessionObject(String xToken) {
         return pair -> Session.session(pair.getFirst(), pair.getSecond(), xToken);
-    }
-
-    private Function<Pair<Application, Kiosk>, Optional<Pair<Application, Kiosk>>> launchKioskApplication(String xToken) {
-        return pair -> kioskApplicationClient.launchApplication(xToken).toJavaOptional().map(statusCode -> pair);
     }
 
     private Function<Application, Optional<Pair<Application, Kiosk>>> toApplicationAndResolvedKiosk(String xToken) {
