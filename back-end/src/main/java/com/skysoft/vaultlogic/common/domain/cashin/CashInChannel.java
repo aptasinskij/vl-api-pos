@@ -36,6 +36,9 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
     @Column(nullable = false)
     private BigInteger balance = BigInteger.ZERO;
 
+    @Column(nullable = false)
+    private BigInteger maxBalance;
+
     @ElementCollection
     private Set<Split> splits = new HashSet<>();
 
@@ -46,17 +49,19 @@ public class CashInChannel extends AbstractAggregateRoot<CashInChannel> {
     public CashInChannel() {
     }
 
-    private CashInChannel(BigInteger channelId, Session session, Status status) {
+    private CashInChannel(BigInteger channelId, Session session, BigInteger maxBalance, Status status) {
         this.channelId = channelId;
         this.session = session;
         this.status = status;
+        this.maxBalance = maxBalance;
     }
 
-    public static CashInChannel newChannel(BigInteger channelId, Session session, Status status) {
+    public static CashInChannel newChannel(BigInteger channelId, Session session, BigInteger maxBalance, Status status) {
         requireNonNull(channelId);
         requireNonNull(session);
         requireNonNull(status);
-        return new CashInChannel(channelId, session, status);
+        requireNonNull(maxBalance);
+        return new CashInChannel(channelId, session, maxBalance, status);
     }
 
     public CashInChannel markCreating() {
