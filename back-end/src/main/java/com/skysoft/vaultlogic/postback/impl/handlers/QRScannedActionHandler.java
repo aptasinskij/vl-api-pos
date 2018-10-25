@@ -33,10 +33,10 @@ public class QRScannedActionHandler extends AbstractEventHandler<QRScanned, Even
 
     @Override
     @Transactional(readOnly = true)
-    public EventEmptyResponse handleEvent(QRScanned event, String xToken) {
+    public EventEmptyResponse handleEvent(QRScanned eventData, String xToken) {
         log.info("[x] ---> POST BACK: QR code scanned: {}", xToken);
         SessionId sessionId = sessionRepository.findSessionIdByXToken(xToken);
-        cameraOracle.scanned(sessionId.getId(), event.data).observable().take(1).subscribe(
+        cameraOracle.scanned(sessionId.getId(), eventData.data).observable().take(1).subscribe(
                 tx -> log.info("[x] confirmed qr scanned"),
                 error -> log.error("[x] error qr scanned confirmation")
         );
