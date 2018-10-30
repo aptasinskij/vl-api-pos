@@ -1,7 +1,9 @@
 pragma solidity 0.4.24;
 
-import "../Platform.sol";
-import {APrinterController} from "./Controllers.sol";
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "./api/APrinterController.sol";
 import {ApplicationLib} from "../libs/Libraries.sol";
 import {APrinterManager} from "../managers/Managers.sol";
 
@@ -28,7 +30,7 @@ contract PrinterController is APrinterController, Named("printer-controller"), M
         function(uint256, string memory, string memory) external _success,
         function(uint256) external _fail
     )
-        public
+        external
         isRegistered
         returns (bool _accepted)
     {
@@ -53,13 +55,13 @@ contract PrinterController is APrinterController, Named("printer-controller"), M
 
     function printReceipt(
         uint256 _sessionId,
-        string memory _receiptId,
-        string memory _data,
-        string memory _params,
+        string _receiptId,
+        string _data,
+        string _params,
         function(uint256) external _success,
         function(uint256) external _fail
     )
-        public
+        external
         isRegistered
         returns (bool _accepted)
     {

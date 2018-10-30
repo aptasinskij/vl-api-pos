@@ -1,9 +1,11 @@
 pragma solidity 0.4.24;
 
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "./api/ACashInController.sol";
 import {ApplicationLib} from "../libs/Libraries.sol";
-import {ACashInController} from "./Controllers.sol";
 import {ACashChannelsManager} from "../managers/Managers.sol";
-import "../Platform.sol";
 
 contract CashInController is ACashInController, Named("cash-in-controller"), Mortal, Component {
 
@@ -30,7 +32,7 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
         function(uint256, uint256, uint256) external _update,
         function(uint256) external _fail
     )
-        public
+        external
         isRegistered
         returns (bool _accepted)
     {
@@ -63,7 +65,7 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
         function(uint256, uint256) external _success,
         function(uint256, uint256) external _fail
     )
-        public
+        external
         isRegistered
         returns (bool _accepted)
     {

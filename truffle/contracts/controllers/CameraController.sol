@@ -1,20 +1,21 @@
 pragma solidity 0.4.24;
 
-import "../Platform.sol";
-import {ACameraController} from "./Controllers.sol";
-import {ApplicationLib} from "../libs/Libraries.sol";
-import {ACameraManager} from "../managers/Managers.sol";
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "./api/ACameraController.sol";
+import "../managers/ACameraManager.sol";
 
 contract CameraController is ACameraController, Named("camera-controller"), Mortal, Component {
 
-    using ApplicationLib for address;
+    /*using ApplicationLib for address;*/
 
     string constant MANAGER = "camera-manager";
-
+/*
     modifier isRegistered {
         require(database.isRegistered(msg.sender), "only registered allowed");
         _;
-    }
+    }*/
 
     modifier onlyManager {
         require(msg.sender == context.get(MANAGER), "only manager allowed");
@@ -30,7 +31,7 @@ contract CameraController is ACameraController, Named("camera-controller"), Mort
         function(uint256) external _fail
     )   // @formatter:off
         public
-        isRegistered
+        /*isRegistered*/
         returns (bool _accepted)
         // @formatter:on
     {
@@ -44,7 +45,7 @@ contract CameraController is ACameraController, Named("camera-controller"), Mort
         function(uint256) external _fail
     )   // @formatter:off
         public
-        isRegistered
+        /*isRegistered*/
         returns (bool _accepted)
         // @formatter:on
     {
@@ -86,7 +87,7 @@ contract CameraController is ACameraController, Named("camera-controller"), Mort
         function(uint256) external _fail
     )   // @formatter:off
         public
-        isRegistered
+        /*isRegistered*/
         returns (bool _accepted)
         // @formatter:on
     {

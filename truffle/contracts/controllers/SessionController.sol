@@ -1,8 +1,11 @@
 pragma solidity 0.4.24;
 
-import {ASessionController} from "./Controllers.sol";
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "./api/ASessionController.sol";
 import {KioskLib, SessionLib, ApplicationLib} from "../libs/Libraries.sol";
-import "../Platform.sol";
+
 
 contract SessionController is ASessionController, Named("session-controller"), Mortal, Component {
 
