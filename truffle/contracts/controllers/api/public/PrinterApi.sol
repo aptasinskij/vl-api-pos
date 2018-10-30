@@ -17,9 +17,9 @@ interface PrinterApi {
     // @formatter:off
     function printReceipt(
         uint256 _sessionId,
-        string memory _receiptId,
-        string memory _data,
-        string memory _params,
+        string _receiptId,
+        string _data,
+        string _params,
         function(uint256) external _success,
         function(uint256) external _fail
     )
