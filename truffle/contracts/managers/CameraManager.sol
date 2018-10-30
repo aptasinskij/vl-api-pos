@@ -1,21 +1,22 @@
 pragma solidity 0.4.24;
 
-import {CameraLib, SessionLib} from "../libs/Libraries.sol";
-import {ACameraManager} from "./Managers.sol";
-import {ACameraOracle} from "../oracles/Oracles.sol";
-import {ACameraController} from "../controllers/Controllers.sol";
-import "../Platform.sol";
+import "../storages/ACameraStorage.sol";
+import "../platform/Mortal.sol";
+import "../platform/Named.sol";
+import "../platform/Component.sol";
+import "../controllers/api/ACameraController.sol";
+import "../oracles/ACameraOracle.sol";
+import "./api/ACameraManager.sol";
 
-contract CameraManager is ACameraManager, Mortal, Named("camera-manager"), Component {
+contract CameraManager is ACameraManager, Named("camera-manager"), Mortal, Component {
 
-    using CameraLib for address;
-    using SessionLib for address;
-
+    string constant STORAGE = "camera-storage";
     string constant ORACLE = "camera-oracle";
     string constant CONTROLLER = "camera-controller";
 
     constructor(address _config) Component(_config) public {}
 
+    // @formatter:off
     function scanQRCode(
         address _application,
         uint256 _sessionId,
@@ -25,75 +26,65 @@ contract CameraManager is ACameraManager, Mortal, Named("camera-manager"), Compo
         function(uint256) external _fail
     )
         public 
-        returns (bool _accepted) 
+        returns (
+            bool _accepted
+        )
+    // @formatter:on
     {
-        address sessionOwner = database.retrieveSessionApplicationDeployedAddress(_sessionId);
-        require(sessionOwner == _application, "illegal session access");
-        require(database.sessionIsActive(_sessionId), "session is not active");
-        uint256 startQRScanId = database.getNextStartQRScanId();
-        database.createStartQRScan(CameraLib.StartQRScan({
-            id : startQRScanId,
-            sessionId : _sessionId,
-            lights : _lights,
-            scanned : _scanned,
-            success : _success,
-            fail : _fail
-            })
-        );
-        _accepted = ACameraOracle(context.get(ORACLE)).onNextStartQRScan(startQRScanId);
+        uint256 id = ACameraStorage(context.get(STORAGE)).saveStart(_sessionId, _lights, _success, _scanned, _fail);
+        _accepted = ACameraOracle(context.get(ORACLE)).onNextStartQRScan(id);
     }
 
     function confirmFailStart(uint256 _commandId) public {
-        //here can be some logic
-        CameraLib.StartQRScan memory command = database.retrieveStartQRScan(_commandId);
-        ACameraController(context.get(CONTROLLER)).respondFailStart(command.sessionId, command.fail);
+        function(uint256) external callback;
+        uint256 sessionId;
+        (sessionId,,,,callback) = ACameraStorage(context.get(STORAGE)).retrieveStart(_commandId);
+        ACameraController(context.get(CONTROLLER)).respondFailStart(sessionId, callback);
     }
 
     function confirmStart(uint256 _commandId, string memory _port, string memory _url, string memory _href) public {
-        //here can be some logic
-        CameraLib.StartQRScan memory command = database.retrieveStartQRScan(_commandId);
-        ACameraController(context.get(CONTROLLER)).respondStart(_commandId, _port, _url, _href, command.success);
+        function(uint256, string memory, string memory, string memory) external callback;
+        uint256 sessionId;
+        (sessionId,,callback,,) = ACameraStorage(context.get(STORAGE)).retrieveStart(_commandId);
+        ACameraController(context.get(CONTROLLER)).respondStart(sessionId, _port, _url, _href, callback);
     }
 
     function confirmScanned(uint256 _sessionId, string memory _qr) public {
-        //here can be some logic
-        CameraLib.StartQRScan memory command = database.retrieveStartQRScanBySessionId(_sessionId);
-        ACameraController(context.get(CONTROLLER)).respondScanned(_sessionId, _qr, command.scanned);
+        function(uint256, string memory) external callback;
+        uint256 sessionId;
+        (sessionId,,,callback,) = ACameraStorage(context.get(STORAGE)).retrieveStartBySessionId(_sessionId);
+        ACameraController(context.get(CONTROLLER)).respondScanned(sessionId, _qr, callback);
     }
 
+    // @formatter:off
     function stopQRScanning(
         address _application,
         uint256 _sessionId,
         function(uint256) external _success,
         function(uint256) external _fail
-    )   // @formatter:off
+    )
         public
-        returns (bool _accepted)
-        // @formatter:on
+        returns (
+            bool _accepted
+    )
+    // @formatter:on
     {
-        address sessionOwner = database.retrieveSessionApplicationDeployedAddress(_sessionId);
-        require(sessionOwner == _application, "illegal session access");
-        require(database.sessionIsActive(_sessionId), "session is not active");
-        uint256 stopQRScanId = database.getNextStopQRScanId();
-        database.createStopQRScan(CameraLib.StopQRScan({
-            id : stopQRScanId,
-            sessionId : _sessionId,
-            success : _success,
-            fail : _fail
-            }));
-        _accepted = ACameraOracle(context.get(ORACLE)).onNextStopQRScan(stopQRScanId);
+        uint256 id = ACameraStorage(context.get(STORAGE)).saveStop(_sessionId, _success, _fail);
+        _accepted = ACameraOracle(context.get(ORACLE)).onNextStopQRScan(id);
     }
 
     function confirmStop(uint256 _commandId) public {
-        //here can be some logic
-        CameraLib.StopQRScan memory command = database.retrieveStopQRScan(_commandId);
-        ACameraController(context.get(CONTROLLER)).respondStop(command.sessionId, command.success);
+        function(uint256) external callback;
+        uint256 sessionId;
+        (sessionId,callback,) = ACameraStorage(context.get(STORAGE)).retrieveStop(_commandId);
+        ACameraController(context.get(CONTROLLER)).respondStop(sessionId, callback);
     }
 
     function confirmFailStop(uint256 _commandId) public {
-        //here can be some logic
-        CameraLib.StopQRScan memory command = database.retrieveStopQRScan(_commandId);
-        ACameraController(context.get(CONTROLLER)).respondFailStop(command.sessionId, command.fail);
+        function(uint256) external callback;
+        uint256 sessionId;
+        (sessionId,,callback) = ACameraStorage(context.get(STORAGE)).retrieveStop(_commandId);
+        ACameraController(context.get(CONTROLLER)).respondFailStop(sessionId, callback);
     }
 
 }

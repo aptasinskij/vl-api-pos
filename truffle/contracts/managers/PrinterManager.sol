@@ -1,10 +1,12 @@
 pragma solidity 0.4.24;
 
-import "../Platform.sol";
-import {PrinterLib, SessionLib} from "../libs/Libraries.sol";
-import {APrinterManager} from "./Managers.sol";
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "../controllers/api/APrinterController.sol";
 import {APrinterOracle} from "../oracles/Oracles.sol";
-import {APrinterController} from "../controllers/Controllers.sol";
+import {PrinterLib, SessionLib} from "../libs/Libraries.sol";
+import "./api/APrinterManager.sol";
 
 contract PrinterManager is APrinterManager, Mortal, Named("camera-manager"), Component {
 

@@ -1,8 +1,10 @@
 pragma solidity 0.4.24;
 
-import "../Platform.sol";
-import {AParameterManager} from "./Managers.sol";
 import {ParameterLib} from "../libs/Libraries.sol";
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "./api/AParameterManager.sol";
 
 contract ParameterManager is AParameterManager, Named("parameter-manager"), Mortal, Component {
 

@@ -1,13 +1,18 @@
 pragma solidity 0.4.24;
 
-import "./Managers.sol";
-import "../Platform.sol";
+import "../platform/Named.sol";
 import "../libs/Libraries.sol";
+import "../platform/Mortal.sol";
 import "../storages/Storages.sol";
+import "../platform/Component.sol";
+import "../controllers/api/ACashInController.sol";
 import {ACashInOracle} from "../oracles/Oracles.sol";
-import {ACashInController} from "../controllers/Controllers.sol";
+import "./api/ACashInManager.sol";
+import "./api/AParameterManager.sol";
+import "./api/ASessionManager.sol";
+import "./api/ATokenManager.sol";
 
-contract CashChannelsManager is ACashChannelsManager, Named("cash-channels-manager"), Mortal, Component {
+contract CashInManager is ACashInManager, Named("cash-channels-manager"), Mortal, Component {
 
     using SafeMath for uint256;
     using CashInLib for address;
