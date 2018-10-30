@@ -1,12 +1,12 @@
 pragma solidity 0.4.24;
 
-import "../storages/ACameraStorage.sol";
-import "../platform/Mortal.sol";
 import "../platform/Named.sol";
-import "../platform/Component.sol";
-import "../controllers/api/ACameraController.sol";
-import "../oracles/api/ACameraOracle.sol";
+import "../platform/Mortal.sol";
 import "./api/ACameraManager.sol";
+import "../platform/Component.sol";
+import "../oracles/api/ACameraOracle.sol";
+import "../storages/api/ACameraStorage.sol";
+import "../controllers/api/ACameraController.sol";
 
 contract CameraManager is ACameraManager, Named("camera-manager"), Mortal, Component {
 

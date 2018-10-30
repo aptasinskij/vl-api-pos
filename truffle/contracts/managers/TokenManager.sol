@@ -1,11 +1,11 @@
 pragma solidity 0.4.24;
 
-import {SafeMath} from "../libs/Libraries.sol";
-import {ATokenStorage} from "../storages/Storages.sol";
 import "../platform/Named.sol";
-import "../platform/Component.sol";
 import "../platform/Mortal.sol";
 import "./api/ATokenManager.sol";
+import "../platform/Component.sol";
+import "../storages/api/ATokenStorage.sol";
+import {SafeMath} from "../libs/Libraries.sol";
 
 contract TokenManager is ATokenManager, Named("token-manager"), Mortal, Component {
 

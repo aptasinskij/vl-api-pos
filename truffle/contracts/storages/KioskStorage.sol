@@ -1,8 +1,10 @@
 pragma solidity 0.4.24;
 
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "./api/AKioskStorage.sol";
+import "../platform/Component.sol";
 import {KioskLib} from "../libs/Libraries.sol";
-import {AKioskStorage} from "./Storages.sol";
-import "../Platform.sol";
 
 contract KioskStorage is AKioskStorage, Named("kiosk-storage"), Mortal, Component {
 

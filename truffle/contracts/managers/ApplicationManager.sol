@@ -1,10 +1,10 @@
 pragma solidity 0.4.24;
 
-import {AnApplicationStorage} from "../storages/Storages.sol";
 import "../platform/Named.sol";
 import "../platform/Mortal.sol";
 import "../platform/Component.sol";
 import "./api/AnApplicationManager.sol";
+import "../storages/api/AnApplicationStorage.sol";
 
 contract ApplicationManager is AnApplicationManager, Named("application-manager"), Mortal, Component {
 

@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import {Owned} from "./Platform.sol";
+import "./platform/Owned.sol";
 
 contract Database is Owned {
 

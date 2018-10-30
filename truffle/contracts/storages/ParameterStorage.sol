@@ -1,8 +1,10 @@
 pragma solidity 0.4.24;
 
 import {ParameterLib} from "../libs/Libraries.sol";
-import {AParameterStorage} from "./Storages.sol";
-import "../Platform.sol";
+import "../platform/Named.sol";
+import "../platform/Component.sol";
+import "../platform/Mortal.sol";
+import "./api/AParameterStorage.sol";
 
 contract ParameterStorage is AParameterStorage, Named("parameter-storage"), Mortal, Component {
 

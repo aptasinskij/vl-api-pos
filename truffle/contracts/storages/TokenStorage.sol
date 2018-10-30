@@ -1,8 +1,10 @@
 pragma solidity 0.4.24;
 
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "./api/ATokenStorage.sol";
+import "../platform/Component.sol";
 import {TokenLib} from "../libs/Libraries.sol";
-import {ATokenStorage} from "./Storages.sol";
-import "../Platform.sol";
 
 contract TokenStorage is ATokenStorage, Named("token-storage"), Mortal, Component {
 

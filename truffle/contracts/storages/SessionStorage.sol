@@ -1,8 +1,10 @@
 pragma solidity 0.4.24;
 
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "./api/ASessionStorage.sol";
 import {SessionLib} from "../libs/Libraries.sol";
-import {ASessionStorage} from "./Storages.sol";
-import "../Platform.sol";
 
 contract SessionStorage is ASessionStorage, Named("session-storage"), Mortal, Component {
     

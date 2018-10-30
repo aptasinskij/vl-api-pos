@@ -1,8 +1,10 @@
 pragma solidity 0.4.24;
 
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "./api/AnApplicationStorage.sol";
 import {ApplicationLib} from "../libs/Libraries.sol";
-import {AnApplicationStorage} from "./Storages.sol";
-import "../Platform.sol";
 
 contract ApplicationStorage is AnApplicationStorage, Named("application-storage"), Mortal, Component {
 
