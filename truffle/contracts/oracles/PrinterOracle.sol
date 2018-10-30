@@ -1,9 +1,11 @@
 pragma solidity 0.4.24;
 
-import {APrinterOracle} from "./Oracles.sol";
-import {APrinterManager} from "../managers/Managers.sol";
 import {PrinterLib} from "../libs/Libraries.sol";
-import "../Platform.sol";
+import "../platform/Mortal.sol";
+import "../platform/Named.sol";
+import "../platform/Component.sol";
+import "../managers/api/APrinterManager.sol";
+import "./api/APrinterOracle.sol";
 
 contract PrinterOracle is APrinterOracle, Mortal, Named("printer-oracle"), Component {
 

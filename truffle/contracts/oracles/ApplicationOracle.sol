@@ -1,7 +1,9 @@
 pragma solidity 0.4.24;
 
-import {AnApplicationOracle} from "./Oracles.sol";
-import "../Platform.sol";
+import "../platform/Mortal.sol";
+import "../platform/Named.sol";
+import "../platform/Component.sol";
+import "./api/AnApplicationOracle.sol";
 
 contract ApplicationOracle is AnApplicationOracle, Mortal, Named("application-oracle"), Component {
 

@@ -1,11 +1,13 @@
 pragma solidity 0.4.24;
 
-import {ACameraOracle} from "./Oracles.sol";
-import {CameraLib} from "../libs/Libraries.sol";
-import {ACameraManager} from "../managers/Managers.sol";
-import "../Platform.sol";
+import "../platform/Mortal.sol";
+import "../platform/Named.sol";
+import "../platform/Component.sol";
+import "../managers/api/ACameraManager.sol";
+import "./api/ACameraOracle.sol";
+import "../libs/Libraries.sol";
 
-contract CameraOracle is ACameraOracle, Mortal, Named("camera-oracle"), Component {
+contract CameraOracle is ACameraOracle, Named("camera-oracle"), Mortal, Component {
 
     using CameraLib for address;
 

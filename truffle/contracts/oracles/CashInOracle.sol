@@ -1,9 +1,11 @@
 pragma solidity 0.4.24;
 
 import "../libs/Libraries.sol";
-import {ACashChannelsManager} from "../managers/Managers.sol";
-import {ACashInOracle} from "./Oracles.sol";
-import "../Platform.sol";
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "../managers/api/ACashInManager.sol";
+import "./api/ACashInOracle.sol";
 
 contract CashInOracle is ACashInOracle, Named("cash-in-oracle"), Mortal, Component {
 
@@ -21,11 +23,11 @@ contract CashInOracle is ACashInOracle, Named("cash-in-oracle"), Mortal, Compone
     }
 
     function successOpen(uint256 _commandId) public onlyOwner {
-        ACashChannelsManager(context.get(MANAGER)).confirmOpen(_commandId);
+        ACashInManager(context.get(MANAGER)).confirmOpen(_commandId);
     }
 
     function increaseBalance(uint256 channelId, uint256 amount) public {
-        ACashChannelsManager(context.get(MANAGER)).updateCashInBalance(channelId, amount);
+        ACashInManager(context.get(MANAGER)).updateCashInBalance(channelId, amount);
     }
 
     function failOpen(uint256 _commandId) public onlyOwner {
@@ -40,7 +42,7 @@ contract CashInOracle is ACashInOracle, Named("cash-in-oracle"), Mortal, Compone
     }
 
     function successClose(uint256 _commandId) {
-        ACashChannelsManager(context.get(MANAGER)).confirmClose(_commandId);
+        ACashInManager(context.get(MANAGER)).confirmClose(_commandId);
     }
 
     function failClose(uint256 _commandId) {

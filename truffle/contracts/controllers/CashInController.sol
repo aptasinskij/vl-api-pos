@@ -5,7 +5,7 @@ import "../platform/Mortal.sol";
 import "../platform/Component.sol";
 import "./api/ACashInController.sol";
 import {ApplicationLib} from "../libs/Libraries.sol";
-import {ACashChannelsManager} from "../managers/Managers.sol";
+import "../managers/api/ACashInManager.sol";
 
 contract CashInController is ACashInController, Named("cash-in-controller"), Mortal, Component {
 
@@ -36,7 +36,7 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
         isRegistered
         returns (bool _accepted)
     {
-        _accepted = ACashChannelsManager(context.get(MANAGER)).openCashInChannel(msg.sender, _sessionId, _maxBalance, _success, _update, _fail);
+        _accepted = ACashInManager(context.get(MANAGER)).openCashInChannel(msg.sender, _sessionId, _maxBalance, _success, _update, _fail);
     }
 
     function respondOpened(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public onlyManager {
@@ -70,7 +70,7 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
         returns (bool _accepted)
     {
         require(_fees.length == _parties.length, "split has not equals parameters");
-        _accepted = ACashChannelsManager(context.get(MANAGER)).closeCashInChannel(msg.sender, _sessionId, _channelId, _fees, _parties, _success, _fail);
+        _accepted = ACashInManager(context.get(MANAGER)).closeCashInChannel(msg.sender, _sessionId, _channelId, _fees, _parties, _success, _fail);
     }
 
     function respondClosed(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public onlyManager {
@@ -82,7 +82,7 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
     }
 
     function balanceOf(uint256 _channelId) public view isRegistered returns (uint256) {
-        return ACashChannelsManager(context.get(MANAGER)).balanceOf(msg.sender, _channelId);
+        return ACashInManager(context.get(MANAGER)).balanceOf(msg.sender, _channelId);
     }
 
 }

@@ -5,7 +5,7 @@ import "../platform/Mortal.sol";
 import "../platform/Component.sol";
 import "./api/APrinterController.sol";
 import {ApplicationLib} from "../libs/Libraries.sol";
-import {APrinterManager} from "../managers/Managers.sol";
+import "../managers/api/APrinterManager.sol";
 
 contract PrinterController is APrinterController, Named("printer-controller"), Mortal, Component {
 

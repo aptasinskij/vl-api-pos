@@ -5,7 +5,7 @@ import "../platform/Mortal.sol";
 import "../platform/Named.sol";
 import "../platform/Component.sol";
 import "../controllers/api/ACameraController.sol";
-import "../oracles/ACameraOracle.sol";
+import "../oracles/api/ACameraOracle.sol";
 import "./api/ACameraManager.sol";
 
 contract CameraManager is ACameraManager, Named("camera-manager"), Mortal, Component {

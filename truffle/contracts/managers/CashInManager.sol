@@ -3,14 +3,14 @@ pragma solidity 0.4.24;
 import "../platform/Named.sol";
 import "../libs/Libraries.sol";
 import "../platform/Mortal.sol";
-import "../storages/Storages.sol";
-import "../platform/Component.sol";
-import "../controllers/api/ACashInController.sol";
-import {ACashInOracle} from "../oracles/Oracles.sol";
-import "./api/ACashInManager.sol";
-import "./api/AParameterManager.sol";
-import "./api/ASessionManager.sol";
 import "./api/ATokenManager.sol";
+import "../storages/Storages.sol";
+import "./api/ACashInManager.sol";
+import "../platform/Component.sol";
+import "./api/ASessionManager.sol";
+import "./api/AParameterManager.sol";
+import "../oracles/api/ACashInOracle.sol";
+import "../controllers/api/ACashInController.sol";
 
 contract CashInManager is ACashInManager, Named("cash-channels-manager"), Mortal, Component {
 

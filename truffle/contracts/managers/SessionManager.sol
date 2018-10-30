@@ -1,11 +1,11 @@
 pragma solidity 0.4.24;
 
-import {SessionLib} from "../libs/Libraries.sol";
-import {ASessionOracle} from "../oracles/Oracles.sol";
 import "../platform/Named.sol";
 import "../platform/Mortal.sol";
 import "../platform/Component.sol";
 import "./api/ASessionManager.sol";
+import "../oracles/api/ASessionOracle.sol";
+import {SessionLib} from "../libs/Libraries.sol";
 
 contract SessionManager is ASessionManager, Named("session-manager"), Mortal, Component {
 

@@ -1,7 +1,9 @@
 pragma solidity 0.4.24;
 
-import {ASessionOracle} from "./Oracles.sol";
-import "../Platform.sol";
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "./api/ASessionOracle.sol";
+import "../platform/Component.sol";
 
 contract SessionOracle is ASessionOracle, Named("session-oracle"), Mortal, Component  {
 
