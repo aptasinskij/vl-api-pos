@@ -25,34 +25,25 @@ contract CameraManager is ACameraManager, Named("camera-manager"), Mortal, Compo
         function(uint256, string memory) external _scanned,
         function(uint256) external _fail
     )
-        public 
-        returns (
-            bool _accepted
-        )
+        public
     // @formatter:on
     {
         uint256 id = ACameraStorage(context.get(STORAGE)).saveStart(_sessionId, _lights, _success, _scanned, _fail);
-        _accepted = ACameraOracle(context.get(ORACLE)).onNextStartQRScan(id);
+        ACameraOracle(context.get(ORACLE)).onNextStartQRScan(id, _sessionId, _lights);
     }
 
     function confirmFailStart(uint256 _commandId) public {
-        function(uint256) external callback;
-        uint256 sessionId;
-        (sessionId,,,,callback) = ACameraStorage(context.get(STORAGE)).retrieveStart(_commandId);
+        (uint256 sessionId,,,,function(uint256) external callback) = ACameraStorage(context.get(STORAGE)).retrieveStart(_commandId);
         ACameraController(context.get(CONTROLLER)).respondFailStart(sessionId, callback);
     }
 
-    function confirmStart(uint256 _commandId, string memory _port, string memory _url, string memory _href) public {
-        function(uint256, string memory, string memory, string memory) external callback;
-        uint256 sessionId;
-        (sessionId,,callback,,) = ACameraStorage(context.get(STORAGE)).retrieveStart(_commandId);
+    function confirmStart(uint256 _commandId, string _port, string _url, string _href) public {
+        (uint256 sessionId,,function(uint256, string memory, string memory, string memory) external callback,,) = ACameraStorage(context.get(STORAGE)).retrieveStart(_commandId);
         ACameraController(context.get(CONTROLLER)).respondStart(sessionId, _port, _url, _href, callback);
     }
 
-    function confirmScanned(uint256 _sessionId, string memory _qr) public {
-        function(uint256, string memory) external callback;
-        uint256 sessionId;
-        (sessionId,,,callback,) = ACameraStorage(context.get(STORAGE)).retrieveStartBySessionId(_sessionId);
+    function confirmScanned(uint256 _sessionId, string _qr) public {
+        (uint256 sessionId,,,function(uint256, string memory) external callback,) = ACameraStorage(context.get(STORAGE)).retrieveStartBySessionId(_sessionId);
         ACameraController(context.get(CONTROLLER)).respondScanned(sessionId, _qr, callback);
     }
 
@@ -64,26 +55,19 @@ contract CameraManager is ACameraManager, Named("camera-manager"), Mortal, Compo
         function(uint256) external _fail
     )
         public
-        returns (
-            bool _accepted
-    )
     // @formatter:on
     {
         uint256 id = ACameraStorage(context.get(STORAGE)).saveStop(_sessionId, _success, _fail);
-        _accepted = ACameraOracle(context.get(ORACLE)).onNextStopQRScan(id);
+        ACameraOracle(context.get(ORACLE)).onNextStopQRScan(id, _sessionId);
     }
 
     function confirmStop(uint256 _commandId) public {
-        function(uint256) external callback;
-        uint256 sessionId;
-        (sessionId,callback,) = ACameraStorage(context.get(STORAGE)).retrieveStop(_commandId);
+        (uint256 sessionId,function(uint256) external callback,) = ACameraStorage(context.get(STORAGE)).retrieveStop(_commandId);
         ACameraController(context.get(CONTROLLER)).respondStop(sessionId, callback);
     }
 
     function confirmFailStop(uint256 _commandId) public {
-        function(uint256) external callback;
-        uint256 sessionId;
-        (sessionId,,callback) = ACameraStorage(context.get(STORAGE)).retrieveStop(_commandId);
+        (uint256 sessionId,,function(uint256) external callback) = ACameraStorage(context.get(STORAGE)).retrieveStop(_commandId);
         ACameraController(context.get(CONTROLLER)).respondFailStop(sessionId, callback);
     }
 

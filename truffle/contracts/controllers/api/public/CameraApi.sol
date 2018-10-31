@@ -14,10 +14,7 @@ interface CameraApi {
         function(uint256, string memory) external _scanned,
         function(uint256) external _fail
     )
-        external
-        returns (
-            bool _accepted
-        );
+        external;
     // @formatter:on
 
     ///@dev function to trigger QR code scanning without lights
@@ -26,16 +23,13 @@ interface CameraApi {
     ///@param _scanned - callback function for informing about actual QR scanned data
     ///@param _fail - callback function for informing about failed case of enabling camera
     // @formatter:off
-    function scanQRCode(
+    function scanQRCodeWithoutLights(
         uint256 _sessionId,
         function(uint256, string memory, string memory, string memory) external _success,
         function(uint256, string memory) external _scanned,
         function(uint256) external _fail
     )
-        external
-        returns (
-            bool _accepted
-        );
+        external;
     // @formatter:on
 
     ///@dev function to disable QR scanning
@@ -48,10 +42,7 @@ interface CameraApi {
         function(uint256) external _success,
         function(uint256) external _fail
     )
-        external
-        returns (
-            bool _accepted
-        );
+        external;
     // @formatter:on
 
 }

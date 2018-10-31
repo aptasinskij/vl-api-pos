@@ -7,9 +7,9 @@ contract ACameraController is CameraApi {
     // @formatter:off
     function respondStart(
         uint256 _sessionId,
-        string memory _port,
-        string memory _url,
-        string memory _href,
+        string _port,
+        string _url,
+        string _href,
         function(uint, string memory, string memory, string memory) external _callback
     )
         public;
@@ -18,7 +18,7 @@ contract ACameraController is CameraApi {
     // @formatter:off
     function respondScanned(
         uint256 _sessionId,
-        string memory _qr,
+        string _qr,
         function(uint256, string memory) external _callback
     )
         public;

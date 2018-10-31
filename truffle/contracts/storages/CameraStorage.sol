@@ -61,12 +61,11 @@ contract CameraStorage is ACameraStorage, Named("camera-storage"), Mortal, Compo
         )
     // @formatter:on
     {
-        Start memory start = starts[_id];
-        _sessionId = start.sessionId;
-        _enableLight = start.enableLight;
-        _success = start.success;
-        _scanned = start.scanned;
-        _fail = start.fail;
+        _sessionId = starts[_id].sessionId;
+        _enableLight = starts[_id].enableLight;
+        _success = starts[_id].success;
+        _scanned = starts[_id].scanned;
+        _fail = starts[_id].fail;
     }
 
     function retrieveStartBySessionId(
@@ -114,10 +113,9 @@ contract CameraStorage is ACameraStorage, Named("camera-storage"), Mortal, Compo
         )
     // @formatter:on
     {
-        Stop memory stop = stops[_id];
-        _sessionId = stop.sessionId;
-        _success = stop.success;
-        _fail = stop.fail;
+        _sessionId = stops[_id].sessionId;
+        _success = stops[_id].success;
+        _fail = stops[_id].fail;
     }
 
 }

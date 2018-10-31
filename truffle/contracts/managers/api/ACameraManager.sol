@@ -10,14 +10,13 @@ contract ACameraManager {
         function(uint256, string memory) external _scanned,
         function(uint256) external _fail
     )
-    public
-    returns (bool _accepted);
+        public;
 
     function confirmFailStart(uint256 _commandId) public;
 
-    function confirmStart(uint256 _commandId, string memory _port, string memory _url, string memory _href) public;
+    function confirmStart(uint256 _commandId, string _port, string _url, string _href) public;
 
-    function confirmScanned(uint256 _sessionId, string memory _qr) public;
+    function confirmScanned(uint256 _sessionId, string _qr) public;
 
     function stopQRScanning(
         address _application,
@@ -25,8 +24,7 @@ contract ACameraManager {
         function(uint256) external _success,
         function(uint256) external _fail
     )
-    public
-    returns (bool _accepted);
+        public;
 
     function confirmStop(uint256 _commandId) public;
 
