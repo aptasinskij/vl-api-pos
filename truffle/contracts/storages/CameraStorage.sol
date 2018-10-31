@@ -4,28 +4,18 @@ import "../platform/Named.sol";
 import "../platform/Mortal.sol";
 import "./api/ACameraStorage.sol";
 import "../platform/Component.sol";
+import "./libs/CameraLib.sol";
 
 contract CameraStorage is ACameraStorage, Named("camera-storage"), Mortal, Component {
 
-    struct Start {
-        uint256 sessionId;
-        bool enableLight;
-        function(uint256, string memory, string memory, string memory) external success;
-        function(uint256, string memory) external scanned;
-        function(uint256) external fail;
-    }
+    using CameraLib for CameraLib.Start;
+    using CameraLib for CameraLib.Stop;
 
-    Start[] private starts;
+    CameraLib.Start[] private starts;
 
     mapping(uint256 => uint256) sessionToStart;
 
-    struct Stop {
-        uint256 sessionId;
-        function(uint256) external success;
-        function(uint256) external fail;
-    }
-
-    Stop[] private stops;
+    CameraLib.Stop[] private stops;
 
     constructor(address _config) Component(_config) public {}
 
@@ -43,7 +33,7 @@ contract CameraStorage is ACameraStorage, Named("camera-storage"), Mortal, Compo
         )
     // @formatter:on
     {
-        _id = starts.push(Start(_sessionId, _enableLight, _success, _scanned, _fail)) - 1;
+        _id = starts.push(CameraLib.Start(_sessionId, _enableLight, _success, _scanned, _fail)) - 1;
         sessionToStart[_sessionId] = _id;
     }
 
@@ -97,7 +87,7 @@ contract CameraStorage is ACameraStorage, Named("camera-storage"), Mortal, Compo
         )
     // @formatter:on
     {
-        _id = stops.push(Stop(_sessionId, _success, _fail)) - 1;
+        _id = stops.push(CameraLib.Stop(_sessionId, _success, _fail)) - 1;
     }
 
     // @formatter:off

@@ -1,20 +1,15 @@
 const Config = artifacts.require("Config");
-const SessionLib = artifacts.require("SessionLib");
-const ApplicationLib = artifacts.require("ApplicationLib");
 const CameraLib = artifacts.require("CameraLib");
+const CameraStorage = artifacts.require("CameraStorage");
 const CameraManager = artifacts.require("CameraManager");
 const CameraOracle = artifacts.require("CameraOracle");
 const CameraController = artifacts.require("CameraController");
 
 module.exports = function (deployer) {
-    deployer.link(ApplicationLib, CameraController);
-    deployer.deploy(CameraController, Config.address);
-
     deployer.deploy(CameraLib);
-    deployer.link(SessionLib, CameraManager);
-    deployer.link(CameraLib, CameraManager);
+    deployer.link(CameraLib, CameraStorage);
+    deployer.deploy(CameraStorage, Config.address);
+    deployer.deploy(CameraController, Config.address);
     deployer.deploy(CameraManager, Config.address);
-
-    deployer.link(CameraLib, CameraOracle);
     deployer.deploy(CameraOracle, Config.address);
 };
