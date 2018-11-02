@@ -1,59 +1,143 @@
 pragma solidity 0.4.24;
 
+import "../libs/CashInLib.sol";
+
 contract ACashInStorage {
 
-    event CashInSaved(uint256 channelId, uint256 sessionId, address application, uint256 status);
-    event CashInBalanceUpdated(uint256 channelId, uint256 amount);
-    event CashInStatusUpdated(uint256 channelId, uint256 status);
-    event CashInSplitAdded(uint256 channelId, address party, uint256 amount);
-
-    function save(
-        uint256 sessionId,
-        address application,
-        uint256 status,
-        uint256 _vaultLogicFee,
-        uint256 _maxAmount
+    function createCashIn(
+        uint256 _sessionId,
+        address _application
     )
-    public
-    returns (uint256 _channelId);
+        public
+        returns (
+            uint256 _id
+        );
 
-    function get(uint256 channelId) public view
-    returns (
-        uint256 sessionId,
-        address application,
-        uint256 balance,
-        uint256 status,
-        uint256 splitSize
-    );
+    function retrieveCashIn(
+        uint256 _id
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            address _application,
+            CashInLib.Status _status
+        );
 
-    function getSessionId(uint256 channelId) public view returns (uint256);
+    function retrieveCashInSessionId(
+        uint256 _id
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId
+        );
 
-    function getApplication(uint256 channelId) public view returns (address);
+    function retrieveCashInApplication(
+        uint256 _id
+    )
+        public
+        view
+        returns (
+            address _application
+        );
 
-    function getApplicationAndSessionId(uint256 channelId) public view returns (address, uint256);
+    function setCashInStatus(
+        uint256 _cashInId,
+        CashInLib.Status _status
+    )
+        public;
 
-    function setBalance(uint256 channelId, uint256 amount) public;
+    function retrieveCashInStatus(
+        uint256 _cashInId
+    )
+        public
+        view
+        returns (
+            CashInLib.Status _status
+        );
 
-    function getBalance(uint256 channelId) public view returns (uint256);
+    function createSplit(
+        uint256 _cashInId,
+        uint256[] _fees,
+        address[] _parties
+    )
+        public;
 
-    function setVLFee(uint256 channelId, uint256 fee) public;
+    function retrieveSplit(
+        uint256 _cashInId
+    )
+        public
+        view
+        returns (
+            uint256[] _fees,
+            address[] _parties
+        );
 
-    function getVLFee(uint256 channelId) public view returns (uint256);
+    function createAccount(
+        uint256 _cashInId,
+        uint256 _maxBalance,
+        uint256 _fee
+    )
+        public;
 
-    function setApplicationBalance(uint256 channelId, uint256 balance) public;
+    function retrieveAccount(
+        uint256 _cashInId
+    )
+        public
+        view
+        returns (
+            uint256 _balance,
+            uint256 _maxBalance,
+            uint256 _fee
+        );
 
-    function getApplicationBalance(uint256 channelId) public view returns (uint256);
+    function setAccountBalance(
+        uint256 _cashInId,
+        uint256 _amount
+    )
+        public;
 
-    function setStatus(uint256 channelId, uint256 status) public;
+    function createClose(
+        uint256 _cashInId,
+        uint256 _sessionId,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256) external _fail
+    )
+        public;
 
-    function getStatus(uint256 channelId) public view returns (uint256);
+    function retrieveClose(
+        uint256 _cashInId
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            function(uint256, uint256) external _success,
+            function(uint256, uint256) external _fail
+        );
 
-    function addSplit(uint256 channelId, address party, uint256 amount) public;
+    function createOpen(
+        uint256 _cashInId,
+        uint256 _sessionId,
+        uint256 _maxBalance,
+        function(uint256) external _fail,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256, uint256) external _update
+    )
+        public;
 
-    function addSplits(uint256 channelId, address[] parties, uint256[] amounts) public;
-
-    function getSplitSize(uint256 channelId) public view returns (uint256);
-
-    function getSplit(uint256 channelId, uint256 subIndex) public view returns (address, uint256);
+    function retrieveOpen(
+        uint256 _cashInId
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            uint256 _maxBalance,
+            function(uint256) external _fail,
+            function(uint256, uint256) external _success,
+            function(uint256, uint256, uint256) external _update
+        );
 
 }

@@ -6,14 +6,11 @@ contract ACashInManager {
         address _application,
         uint256 _sessionId,
         uint256 _maxBalance,
+        function(uint256) external _fail,
         function(uint256, uint256) external _success,
-        function(uint256, uint256, uint256) external _update,
-        function(uint256) external _fail
+        function(uint256, uint256, uint256) external _update
     )
-        public
-        returns (
-            bool _accepted
-        );
+        public;
 
     function closeCashInChannel(
         address _application,
@@ -24,17 +21,32 @@ contract ACashInManager {
         function(uint256, uint256) external _success,
         function(uint256, uint256) external _fail
     )
+        public;
+
+    function confirmOpen(
+        uint256 channelId
+    )
+        public;
+
+    function confirmClose(
+        uint256 channelId
+    )
+        public;
+
+    function updateCashInBalance(
+        uint256 channelId,
+        uint256 amount
+    )
+        public;
+
+    function balanceOf(
+        address _application,
+        uint256 _channelId
+    )
         public
+        view
         returns (
-            bool _accepted
+            uint256 _balance
         );
-
-    function confirmOpen(uint256 channelId) public;
-
-    function confirmClose(uint256 channelId) public;
-
-    function updateCashInBalance(uint256 channelId, uint256 amount) public;
-
-    function balanceOf(address _application, uint256 _channelId) public view returns (uint256 _balance);
 
 }

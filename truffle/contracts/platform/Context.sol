@@ -8,10 +8,9 @@ contract Context {
         context[name] = msg.sender;
     }
 
-    function get(string memory name) public view returns (address) {
-        address component = context[name];
-        require(component != 0x0, "component not found");
-        return component;
+    function get(string name) public view returns (address _component) {
+        _component = context[name];
+        require(_component != 0x0, "component not found");
     }
 
 }

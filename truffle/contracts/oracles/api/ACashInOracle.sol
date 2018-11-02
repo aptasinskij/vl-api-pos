@@ -2,12 +2,10 @@ pragma solidity 0.4.24;
 
 contract ACashInOracle {
 
-    event OpenCashAcceptor(uint256 sessionId, uint256 channelId, uint256 channelStatus, uint256 _maxAmount);
-    event CloseCashAcceptor(uint256 sessionId, uint256 channelId);
     event OpenCashIn(uint256 _commandId, uint256 _sessionId, uint256 _maxBalance);
+    event CloseCashIn(uint256 _cashInId, uint256 _sessionId);
 
-    //open cash-in functions
-    function onNextOpenCashIn(uint256 _commandId) public returns (bool _accepted);
+    function onNextOpenCashIn(uint256 _commandId, uint256 _sessionId, uint256 _maxBalance) public;
 
     function successOpen(uint256 _commandId) public;
 
@@ -15,8 +13,7 @@ contract ACashInOracle {
 
     function failOpen(uint256 _commandId) public;
 
-    //close cash-in functions
-    function onNextCloseCashIn(uint256 _commandId) public returns (bool _accepted);
+    function onNextCloseCashIn(uint256 _commandId, uint256 _sessionId) public;
 
     function successClose(uint256 _commandId) public;
 
