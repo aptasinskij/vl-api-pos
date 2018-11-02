@@ -6,7 +6,7 @@ import "../platform/Component.sol";
 import "./api/ACashOutStorage.sol";
 import {CashOutLib} from "../libs/Libraries.sol";
 
-contract CashInStorage is ACashOutStorage, Named("cash-out-storage"), Mortal, Component {
+contract CashOutStorage is ACashOutStorage, Named("cash-out-storage"), Mortal, Component {
 
     string constant DATABASE = "database";
 
