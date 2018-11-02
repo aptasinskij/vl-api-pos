@@ -19,7 +19,7 @@ contract SessionController is ASessionController, Named("session-controller"), M
 
     constructor(address _config) Component(_config) public {}
 
-    function getKiosk(
+    function getKioskInfo(
         uint256 _sessionId
     ) 
         public 
@@ -34,6 +34,43 @@ contract SessionController is ASessionController, Named("session-controller"), M
     {
         KioskLib.Kiosk memory kiosk = database.retrieveSessionKiosk(_sessionId);
         return (kiosk.id, kiosk.location, kiosk.name, kiosk.timezone);
+    }
+
+    // formatter:off
+    function closeSession(
+        uint256 _sessionId,
+        function(uint256) external _success,
+        function(uint256) external _fail
+    )
+        external
+        returns (
+            bool _accepted
+        )
+    {
+        _accepted = true;
+    }
+    // formatter:on
+
+    // formatter:off
+    function respondClose(
+        uint256 _sessionId,
+        function(uint256) external _callback
+    )
+        public
+    // formatter:on
+    {
+
+    }
+
+    // formatter:off
+    function respondFailClose(
+        uint256 _sessionId,
+        function(uint256) external _callback
+    )
+        public
+    // formatter:on
+    {
+
     }
 
 }

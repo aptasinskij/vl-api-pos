@@ -6,14 +6,11 @@ interface CashInApi {
     function openCashInChannel(
         uint256 _sessionId,
         uint256 _maxBalance,
+        function(uint256) external _fail,
         function(uint256, uint256) external _success,
-        function(uint256, uint256, uint256) external _update,
-        function(uint256) external _fail
+        function(uint256, uint256, uint256) external _update
     )
-        external
-        returns (
-            bool _accepted
-        );
+        external;
     // @formatter:on
 
     // @formatter:off
@@ -25,10 +22,7 @@ interface CashInApi {
         function(uint256, uint256) external _success,
         function(uint256, uint256) external _fail
     )
-        external
-        returns (
-            bool _accepted
-        );
+        external;
     // @formatter:on
 
     // @formatter:off
