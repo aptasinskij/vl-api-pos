@@ -6,6 +6,7 @@ import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.RequestEntity;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import static com.skysoft.vaultlogic.clients.RequestFactory.post;
 import static io.vavr.API.Try;
 
+@Slf4j
 @Service
 @Profile("cloud")
 @AllArgsConstructor
@@ -45,6 +47,7 @@ public class KioskCameraHttpClient implements KioskCamera {
     @Override
     public Try<Preview> startPreview(String xToken, PreviewConfig startPreview) {
         return Try(() -> exchange(post(xToken, maya::startPreviewURI, startPreview), Preview.class))
+                .onFailure(throwable -> log.error("[x] start preview request execution fail: {}", throwable.getMessage()))
                 .map(HttpEntity::getBody);
     }
 
