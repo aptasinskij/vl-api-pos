@@ -8,7 +8,7 @@ import com.skysoft.vaultlogic.common.domain.session.events.SessionCloseRequested
 import com.skysoft.vaultlogic.common.domain.session.events.SessionClosed;
 import com.skysoft.vaultlogic.common.domain.session.events.SessionCreating;
 import com.skysoft.vaultlogic.common.domain.session.projections.SessionId;
-import com.skysoft.vaultlogic.contracts.SessionManager;
+import com.skysoft.vaultlogic.contracts.SessionOracle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -22,13 +22,13 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Profile("cloud")
 public class CloudSessionDomainEventsListener {
 
-    private final SessionManager sessionManager;
+    private final SessionOracle sessionOracle;
     private final SessionRepository sessionRepository;
     private final KioskApplicationClient kioskApplicationClient;
 
     @Autowired
-    public CloudSessionDomainEventsListener(SessionManager sessionManager, SessionRepository sessionRepository, KioskApplicationClient kioskApplicationClient) {
-        this.sessionManager = sessionManager;
+    public CloudSessionDomainEventsListener(SessionOracle sessionOracle, SessionRepository sessionRepository, KioskApplicationClient kioskApplicationClient) {
+        this.sessionOracle = sessionOracle;
         this.sessionRepository = sessionRepository;
         this.kioskApplicationClient = kioskApplicationClient;
     }
@@ -39,7 +39,7 @@ public class CloudSessionDomainEventsListener {
     public void creating(SessionCreating event) {
         log.info("[x]---> Session creating with XToken: {}", event.xToken);
         Session session = sessionRepository.findByXTokenJoinApplicationAndKiosk(event.xToken).orElseThrow(RuntimeException::new);
-        sessionManager.createSession(
+        sessionOracle.createSession(
                 session.getId(),
                 session.getApplication().getId(),
                 session.getXToken(),
@@ -59,7 +59,7 @@ public class CloudSessionDomainEventsListener {
     public void activated(SessionActivated event) {
         log.info("[x]---> Session activated with XToken: {}", event.xToken);
         SessionId session = sessionRepository.findSessionIdByXToken(event.xToken);
-        sessionManager.activate(session.getId()).observable().take(1).subscribe(
+        sessionOracle.activate(session.getId()).observable().take(1).subscribe(
                 tx -> log.info("[x] Saved to Smart Contract. TX: {}", tx.getTransactionHash()),
                 throwable -> log.error("[x] Failed to save", throwable)
         );
@@ -79,8 +79,14 @@ public class CloudSessionDomainEventsListener {
 
     @Async
     @TransactionalEventListener
+    @Transactional(readOnly = true)
     public void closed(SessionClosed event) {
         log.info("[x]---> Session CLOSED EVENT HANDLING");
+        SessionId sessionId = sessionRepository.findSessionIdByXToken(event.xToken);
+        sessionOracle.successClose(sessionId.getId()).observable().take(1).subscribe(
+                transactionReceipt -> log.info("[x] confirmed session close to smart contract"),
+                throwable -> log.error("[x] failed to confirm session fail close to smart contract")
+        );
     }
 
 }

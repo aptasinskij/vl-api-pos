@@ -5,7 +5,7 @@ import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
 import com.skysoft.vaultlogic.common.domain.session.SessionTxLogRepository;
 import com.skysoft.vaultlogic.common.domain.session.events.*;
 import com.skysoft.vaultlogic.common.domain.session.projections.SessionId;
-import com.skysoft.vaultlogic.contracts.SessionManager;
+import com.skysoft.vaultlogic.contracts.SessionOracle;
 import com.skysoft.vaultlogic.listeners.RemoteRequestEmulator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import rx.functions.Action1;
 @AllArgsConstructor
 public class LocalSessionDomainEventsListener {
 
-    private final SessionManager sessionManager;
+    private final SessionOracle sessionOracle;
     private final SessionRepository sessionRepository;
     private final SessionTxLogRepository sessionTxLogRepository;
 
@@ -37,7 +37,7 @@ public class LocalSessionDomainEventsListener {
 
         log.info("[x]---> Session creating with XToken: {}", event.xToken);
         Session session = sessionRepository.findByXTokenJoinApplicationAndKiosk(event.xToken).orElseThrow(RuntimeException::new);
-        sessionManager.createSession(session.getId(), session.getApplication().getId(), session.getXToken(), session.getKiosk().getShortId())
+        sessionOracle.createSession(session.getId(), session.getApplication().getId(), session.getXToken(), session.getKiosk().getShortId())
                 .observable().subscribe(onSuccess, onError);
     }
 
@@ -54,7 +54,7 @@ public class LocalSessionDomainEventsListener {
     public void activated(SessionActivated event) {
         log.info("[x]---> Session activated. XToken {}", event.xToken);
         SessionId sessionId = sessionRepository.findSessionIdByXToken(event.xToken);
-        sessionManager.activate(sessionId.getId()).observable().subscribe(onSuccess, onError);
+        sessionOracle.activate(sessionId.getId()).observable().subscribe(onSuccess, onError);
     }
 
     @Async
@@ -72,7 +72,7 @@ public class LocalSessionDomainEventsListener {
     public void closed(SessionClosed event) {
         log.info("[x] Session closed. XToken: {}", event.getXToken());
         SessionId sessionId = sessionRepository.findSessionIdByXToken(event.xToken);
-        sessionManager.confirmClose(sessionId.getId()).observable().subscribe(onSuccess, onError);
+        sessionOracle.successClose(sessionId.getId()).observable().subscribe(onSuccess, onError);
     }
 
 }

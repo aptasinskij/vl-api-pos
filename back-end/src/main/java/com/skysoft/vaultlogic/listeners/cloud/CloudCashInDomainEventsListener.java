@@ -65,7 +65,7 @@ public class CloudCashInDomainEventsListener {
         SessionXToken sessionXToken = sessionRepository.findSessionXTokenByCashInChannels_ChannelId(event.getChannelId());
         log.info("[x]---> CASH IN CLOSE REQUESTED. ID: {}, X-TOKEN: {} ", event.getChannelId(), sessionXToken.getxToken());
         kioskCashDevices.disableCashAcceptor(sessionXToken.getxToken())
-                .onSuccess(cashAcceptorStatus -> log.info("[x] successfully enabled cash acceptor"))
+                .onSuccess(cashAcceptorStatus -> log.info("[x] successfully close cash acceptor"))
                 .onFailure(throwable -> log.error("[x] failed to disable cash acceptor")).toJavaOptional()
                 .flatMap(cashAcceptorStatus -> cashInRepository.findByChannelId(event.getChannelId()))
                 .map(CashInChannel::markClosed)

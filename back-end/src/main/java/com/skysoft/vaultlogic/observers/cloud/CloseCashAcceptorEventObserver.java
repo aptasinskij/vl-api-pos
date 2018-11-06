@@ -1,7 +1,6 @@
 package com.skysoft.vaultlogic.observers.cloud;
 
 import com.skysoft.vaultlogic.contracts.CashInOracle;
-import com.skysoft.vaultlogic.contracts.CashInOracle.CloseCashAcceptorEventResponse;
 import com.skysoft.vaultlogic.observers.api.AbstractContractEventObserver;
 import com.skysoft.vaultlogic.observers.api.EventObservable;
 import com.skysoft.vaultlogic.services.CashInService;
@@ -11,12 +10,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
 
-import static com.skysoft.vaultlogic.contracts.CashInOracle.CLOSECASHACCEPTOR_EVENT;
+import static com.skysoft.vaultlogic.contracts.CashInOracle.CLOSECASHIN_EVENT;
 
 @Slf4j
 @Component
 @Profile("cloud")
-public class CloseCashAcceptorEventObserver extends AbstractContractEventObserver<CloseCashAcceptorEventResponse, CashInOracle> {
+public class CloseCashAcceptorEventObserver extends AbstractContractEventObserver<CashInOracle.CloseCashInEventResponse, CashInOracle> {
 
     private final CashInService cashInService;
 
@@ -29,18 +28,18 @@ public class CloseCashAcceptorEventObserver extends AbstractContractEventObserve
 
     @Override
     protected Event eventToFilterFor() {
-        return CLOSECASHACCEPTOR_EVENT;
+        return CLOSECASHIN_EVENT;
     }
 
     @Override
-    protected EventObservable<CloseCashAcceptorEventResponse> getEventObservable() {
-        return contract::closeCashAcceptorEventObservable;
+    protected EventObservable<CashInOracle.CloseCashInEventResponse> getEventObservable() {
+        return contract::closeCashInEventObservable;
     }
 
     @Override
-    public void onNext(CloseCashAcceptorEventResponse event) {
-        log.info("[x] CLOSE CASH ACCEPTOR: Channel: {}, XToken: {}", event.channelId, event.sessionId);
-        cashInService.closeCashInChannel(event.channelId, event.sessionId);
+    public void onNext(CashInOracle.CloseCashInEventResponse event) {
+        log.info("[x] CLOSE CASH ACCEPTOR: Channel: {}, XToken: {}", event._cashInId, event._sessionId);
+        cashInService.closeCashInChannel(event._cashInId, event._sessionId);
     }
 
     @Override
