@@ -8,25 +8,19 @@ interface PrinterApi {
         function(uint256, string memory, string memory) external _success,
         function(uint256) external _fail
     )
-        external
-        returns (
-            bool _accepted
-        );
+    external;
     // @formatter:on
 
     // @formatter:off
     function printReceipt(
-        uint256 _sessionId,
-        string _receiptId,
-        string _data,
-        string _params,
-        function(uint256) external _success,
-        function(uint256) external _fail
-    )
-        external
-        returns (
-            bool _accepted
-        );
+         uint256 _sessionId,
+         string _receiptId,
+         string _data,
+         string _params,
+         function(uint256) external _success,
+         function(uint256) external _fail
+     )
+         external;
     // @formatter:on
 
 }
