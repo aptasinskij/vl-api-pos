@@ -42,7 +42,9 @@ contract CashInManager is ACashInManager, Named("cash-in-manager"), Mortal, Comp
         public
         onlyBy(CONTROLLER)
     {
+        //TODO:implementation: check if msg.sender is registered application
         //TODO:implementation: check if session can hold open cash-in channel
+        //TODO:implementation SET SESSION HAS ACTIVE CASH-IN CHANNEL FLAG
         ACashInStorage cashInStorage = ACashInStorage(context.get(STORAGE));
         uint256 id = cashInStorage.createCashIn(_sessionId, _application);
         cashInStorage.createOpen(id, _sessionId, _maxBalance, _fail, _success, _update);
@@ -96,6 +98,7 @@ contract CashInManager is ACashInManager, Named("cash-in-manager"), Mortal, Comp
         channelInState(_channelId, CashInLib.Status.ACTIVE)
         onlyBy(CONTROLLER)
     {
+        //TODO:implementation: check if msg.sender is registered application
         _validateCanBeClosed(_application, _sessionId, _channelId);
         _validateSplits(_channelId, _fees);
         ACashInStorage cashInStorage = ACashInStorage(context.get(STORAGE));

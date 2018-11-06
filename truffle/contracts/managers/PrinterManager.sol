@@ -6,12 +6,11 @@ import "../platform/Component.sol";
 import "./api/APrinterManager.sol";
 import "../oracles/api/APrinterOracle.sol";
 import "../controllers/api/APrinterController.sol";
-import {PrinterLib, SessionLib} from "../libs/Libraries.sol";
+import {PrinterLib} from "../libs/Libraries.sol";
 
-contract PrinterManager is APrinterManager, Mortal, Named("camera-manager"), Component {
+contract PrinterManager is APrinterManager, Mortal, Named("printer-manager"), Component {
 
     using PrinterLib for address;
-    using SessionLib for address;
 
     string constant ORACLE = "printer-oracle";
     string constant CONTROLLER = "printer-controller";
@@ -27,9 +26,9 @@ contract PrinterManager is APrinterManager, Mortal, Named("camera-manager"), Com
         public
         returns (bool _accepted)
     {
-        address sessionOwner = database.retrieveSessionApplicationDeployedAddress(_sessionId);
+        /*address sessionOwner = database.retrieveSessionApplicationDeployedAddress(_sessionId);
         require(sessionOwner == _application, "illegal session access");
-        require(database.sessionIsActive(_sessionId), "session is not active");
+        require(database.sessionIsActive(_sessionId), "session is not active");*/
         uint256 receiptCreateId = database.getNextReceiptCreateId();
         // @formatter:off
         database.createReceiptCreate(PrinterLib.ReceiptCreate({
@@ -64,9 +63,9 @@ contract PrinterManager is APrinterManager, Mortal, Named("camera-manager"), Com
         public
         returns (bool _accepted)
     {
-        address sessionOwner = database.retrieveSessionApplicationDeployedAddress(_sessionId);
+        /*address sessionOwner = database.retrieveSessionApplicationDeployedAddress(_sessionId);
         require(sessionOwner == _application, "illegal session access");
-        require(database.sessionIsActive(_sessionId), "session is not active");
+        require(database.sessionIsActive(_sessionId), "session is not active");*/
         uint256 receiptPrintId = database.getNextReceiptPrintId();
         // @formatter:off
         database.createReceiptPrint(PrinterLib.ReceiptPrint({
