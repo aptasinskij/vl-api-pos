@@ -23,7 +23,7 @@ public class ReceiptTest {
         Receipt receipt = new Receipt();
         receipt.setId("receipt_id");
         receipt.setData("receipt_data");
-        receipt.setParams("receipt_params");
+        /*receipt.setParams("receipt_params");*/
         assertThat(json.write(receipt)).isEqualToJson("receipt.json");
     }
 
