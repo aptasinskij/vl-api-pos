@@ -73,7 +73,7 @@ public class CameraOracle extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("89354", "0xd8c02d31312c9307ef8d57d78601b01f7cae2256");
+        _addresses.put("89354", "0x73691419bce58e792d8a8e4a86385cfeaf3a3a5e");
     }
 
     protected CameraOracle(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {

@@ -3,6 +3,9 @@ package com.skysoft.vaultlogic.clients.api.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
 public class Receipt {
 
@@ -11,7 +14,7 @@ public class Receipt {
     private String data;
 
     @JsonProperty("wkhtmltopdf_params")
-    private String params;
+    private Map<String, String> params = new HashMap<>();
 
     public Receipt() {
     }
@@ -19,7 +22,7 @@ public class Receipt {
     public Receipt(String id, String data, String params) {
         this.id = id;
         this.data = data;
-        this.params = params;
+        this.params.put("orientation", params);
     }
 
     public static Receipt of(String id, String data, String params) {

@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
 
+import javax.annotation.PostConstruct;
+
 import static com.skysoft.vaultlogic.contracts.SessionOracle.CLOSESESSION_EVENT;
 
 @Slf4j
@@ -24,7 +26,12 @@ public class CloseSessionEventObserver extends AbstractContractEventObserver<Clo
     public CloseSessionEventObserver(SessionOracle sessionOracle, SessionService sessionService) {
         super(sessionOracle);
         this.sessionService = sessionService;
-        subscribe();
+    }
+
+    @Override
+    @PostConstruct
+    protected void subscribe() {
+        super.subscribe();
     }
 
     @Override
