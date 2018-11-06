@@ -22,10 +22,7 @@ interface SessionApi {
         function(uint256) external _success,
         function(uint256) external _fail
     )
-        external
-        returns (
-            bool _accepted
-        );
+        external;
     // formatter:on
 
 }

@@ -4,20 +4,20 @@ contract ASessionManager {
 
     function createSession(uint256 _sessionId, uint256 _appId, string _xToken, string _kioskId) public;
 
-    function closeSession(uint256 sessionId) public;
-
-    function confirmClose(uint256 sessionId) public;
-
-    function isActive(uint256 sessionId) public view returns(bool);
-
-    function isHasActiveCashIn(uint256 _sessionId) public view returns(bool);
-
     function activate(uint256 _sessionId) public;
 
-    function validateCanOpenCashIn(uint256 _sessionId, address _application) public view returns (bool _canOpenCashIn);
+    // @formatter:off
+    function closeSession(
+        address _application,
+        uint256 _sessionId,
+        function(uint256) external _success,
+        function(uint256) external _fail
+    )
+        external;
+    // @formatter:on
 
-    function setSessionHasActiveCashIn(uint256 _sessionId) public;
+    function confirmClose(uint256 _sessionId) public;
 
-    function setSessionIsNotHasActiveCashIn(uint256 _sessionId) public;
+    function confirmFailClose(uint256 _sessionId) public;
 
 }

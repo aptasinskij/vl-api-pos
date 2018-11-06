@@ -4,26 +4,18 @@ import "../platform/Named.sol";
 import "../platform/Mortal.sol";
 import "../platform/Component.sol";
 import "./api/ASessionController.sol";
-import {KioskLib, SessionLib, ApplicationLib} from "../libs/Libraries.sol";
-
+import "../managers/api/ASessionManager.sol";
 
 contract SessionController is ASessionController, Named("session-controller"), Mortal, Component {
 
-    using SessionLib for address;
-    using ApplicationLib for address;
-
-    modifier isRegistered {
-        require(database.isRegistered(msg.sender), "only registered allowed");
-        _;
-    }
+    string constant MANAGER = "session-manager";
 
     constructor(address _config) Component(_config) public {}
 
     function getKioskInfo(
         uint256 _sessionId
     ) 
-        public 
-        isRegistered 
+        public
         view 
         returns (
             string memory _id, 
@@ -32,8 +24,11 @@ contract SessionController is ASessionController, Named("session-controller"), M
             string memory _timezone
         ) 
     {
-        KioskLib.Kiosk memory kiosk = database.retrieveSessionKiosk(_sessionId);
-        return (kiosk.id, kiosk.location, kiosk.name, kiosk.timezone);
+        //TODO:implementation: lazy kiosk-info api
+        _id = "10998";
+        _location  = "Keletskaya 98, Vinnitsa, CA, USA";
+        _name = "Vinn Team (Test)";
+        _timezone = "Europe/Kiev";
     }
 
     // formatter:off
@@ -43,11 +38,8 @@ contract SessionController is ASessionController, Named("session-controller"), M
         function(uint256) external _fail
     )
         external
-        returns (
-            bool _accepted
-        )
     {
-        _accepted = true;
+        ASessionManager(context.get(MANAGER)).closeSession(msg.sender, _sessionId, _success, _fail);
     }
     // formatter:on
 
@@ -59,7 +51,7 @@ contract SessionController is ASessionController, Named("session-controller"), M
         public
     // formatter:on
     {
-
+        _callback(_sessionId);
     }
 
     // formatter:off
@@ -70,7 +62,7 @@ contract SessionController is ASessionController, Named("session-controller"), M
         public
     // formatter:on
     {
-
+        _callback(_sessionId);
     }
 
 }
