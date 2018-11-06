@@ -13,7 +13,7 @@ import org.web3j.abi.datatypes.Event;
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
-import static com.skysoft.vaultlogic.contracts.CashInOracle.OPENCASHACCEPTOR_EVENT;
+import static com.skysoft.vaultlogic.contracts.CashInOracle.OPENCASHIN_EVENT;
 
 @Slf4j
 @Component
@@ -36,7 +36,7 @@ public class OpenCashAcceptorEventObserver extends AbstractContractEventObserver
 
     @Override
     protected Event eventToFilterFor() {
-        return OPENCASHACCEPTOR_EVENT;
+        return OPENCASHIN_EVENT;
     }
 
     @Override

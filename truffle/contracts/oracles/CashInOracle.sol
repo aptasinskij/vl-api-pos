@@ -1,50 +1,43 @@
 pragma solidity 0.4.24;
 
-import "../libs/Libraries.sol";
-import {ACashChannelsManager} from "../managers/Managers.sol";
-import {ACashInOracle} from "./Oracles.sol";
-import "../Platform.sol";
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "../managers/api/ACashInManager.sol";
+import "./api/ACashInOracle.sol";
 
 contract CashInOracle is ACashInOracle, Named("cash-in-oracle"), Mortal, Component {
 
-    using CashInLib for address;
-
-    string constant MANAGER = "cash-channels-manager";
+    string constant MANAGER = "cash-in-manager";
 
     constructor(address _config) Component(_config) public {}
 
-    //open cash-in functions
-    function onNextOpenCashIn(uint256 _commandId) public returns (bool _accepted) {
-        CashInLib.Open memory command = database.retrieveCashInOpen(_commandId);
-        emit OpenCashIn(_commandId, command.sessionId, command.maxBalance);
-        _accepted = true;
+    function onNextOpenCashIn(uint256 _commandId, uint256 _sessionId, uint256 _maxBalance) public {
+        emit OpenCashIn(_commandId, _sessionId, _maxBalance);
     }
 
     function successOpen(uint256 _commandId) public onlyOwner {
-        ACashChannelsManager(context.get(MANAGER)).confirmOpen(_commandId);
+        ACashInManager(context.get(MANAGER)).confirmOpen(_commandId);
     }
 
     function increaseBalance(uint256 channelId, uint256 amount) public {
-        ACashChannelsManager(context.get(MANAGER)).updateCashInBalance(channelId, amount);
+        ACashInManager(context.get(MANAGER)).updateCashInBalance(channelId, amount);
     }
 
     function failOpen(uint256 _commandId) public onlyOwner {
-
+        //TODO:implementation: add ACashInManager::confirmFailOpen(uint256 _commandId) call
     }
 
-    //close cash-in functions
-    function onNextCloseCashIn(uint256 _commandId) public returns (bool _accepted) {
-        CashInLib.Close memory command = database.retrieveCashInClose(_commandId);
-        emit CloseCashAcceptor(command.sessionId, _commandId);
-        _accepted = true;
+    function onNextCloseCashIn(uint256 _commandId, uint256 _sessionId) public {
+        emit CloseCashIn(_commandId, _sessionId);
     }
 
-    function successClose(uint256 _commandId) {
-        ACashChannelsManager(context.get(MANAGER)).confirmClose(_commandId);
+    function successClose(uint256 _commandId) public {
+        ACashInManager(context.get(MANAGER)).confirmClose(_commandId);
     }
 
-    function failClose(uint256 _commandId) {
-
+    function failClose(uint256 _commandId) public {
+        //TODO:implementation: add ACashInManager::confirmFailClose(uint256 _commandId) call
     }
 
 }

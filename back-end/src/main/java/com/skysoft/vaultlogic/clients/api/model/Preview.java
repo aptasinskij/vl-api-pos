@@ -7,8 +7,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class Preview extends StatusCode {
 
-    private String port;
-    private String url;
-    private String href;
+    private String port = "none";
+    private String url = "none";
+    private String href = "none";
 
 }

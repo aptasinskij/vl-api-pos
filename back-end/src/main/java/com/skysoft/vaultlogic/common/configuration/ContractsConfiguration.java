@@ -59,16 +59,6 @@ public class ContractsConfiguration {
     }
 
     @Bean
-    public SessionStorage sessionStorage(Quorum quorum, ClientTransactionManager transactionManager, BlockchainNetwork network) {
-        return SessionStorage.load(SessionStorage.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
-    }
-
-    @Bean
-    public SessionManager sessionManager(Quorum quorum, ClientTransactionManager transactionManager, BlockchainNetwork network) {
-        return SessionManager.load(SessionManager.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
-    }
-
-    @Bean
     public CashInOracle cashInOracle(Quorum quorum, ClientTransactionManager transactionManager, BlockchainNetwork network) {
         return CashInOracle.load(CashInOracle.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
     }

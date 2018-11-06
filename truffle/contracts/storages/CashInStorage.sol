@@ -1,93 +1,216 @@
 pragma solidity 0.4.24;
 
-import {CashInLib} from "../libs/Libraries.sol";
-import {ACashInStorage} from "./Storages.sol";
-import "../Platform.sol";
+import "../platform/Named.sol";
+import "../platform/Component.sol";
+import "../platform/Mortal.sol";
+import "./api/ACashInStorage.sol";
 
 contract CashInStorage is ACashInStorage, Named("cash-in-storage"), Mortal, Component {
 
-    using CashInLib for address;
+    using CashInLib for *;
+
+    CashInLib.CashIn[] private channels;
+
+    mapping(uint256 => CashInLib.Split) private channelSplit;
+
+    mapping(uint256 => CashInLib.Account) private channelAccount;
+
+    mapping(uint256 => CashInLib.Close) private channelClose;
+
+    mapping(uint256 => CashInLib.Open) private channelOpen;
 
     constructor(address _config) Component(_config) public {}
 
-    function save(uint256 sessionId, address application, uint256 status, uint256 _vaultLogicFee, uint256 _maxAmount) public returns (uint256 _channelId) {
-        //_channelId = database.save(sessionId, application, status, _vaultLogicFee, _maxAmount);
-        emit CashInSaved(_channelId, sessionId, application, status);
+    function createCashIn(
+        uint256 _sessionId,
+        address _application
+    )
+        public
+        returns (
+            uint256 _id
+        )
+    {
+        _id = channels.push(CashInLib.CashIn(_sessionId, _application, CashInLib.Status.CREATING)) - 1;
     }
 
-    function get(uint256 channelId) public view
-    returns(
-        uint256 sessionId,
-        address application,
-        uint256 balance,
-        uint256 status,
-        uint256 splitSize
-    ) {
-        //return database.get(channelId);
+    function retrieveCashIn(
+        uint256 _id
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            address _application,
+            CashInLib.Status _status
+        )
+    {
+        _sessionId = channels[_id].sessionId;
+        _application = channels[_id].application;
+        _status = channels[_id].status;
     }
 
-    function getSessionId(uint256 channelId) public view returns(uint256) {
-        //return database.getSessionId(channelId);
+    function retrieveCashInSessionId(
+        uint256 _id
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId
+        )
+    {
+        _sessionId = channels[_id].sessionId;
     }
 
-    function getApplication(uint256 channelId) public view returns(address) {
-        //return database.getApplication(channelId);
+    function retrieveCashInApplication(
+        uint256 _id
+    )
+        public
+        view
+        returns (
+            address _application
+        )
+    {
+        _application = channels[_id].application;
     }
 
-    function getApplicationAndSessionId(uint256 channelId) public view returns(address application, uint256 sessionId) {
-        //application = database.getApplication(channelId);
-        //sessionId = database.getSessionId(channelId);
+    function setCashInStatus(
+        uint256 _cashInId,
+        CashInLib.Status _status
+    )
+        public
+    {
+        channels[_cashInId].status = _status;
     }
 
-    function setBalance(uint256 channelId, uint256 amount) public {
-        //database.setBalance(channelId, amount);
-        //emit CashInBalanceUpdated(channelId, amount);
+    function retrieveCashInStatus(
+        uint256 _cashInId
+    )
+        public
+        view
+        returns (
+            CashInLib.Status _status
+        )
+    {
+        _status = channels[_cashInId].status;
     }
 
-    function getBalance(uint256 channelId) public view returns(uint256) {
-        //return database.getBalance(channelId);
+    function createSplit(
+        uint256 _cashInId,
+        uint256[] _fees,
+        address[] _parties
+    )
+        public
+    {
+        channelSplit[_cashInId] = CashInLib.Split(_fees, _parties);
     }
 
-    function setVLFee(uint256 channelId, uint256 fee) public {
-        //database.setVLFee(channelId, fee);
+    function retrieveSplit(
+        uint256 _cashInId
+    )
+        public
+        view
+        returns (
+            uint256[] _fees,
+            address[] _parties
+        )
+    {
+        _fees = channelSplit[_cashInId].fees;
+        _parties = channelSplit[_cashInId].parties;
     }
 
-    function getVLFee(uint256 channelId) public view returns(uint256){
-        //return database.getVLFee(channelId);
+    function createAccount(
+        uint256 _cashInId,
+        uint256 _maxBalance,
+        uint256 _fee
+    )
+        public
+    {
+        channelAccount[_cashInId] = CashInLib.Account(0, _maxBalance, _fee);
     }
 
-    function setApplicationBalance(uint256 channelId, uint256 balance) public {
-        //database.setApplicationBalance(channelId, balance);
+    function retrieveAccount(
+        uint256 _cashInId
+    )
+        public
+        view
+        returns (
+            uint256 _balance,
+            uint256 _maxBalance,
+            uint256 _fee
+    )
+    {
+        _balance = channelAccount[_cashInId].balance;
+        _maxBalance = channelAccount[_cashInId].maxBalance;
+        _fee = channelAccount[_cashInId].fee;
     }
 
-    function getApplicationBalance(uint256 channelId) public view returns(uint256) {
-        //return database.getApplicationBalance(channelId);
+    function setAccountBalance(
+        uint256 _cashInId,
+        uint256 _amount
+    )
+        public
+    {
+        channelAccount[_cashInId].balance = _amount;
     }
 
-    function setStatus(uint256 channelId, uint256 status) public {
-        //database.setStatus(channelId, status);
-        //emit CashInStatusUpdated(channelId, status);
+    function createClose(
+        uint256 _cashInId,
+        uint256 _sessionId,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256) external _fail
+    )
+        public
+    {
+        channelClose[_cashInId] = CashInLib.Close(_sessionId, _success, _fail);
     }
 
-    function getStatus(uint256 channelId) public view returns(uint256) {
-        //return database.getStatus(channelId);
+    function retrieveClose(
+        uint256 _cashInId
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            function(uint256, uint256) external _success,
+            function(uint256, uint256) external _fail
+    )
+    {
+        _sessionId = channelClose[_cashInId].sessionId;
+        _success = channelClose[_cashInId].success;
+        _fail = channelClose[_cashInId].fail;
     }
 
-    function addSplit(uint256 channelId, address party, uint256 amount) public {
-        //database.addSplit(channelId, party, amount);
-        //emit CashInSplitAdded(channelId, party, amount);
+    function createOpen(
+        uint256 _cashInId,
+        uint256 _sessionId,
+        uint256 _maxBalance,
+        function(uint256) external _fail,
+        function(uint256, uint256) external _success,
+        function(uint256, uint256, uint256) external _update
+    )
+        public
+    {
+        channelOpen[_cashInId] = CashInLib.Open(_sessionId, _maxBalance, _fail, _success, _update);
     }
 
-    function addSplits(uint256 channelId, address[] parties, uint256[] amounts) public {
-        //database.addSplits(channelId, parties, amounts);
-    }
-
-    function getSplitSize(uint256 channelId) public view returns(uint256) {
-        //return database.getSplitSize(channelId);
-    }
-
-    function getSplit(uint256 channelId, uint256 subIndex) public view returns(address, uint256) {
-        //return database.getSplit(channelId, subIndex);
+    function retrieveOpen(
+        uint256 _cashInId
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            uint256 _maxBalance,
+            function(uint256) external _fail,
+            function(uint256, uint256) external _success,
+            function(uint256, uint256, uint256) external _update
+    )
+    {
+        _sessionId = channelOpen[_cashInId].sessionId;
+        _maxBalance = channelOpen[_cashInId].maxBalance;
+        _fail = channelOpen[_cashInId].fail;
+        _success = channelOpen[_cashInId].success;
+        _update = channelOpen[_cashInId].update;
     }
 
 }

@@ -1,23 +1,17 @@
 pragma solidity 0.4.24;
 
-import {ApplicationLib} from "../libs/Libraries.sol";
-import {ACashInController} from "./Controllers.sol";
-import {ACashChannelsManager} from "../managers/Managers.sol";
-import "../Platform.sol";
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
+import "./api/ACashInController.sol";
+import "../managers/api/ACashInManager.sol";
 
 contract CashInController is ACashInController, Named("cash-in-controller"), Mortal, Component {
 
-    using ApplicationLib for address;
+    string constant MANAGER = "cash-in-manager";
 
-    string constant MANAGER = "cash-channels-manager";
-
-    modifier isRegistered {
-        require(database.isRegistered(msg.sender), "only registered allowed");
-        _;
-    }
-
-    modifier onlyManager {
-        require(context.get(MANAGER) == msg.sender, "only manager allowed");
+    modifier onlyBy(string _name) {
+        require(msg.sender == context.get(_name), "illegal access");
         _;
     }
 
@@ -26,22 +20,34 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
     function openCashInChannel(
         uint256 _sessionId,
         uint256 _maxBalance,
+        function(uint256) external _fail,
         function(uint256, uint256) external _success,
-        function(uint256, uint256, uint256) external _update,
-        function(uint256) external _fail
+        function(uint256, uint256, uint256) external _update
     )
-        public
-        isRegistered
-        returns (bool _accepted)
+        external
+        //TODO:implementation: check if msg.sender is registered application
     {
-        _accepted = ACashChannelsManager(context.get(MANAGER)).openCashInChannel(msg.sender, _sessionId, _maxBalance, _success, _update, _fail);
+        ACashInManager(context.get(MANAGER)).openCashInChannel(msg.sender, _sessionId, _maxBalance, _fail, _success, _update);
     }
 
-    function respondOpened(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public onlyManager {
+    function respondOpened(
+        uint256 _sessionId,
+        uint256 _cashInId,
+        function(uint256, uint256) external _callback
+    )
+        public
+        onlyBy(MANAGER)
+    {
         _callback(_sessionId, _cashInId);
     }
 
-    function respondFailOpen(uint256 _sessionId, function(uint256) external _callback) public onlyManager {
+    function respondFailOpen(
+        uint256 _sessionId,
+        function(uint256) external _callback
+    )
+        public
+        onlyBy(MANAGER)
+    {
         _callback(_sessionId);
     }
 
@@ -50,7 +56,9 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
         uint256 _cashInId,
         uint256 _amount,
         function(uint256, uint256, uint256) external _callback
-    ) public
+    )
+        public
+        onlyBy(MANAGER)
     {
         _callback(_sessionId, _cashInId, _amount);
     }
@@ -63,24 +71,46 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
         function(uint256, uint256) external _success,
         function(uint256, uint256) external _fail
     )
-        public
-        isRegistered
-        returns (bool _accepted)
+        external
+        //TODO:implementation: check if msg.sender is registered application
     {
         require(_fees.length == _parties.length, "split has not equals parameters");
-        _accepted = ACashChannelsManager(context.get(MANAGER)).closeCashInChannel(msg.sender, _sessionId, _channelId, _fees, _parties, _success, _fail);
+        ACashInManager(context.get(MANAGER)).closeCashInChannel(msg.sender, _sessionId, _channelId, _fees, _parties, _success, _fail);
     }
 
-    function respondClosed(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public onlyManager {
+    function respondClosed(
+        uint256 _sessionId,
+        uint256 _cashInId,
+        function(uint256, uint256) external _callback
+    )
+        public
+        onlyBy(MANAGER)
+    {
         _callback(_sessionId, _cashInId);
     }
 
-    function respondFailClose(uint256 _sessionId, uint256 _cashInId, function(uint256, uint256) external _callback) public onlyManager {
+    function respondFailClose(
+        uint256 _sessionId,
+        uint256 _cashInId,
+        function(uint256, uint256) external _callback
+    )
+        public
+        onlyBy(MANAGER)
+    {
         _callback(_sessionId, _cashInId);
     }
 
-    function balanceOf(uint256 _channelId) public view isRegistered returns (uint256) {
-        return ACashChannelsManager(context.get(MANAGER)).balanceOf(msg.sender, _channelId);
+    function balanceOf(
+        uint256 _channelId
+    )
+        public
+        view
+        //TODO:implementation: check if msg.sender is registered application
+        returns (
+            uint256 _balance
+        )
+    {
+        _balance = ACashInManager(context.get(MANAGER)).balanceOf(msg.sender, _channelId);
     }
 
 }

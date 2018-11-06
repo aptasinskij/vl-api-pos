@@ -1,87 +1,72 @@
 pragma solidity 0.4.24;
 
-import "../Platform.sol";
-import "../controllers/Controllers.sol";
+import "../platform/Context.sol";
+import "../controllers/api/public/CashInApi.sol";
+import "../controllers/api/public/CameraApi.sol";
 
 contract CapitalHero {
 
-    event OpenAccepted(uint256 _sessionId);
-    event SuccessOpen(uint256 _sessionId, uint256 _cashInId);
-    event BalanceUpdate(uint256 _sessionId, uint256 _cashInId, uint256 _amount);
-    event FailOpen(uint256 _sessionId);
-
-    event CloseAccepted(uint256 _sessionId);
-    event SuccessClose(uint256 _sessionId, uint256 _cashInId);
-    event FailClose(uint256 _sessionId, uint256 _cashInId);
-
-    string constant CASH_IN_CONTROLLER = "cash-in-controller";
+    string constant CONTROLLER = "cash-in-controller";
 
     Context private context;
-
-    uint256 public lastOpenAcceptedSession;
-
-    uint256 public lastSuccessOpenSession;
-    uint256 public lastSuccessOpenChannel;
-
-    uint256 public lastBalanceUpdateSession;
-    uint256 public lastBalanceUpdateChannel;
-    uint256 public lastBalanceUpdateAmount;
 
     constructor(address _context) public {
         context = Context(_context);
     }
 
-    function openCashInChannel(uint256 _sessionId, uint256 _maxAmount) external {
-        bool accepted = ACashInController(context.get(CASH_IN_CONTROLLER)).openCashInChannel(
+    event RequestSended(uint256 _sessionId, uint256 _maxBalance);
+    event CashInOpened(uint256 _sessionId, uint256 _cashInId);
+    event CashInUpdate(uint256 _sessionId, uint256 _cashInId, uint256 _amount);
+    event CashInFail(uint256 _sessionId);
+
+    function open(uint256 _sessionId, uint256 _maxBalance) public {
+        CashInApi(context.get(CONTROLLER)).openCashInChannel(
             _sessionId,
-            _maxAmount,
-            this.successOpen,
-            this.balanceUpdate,
-            this.failOpen
+            _maxBalance,
+            this._openFail,
+            this._openSuccess,
+            this._balanceUpdate
         );
-        if (accepted) {
-            lastOpenAcceptedSession = _sessionId;
-            emit OpenAccepted(_sessionId);
-        }
+        emit RequestSended(_sessionId, _maxBalance);
     }
 
-    function successOpen(uint256 _sessionId, uint256 _cashInId) public {
-        lastSuccessOpenSession = _sessionId;
-        lastSuccessOpenChannel = _cashInId;
-        emit SuccessOpen(_sessionId, _cashInId);
+    function _openFail(uint256 _sessionId) public {
+        emit CashInFail(_sessionId);
     }
 
-    function balanceUpdate(uint256 _sessionId, uint256 _cashInId, uint256 _amount) public {
-        lastBalanceUpdateSession = _sessionId;
-        lastBalanceUpdateChannel = _cashInId;
-        lastBalanceUpdateAmount = _amount;
-        emit BalanceUpdate(_sessionId, _cashInId, _amount);
+    function _openSuccess(uint256 _sessionId, uint256 _cashInId) public {
+        emit CashInOpened(_sessionId, _cashInId);
     }
 
-    function failOpen(uint256 _sessionId) public {
-        emit FailOpen(_sessionId);
+    function _balanceUpdate(uint256 _sessionId, uint256 _cashInId, uint256 _amount) public {
+        emit CashInUpdate(_sessionId, _cashInId, _amount);
     }
 
-    function closeCashInChannel(uint256 _sessionId, uint256 _cashInId) public {
-        uint256[] memory fees = new uint256[](0);
-        address[] memory parties = new address[](0);
-        bool accepted = ACashInController(context.get(CASH_IN_CONTROLLER)).closeCashInChannel(
+    event ScanAccepted(uint256 _sessionId);
+    event SuccessQR(uint256 _sessionId, string _port, string _url, string _href);
+    event QRScanned(uint256 _sessionId, string _data);
+    event QRFail(uint256 _sessionId);
+
+    function scanQRWithLights(uint256 _sessionId) public {
+        CameraApi(context.get("camera-controller")).scanQRCodeWithLights(
             _sessionId,
-            _cashInId,
-            fees,
-            parties,
-            this.successClose,
-            this.failClose
+            this.__successStartScan,
+            this.__QRScanned,
+            this.__QRFail
         );
-        if (accepted) emit CloseAccepted(_sessionId);
+        emit ScanAccepted(_sessionId);
     }
 
-    function successClose(uint256 _sessionId, uint256 _cashInId) public {
-        emit SuccessClose(_sessionId, _cashInId);
+    function __successStartScan(uint256 _sessionId, string _port, string _url, string _href) public {
+        emit SuccessQR(_sessionId, _port, _url, _href);
     }
 
-    function failClose(uint256 _sessionId, uint256 _cashInId) public {
-        emit FailClose(_sessionId, _cashInId);
+    function __QRScanned(uint256 _sessionId, string _data) public {
+        emit QRScanned(_sessionId, _data);
+    }
+
+    function __QRFail(uint256 _sessionId) public {
+        emit QRFail(_sessionId);
     }
 
 }
