@@ -8,7 +8,7 @@ interface PrinterApi {
         function(uint256, string memory, string memory) external _success,
         function(uint256) external _fail
     )
-    external;
+        public;
     // @formatter:on
 
     // @formatter:off
@@ -16,11 +16,12 @@ interface PrinterApi {
          uint256 _sessionId,
          string _receiptId,
          string _data,
-         string _params,
+         bytes32[] _paramNames,
+         bytes32[] _paramValues,
          function(uint256) external _success,
          function(uint256) external _fail
      )
-         external;
+         public;
     // @formatter:on
 
 }
