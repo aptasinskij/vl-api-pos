@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 contract AKioskManager {
 
     // @formatter:off
-    function getKioskInfo(
+    function getKiosk(
         address _application,
         uint256 _sessionId,
         function(

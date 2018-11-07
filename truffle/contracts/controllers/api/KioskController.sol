@@ -13,7 +13,7 @@ contract KioskController is AKioskController, Named("kiosk-controller"), Mortal,
     constructor(address _config) Component(_config) public {}
 
     // @formatter:off
-    function getKioskInfo(
+    function getKiosk(
         uint256 _sessionId,
         function(
             uint256,
@@ -29,7 +29,7 @@ contract KioskController is AKioskController, Named("kiosk-controller"), Mortal,
         external
     // @formatter:on
     {
-        AKioskManager(context.get(MANAGER)).getKioskInfo(msg.sender, _sessionId, _success, _fail);
+        AKioskManager(context.get(MANAGER)).getKiosk(msg.sender, _sessionId, _success, _fail);
     }
 
 }

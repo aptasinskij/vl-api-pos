@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 interface KioskApi {
 
     // @formatter:off
-    function getKioskInfo(
+    function getKiosk(
         uint256 _sessionId,
         function(
             uint256,
