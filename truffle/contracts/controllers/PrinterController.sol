@@ -48,6 +48,7 @@ contract PrinterController is APrinterController, Named("printer-controller"), M
     )
         public
     {
+        require(_paramNames.length == _paramValues.length, "printer have not equals parameters");
         APrinterManager(context.get(MANAGER)).printReceipt(msg.sender, _sessionId, _receiptId, _data, _paramNames, _paramValues, _success, _fail);
     }
 
