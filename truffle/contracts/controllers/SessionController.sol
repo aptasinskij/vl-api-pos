@@ -12,25 +12,6 @@ contract SessionController is ASessionController, Named("session-controller"), M
 
     constructor(address _config) Component(_config) public {}
 
-    function getKioskInfo(
-        uint256 _sessionId
-    ) 
-        public
-        view 
-        returns (
-            string memory _id, 
-            string memory _location, 
-            string memory _name, 
-            string memory _timezone
-        ) 
-    {
-        //TODO:implementation: lazy kiosk-info api
-        _id = "10998";
-        _location  = "Keletskaya 98, Vinnitsa, CA, USA";
-        _name = "Vinn Team (Test)";
-        _timezone = "Europe/Kiev";
-    }
-
     // formatter:off
     function closeSession(
         uint256 _sessionId,
