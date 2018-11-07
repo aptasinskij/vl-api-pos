@@ -165,7 +165,7 @@ library ApplicationLib {
 
 }
 
-library KioskLib {
+/*library KioskLib {
 
     string constant EXISTS = "kiosk.exists";
 
@@ -227,7 +227,7 @@ library KioskLib {
         _timezone = Database(self).getStringValue(keccak256(abi.encodePacked(TIME_ZONE, _kioskId)));
     }
 
-}
+}*/
 
 library CashOutLib {
 
