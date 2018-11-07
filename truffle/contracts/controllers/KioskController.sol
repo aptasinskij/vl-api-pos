@@ -1,10 +1,10 @@
 pragma solidity 0.4.24;
 
-import "./AKioskController.sol";
-import "../../platform/Named.sol";
-import "../../platform/Mortal.sol";
-import "../../platform/Component.sol";
-import "../../managers/api/AKioskManager.sol";
+import "../managers/api/AKioskManager.sol";
+import "./api/AKioskController.sol";
+import "../platform/Named.sol";
+import "../platform/Mortal.sol";
+import "../platform/Component.sol";
 
 contract KioskController is AKioskController, Named("kiosk-controller"), Mortal, Component {
 
