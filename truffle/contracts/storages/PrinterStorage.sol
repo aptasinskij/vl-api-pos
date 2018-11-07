@@ -52,7 +52,8 @@ contract PrinterStorage is APrinterStorage, Named("printer-storage"), Mortal, Co
         uint256 _sessionId,
         string _receiptId,
         string _data,
-        string _params,
+        bytes32[] _paramNames,
+        bytes32[] _paramValues,
         function(uint256) external _success,
         function(uint256) external _fail
     )
@@ -62,7 +63,7 @@ contract PrinterStorage is APrinterStorage, Named("printer-storage"), Mortal, Co
         )
     // @formatter:on
     {
-        _id = print.push(PrinterLib.ReceiptPrint(_sessionId, _receiptId, _data, _params, _success, _fail)) - 1;
+        _id = print.push(PrinterLib.ReceiptPrint(_sessionId, _receiptId, _data, _paramNames, _paramValues, _success, _fail)) - 1;
     }
 
     // @formatter:off
@@ -75,7 +76,8 @@ contract PrinterStorage is APrinterStorage, Named("printer-storage"), Mortal, Co
             uint256 _sessionId,
             string _receiptId,
             string _data,
-            string _params,
+            bytes32[] _paramNames,
+            bytes32[] _paramValues,
             function(uint256) external _success,
             function(uint256) external _fail
         )
@@ -84,7 +86,8 @@ contract PrinterStorage is APrinterStorage, Named("printer-storage"), Mortal, Co
         _sessionId = print[_id].sessionId;
         _receiptId = print[_id].receiptId;
         _data = print[_id].data;
-        _params = print[_id].params;
+        _paramNames = print[_id].paramNames;
+        _paramValues = print[_id].paramValues;
         _success = print[_id].success;
         _fail = print[_id].fail;
     }

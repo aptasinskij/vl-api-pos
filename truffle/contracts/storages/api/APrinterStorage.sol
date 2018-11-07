@@ -32,7 +32,8 @@ contract APrinterStorage {
         uint256 _sessionId,
         string _receiptId,
         string _data,
-        string _params,
+        bytes32[] _paramNames,
+        bytes32[] _paramValues,
         function(uint256) external _success,
         function(uint256) external _fail
     )
@@ -52,7 +53,8 @@ contract APrinterStorage {
             uint256 _sessionId,
             string _receiptId,
             string _data,
-            string _params,
+            bytes32[] _paramNames,
+            bytes32[] _paramValues,
             function(uint256) external _success,
             function(uint256) external _fail
         );

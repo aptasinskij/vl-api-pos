@@ -24,8 +24,8 @@ contract PrinterOracle is APrinterOracle, Mortal, Named("printer-oracle"), Compo
         APrinterManager(context.get(MANAGER)).confirmFailCreate(_commandId);
     }
 
-    function onNextReceiptPrint(uint256 _commandId, uint256 _sessionId, string _receiptId, string _data, string _params) public {
-        emit ReceiptPrint(_commandId, _sessionId, _receiptId, _data, _params);
+    function onNextReceiptPrint(uint256 _commandId, uint256 _sessionId, string _receiptId, string _data, bytes32[] _paramNames, bytes32[] _paramValues) public {
+        emit ReceiptPrint(_commandId, _sessionId, _receiptId, _data, _paramNames, _paramValues);
     }
 
     function successPrint(uint256 _commandId) public onlyOwner {
