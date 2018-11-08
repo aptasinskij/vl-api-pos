@@ -15,7 +15,7 @@ public interface KioskCashDevices {
 
     Try<CashAcceptorStatus> disableCashAcceptor(String xToken);
 
-    Either<Throwable, DispensableAmount> getDispensableAmount(String xToken, DispensableAmount amountToDispense);
+    Try<DispensableAmount> getDispensableAmount(String xToken, DispensableAmount amountToDispense);
 
     Either<Throwable, StatusCode> dispenseCash(String xToken, DispenseCash dispenseCash);
 
