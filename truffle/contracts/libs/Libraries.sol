@@ -232,7 +232,7 @@ library ApplicationLib {
 library CashOutLib {
 
     using ApplicationLib for address;
-    using KioskLib for address;
+    /*using KioskLib for address;*/
 
     bytes32 constant CASH_OUT_INDEX = keccak256(abi.encode("CashOutIndex"));
 
@@ -366,10 +366,10 @@ library CashOutLib {
         splitSize = Database(self).getUintValue(string256(SPLIT_SIZE, index));
     }
 
-    function retrieveCashOutKiosk(address self, uint256 index) internal view returns (KioskLib.Kiosk memory) {
+    /*function retrieveCashOutKiosk(address self, uint256 index) internal view returns (KioskLib.Kiosk memory) {
         require(cashOutExists(self, index), "Cash out channel not exists");
         return self.retrieveKiosk(getKioskId(self, index));
-    }
+    }*/
 
     function setKioskId(address self, uint256 index, string kioskId) internal {
         Database(self).setStringValue(string256(KIOSK_ID, index), string(kioskId));
