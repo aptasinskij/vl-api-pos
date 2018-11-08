@@ -18,9 +18,18 @@ import org.web3j.abi.datatypes.Event;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import static com.skysoft.vaultlogic.clients.api.model.Receipt.of;
 import static com.skysoft.vaultlogic.contracts.PrinterOracle.RECEIPTPRINT_EVENT;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.IntStream.range;
+
 
 @Slf4j
 @Component
@@ -57,8 +66,12 @@ public class ReceiptPrintEventObserver extends AbstractContractEventObserver<Rec
     @Transactional(readOnly = true)
     public void onNext(ReceiptPrintEventResponse event) {
         log.info("[x] Receipt print: {}, {}", event._commandId, event._sessionId);
-        SessionXToken sessionXToken = sessionRepository.findSessionXTokenById(event._sessionId);
-        kioskPrinter.printReceipt(sessionXToken.getxToken(), Receipt.of(event._receiptId, event._data, event._params))
+        String xToken = sessionRepository.findSessionXTokenById(event._sessionId).getxToken();
+        List<String> names = event._paramNames.stream().map(byte[]::toString).collect(toList());
+        List<String> values = event._paramValues.stream().map(byte[]::toString).collect(toList());
+        Map<String, String> parameters = range(0, names.size()).boxed()
+                .collect(toMap(names::get, values::get));
+        kioskPrinter.printReceipt(xToken, of(event._receiptId, event._data, parameters))
                 .onSuccess(confirmSuccessReceiptPrint(event._commandId))
                 .onFailure(confirmFailReceiptPrint(event._commandId));
     }
