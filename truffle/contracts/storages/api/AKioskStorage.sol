@@ -2,10 +2,45 @@ pragma solidity 0.4.24;
 
 contract AKioskStorage {
 
-    event Saved(string _kioskId, string _location, string _name, string _timezone);
+    // @formatter:off
+    function createKioskInfoRequest(
+        uint256 _sessionId,
+        function(
+            uint256,
+            string memory,
+            string memory,
+            string memory,
+            string memory,
+            uint256[] memory,
+            uint256[] memory
+        ) external _success,
+        function(uint256) external _fail
+    )
+        public
+        returns (
+            uint256 _id
+        );
+    // @formatter:on
 
-    function save(string memory _kioskId, string memory _location, string memory _name, string memory _timezone) public;
-
-    function get(string memory _kioskId) public view returns (string memory _location, string memory _name, string memory _timezone);
+    // @formatter:off
+    function retrieveKioskInfoRequest(
+        uint256 _id
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            function(
+                uint256,
+                string memory,
+                string memory,
+                string memory,
+                string memory,
+                uint256[] memory,
+                uint256[] memory
+            ) external _success,
+            function(uint256) external _fail
+        );
+    // @formatter:on
 
 }

@@ -4,21 +4,62 @@ import "../platform/Named.sol";
 import "../platform/Mortal.sol";
 import "./api/AKioskStorage.sol";
 import "../platform/Component.sol";
-import {KioskLib} from "../libs/Libraries.sol";
+import "./libs/KioskLib.sol";
 
 contract KioskStorage is AKioskStorage, Named("kiosk-storage"), Mortal, Component {
 
-    using KioskLib for address;
+    using KioskLib for KioskLib.KioskInfoRequest;
+
+    KioskLib.KioskInfoRequest[] private requests;
 
     constructor(address _config) Component(_config) public {}
 
-    function save(string memory _kioskId, string memory _location, string memory _name, string memory _timezone) public {
-        database.save(_kioskId, _location, _name, _timezone);
-        emit Saved(_kioskId, _location, _name, _timezone);
+    // @formatter:off
+    function createKioskInfoRequest(
+        uint256 _sessionId,
+        function(
+            uint256,
+            string memory,
+            string memory,
+            string memory,
+            string memory,
+            uint256[] memory,
+            uint256[] memory
+        ) external _success,
+        function(uint256) external _fail
+    )
+        public
+        returns (
+            uint256 _id
+        )
+    // @formatter:on
+    {
+        return requests.push(KioskLib.KioskInfoRequest(_sessionId, _success, _fail)) - 1;
     }
 
-    function get(string memory _kioskId) public view returns (string memory _location, string memory _name, string memory _timezone) {
-        return database.get(_kioskId);
+    // @formatter:off
+    function retrieveKioskInfoRequest(
+        uint256 _id
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            function(
+                uint256,
+                string memory,
+                string memory,
+                string memory,
+                string memory,
+                uint256[] memory,
+                uint256[] memory
+            ) external _success,
+            function(uint256) external _fail
+        )
+    // @formatter:on
+    {
+        _sessionId = requests[_id].sessionId;
+        _success = requests[_id].success;
+        _fail = requests[_id].fail;
     }
-
 }
