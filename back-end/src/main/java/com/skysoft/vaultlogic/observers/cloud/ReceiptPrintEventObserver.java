@@ -1,10 +1,8 @@
 package com.skysoft.vaultlogic.observers.cloud;
 
 import com.skysoft.vaultlogic.clients.api.KioskPrinter;
-import com.skysoft.vaultlogic.clients.api.model.Receipt;
 import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
-import com.skysoft.vaultlogic.common.domain.session.projections.SessionXToken;
 import com.skysoft.vaultlogic.contracts.PrinterOracle;
 import com.skysoft.vaultlogic.contracts.PrinterOracle.ReceiptPrintEventResponse;
 import com.skysoft.vaultlogic.observers.api.AbstractContractEventObserver;
@@ -18,11 +16,9 @@ import org.web3j.abi.datatypes.Event;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static com.skysoft.vaultlogic.clients.api.model.Receipt.of;
 import static com.skysoft.vaultlogic.contracts.PrinterOracle.RECEIPTPRINT_EVENT;
