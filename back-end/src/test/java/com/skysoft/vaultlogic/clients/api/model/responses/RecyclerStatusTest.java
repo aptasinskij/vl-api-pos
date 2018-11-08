@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 
 import static com.skysoft.vaultlogic.clients.api.model.Cassette.Type.cash;
@@ -35,16 +36,16 @@ public class RecyclerStatusTest {
         Cassette cassette1 = new Cassette();
         cassette1.setId("id_1");
         cassette1.setCount(BigDecimal.ZERO);
-        cassette1.setDenomination("denomination_1");
-        cassette1.setAmount(BigDecimal.ZERO);
+        cassette1.setDenomination(BigInteger.ZERO);
+        cassette1.setAmount(BigInteger.ZERO);
         cassette1.setMaxCount(BigDecimal.ZERO);
         cassette1.setType(cash);
 
         Cassette cassette2 = new Cassette();
         cassette2.setId("id_2");
         cassette2.setCount(BigDecimal.ONE);
-        cassette2.setDenomination("denomination_2");
-        cassette2.setAmount(BigDecimal.ONE);
+        cassette2.setDenomination(BigInteger.TEN);
+        cassette2.setAmount(BigInteger.ONE);
         cassette2.setMaxCount(BigDecimal.ONE);
         cassette2.setType(coin);
 
