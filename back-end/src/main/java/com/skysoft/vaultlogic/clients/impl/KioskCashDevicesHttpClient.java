@@ -6,15 +6,18 @@ import com.skysoft.vaultlogic.common.configuration.properties.MayaProperties;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import static com.skysoft.vaultlogic.clients.RequestFactory.post;
 import static io.vavr.API.Try;
 
-@Service
+@Slf4j
+@Component
 @Profile("cloud")
 @AllArgsConstructor
 public class KioskCashDevicesHttpClient implements KioskCashDevices {
@@ -49,10 +52,10 @@ public class KioskCashDevicesHttpClient implements KioskCashDevices {
     }
 
     @Override
-    public Either<Throwable, DispensableAmount> getDispensableAmount(String xToken, DispensableAmount amountToDispense) {
+    public Try<DispensableAmount> getDispensableAmount(String xToken, DispensableAmount amountToDispense) {
         return Try(() -> rest.exchange(post(xToken, maya::dispensableAmountURI, amountToDispense), DispensableAmount.class))
-                .map(HttpEntity::getBody)
-                .toEither();
+                .onFailure(throwable -> log.error("[x] fail to fetch dispensable amount: {}", throwable.getMessage()))
+                .map(HttpEntity::getBody);
     }
 
     @Override

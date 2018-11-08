@@ -93,4 +93,9 @@ public class ContractsConfiguration {
         return PrinterOracle.load(PrinterOracle.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
     }
 
+    @Bean
+    public KioskOracle kioskOracle(Quorum quorum, ClientTransactionManager transactionManager, BlockchainNetwork network) {
+        return KioskOracle.load(KioskOracle.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
+    }
+
 }

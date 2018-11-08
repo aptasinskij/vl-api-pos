@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -16,9 +17,9 @@ public class Cassette {
 
     private BigDecimal count;
 
-    private String denomination;
+    private BigInteger denomination;
 
-    private BigDecimal amount;
+    private BigInteger amount;
 
     @JsonProperty("max_count")
     private BigDecimal maxCount;
