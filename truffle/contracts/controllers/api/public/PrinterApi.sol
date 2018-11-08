@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-interface PrinterApi {
+contract PrinterApi {
 
     // @formatter:off
     function createReceipt(
