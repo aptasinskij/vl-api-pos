@@ -7,6 +7,7 @@ import "../platform/Component.sol";
 import "../oracles/api/ACashInOracle.sol";
 import "../storages/api/ACashInStorage.sol";
 import "../controllers/api/ACashInController.sol";
+import "./api/ATokenManager.sol";
 
 contract CashInManager is ACashInManager, Named("cash-in-manager"), Mortal, Component {
 
@@ -148,7 +149,8 @@ contract CashInManager is ACashInManager, Named("cash-in-manager"), Mortal, Comp
     {
         ACashInStorage cashInStorage = ACashInStorage(context.get(STORAGE));
         (uint256 sessionId,function(uint256, uint256) external success,) = cashInStorage.retrieveClose(_commandId);
-        //TODO:implementation: CALL TOKEN-MANAGER::performCashInTransfer(uint256 cashInBalance, uint256 fee, uint256[] fees, address[] parties, address _application)
+        ATokenManager tokenManager = ATokenManager(context.get(TOKEN_MANAGER));
+        tokenManager.performCashInTransfer(_commandId);
         //TODO:implementation SET SESSION HAS NO ACTIVE CASH-IN CHANNEL FLAG
         cashInStorage.setCashInStatus(_commandId, CashInLib.Status.CLOSED);
         ACashInController(context.get(CONTROLLER)).respondClosed(sessionId, _commandId, success);
