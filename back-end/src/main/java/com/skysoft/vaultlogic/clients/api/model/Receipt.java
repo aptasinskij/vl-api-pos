@@ -3,7 +3,6 @@ package com.skysoft.vaultlogic.clients.api.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Data
