@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.web3j.abi.datatypes.Event;
+import org.web3j.abi.datatypes.generated.Bytes32;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
@@ -63,10 +64,9 @@ public class ReceiptPrintEventObserver extends AbstractContractEventObserver<Rec
     public void onNext(ReceiptPrintEventResponse event) {
         log.info("[x] Receipt print: {}, {}", event._commandId, event._sessionId);
         String xToken = sessionRepository.findSessionXTokenById(event._sessionId).getxToken();
-        List<String> names = event._paramNames.stream().map(byte[]::toString).collect(toList());
-        List<String> values = event._paramValues.stream().map(byte[]::toString).collect(toList());
-        Map<String, String> parameters = range(0, names.size()).boxed()
-                .collect(toMap(names::get, values::get));
+        List<String> names = event._paramNames.stream().map(Bytes32::getValue).map(String::new).collect(toList());
+        List<String> values = event._paramValues.stream().map(Bytes32::getValue).map(String::new).collect(toList());
+        Map<String, String> parameters = range(0, names.size()).boxed().collect(toMap(names::get, values::get));
         kioskPrinter.printReceipt(xToken, of(event._receiptId, event._data, parameters))
                 .onSuccess(confirmSuccessReceiptPrint(event._commandId))
                 .onFailure(confirmFailReceiptPrint(event._commandId));
