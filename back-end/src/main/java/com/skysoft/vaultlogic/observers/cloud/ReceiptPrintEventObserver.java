@@ -1,10 +1,8 @@
 package com.skysoft.vaultlogic.observers.cloud;
 
 import com.skysoft.vaultlogic.clients.api.KioskPrinter;
-import com.skysoft.vaultlogic.clients.api.model.Receipt;
 import com.skysoft.vaultlogic.clients.api.model.StatusCode;
 import com.skysoft.vaultlogic.common.domain.session.SessionRepository;
-import com.skysoft.vaultlogic.common.domain.session.projections.SessionXToken;
 import com.skysoft.vaultlogic.contracts.PrinterOracle;
 import com.skysoft.vaultlogic.contracts.PrinterOracle.ReceiptPrintEventResponse;
 import com.skysoft.vaultlogic.observers.api.AbstractContractEventObserver;
@@ -15,12 +13,20 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.web3j.abi.datatypes.Event;
+import org.web3j.abi.datatypes.generated.Bytes32;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
+import static com.skysoft.vaultlogic.clients.api.model.Receipt.of;
 import static com.skysoft.vaultlogic.contracts.PrinterOracle.RECEIPTPRINT_EVENT;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.IntStream.range;
+
 
 @Slf4j
 @Component
@@ -57,8 +63,11 @@ public class ReceiptPrintEventObserver extends AbstractContractEventObserver<Rec
     @Transactional(readOnly = true)
     public void onNext(ReceiptPrintEventResponse event) {
         log.info("[x] Receipt print: {}, {}", event._commandId, event._sessionId);
-        SessionXToken sessionXToken = sessionRepository.findSessionXTokenById(event._sessionId);
-        kioskPrinter.printReceipt(sessionXToken.getxToken(), Receipt.of(event._receiptId, event._data, event._params))
+        String xToken = sessionRepository.findSessionXTokenById(event._sessionId).getxToken();
+        List<String> names = event._paramNames.stream().map(Bytes32::getValue).map(String::new).collect(toList());
+        List<String> values = event._paramValues.stream().map(Bytes32::getValue).map(String::new).collect(toList());
+        Map<String, String> parameters = range(0, names.size()).boxed().collect(toMap(names::get, values::get));
+        kioskPrinter.printReceipt(xToken, of(event._receiptId, event._data, parameters))
                 .onSuccess(confirmSuccessReceiptPrint(event._commandId))
                 .onFailure(confirmFailReceiptPrint(event._commandId));
     }

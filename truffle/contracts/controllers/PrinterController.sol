@@ -17,7 +17,7 @@ contract PrinterController is APrinterController, Named("printer-controller"), M
         function(uint256, string memory, string memory) external _success,
         function(uint256) external _fail
     )
-        external
+        public
     {
         APrinterManager(context.get(MANAGER)).createReceipt(msg.sender, _sessionId, _success, _fail);
     }
@@ -41,13 +41,15 @@ contract PrinterController is APrinterController, Named("printer-controller"), M
         uint256 _sessionId,
         string _receiptId,
         string _data,
-        string _params,
+        bytes32[] _paramNames,
+        bytes32[] _paramValues,
         function(uint256) external _success,
         function(uint256) external _fail
     )
-        external
+        public
     {
-        APrinterManager(context.get(MANAGER)).printReceipt(msg.sender, _sessionId, _receiptId, _data, _params, _success, _fail);
+        require(_paramNames.length == _paramValues.length, "printer have not equals parameters");
+        APrinterManager(context.get(MANAGER)).printReceipt(msg.sender, _sessionId, _receiptId, _data, _paramNames, _paramValues, _success, _fail);
     }
 
     function respondPrint(uint256 _sessionId, function(uint256) external _callback) public {

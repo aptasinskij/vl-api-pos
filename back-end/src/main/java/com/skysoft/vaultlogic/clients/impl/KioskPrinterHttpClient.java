@@ -35,6 +35,7 @@ public class KioskPrinterHttpClient implements KioskPrinter {
     @Override
     public Try<StatusCode> printReceipt(String xToken, Receipt receipt) {
         return Try(() -> rest.exchange(post(xToken, maya::printReceiptURI, receipt), StatusCode.class))
+                .onFailure(throwable -> log.error("[x] error sending print receipt request:", throwable))
                 .map(HttpEntity::getBody);
     }
 

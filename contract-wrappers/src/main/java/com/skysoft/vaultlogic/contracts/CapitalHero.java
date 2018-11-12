@@ -91,7 +91,7 @@ public class CapitalHero extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("89354", "0x90f60a71fe4bbb5b3542bbe78e622b1d5352a40d");
+        _addresses.put("89354", "0x5c6f0a99ff5b834ca50eed605d4a2536d8157cf1");
     }
 
     protected CapitalHero(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {

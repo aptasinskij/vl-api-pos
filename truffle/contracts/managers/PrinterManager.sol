@@ -47,24 +47,25 @@ contract PrinterManager is APrinterManager, Mortal, Named("printer-manager"), Co
         uint256 _sessionId,
         string _receiptId,
         string _data,
-        string _params,
+        bytes32[] _paramNames,
+        bytes32[] _paramValues,
         function(uint256) external _success,
         function(uint256) external _fail
     )
-    public
+        public
     // @formatter:on
     {
-        uint256 _id = APrinterStorage(context.get(STORAGE)).createReceiptPrint(_sessionId, _receiptId, _data, _params, _success, _fail);
-        APrinterOracle(context.get(ORACLE)).onNextReceiptPrint(_id, _sessionId, _receiptId, _data, _params);
+        uint256 _id = APrinterStorage(context.get(STORAGE)).createReceiptPrint(_sessionId, _receiptId, _data, _paramNames, _paramValues, _success, _fail);
+        APrinterOracle(context.get(ORACLE)).onNextReceiptPrint(_id, _sessionId, _receiptId, _data, _paramNames, _paramValues);
     }
 
     function confirmPrint(uint256 _commandId) public {
-        (uint256 _sessionId,,,,function(uint256) external callback,) = APrinterStorage(context.get(STORAGE)).getReceiptPrint(_commandId);
+        (uint256 _sessionId,,,,,function(uint256) external callback,) = APrinterStorage(context.get(STORAGE)).getReceiptPrint(_commandId);
         APrinterController(context.get(CONTROLLER)).respondPrint(_sessionId, callback);
     }
 
     function confirmFailPrint(uint256 _commandId) public {
-        (uint256 _sessionId,,,,,function(uint256) external callback) = APrinterStorage(context.get(STORAGE)).getReceiptPrint(_commandId);
+        (uint256 _sessionId,,,,,,function(uint256) external callback) = APrinterStorage(context.get(STORAGE)).getReceiptPrint(_commandId);
         APrinterController(context.get(CONTROLLER)).respondPrint(_sessionId, callback);
     }
 

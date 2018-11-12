@@ -12,7 +12,8 @@ library PrinterLib {
         uint256 sessionId;
         string receiptId;
         string data;
-        string params;
+        bytes32[] paramNames;
+        bytes32[] paramValues;
         function(uint256) external success;
         function(uint256) external fail;
     }
