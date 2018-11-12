@@ -1,7 +1,6 @@
 package com.skysoft.vaultlogic.services;
 
 import com.skysoft.vaultlogic.common.domain.application.Application;
-import com.skysoft.vaultlogic.common.domain.application.projections.SmartContractApplication;
 
 import java.math.BigInteger;
 import java.net.URI;

@@ -52,7 +52,7 @@ public class CloseSessionEventObserver extends AbstractContractEventObserver<Clo
 
     @Override
     public void onError(Throwable throwable) {
-        log.error("[x] Error filtering for open cash acceptor event", throwable);
+        log.error("[x] Error filtering for close session event", throwable);
     }
 
 }

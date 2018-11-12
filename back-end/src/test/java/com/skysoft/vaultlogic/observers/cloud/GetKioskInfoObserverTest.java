@@ -60,9 +60,9 @@ public class GetKioskInfoObserverTest {
         getKioskInfoObserver = new GetKioskInfoObserver(kioskOracle, sessionRepository, kioskDevicesClient, kioskMapper, kioskCashDevices);
         event._commandId = BigInteger.ONE;
         event._sessionId = BigInteger.ONE;
-        firstCassette.setDenomination(valueOf(100));
+        /*firstCassette.setDenomination(valueOf(100));*/
         firstCassette.setAmount(valueOf(200));
-        secondCassette.setDenomination(valueOf(50));
+        /*secondCassette.setDenomination(valueOf(50));*/
         secondCassette.setAmount(valueOf(20));
         dispensableAmount.setCassettes(asList(firstCassette, secondCassette));
         when(sessionRepository.findSessionXTokenById(any(BigInteger.class))).thenReturn(new SessionXToken() {

@@ -52,7 +52,7 @@ public class KioskServiceImpl implements KioskService {
     private Kiosk resolveFromRepository(KioskDevice device) {
         Kiosk kiosk = kioskMapper.fromKioskDevice(device);
         return kioskRepository.findByShortId(kiosk.getShortId()).orElseGet(() -> {
-            saveToSmartContract(kiosk);
+            /*saveToSmartContract(kiosk);*/
             return kioskRepository.save(kiosk);
         });
     }
