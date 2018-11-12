@@ -15,9 +15,9 @@ public class Cassette {
 
     private String id;
 
-    private BigDecimal count;
+    private BigInteger count;
 
-    private BigInteger denomination;
+    private BigDecimal denomination;
 
     private BigInteger amount;
 
