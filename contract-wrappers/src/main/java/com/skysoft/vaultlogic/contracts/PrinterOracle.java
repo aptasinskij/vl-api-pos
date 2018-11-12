@@ -72,7 +72,7 @@ public class PrinterOracle extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("89354", "0xfd1eee1294d56ed901103a7960655aec4c15df79");
+        _addresses.put("89354", "0xe2603ceb529dd44bb5be5a3dade86e4cc060b975");
     }
 
     protected PrinterOracle(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -158,8 +158,8 @@ public class PrinterOracle extends Contract {
             typedResponse._sessionId = (BigInteger) eventValues.getNonIndexedValues().get(1).getValue();
             typedResponse._receiptId = (String) eventValues.getNonIndexedValues().get(2).getValue();
             typedResponse._data = (String) eventValues.getNonIndexedValues().get(3).getValue();
-            typedResponse._paramNames = (List<byte[]>) eventValues.getNonIndexedValues().get(4).getValue();
-            typedResponse._paramValues = (List<byte[]>) eventValues.getNonIndexedValues().get(5).getValue();
+            typedResponse._paramNames = (List<Bytes32>) eventValues.getNonIndexedValues().get(4).getValue();
+            typedResponse._paramValues = (List<Bytes32>) eventValues.getNonIndexedValues().get(5).getValue();
             responses.add(typedResponse);
         }
         return responses;
@@ -176,8 +176,8 @@ public class PrinterOracle extends Contract {
                 typedResponse._sessionId = (BigInteger) eventValues.getNonIndexedValues().get(1).getValue();
                 typedResponse._receiptId = (String) eventValues.getNonIndexedValues().get(2).getValue();
                 typedResponse._data = (String) eventValues.getNonIndexedValues().get(3).getValue();
-                typedResponse._paramNames = (List<byte[]>) eventValues.getNonIndexedValues().get(4).getValue();
-                typedResponse._paramValues = (List<byte[]>) eventValues.getNonIndexedValues().get(5).getValue();
+                typedResponse._paramNames = (List<Bytes32>) eventValues.getNonIndexedValues().get(4).getValue();
+                typedResponse._paramValues = (List<Bytes32>) eventValues.getNonIndexedValues().get(5).getValue();
                 return typedResponse;
             }
         });
@@ -285,8 +285,8 @@ public class PrinterOracle extends Contract {
 
         public String _data;
 
-        public List<byte[]> _paramNames;
+        public List<Bytes32> _paramNames;
 
-        public List<byte[]> _paramValues;
+        public List<Bytes32> _paramValues;
     }
 }
