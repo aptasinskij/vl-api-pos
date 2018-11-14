@@ -1,54 +1,103 @@
 pragma solidity 0.4.24;
 
+import "../libs/CashOutLib.sol";
+
 contract ACashOutStorage {
 
-    event CashOutSaved(uint256 channelId, string kioskId, uint256 sessionId, address application, uint256 status);
-    event CashOutStatusUpdated(uint256 channelId, uint256 status);
-    event CashOutSplitAdded(uint256 channelId, address party, uint256 amount);
+    function createCashOut(
+        uint256 _sessionId,
+        address _application
+    )
+        public
+        returns (
+            uint256 _id
+        );
 
-    function save(string kioskId, uint256 sessionId, address application, uint256 status, uint256 vaultLogicPercent,
-        uint256 vaultLogicAmount, uint256 withdrawAmount, uint256 reservedAmount, address[] parties, uint256[] fees) public
-    returns (uint256);
+    function retrieveCashOut(
+        uint256 _id
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            address _application,
+            CashOutLib.Status _status
+        );
 
-    function get(uint256 channelId) public view
-    returns (
-        string kioskId,
-        uint256 sessionId,
-        address application,
-        uint256 status,
-        uint256 vaultLogicPercent,
-        uint256 vaultLogicAmount,
-        uint256 withdrawAmount,
-        uint256 reservedAmount,
-        uint256 splitSize
-    );
+    //TODO: createAccount and retrieveAccount methods
 
-    function getKioskId(uint256 channelId) public view returns (string);
+    function createSplit(
+        uint256 _cashOutId,
+        uint256[] _fees,
+        address[] _parties
+    )
+        public;
 
-    function getSessionId(uint256 channelId) public view returns (uint256);
+    function retrieveSplit(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            uint256[] _fees,
+            address[] _parties
+        );
 
-    function getApplication(uint256 channelId) public view returns (address);
+    function createCassette(
+        uint256 _cashOutId,
+        uint256[] _bills,
+        uint256[] _amounts
+    )
+        public;
 
-    function setStatus(uint256 channelId, uint256 status) public;
+    function retrieveCassette(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            uint256[] _bills,
+            uint256[] _amounts
+        );
 
-    function getStatus(uint256 channelId) public view returns (uint256);
+    function createOpen(
+        uint256 _cashOutId,
+        uint256 _sessionId,
+        uint256 _amount,
+        function(uint256, uint256) external _fail,
+        function(uint256, uint256) external _success
+    )
+        public;
 
-    function getWithdrawAmount(uint256 channelId) public view returns (uint256);
+    function retrieveOpen(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            uint256 _amount,
+            function(uint256, uint256) external _fail,
+            function(uint256, uint256) external _success
+        );
 
-    function getReservedAmount(uint256 channelId) public view returns (uint256);
+    function createClose(
+        uint256 _cashOutId,
+        uint256 _sessionId,
+        function(uint256, uint256) external _fail,
+        function(uint256, uint256) external _success
+    )
+        public;
 
-    function getVaultLogicAmount(uint256 channelId) public view returns (uint256);
-
-    function setVaultLogicPercent(uint256 channelId, uint256 vaultLogicPercent) public;
-
-    function getVaultLogicPercent(uint256 channelId) public view returns (uint256);
-
-    function addSplit(uint256 channelId, address party, uint256 amount) public;
-
-    function addSplits(uint256 channelId, address[] parties, uint256[] amounts) public;
-
-    function getSplitSize(uint256 channelId) public view returns (uint256);
-
-    function getSplit(uint256 channelId, uint256 subIndex) public view returns (address, uint256);
+    function retrieveClose(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            function(uint256, uint256) external _fail,
+            function(uint256, uint256) external _success
+        );
 
 }
