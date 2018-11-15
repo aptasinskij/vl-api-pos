@@ -4,13 +4,21 @@ interface CashOutApi {
 
     // @formatter:off
     function openCashOutChannel(
-        uint256 _sessionId,
-        uint256 _amount,
-        uint256[] _bills,
-        uint256[] _amounts,
+        string _kioskId,
+        uint256 _toWithdraw,
         uint256[] _fees,
         address[] _parties,
-        function(uint256) external _fail,
+        function(string memory) external _fail,
+        function(string memory, uint256) external _success
+    )
+        external;
+    // @formatter:on
+
+    // @formatter:off
+    function validateCashOutChannel(
+        uint256 _sessionId,
+        uint256 _cashOutId,
+        function(uint256, uint256) external _fail,
         function(uint256, uint256) external _success
     )
         external;
@@ -19,10 +27,19 @@ interface CashOutApi {
     // @formatter:off
     function closeCashOutChannel(
         uint256 _sessionId,
-        uint256 _channelId,
+        uint256 _cashOutId,
         function(uint256, uint256) external _fail,
         function(uint256, uint256) external _success
-)
+    )
+        external;
+    // @formatter:on
+
+    // @formatter:off
+    function rollbackCashOutChannel(
+        uint256 _cashOutId,
+        function(uint256) external _fail,
+        function(uint256) external _success
+    )
         external;
     // @formatter:on
 
