@@ -88,6 +88,16 @@ contract CashOutController is ACashOutController, Named("cash-out-controller"), 
         _callback(_sessionId, _cashOutId);
     }
 
+    function rollbackCashOutChannel(
+        uint256 _cashOutId,
+        function(uint256) external _fail,
+        function(uint256) external _success
+    )
+        external
+        //TODO:implementation: check if msg.sender is registered application
+    {
+    }
+
     function respondRolledBack(
         uint256 _cashOutId,
         function(uint256) external _callback
