@@ -64,8 +64,8 @@ public class ReceiptPrintEventObserver extends AbstractContractEventObserver<Rec
     public void onNext(ReceiptPrintEventResponse event) {
         log.info("[x] Receipt print: {}, {}", event._commandId, event._sessionId);
         String xToken = sessionRepository.findSessionXTokenById(event._sessionId).getxToken();
-        List<String> names = event._paramNames.stream().map(Bytes32::getValue).map(String::new).collect(toList());
-        List<String> values = event._paramValues.stream().map(Bytes32::getValue).map(String::new).collect(toList());
+        List<String> names = event._paramNames.stream().map(Bytes32::getValue).map(String::new).map(String::trim).collect(toList());
+        List<String> values = event._paramValues.stream().map(Bytes32::getValue).map(String::new).map(String::trim).collect(toList());
         Map<String, String> parameters = range(0, names.size()).boxed().collect(toMap(names::get, values::get));
         kioskPrinter.printReceipt(xToken, of(event._receiptId, event._data, parameters))
                 .onSuccess(confirmSuccessReceiptPrint(event._commandId))
