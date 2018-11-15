@@ -15,14 +15,12 @@ contract CashOutController is ACashOutController, Named("cash-out-controller"), 
     constructor(address _config) Component(_config) public {}
 
     function openCashOutChannel(
-        uint256 _sessionId,
-        uint256 _amount,
-        uint256[] _bills,
-        uint256[] _amounts,
+        string _kioskId,
+        uint256 _toWithdraw,
         uint256[] _fees,
         address[] _parties,
-        function(uint256) external _fail,
-        function(uint256, uint256) external _success
+        function(string memory) external _fail,
+        function(string memory, uint256) external _success
     )
         external
         //TODO:implementation: check if msg.sender is registered application
@@ -30,32 +28,51 @@ contract CashOutController is ACashOutController, Named("cash-out-controller"), 
     }
 
     function respondOpened(
+        string _kioskId,
+        uint256 _cashOutId,
+        function(string memory, uint256) external _callback
+    )
+        public
+    {
+        _callback(_kioskId, _cashOutId);
+    }
+
+    function respondFailOpen(
+        string _kioskId,
+        function(string memory) external _callback
+    )
+        public
+    {
+        _callback(_kioskId);
+    }
+
+    function validateCashOutChannel(
+        uint256 _sessionId,
+        uint256 _cashOutId,
+        function(uint256, uint256) external _fail,
+        function(uint256, uint256) external _success
+    )
+        external
+        //TODO:implementation: check if msg.sender is registered application
+    {
+    }
+
+    function respondValidated(
         uint256 _sessionId,
         uint256 _cashOutId,
         function(uint256, uint256) external _callback
     )
         public
-        onlyBy(MANAGER)
     {
-        _callback(_sessionId, _cashInId);
-    }
-
-    function respondFailOpen(
-        uint256 _sessionId,
-        function(uint256, uint256) external _callback
-    )
-        public
-        onlyBy(MANAGER)
-    {
-        _callback(_sessionId);
+        _callback(_sessionId, _cashOutId);
     }
 
     function closeCashOutChannel(
         uint256 _sessionId,
-        uint256 _channelId,
+        uint256 _cashOutId,
         function(uint256, uint256) external _fail,
         function(uint256, uint256) external _success
-)
+    )
         external
         //TODO:implementation: check if msg.sender is registered application
     {
@@ -67,20 +84,17 @@ contract CashOutController is ACashOutController, Named("cash-out-controller"), 
         function(uint256, uint256) external _callback
     )
         public
-        onlyBy(MANAGER)
     {
         _callback(_sessionId, _cashOutId);
     }
 
-    function respondFailClose(
-        uint256 _sessionId,
+    function respondRolledBack(
         uint256 _cashOutId,
-        function(uint256, uint256) external _callback
+        function(uint256) external _callback
     )
         public
-        onlyBy(MANAGER)
     {
-        _callback(_sessionId, _cashOutId);
+        _callback(_cashOutId);
     }
 
 }
