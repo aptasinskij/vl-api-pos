@@ -1,96 +1,91 @@
 pragma solidity 0.4.24;
 
 import "../platform/Named.sol";
-import "../platform/Mortal.sol";
 import "../platform/Component.sol";
+import "../platform/Mortal.sol";
 import "./api/ACashOutStorage.sol";
-import {CashOutLib} from "../libs/Libraries.sol";
 
 contract CashOutStorage is ACashOutStorage, Named("cash-out-storage"), Mortal, Component {
 
-    string constant DATABASE = "database";
+    using CashOutLib for *;
 
-    using CashOutLib for address;
+    CashOutLib.CashOut[] private channels;
+    mapping(uint256 => CashOutLib.Open) private channelOpen;
+    mapping(uint256 => CashOutLib.Account) private channelAccount;
+    mapping(uint256 => CashOutLib.Validate) private channelValidate;
+    mapping(uint256 => CashOutLib.Close) private channelClose;
 
     constructor(address _config) Component(_config) public {}
 
-    function save(string kioskId, uint256 sessionId, address application, uint256 status, uint256 vaultLogicPercent,
-        uint256 vaultLogicAmount, uint256 withdrawAmount, uint256 reservedAmount, address[] parties, uint256[] fees) public returns (uint256 channelId) {
-        channelId = database.save(kioskId, sessionId, application, status, vaultLogicPercent, vaultLogicAmount, withdrawAmount, reservedAmount, parties, fees);
-        emit CashOutSaved(channelId, kioskId, sessionId, application, status);
+    function createCashOut(
+        address _application
+    )
+        public
+        returns (
+            uint256 _cashOutId
+        )
+    {
+        _cashOutId = channels.push(CashOutLib.CashOut(_application, CashOutLib.Status.CREATING)) - 1;
     }
 
-    function get(uint256 channelId) public view
-    returns(
-        string kioskId,
-        uint256 sessionId,
-        address application,
-        uint256 status,
-        uint256 vaultLogicPercent,
-        uint256 vaultLogicAmount,
-        uint256 withdrawAmount,
-        uint256 reservedAmount,
-        uint256 splitSize
-    ) {
-        return database.get(channelId);
+    function createOpen(
+        uint256 _cashOutId,
+        string _kioskId,
+        function(string memory) external _fail,
+        function(string memory, uint256) external _success
+    )
+        public
+    {
+        channelOpen[_cashOutId] = CashOutLib.Open(_kioskId, _fail, _success);
     }
 
-    function getKioskId(uint256 channelId) public view returns(string) {
-        return database.getKioskId(channelId);
+    function createAccount(
+        uint256 _cashOutId,
+        uint256 _toWithdraw,
+        uint256 _VLFee,
+        uint256 _reserve,
+        uint256[] _fees,
+        address[] _parties
+    )
+        public
+    {
+        channelAccount[_cashOutId] = CashOutLib.Account(_toWithdraw, _VLFee, _reserve, _fees, _parties);
     }
 
-    function getSessionId(uint256 channelId) public view returns(uint256) {
-        return database.getSessionId(channelId);
+    function createValidate(
+        uint256 _cashOutId,
+        uint256 _sessionId,
+        function(uint256, uint256) external _fail,
+        function(uint256, uint256) external _success
+    )
+        public
+    {
+        channelValidate[_cashOutId] = CashOutLib.Validate(_sessionId, _fail, _success);
     }
 
-    function getApplication(uint256 channelId) public view returns(address) {
-        return database.getApplication(channelId);
+    function createClose(
+        uint256 _cashOutId,
+        uint256 _sessionId,
+        function(uint256, uint256) external _fail,
+        function(uint256, uint256) external _success
+    )
+        public
+    {
+        channelClose[_cashOutId] = CashOutLib.Close(_sessionId, _fail, _success);
     }
 
-    function setStatus(uint256 channelId, uint256 status) public {
-        database.setStatus(channelId, status);
-        emit CashOutStatusUpdated(channelId, status);
-    }
-
-    function getStatus(uint256 channelId) public view returns(uint256) {
-        return database.getStatus(channelId);
-    }
-
-    function getWithdrawAmount(uint256 channelId) public view returns(uint256) {
-        return database.getWithdrawAmount(channelId);
-    }
-
-    function getReservedAmount(uint256 channelId) public view returns(uint256) {
-        return database.getReservedAmount(channelId);
-    }
-
-    function getVaultLogicAmount(uint256 channelId) public view returns(uint256) {
-        return database.getVaultLogicAmount(channelId);
-    }
-
-    function setVaultLogicPercent(uint256 channelId, uint256 vaultLogicPercent) public {
-        database.setVaultLogicPercent(channelId, vaultLogicPercent);
-    }
-
-    function getVaultLogicPercent(uint256 channelId) public view returns(uint256){
-        return database.getVaultLogicPercent(channelId);
-    }
-
-    function addSplit(uint256 channelId, address party, uint256 amount) public {
-        database.addSplit(channelId, party, amount);
-        emit CashOutSplitAdded(channelId, party, amount);
-    }
-
-    function addSplits(uint256 channelId, address[] parties, uint256[] amounts) public {
-        database.addSplits(channelId, parties, amounts);
-    }
-
-    function getSplitSize(uint256 channelId) public view returns(uint256) {
-        return database.getSplitSize(channelId);
-    }
-
-    function getSplit(uint256 channelId, uint256 subIndex) public view returns(address, uint256) {
-        return database.getSplit(channelId, subIndex);
+    function retrieveCashOut(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            address _application,
+            CashOutLib.Status _status
+        )
+    {
+        _application = channels[_cashOutId].application;
+        _status = channels[_cashOutId].status;
     }
 
 }
