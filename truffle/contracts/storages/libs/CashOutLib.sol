@@ -45,4 +45,9 @@ library CashOutLib {
         function(uint256, uint256) external success;
     }
 
+    struct Rollback {
+        function(uint256) external fail;
+        function(uint256) external success;
+    }
+
 }
