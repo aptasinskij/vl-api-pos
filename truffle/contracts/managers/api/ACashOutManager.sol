@@ -39,4 +39,44 @@ contract ACashOutManager {
     )
         public;
 
+    function confirmOpen(
+        uint256 _commandId
+    )
+        public;
+
+    function confirmFailOpen(
+        uint256 _commandId
+    )
+        public;
+
+    function confirmValidate(
+        uint256 _commandId
+    )
+        public;
+
+    function confirmFailValidate(
+        uint256 _commandId
+    )
+        public;
+
+    function confirmClose(
+        uint256 _commandId
+    )
+        public;
+
+    function confirmFailClose(
+        uint256 _commandId
+    )
+        public;
+
+    function confirmRollback(
+        uint256 _commandId
+    )
+        public;
+
+    function confirmFailRollback(
+        uint256 _commandId
+    )
+        public;
+
 }
