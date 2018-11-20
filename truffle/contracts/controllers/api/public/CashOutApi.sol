@@ -3,6 +3,10 @@ pragma solidity 0.4.24;
 contract CashOutApi {
 
     // @formatter:off
+    function getFeePercent() external view returns (uint256);
+    // @formatter:on
+
+    // @formatter:off
     function openCashOutChannel(
         string _requestId,
         string _kioskId,

@@ -3,6 +3,10 @@ pragma solidity 0.4.24;
 interface CashInApi {
 
     // @formatter:off
+    function getFeePercent() external view returns (uint256);
+    // @formatter:on
+
+    // @formatter:off
     function openCashInChannel(
         uint256 _sessionId,
         uint256 _maxBalance,
