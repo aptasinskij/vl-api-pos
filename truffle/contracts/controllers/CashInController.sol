@@ -17,6 +17,11 @@ contract CashInController is ACashInController, Named("cash-in-controller"), Mor
 
     constructor(address _config) Component(_config) public {}
 
+    function getFeePercent() external view returns (uint256) {
+        // fetch actual value from MANAGER contract in future
+        return 1;
+    }
+
     function openCashInChannel(
         uint256 _sessionId,
         uint256 _maxBalance,

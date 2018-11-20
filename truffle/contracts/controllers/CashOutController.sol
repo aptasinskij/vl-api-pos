@@ -13,6 +13,13 @@ contract CashOutController is ACashOutController, Named("cash-out-controller"), 
     constructor(address _config) Component(_config) public {}
 
     // @formatter:off
+    function getFeePercent() external view returns (uint256) {
+        // fetch actual value from MANAGER contract in future
+        return 1;
+    }
+    // @formatter:on
+
+    // @formatter:off
     function openCashOutChannel(
         string _requestId,
         string _kioskId,
