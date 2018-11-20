@@ -7,7 +7,7 @@ import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +25,9 @@ public class KioskDevicesClientHttpClient implements KioskDevicesClient {
 
     @Override
     public Try<KioskDevice> getKioskInfo(String xToken) {
-        Try<ResponseEntity<KioskDevice>> kioskInfo = Try(() -> rest.exchange(post(xToken, maya::deviceInfoURI), KioskDevice.class));
-        kioskInfo.onFailure(throwable -> log.error("[x] failed to send kiosk info request: {}", throwable.getMessage()));
-        return kioskInfo.map(ResponseEntity::getBody);
+        return Try(() -> rest.exchange(post(xToken, maya::deviceInfoURI), KioskDevice.class))
+                .onFailure(throwable -> log.error("[x] failed to send kiosk info request: {}", throwable.getMessage()))
+                .map(HttpEntity::getBody);
     }
 
 }

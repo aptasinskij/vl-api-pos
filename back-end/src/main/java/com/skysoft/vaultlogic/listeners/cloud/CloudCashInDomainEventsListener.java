@@ -53,7 +53,7 @@ public class CloudCashInDomainEventsListener {
 
     @Async
     @TransactionalEventListener
-    public void opened(CashInActivated event) {
+    public void activated(CashInActivated event) {
         log.info("[x]---> CASH IN OPENED EVENT. ID: {}", event.getChannelId());
         cashInOracle.successOpen(event.getChannelId()).observable().take(1).subscribe(CONFIRMED, FAILED);
     }

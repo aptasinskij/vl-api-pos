@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +28,9 @@ public class KioskApplicationClientHttpClient implements KioskApplicationClient 
 
     @Override
     public Try<StatusCode> launchApplication(String xToken) {
-        Try<ResponseEntity<StatusCode>> launch = Try(() -> rest.exchange(RequestFactory.post(xToken, maya::launchApplicationURI), StatusCode.class));
-        launch.onFailure(throwable -> log.info("[x] failed to send launch application: {}", throwable.getMessage()));
-        return launch.map(HttpEntity::getBody);
+        return Try(() -> rest.exchange(RequestFactory.post(xToken, maya::launchApplicationURI), StatusCode.class))
+                .onFailure(throwable -> log.info("[x] failed to send launch application: {}", throwable.getMessage()))
+                .map(HttpEntity::getBody);
     }
 
     @Override
