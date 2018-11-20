@@ -14,19 +14,21 @@ contract CashOutController is ACashOutController, Named("cash-out-controller"), 
 
     // @formatter:off
     function openCashOutChannel(
+        string _requestId,
         string _kioskId,
         uint256 _toWithdraw,
         uint256[] _fees,
         address[] _parties,
-        function(string memory) external _fail,
-        function(string memory, uint256) external _success
+        function(string memory, string memory) external _fail,
+        function(string memory, string memory, uint256, uint256) external _success
     )
-        external
+        public
     // @formatter:on
     {
         //TODO:implementation: check that msg.sender is registered application, validate parameters
         ACashOutManager(context.get(MANAGER)).openCashOutChannel(
             msg.sender,
+            _requestId,
             _kioskId,
             _toWithdraw,
             _fees,
@@ -43,7 +45,7 @@ contract CashOutController is ACashOutController, Named("cash-out-controller"), 
         function(uint256, uint256) external _fail,
         function(uint256, uint256) external _success
     )
-        external
+        public
     // @formatter:on
     {
         //TODO:implementation: check that msg.sender is registered application, validate parameters
@@ -63,7 +65,7 @@ contract CashOutController is ACashOutController, Named("cash-out-controller"), 
         function(uint256, uint256) external _fail,
         function(uint256, uint256) external _success
     )
-        external
+        public
     // @formatter:on
     {
         //TODO:implementation: check that msg.sender is registered application, validate parameters
@@ -82,7 +84,7 @@ contract CashOutController is ACashOutController, Named("cash-out-controller"), 
         function(uint256) external _fail,
         function(uint256) external _success
     )
-        external
+        public
     // @formatter:on
     {
         //TODO:implementation: check that msg.sender is registered application, validate parameters
@@ -96,25 +98,28 @@ contract CashOutController is ACashOutController, Named("cash-out-controller"), 
 
     // @formatter:off
     function respondOpened(
+        string _requestId,
         string _kioskId,
         uint256 _cashOutId,
-        function(string memory, uint256) external _callback
+        uint256 _fee,
+        function(string memory, string memory, uint256, uint256) external _callback
     )
         public
     // @formatter:on
     {
-        _callback(_kioskId, _cashOutId);
+        _callback(_requestId, _kioskId, _cashOutId, _fee);
     }
 
     // @formatter:off
     function respondFailOpen(
+        string _requestId,
         string _kioskId,
-        function(string memory) external _callback
+        function(string memory, string memory) external _callback
     )
         public
     // @formatter:on
     {
-        _callback(_kioskId);
+        _callback(_requestId, _kioskId);
     }
 
     // @formatter:off

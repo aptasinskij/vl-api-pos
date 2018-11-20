@@ -15,9 +15,10 @@ library CashOutLib {
     }
 
     struct Open {
+        string requestId;
         string kioskId;
-        function(string memory) external fail;
-        function(string memory, uint256) external success;
+        function(string memory, string memory) external fail;
+        function(string memory, string memory, uint256, uint256) external success;
     }
 
     struct CashOut {

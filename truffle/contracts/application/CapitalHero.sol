@@ -22,10 +22,11 @@ contract CapitalHero {
     // Open cash out components:
 
     event OpenCashOutAccepted();
-    event OpenCashOutSuccess(string _kioskId, uint256 _cashOutId);
-    event OpenCashOutFailed(string _kioskId);
+    event OpenCashOutSuccess(string _requestId, string _kioskId, uint256 _cashOutId, uint256 _fee);
+    event OpenCashOutFailed(string _kioskId, string _requestId);
 
     function openCashOut(
+        string _requestId,
         string _kioskId,
         uint256 _toWithdraw,
         uint256[] _fees,
@@ -34,17 +35,23 @@ contract CapitalHero {
     public
     {
         CashOutApi(context.get(CASH_OUT_API)).openCashOutChannel(
-            _kioskId, _toWithdraw, _fees, _parties, this.__failOpenCashOut, this.__successOpenCashOut
+            _requestId,
+            _kioskId,
+            _toWithdraw,
+            _fees,
+            _parties,
+            this.__failOpenCashOut,
+            this.__successOpenCashOut
         );
         emit OpenCashOutAccepted();
     }
 
-    function __successOpenCashOut(string _kioskId, uint256 _cashOutId) public {
-        emit OpenCashOutSuccess(_kioskId, _cashOutId);
+    function __successOpenCashOut(string _requestId, string _kioskId, uint256 _cashOutId, uint256 _fee) public {
+        emit OpenCashOutSuccess(_requestId, _kioskId, _cashOutId, _fee);
     }
 
-    function __failOpenCashOut(string _kioskId) public {
-        emit OpenCashOutFailed(_kioskId);
+    function __failOpenCashOut( string _requestId, string _kioskId) public {
+        emit OpenCashOutFailed(_requestId, _kioskId);
     }
 
     // Validate cash out components:
@@ -84,6 +91,7 @@ contract CapitalHero {
             this.__failCloseCashOut,
             this.__successCloseCashOut
         );
+        emit CloseCashOutAccepted();
     }
 
     function __successCloseCashOut(uint256 _sessionId, uint256 _cashOutId) public {
@@ -106,6 +114,7 @@ contract CapitalHero {
             this.__failRollbackCashOut,
             this.__successRollbackCashOut
         );
+        emit RollbackCashOutAccepted();
     }
 
     function __successRollbackCashOut(uint256 _cashOutId) public {

@@ -14,24 +14,27 @@ contract CashOutManager is ACashOutManager, Named("cash-out-manager"), Mortal, C
     string constant STORAGE = "cash-out-storage";
     string constant ORACLE = "cash-out-oracle";
 
+    uint256 constant VLFEE = 1;
+
     constructor(address _config) Component(_config) public {}
 
     function openCashOutChannel(
         address _application,
+        string _requestId,
         string _kioskId,
         uint256 _toWithdraw,
         uint256[] _fees,
         address[] _parties,
-        function(string memory) external _fail,
-        function(string memory, uint256) external _success
+        function(string memory, string memory) external _fail,
+        function(string memory, string memory, uint256, uint256) external _success
     )
         public
     {
         //TODO:implementation: verify msg.sender is CashOutController
         ACashOutStorage cashOutStorage = ACashOutStorage(context.get(STORAGE));
         uint256 cashOutId = cashOutStorage.createCashOut(_application);
-        cashOutStorage.createOpen(cashOutId, _kioskId, _fail, _success);
-        cashOutStorage.createAccount(cashOutId, _toWithdraw, 100, 5000, _fees, _parties);
+        cashOutStorage.createOpen(cashOutId, _requestId, _kioskId, _fail, _success);
+        cashOutStorage.createAccount(cashOutId, _toWithdraw, VLFEE, 5000, _fees, _parties);
         ACashOutOracle(context.get(ORACLE)).onNextOpenCashOut(cashOutId);
     }
 
@@ -40,9 +43,20 @@ contract CashOutManager is ACashOutManager, Named("cash-out-manager"), Mortal, C
     )
         public
     {
-        (string memory kioskId,,function(string memory, uint256) external success) = ACashOutStorage(context.get(STORAGE))
-        .retrieveOpen(_commandId);
-        ACashOutController(context.get(CONTROLLER)).respondOpened(kioskId, _commandId, success);
+        ACashOutStorage cashOutStorage = ACashOutStorage(context.get(STORAGE));
+        (
+        string memory requestId,
+        string memory kioskId,,
+        function(string memory, string memory, uint256, uint256) external success
+        ) = cashOutStorage.retrieveOpen(_commandId);
+        (uint256 toWithdraw,uint256 vlFee,,,) = cashOutStorage.retrieveAccount(_commandId);
+        ACashOutController(context.get(CONTROLLER)).respondOpened(
+            requestId,
+            kioskId,
+            _commandId,
+            (toWithdraw / 100) * vlFee,
+            success
+        );
     }
 
     function confirmFailOpen(
@@ -50,9 +64,13 @@ contract CashOutManager is ACashOutManager, Named("cash-out-manager"), Mortal, C
     )
         public
     {
-        (string memory kioskId,function(string memory) external fail,) = ACashOutStorage(context.get(STORAGE))
-        .retrieveOpen(_commandId);
-        ACashOutController(context.get(CONTROLLER)).respondFailOpen(kioskId, fail);
+        (
+        string memory requestId,
+        string memory kioskId,
+        function(string memory, string memory) external fail,
+        ) = ACashOutStorage(context.get(STORAGE)).retrieveOpen(_commandId);
+        //TODO:impl: PUT BUSSINES LOGIC HERE
+        ACashOutController(context.get(CONTROLLER)).respondFailOpen(requestId, kioskId, fail);
     }
 
     function validateCashOutChannel(

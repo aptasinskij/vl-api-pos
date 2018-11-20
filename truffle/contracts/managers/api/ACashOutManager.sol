@@ -4,12 +4,13 @@ contract ACashOutManager {
 
     function openCashOutChannel(
         address _application,
+        string _requestId,
         string _kioskId,
         uint256 _toWithdraw,
         uint256[] _fees,
         address[] _parties,
-        function(string memory) external _fail,
-        function(string memory, uint256) external _success
+        function(string memory, string memory) external _fail,
+        function(string memory, string memory, uint256, uint256) external _success
     )
         public;
 

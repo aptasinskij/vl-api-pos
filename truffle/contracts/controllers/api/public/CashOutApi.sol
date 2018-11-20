@@ -1,17 +1,18 @@
 pragma solidity 0.4.24;
 
-interface CashOutApi {
+contract CashOutApi {
 
     // @formatter:off
     function openCashOutChannel(
+        string _requestId,
         string _kioskId,
         uint256 _toWithdraw,
         uint256[] _fees,
         address[] _parties,
-        function(string memory) external _fail,
-        function(string memory, uint256) external _success
+        function(string memory, string memory) external _fail,
+        function(string memory, string memory, uint256, uint256) external _success
     )
-        external;
+        public;
     // @formatter:on
 
     // @formatter:off
@@ -21,7 +22,7 @@ interface CashOutApi {
         function(uint256, uint256) external _fail,
         function(uint256, uint256) external _success
     )
-        external;
+        public;
     // @formatter:on
 
     // @formatter:off
@@ -31,7 +32,7 @@ interface CashOutApi {
         function(uint256, uint256) external _fail,
         function(uint256, uint256) external _success
     )
-        external;
+        public;
     // @formatter:on
 
     // @formatter:off
@@ -40,7 +41,7 @@ interface CashOutApi {
         function(uint256) external _fail,
         function(uint256) external _success
     )
-        external;
+        public;
     // @formatter:on
 
 }

@@ -6,17 +6,20 @@ contract ACashOutController is CashOutApi {
 
     // @formatter:off
     function respondOpened(
+        string _requestId,
         string _kioskId,
         uint256 _cashOutId,
-        function(string memory, uint256) external _callback
+        uint256 _fee,
+        function(string memory, string memory, uint256, uint256) external _callback
     )
         public;
     // @formatter:on
 
     // @formatter:off
     function respondFailOpen(
+        string _requestId,
         string _kioskId,
-        function(string memory) external _callback
+        function(string memory, string memory) external _callback
     )
         public;
     // @formatter:on

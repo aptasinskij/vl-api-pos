@@ -17,9 +17,10 @@ contract ACashOutStorage {
     // @formatter:off
     function createOpen(
         uint256 _cashOutId,
+        string _requestId,
         string _kioskId,
-        function(string memory) external _fail,
-        function(string memory, uint256) external _success
+        function(string memory, string memory) external _fail,
+        function(string memory, string memory, uint256, uint256) external _success
     )
         public;
     // @formatter:on
@@ -99,9 +100,10 @@ contract ACashOutStorage {
         public
         view
         returns (
+            string memory _requestId,
             string memory _kioskId,
-            function(string memory) external _fail,
-            function(string memory, uint256) external _success
+            function(string memory, string memory) external _fail,
+            function(string memory, string memory, uint256, uint256) external _success
         );
     // @formatter:on
 
@@ -118,7 +120,6 @@ contract ACashOutStorage {
         );
     // @formatter:on
 
-    // @formatter:off
     function retrieveClose(
         uint256 _cashOutId
     )
@@ -131,7 +132,6 @@ contract ACashOutStorage {
         );
     // @formatter:on
 
-    // @formatter:off
     function retrieveRollback(
         uint256 _cashOutId
     )
