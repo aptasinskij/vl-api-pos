@@ -1,54 +1,145 @@
 pragma solidity 0.4.24;
 
+import "../libs/CashOutLib.sol";
+
 contract ACashOutStorage {
 
-    event CashOutSaved(uint256 channelId, string kioskId, uint256 sessionId, address application, uint256 status);
-    event CashOutStatusUpdated(uint256 channelId, uint256 status);
-    event CashOutSplitAdded(uint256 channelId, address party, uint256 amount);
+    // @formatter:off
+    function createCashOut(
+        address _application
+    )
+        public
+        returns (
+            uint256 _cashOutId
+        );
+    // @formatter:on
 
-    function save(string kioskId, uint256 sessionId, address application, uint256 status, uint256 vaultLogicPercent,
-        uint256 vaultLogicAmount, uint256 withdrawAmount, uint256 reservedAmount, address[] parties, uint256[] fees) public
-    returns (uint256);
+    // @formatter:off
+    function createOpen(
+        uint256 _cashOutId,
+        string _requestId,
+        string _kioskId,
+        function(string memory, string memory) external _fail,
+        function(string memory, string memory, uint256, uint256) external _success
+    )
+        public;
+    // @formatter:on
 
-    function get(uint256 channelId) public view
-    returns (
-        string kioskId,
-        uint256 sessionId,
-        address application,
-        uint256 status,
-        uint256 vaultLogicPercent,
-        uint256 vaultLogicAmount,
-        uint256 withdrawAmount,
-        uint256 reservedAmount,
-        uint256 splitSize
-    );
+    // @formatter:off
+    function createAccount(
+        uint256 _cashOutId,
+        uint256 _toWithdraw,
+        uint256 _VLFee,
+        uint256 _reserve,
+        uint256[] _fees,
+        address[] _parties
+    )
+        public;
+    // @formatter:on
 
-    function getKioskId(uint256 channelId) public view returns (string);
+    // @formatter:off
+    function createValidate(
+        uint256 _cashOutId,
+        uint256 _sessionId,
+        function(uint256, uint256) external _fail,
+        function(uint256, uint256) external _success
+    )
+        public;
+    // @formatter:on
 
-    function getSessionId(uint256 channelId) public view returns (uint256);
+    // @formatter:off
+    function createClose(
+        uint256 _cashOutId,
+        uint256 _sessionId,
+        function(uint256, uint256) external _fail,
+        function(uint256, uint256) external _success
+    )
+        public;
+    // @formatter:on
 
-    function getApplication(uint256 channelId) public view returns (address);
+    // @formatter:off
+    function createRollback(
+        uint256 _cashOutId,
+        function(uint256) external _fail,
+        function(uint256) external _success
+    )
+        public;
+    // @formatter:on
 
-    function setStatus(uint256 channelId, uint256 status) public;
+    // @formatter:off
+    function retrieveCashOut(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            address _application,
+            CashOutLib.Status _status
+        );
+    // @formatter:on
 
-    function getStatus(uint256 channelId) public view returns (uint256);
+    // @formatter:off
+    function retrieveAccount(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            uint256 _toWithdraw,
+            uint256 _VLFee,
+            uint256 _reserve,
+            uint256[] _fees,
+            address[] _parties
+        );
+    // @formatter:on
 
-    function getWithdrawAmount(uint256 channelId) public view returns (uint256);
+    // @formatter:off
+    function retrieveOpen(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            string memory _requestId,
+            string memory _kioskId,
+            function(string memory, string memory) external _fail,
+            function(string memory, string memory, uint256, uint256) external _success
+        );
+    // @formatter:on
 
-    function getReservedAmount(uint256 channelId) public view returns (uint256);
+    // @formatter:off
+    function retrieveValidate(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            function(uint256, uint256) external _fail,
+            function(uint256, uint256) external _success
+        );
+    // @formatter:on
 
-    function getVaultLogicAmount(uint256 channelId) public view returns (uint256);
+    function retrieveClose(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            function(uint256, uint256) external _fail,
+            function(uint256, uint256) external _success
+        );
+    // @formatter:on
 
-    function setVaultLogicPercent(uint256 channelId, uint256 vaultLogicPercent) public;
-
-    function getVaultLogicPercent(uint256 channelId) public view returns (uint256);
-
-    function addSplit(uint256 channelId, address party, uint256 amount) public;
-
-    function addSplits(uint256 channelId, address[] parties, uint256[] amounts) public;
-
-    function getSplitSize(uint256 channelId) public view returns (uint256);
-
-    function getSplit(uint256 channelId, uint256 subIndex) public view returns (address, uint256);
-
+    function retrieveRollback(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            function(uint256) external _fail,
+            function(uint256) external _success
+        );
+    // @formatter:on
 }

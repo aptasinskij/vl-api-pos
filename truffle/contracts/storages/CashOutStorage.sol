@@ -1,96 +1,211 @@
 pragma solidity 0.4.24;
 
 import "../platform/Named.sol";
-import "../platform/Mortal.sol";
 import "../platform/Component.sol";
+import "../platform/Mortal.sol";
 import "./api/ACashOutStorage.sol";
-import {CashOutLib} from "../libs/Libraries.sol";
 
 contract CashOutStorage is ACashOutStorage, Named("cash-out-storage"), Mortal, Component {
 
-    string constant DATABASE = "database";
+    using CashOutLib for *;
 
-    using CashOutLib for address;
+    CashOutLib.CashOut[] private channels;
+    mapping(uint256 => CashOutLib.Open) private channelOpen;
+    mapping(uint256 => CashOutLib.Account) private channelAccount;
+    mapping(uint256 => CashOutLib.Validate) private channelValidate;
+    mapping(uint256 => CashOutLib.Close) private channelClose;
+    mapping(uint256 => CashOutLib.Rollback) private channelRollback;
 
     constructor(address _config) Component(_config) public {}
 
-    function save(string kioskId, uint256 sessionId, address application, uint256 status, uint256 vaultLogicPercent,
-        uint256 vaultLogicAmount, uint256 withdrawAmount, uint256 reservedAmount, address[] parties, uint256[] fees) public returns (uint256 channelId) {
-        channelId = database.save(kioskId, sessionId, application, status, vaultLogicPercent, vaultLogicAmount, withdrawAmount, reservedAmount, parties, fees);
-        emit CashOutSaved(channelId, kioskId, sessionId, application, status);
+    // @formatter:off
+    function createCashOut(
+        address _application
+    )
+        public
+        returns (
+            uint256 _cashOutId
+        )
+    {
+        _cashOutId = channels.push(CashOutLib.CashOut(_application, CashOutLib.Status.CREATING)) - 1;
     }
+    // @formatter:on
 
-    function get(uint256 channelId) public view
-    returns(
-        string kioskId,
-        uint256 sessionId,
-        address application,
-        uint256 status,
-        uint256 vaultLogicPercent,
-        uint256 vaultLogicAmount,
-        uint256 withdrawAmount,
-        uint256 reservedAmount,
-        uint256 splitSize
-    ) {
-        return database.get(channelId);
+    // @formatter:off
+    function createOpen(
+        uint256 _cashOutId,
+        string _requestId,
+        string _kioskId,
+        function(string memory, string memory) external _fail,
+        function(string memory, string memory, uint256, uint256) external _success
+    )
+        public
+    {
+        channelOpen[_cashOutId] = CashOutLib.Open(_requestId, _kioskId, _fail, _success);
     }
+    // @formatter:on
 
-    function getKioskId(uint256 channelId) public view returns(string) {
-        return database.getKioskId(channelId);
+    // @formatter:off
+    function createAccount(
+        uint256 _cashOutId,
+        uint256 _toWithdraw,
+        uint256 _VLFee,
+        uint256 _reserve,
+        uint256[] _fees,
+        address[] _parties
+    )
+        public
+    {
+        channelAccount[_cashOutId] = CashOutLib.Account(_toWithdraw, _VLFee, _reserve, _fees, _parties);
     }
+    // @formatter:on
 
-    function getSessionId(uint256 channelId) public view returns(uint256) {
-        return database.getSessionId(channelId);
+    // @formatter:off
+    function createValidate(
+        uint256 _cashOutId,
+        uint256 _sessionId,
+        function(uint256, uint256) external _fail,
+        function(uint256, uint256) external _success
+    )
+        public
+    {
+        channelValidate[_cashOutId] = CashOutLib.Validate(_sessionId, _fail, _success);
     }
+    // @formatter:on
 
-    function getApplication(uint256 channelId) public view returns(address) {
-        return database.getApplication(channelId);
+    // @formatter:off
+    function createClose(
+        uint256 _cashOutId,
+        uint256 _sessionId,
+        function(uint256, uint256) external _fail,
+        function(uint256, uint256) external _success
+    )
+        public
+    {
+        channelClose[_cashOutId] = CashOutLib.Close(_sessionId, _fail, _success);
     }
+    // @formatter:on
 
-    function setStatus(uint256 channelId, uint256 status) public {
-        database.setStatus(channelId, status);
-        emit CashOutStatusUpdated(channelId, status);
+    // @formatter:off
+    function createRollback(
+        uint256 _cashOutId,
+        function(uint256) external _fail,
+        function(uint256) external _success
+    )
+        public
+    {
+        channelRollback[_cashOutId] = CashOutLib.Rollback(_fail, _success);
     }
+    // @formatter:on
 
-    function getStatus(uint256 channelId) public view returns(uint256) {
-        return database.getStatus(channelId);
+    // @formatter:off
+    function retrieveCashOut(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            address _application,
+            CashOutLib.Status _status
+        )
+    {
+        _application = channels[_cashOutId].application;
+        _status = channels[_cashOutId].status;
     }
+    // @formatter:on
 
-    function getWithdrawAmount(uint256 channelId) public view returns(uint256) {
-        return database.getWithdrawAmount(channelId);
+    // @formatter:off
+    function retrieveAccount(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            uint256 _toWithdraw,
+            uint256 _VLFee,
+            uint256 _reserve,
+            uint256[] _fees,
+            address[] _parties
+        )
+    {
+        _toWithdraw = channelAccount[_cashOutId].toWithdraw;
+        _VLFee = channelAccount[_cashOutId].VLFee;
+        _reserve = channelAccount[_cashOutId].reserve;
+        _fees = channelAccount[_cashOutId].fees;
+        _parties = channelAccount[_cashOutId].parties;
     }
+    // @formatter:on
 
-    function getReservedAmount(uint256 channelId) public view returns(uint256) {
-        return database.getReservedAmount(channelId);
+    // @formatter:off
+    function retrieveOpen(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            string memory _requestId,
+            string memory _kioskId,
+            function(string memory, string memory) external _fail,
+            function(string memory, string memory, uint256, uint256) external _success
+        )
+    {
+        _requestId = channelOpen[_cashOutId].requestId;
+        _kioskId = channelOpen[_cashOutId].kioskId;
+        _fail = channelOpen[_cashOutId].fail;
+        _success = channelOpen[_cashOutId].success;
     }
+    // @formatter:on
 
-    function getVaultLogicAmount(uint256 channelId) public view returns(uint256) {
-        return database.getVaultLogicAmount(channelId);
+    // @formatter:off
+    function retrieveValidate(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            function(uint256, uint256) external _fail,
+            function(uint256, uint256) external _success
+        )
+    {
+        _sessionId = channelValidate[_cashOutId].sessionId;
+        _fail = channelValidate[_cashOutId].fail;
+        _success = channelValidate[_cashOutId].success;
     }
+    // @formatter:on
 
-    function setVaultLogicPercent(uint256 channelId, uint256 vaultLogicPercent) public {
-        database.setVaultLogicPercent(channelId, vaultLogicPercent);
+    // @formatter:off
+    function retrieveClose(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            uint256 _sessionId,
+            function(uint256, uint256) external _fail,
+            function(uint256, uint256) external _success
+        )
+    {
+        _sessionId = channelClose[_cashOutId].sessionId;
+        _fail = channelClose[_cashOutId].fail;
+        _success = channelClose[_cashOutId].success;
     }
+    // @formatter:on
 
-    function getVaultLogicPercent(uint256 channelId) public view returns(uint256){
-        return database.getVaultLogicPercent(channelId);
+    // @formatter:off
+    function retrieveRollback(
+        uint256 _cashOutId
+    )
+        public
+        view
+        returns (
+            function(uint256) external _fail,
+            function(uint256) external _success
+        )
+    {
+        _fail = channelRollback[_cashOutId].fail;
+        _success = channelRollback[_cashOutId].success;
     }
-
-    function addSplit(uint256 channelId, address party, uint256 amount) public {
-        database.addSplit(channelId, party, amount);
-        emit CashOutSplitAdded(channelId, party, amount);
-    }
-
-    function addSplits(uint256 channelId, address[] parties, uint256[] amounts) public {
-        database.addSplits(channelId, parties, amounts);
-    }
-
-    function getSplitSize(uint256 channelId) public view returns(uint256) {
-        return database.getSplitSize(channelId);
-    }
-
-    function getSplit(uint256 channelId, uint256 subIndex) public view returns(address, uint256) {
-        return database.getSplit(channelId, subIndex);
-    }
+    // @formatter:on
 
 }

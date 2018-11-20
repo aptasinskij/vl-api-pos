@@ -1,8 +1,7 @@
 pragma solidity 0.4.24;
 
 import "../platform/Context.sol";
-import "../controllers/api/public/CashInApi.sol";
-import "../controllers/api/public/CameraApi.sol";
+import "../controllers/api/public/CashOutApi.sol";
 
 contract CapitalHero {
 
@@ -14,59 +13,116 @@ contract CapitalHero {
         context = Context(_context);
     }
 
-    event RequestSended(uint256 _sessionId, uint256 _maxBalance);
-    event CashInOpened(uint256 _sessionId, uint256 _cashInId);
-    event CashInUpdate(uint256 _sessionId, uint256 _cashInId, uint256 _amount);
-    event CashInFail(uint256 _sessionId);
+    /*
+        Example of CashOutApi workflow
+    */
 
-    function open(uint256 _sessionId, uint256 _maxBalance) public {
-        CashInApi(context.get(CONTROLLER)).openCashInChannel(
-            _sessionId,
-            _maxBalance,
-            this._openFail,
-            this._openSuccess,
-            this._balanceUpdate
+    string constant CASH_OUT_API = "cash-out-controller";
+
+    // Open cash out components:
+
+    event OpenCashOutAccepted();
+    event OpenCashOutSuccess(string _requestId, string _kioskId, uint256 _cashOutId, uint256 _fee);
+    event OpenCashOutFailed(string _kioskId, string _requestId);
+
+    function openCashOut(
+        string _requestId,
+        string _kioskId,
+        uint256 _toWithdraw,
+        uint256[] _fees,
+        address[] _parties
+    )
+    public
+    {
+        CashOutApi(context.get(CASH_OUT_API)).openCashOutChannel(
+            _requestId,
+            _kioskId,
+            _toWithdraw,
+            _fees,
+            _parties,
+            this.__failOpenCashOut,
+            this.__successOpenCashOut
         );
-        emit RequestSended(_sessionId, _maxBalance);
+        emit OpenCashOutAccepted();
     }
 
-    function _openFail(uint256 _sessionId) public {
-        emit CashInFail(_sessionId);
+    function __successOpenCashOut(string _requestId, string _kioskId, uint256 _cashOutId, uint256 _fee) public {
+        emit OpenCashOutSuccess(_requestId, _kioskId, _cashOutId, _fee);
     }
 
-    function _openSuccess(uint256 _sessionId, uint256 _cashInId) public {
-        emit CashInOpened(_sessionId, _cashInId);
+    function __failOpenCashOut( string _requestId, string _kioskId) public {
+        emit OpenCashOutFailed(_requestId, _kioskId);
     }
 
-    function _balanceUpdate(uint256 _sessionId, uint256 _cashInId, uint256 _amount) public {
-        emit CashInUpdate(_sessionId, _cashInId, _amount);
-    }
+    // Validate cash out components:
 
-    event ScanAccepted(uint256 _sessionId);
-    event SuccessQR(uint256 _sessionId, string _port, string _url, string _href);
-    event QRScanned(uint256 _sessionId, string _data);
-    event QRFail(uint256 _sessionId);
+    event ValidateCashOutAccepted();
+    event ValidateCashOutSuccess(uint256 _sessionId, uint256 _cashOutId);
+    event ValidateCashOutFailed(uint256 _sessionId, uint256 _cashOutId);
 
-    function scanQRWithLights(uint256 _sessionId) public {
-        CameraApi(context.get("camera-controller")).scanQRCodeWithLights(
+    function validateCashOut(uint256 _sessionId, uint256 _cashOutId) public {
+        CashOutApi(context.get(CASH_OUT_API)).validateCashOutChannel(
             _sessionId,
-            this.__successStartScan,
-            this.__QRScanned,
-            this.__QRFail
+            _cashOutId,
+            this.__failValidateCashOut,
+            this.__successValidateCashOut
         );
-        emit ScanAccepted(_sessionId);
+        emit ValidateCashOutAccepted();
     }
 
-    function __successStartScan(uint256 _sessionId, string _port, string _url, string _href) public {
-        emit SuccessQR(_sessionId, _port, _url, _href);
+    function __successValidateCashOut(uint256 _sessionId, uint256 _cashOutId) public {
+        emit ValidateCashOutSuccess(_sessionId, _cashOutId);
     }
 
-    function __QRScanned(uint256 _sessionId, string _data) public {
-        emit QRScanned(_sessionId, _data);
+    function __failValidateCashOut(uint256 _sessionId, uint256 _cashOutId) public {
+        emit ValidateCashOutFailed(_sessionId, _cashOutId);
     }
 
-    function __QRFail(uint256 _sessionId) public {
-        emit QRFail(_sessionId);
+    // Close cash out components:
+
+    event CloseCashOutAccepted();
+    event CloseCashOutSuccess(uint256 _sessionId, uint256 _cashOutId);
+    event CloseCashOutFailed(uint256 _sessionId, uint256 _cashOutId);
+
+    function closeCashOut(uint256 _sessionId, uint256 _cashOutId) public {
+        CashOutApi(context.get(CASH_OUT_API)).closeCashOutChannel(
+            _sessionId,
+            _cashOutId,
+            this.__failCloseCashOut,
+            this.__successCloseCashOut
+        );
+        emit CloseCashOutAccepted();
+    }
+
+    function __successCloseCashOut(uint256 _sessionId, uint256 _cashOutId) public {
+        emit CloseCashOutSuccess(_sessionId, _cashOutId);
+    }
+
+    function __failCloseCashOut(uint256 _sessionId, uint256 _cashOutId) public {
+        emit CloseCashOutFailed(_sessionId, _cashOutId);
+    }
+
+    // Rollback cash out components:
+
+    event RollbackCashOutAccepted();
+    event RollbackCashOutSuccess(uint256 _cashOutId);
+    event RollbackCashOutFailed(uint256 _cashOutId);
+
+    function rollbackCashOut(uint256 _cashOutId) public {
+        CashOutApi(context.get(CASH_OUT_API)).rollbackCashOutChannel(
+            _cashOutId,
+            this.__failRollbackCashOut,
+            this.__successRollbackCashOut
+        );
+        emit RollbackCashOutAccepted();
+    }
+
+    function __successRollbackCashOut(uint256 _cashOutId) public {
+        emit RollbackCashOutSuccess(_cashOutId);
+    }
+
+    function __failRollbackCashOut(uint256 _cashOutId) public {
+        emit RollbackCashOutFailed(_cashOutId);
     }
 
 }

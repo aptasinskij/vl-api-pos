@@ -66,7 +66,7 @@ contract PrinterManager is APrinterManager, Mortal, Named("printer-manager"), Co
 
     function confirmFailPrint(uint256 _commandId) public {
         (uint256 _sessionId,,,,,,function(uint256) external callback) = APrinterStorage(context.get(STORAGE)).getReceiptPrint(_commandId);
-        APrinterController(context.get(CONTROLLER)).respondPrint(_sessionId, callback);
+        APrinterController(context.get(CONTROLLER)).respondFailPrint(_sessionId, callback);
     }
 
 }

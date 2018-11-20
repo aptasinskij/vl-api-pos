@@ -7,8 +7,11 @@ import org.springframework.data.util.Pair;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static com.skysoft.vaultlogic.clients.api.model.Cassette.Type.cash;
+import static java.util.stream.Collectors.toList;
 
 @Data
 @JsonInclude(NON_NULL)
@@ -22,6 +25,11 @@ public class Cassette {
 
     private BigInteger amount;
 
+    public Cassette(BigDecimal denomination, Type type) {
+        this.denomination = denomination;
+        this.type = type;
+    }
+
     @JsonProperty("max_count")
     private BigDecimal maxCount;
 
@@ -32,11 +40,17 @@ public class Cassette {
     }
 
     public static boolean isCash(Cassette cassette) {
-        return Type.cash.equals(cassette.getType());
+        return cash.equals(cassette.getType());
     }
 
     public static Pair<BigInteger, BigInteger> denominationToCountPair(Cassette cassette) {
         return Pair.of(cassette.getDenomination().toBigInteger(), cassette.getCount());
+    }
+
+    public static List<Cassette> fromBillsForDispense(List<BigInteger> bills) {
+        return bills.stream()
+                .map(bigInteger -> new Cassette(new BigDecimal(bigInteger), cash))
+                .collect(toList());
     }
 
 }

@@ -64,6 +64,11 @@ public class ContractsConfiguration {
     }
 
     @Bean
+    public CashOutOracle cashOutOracle(Quorum quorum, ClientTransactionManager transactionManager, BlockchainNetwork network) {
+        return CashOutOracle.load(CashOutOracle.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
+    }
+
+    @Bean
     public SessionOracle sessionOracle(Quorum quorum, ClientTransactionManager transactionManager, BlockchainNetwork network) {
         return SessionOracle.load(SessionOracle.getPreviouslyDeployedAddress(network.getId()), quorum, transactionManager, ZERO, GAS_LIMIT);
     }

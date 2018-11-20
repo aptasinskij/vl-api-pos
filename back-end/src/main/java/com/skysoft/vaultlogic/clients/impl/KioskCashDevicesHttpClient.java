@@ -59,10 +59,9 @@ public class KioskCashDevicesHttpClient implements KioskCashDevices {
     }
 
     @Override
-    public Either<Throwable, StatusCode> dispenseCash(String xToken, DispenseCash dispenseCash) {
+    public Try<StatusCode> dispenseCash(String xToken, DispenseCash dispenseCash) {
         return Try(() -> rest.exchange(post(xToken, maya::dispenseCashURI, dispenseCash), StatusCode.class))
-                .map(HttpEntity::getBody)
-                .toEither();
+                .map(HttpEntity::getBody);
     }
 
 }

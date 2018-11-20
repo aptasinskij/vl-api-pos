@@ -17,6 +17,6 @@ public interface KioskCashDevices {
 
     Try<DispensableAmount> getDispensableAmount(String xToken, DispensableAmount amountToDispense);
 
-    Either<Throwable, StatusCode> dispenseCash(String xToken, DispenseCash dispenseCash);
+    Try<StatusCode> dispenseCash(String xToken, DispenseCash dispenseCash);
 
 }
