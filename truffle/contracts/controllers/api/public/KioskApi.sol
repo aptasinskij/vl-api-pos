@@ -5,9 +5,9 @@ interface KioskApi {
     /**
     @notice Get kiosk info
     @dev
-    @param _sessionId: id of the session in which user wants to get info about kiosk
-    @param _success: callback function(_id, _location, _name, _timezone, _bills, _amounts) for informing about successful case of getting kiosk info
-    @param _fail: callback function(_id) for informing about failed case of getting kiosk info
+    @param _sessionId id of the session in which user wants to get info about kiosk
+    @param _success callback function(_id, _location, _name, _timezone, _bills, _amounts) for informing about successful case of getting kiosk info
+    @param _fail callback function(_id) for informing about failed case of getting kiosk info
     @return {
     }
     */
