@@ -18,7 +18,7 @@ interface CashInApi {
     /**
     @notice Create CashIn channel. Require that the session does not has active CashIn channel.
     @dev CashIn channel will be assigned status CREATING;
-        will proceed rather to ACTIVE or FAILED_TO_CREATE after successful or fail confirmation respectively
+        will proceed either to ACTIVE or FAILED_TO_CREATE after successful or fail confirmation respectively
     @param _sessionId: id of the session in which CashIn channel is creating
     @param _maxBalance: max balance of the CashIn channel
     @param _fail: callback function(_sessionId) for informing about failed case of creating CashIn channel
@@ -39,9 +39,9 @@ interface CashInApi {
     // @formatter:on
 
     /**
-    @notice Close CashIn channel. Require that the CashIn channel in ACTIVE state.
+    @notice Close CashIn channel. Require that the CashIn channel in ACTIVE status.
     @dev CashIn channel will be assigned status CLOSE_REQUESTED;
-        will proceed rather to CLOSE or FAILED_TO_CLOSE after successful or fail confirmation respectively
+        will proceed either to CLOSE or FAILED_TO_CLOSE after successful or fail confirmation respectively
     @param _sessionId: id of the session in which CashIn channel is closing
     @param _channelId: id of the CashIn channel to close
     @param _fees: array of fee amount per split definition party
