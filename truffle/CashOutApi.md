@@ -81,7 +81,7 @@ function _fail(string _requestId, string _kioskId) public {
 *Example of client contract function declaration*
 
 ```solidity
-function _success(string memory _requestId, string memory _kioskId, uint256 _toWithdraw, uint256 _vlFee) public {
+function _success(string _requestId, string _kioskId, uint256 _toWithdraw, uint256 _vlFee) public {
     //handling
 }
 ```
