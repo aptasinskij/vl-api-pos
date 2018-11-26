@@ -1,6 +1,7 @@
 * [SessionApi](#session-api)
   * [closeSession](#function-closesession)
 
+---
 # Session-api
 
 ## *function* closeSession

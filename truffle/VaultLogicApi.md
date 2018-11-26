@@ -8,6 +8,21 @@
   * [closeCashInChannel](#function-closecashinchannel)
   * [balanceOf](#function-balanceof)
 * [KioskApi](#kiosk-api)
+  * [getKiosk](#function-getkiosk)
+* [PrinterApi](#printer-api)
+  * [createReceipt](#function-createreceipt)
+  * [printReceipt](#function-printreceipt)
+* [CashOutApi](#cashout-api)
+  * [getFeePercent](#function-getfeepercent)
+  * [openCashOutChannel](#function-opencashoutchannel)
+  * [validateCashOutChannel](#function-validatecashoutchannel)
+  * [closeCashOutChannel](#function-closecashoutchannel)
+  * [rollbackCashOutChannel](#function-rollbackcashoutchannel)
+* [SessionApi](#session-api)
+  * [closeSession](#function-closesession)
+
+
+---
 
 # Camera-api
 
@@ -381,3 +396,482 @@ function balanceOf(
 | Type | Name | Description |
 |-|-|-|
 | *uint256* | _balance | balance of the CashIn channel |
+
+
+---
+
+# Kiosk-api
+
+## *function* getKiosk
+
+*Get kiosk info*
+
+```solidity
+function getKiosk(
+    uint256 _sessionId,
+    function(
+        uint256,
+        string memory,
+        string memory,
+        string memory,
+        string memory,
+        uint256[] memory,
+        uint256[] memory
+    ) external _success,
+    function(uint256) external _fail
+)
+    external;
+```
+
+*Inputs*
+
+| Type | Name | Description |
+|-|-|-|
+| *uint256* | _sessionId | id of the session in which user wants to get info about kiosk |
+| *function(uint256, string memory, string memory, string memory, string memory, uint256[] memory, uint256[] memory) external* | _success | success getting kiosk info callback function |
+| *function(uint256) external* | _fail | fail to get kiosk info callback function |
+
+*Success callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | command id | Id of the session |
+| *string* | id | Id of kiosk |
+| *string* | location | Location of the kiosk |
+| *string* | name | Name of the kiosk |
+| *string* | timezone | Kiosk timezone |
+| *uint256[]* | bills | Array of available bills |
+| *uint256[]* | amounts | Array of available amount of money per bills |
+
+*Example of client contract function declaration*
+```solidity
+function _success(uint256 _sessionId, uint256 _cashOutId) public {
+    //handling
+}
+```
+
+*Fail callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | command id | Id of the session |
+
+*Example of client contract function declaration*
+```solidity
+function _fail(uint256 _commandId) public {
+    //handling
+}
+```
+
+
+---
+
+# Printer-api
+
+## *function* createReceipt
+
+*Create receipt*
+
+```solidity
+function createReceipt(
+    uint256 _sessionId,
+    function(uint256, string memory, string memory) external _success,
+    function(uint256) external _fail
+)
+    public;
+```
+
+*Inputs*
+
+| Type | Name | Description |
+|-|-|-|
+| *uint256* | session id | id of the session in which receipt must create |
+| *function(uint256, string memory, string memory) external* | _success | success creating receipt callback function |
+| *function(uint256) external* | _fail | fail to create receipt callback function |
+
+*Success callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | command id | Id of the session |
+| *string* | receipt id | Id of the created receipt |
+| *string* | url | Url of the created receipt  |
+
+*Example of client contract function declaration*
+```solidity
+function _success(uint256 _commandId, string _receiptId, string _url) public {
+    //handling
+}
+```
+
+*Fail callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | command id | Id of the session |
+
+*Example of client contract function declaration*
+```solidity
+function _fail(uint256 _commandId) public {
+    //handling
+}
+```
+
+---
+
+## *function* printReceipt
+
+*Print receipt*
+
+```solidity
+function printReceipt(
+         uint256 _sessionId,
+         string _receiptId,
+         string _data,
+         bytes32[] _paramNames,
+         bytes32[] _paramValues,
+         function(uint256) external _success,
+         function(uint256) external _fail
+     )
+         public;
+```
+
+*Inputs*
+
+| Type | Name | Description |
+|-|-|-|
+| *uint256* | session id | id of the session in which receipt must be printed |
+| *string* | receipt id | id of the receipt |
+| *string* | data | information which mast be printed on receipt |
+| *bytes32[]* | param names | array of parameters names from application |
+| *bytes32[]* | param values | array of values from application |
+| *function(uint256) external* | _success | success printing receipt callback function |
+| *function(uint256) external* | _fail | fail to print receipt callback function |
+
+*Success callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | command id | Id of the session |
+
+*Example of client contract function declaration*
+```solidity
+function _success(uint256 _commandId) public {
+    //handling
+}
+```
+
+*Fail callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | command id | Id of the session |
+
+*Example of client contract function declaration*
+```solidity
+function _fail(uint256 _commandId) public {
+    //handling
+}
+```
+
+
+---
+
+# CashOut-api
+
+## *function* getFeePercent
+
+*Get VaultLogic fee percent for CashOut channel*
+
+```solidity
+function getFeePercent() external view returns (uint256);
+```
+
+*Output*
+
+| Type | Name | Description |
+|-|-|-|
+| *uint256* | _fee | VaultLogic fee percent for CashOutChannel |
+
+---
+
+## *function* openCashOutChannel
+
+*Create CashOut channel*
+
+> CashOut channel will be assigned CREATING status;
+  will proceed to either ACTIVE or FAILED_TO_CREATE after successful or fail confirmation respectively
+
+```solidity
+function openCashOutChannel(
+    string _requestId,
+    string _kioskId,
+    uint256 _toWithdraw,
+    uint256[] _fees,
+    address[] _parties,
+    function(string memory, string memory) external _fail,
+    function(string memory, string memory, uint256, uint256) external _success
+)
+    public;
+```
+
+*Input*
+
+| Type | Name | Description |
+|-|-|-|
+| *string* | _requestId | application assigned request id |
+| *string* | _kioskId | id of the kiosk in which CashOut channel creating |
+| *uint256* | _toWithdraw | the amount of tokens application wants to dispense |
+| *uint256[]* | _fees | array of fee amount per split definition party |
+| *address[]* | _parties | array of parties of split definition |
+| *function(string memory, string memory) external* | _fail | fail to open CashOut channel callback function  |
+| *function(string memory, string memory, uint256, uint256) external* | _success | success open CashOut channel callback function |
+
+*Fail callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *string* | request id | Id of the request |
+| *string* | kiosk id | Id of the kiosk |
+
+*Example of client contract function declaration*
+```solidity
+function _fail(string _requestId, string _kioskId) public {
+    //handling
+}
+```
+
+*Success callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *string* | request id | Id of the session |
+| *string* | kiosk id | Id of the created CashIn channel |
+| *uint256* | to withdraw amount | Id of the created CashIn channel |
+| *uint256* | VaultLogic fee | Id of the created CashIn channel |
+
+*Example of client contract function declaration*
+
+```solidity
+function _success(string _requestId, string _kioskId, uint256 _toWithdraw, uint256 _vlFee) public {
+    //handling
+}
+```
+
+---
+
+## *function* validateCashOutChannel
+
+*Validate CashOut channel*
+
+> Require CashOut in ACTIVE, NOT_ABLE_TO_CLOSE or ABLE_TO_CLOSE status
+  CashOut channel will be assigned VALIDATING status;
+  will proceed to either ABLE_TO_CLOSE or NOT_ABLE_TO_CLOSE after successful or fail confirmation respectively
+  
+```solidity
+function validateCashOutChannel(
+    uint256 _sessionId,
+    uint256 _cashOutId,
+    function(uint256, uint256) external _fail,
+    function(uint256, uint256) external _success
+)
+    public;
+```
+
+*Inputs*
+
+| Type | Name | Description |
+|-|-|-|
+| *uint256* | _sessionId | id of the session in which CashOut channel is validating |
+| *uint256* | _cashOutId | id of the CashOut channel |
+| *function(uint256, uint256) external* | _success | success validate CashOut channel callback function |
+| *function(uint256, uint256) external* | _fail | fail to validate CashOut channel callback function |
+
+*Success callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | session id | Id of the session |
+| *uint256* | cashOut id | Id of the validated CashOut channel |
+
+*Example of client contract function declaration*
+```solidity
+function _success(uint256 _sessionId, uint256 _cashOutId) public {
+    //handling
+}
+```
+
+*Fail callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | session id | Id of the session |
+| *uint256* | cashOut id | Id of the CashOut channel |
+
+*Example of client contract function declaration*
+```solidity
+function _fail(uint256 _sessionId, uint256 _cashOutId) public {
+    //handling
+}
+```
+
+---
+
+## *function* closeCashOutChannel
+
+*Close CashOut channel*
+
+> Require CashOut in ABLE_TO_CLOSE status and validation was in the same session
+  CashOut channel will be assigned CLOSE_REQUESTED status;
+  will proceed either to CLOSED or FAILED_TO_CLOSE after successful of fail confirmation respectively
+  
+```solidity
+function closeCashOutChannel(
+    uint256 _sessionId,
+    uint256 _cashOutId,
+    function(uint256, uint256) external _fail,
+    function(uint256, uint256) external _success
+)
+    public;
+```
+
+*Inputs*
+
+| Type | Name | Description |
+|-|-|-|
+| *uint256* | _sessionId | id of the session in which CashOut channel is closing |
+| *uint256* | _cashOutId | id of the CashOut channel |
+| *function(uint256, uint256) external* | _success | success close CashOut channel callback function |
+| *function(uint256, uint256) external* | _fail | fail to close CashOut channel callback function |
+
+*Success callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | session id | Id of the session |
+| *uint256* | cashOut id | Id of the closed CashOut channel |
+
+*Example of client contract function declaration*
+```solidity
+function _success(uint256 _sessionId, uint256 _cashOutId) public {
+    //handling
+}
+```
+
+*Fail callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | session id | Id of the session |
+| *uint256* | cashOut id | Id of the CashOut channel |
+
+*Example of client contract function declaration*
+```solidity
+function _fail(uint256 _sessionId, uint256 _cashOutId) public {
+    //handling
+}
+```
+
+---
+
+## *function* rollbackCashOutChannel
+
+*Rollback CashOut channel*
+
+> Require CashOut in ACTIVE, ABLE_TO_CLOSE or NOT_ABLE_TO_CLOSE status
+  CashOut channel will be assigned CANCELED status
+  
+```solidity
+function rollbackCashOutChannel(
+    uint256 _cashOutId,
+    function(uint256) external _fail,
+    function(uint256) external _success
+)
+    public;
+```
+
+*Inputs*
+
+| Type | Name | Description |
+|-|-|-|
+| *uint256* | _cashOutId | id of the CashOut channel |
+| *function(uint256) external* | _fail | fail to rollback CashOut channel callback function |
+| *function(uint256) external* | _success | success rollback CashOut channel callback function |
+
+*Success callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | cashOut id | Id of the CashOut channel |
+
+*Example of client contract function declaration*
+```solidity
+function _success(uint256 _cashOutId) public {
+    //handling
+}
+```
+
+*Fail callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | cashOut id | Id of CashOut channel |
+
+*Example of client contract function declaration*
+```solidity
+function _fail(uint256 _cashOutId) public {
+    //handling
+}
+```
+
+
+---
+
+# Session-api
+
+## *function* closeSession
+
+*Close Session*
+
+```solidity
+function closeSession(
+    uint256 _sessionId,
+    function(uint256) external _success,
+    function(uint256) external _fail
+)
+    external;
+```
+
+*Inputs*
+
+| Type | Name | Description |
+|-|-|-|
+| *uint256* | _sessionId | id of the session to close |
+| *function(uint256) external* | _success | success close session callback function |
+| *function(uint256) external* | _fail | fail to close session callback function |
+
+*Success callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | session id | Id of the session |
+
+*Example of client contract function declaration*
+```solidity
+function _success(uint256 _sessionId) public {
+    //handling
+}
+```
+
+*Fail callback inputs*
+
+| Type | Stands for | Description |
+|-|-|-|
+| *uint256* | session id | Id of the session |
+
+*Example of client contract function declaration*
+```solidity
+function _fail(uint256 _sessionId) public {
+    //handling
+}
+```

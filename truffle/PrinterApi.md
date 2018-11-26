@@ -2,6 +2,7 @@
   * [createReceipt](#function-createreceipt)
   * [printReceipt](#function-printreceipt)
 
+---
 # Printer-api
 
 ## *function* createReceipt
