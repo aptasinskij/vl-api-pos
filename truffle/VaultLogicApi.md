@@ -40,10 +40,10 @@ function scanQRCodeWithLights(
 
 | Type | Stands for | Description |
 |-|-|-|
-| *uint256* | session id | id of the session in which camera was enabled |
-| *string memory* | port | port in which client can bind to retrieve live streaming video |
-| *string memory* | url | url in which client can bind to retrieve live streaming video |
-| *string memory* | href | combination of url and port params |
+| *uint256* | session id | Id of the session in which camera was enabled |
+| *string memory* | port | Port in which client can bind to retrieve live streaming video |
+| *string memory* | url | Url in which client can bind to retrieve live streaming video |
+| *string memory* | href | Combination of url and port params |
 
 *Example of client contract function declaration*
 ```solidity
@@ -56,8 +56,8 @@ function __success(uint256 _sessionId, string _port, string _url, string _href) 
 
 | Type | Stands for | Description |
 |-|-|-|
-| *uint256* | session id | id of the session in which QR code was scanned |
-| *string memory* | QR code data | scanned QR code data |
+| *uint256* | session id | Id of the session in which QR code was scanned |
+| *string memory* | QR code data | Scanned QR code data |
 
 *Example of client contract function declaration*
 ```solidity
@@ -70,7 +70,7 @@ function __scanned(uint256 _sessionId, string _data) public {
 
 | Type | Stands for | Description |
 |-|-|-|
-| *uint256* | session id | id of the session |
+| *uint256* | session id | Id of the session |
 
 *Example of client contract function declaration*
 ```solidity
@@ -110,10 +110,10 @@ function scanQRCodeWithoutLights(
 
 | Type | Stands for | Description |
 |-|-|-|
-| *uint256* | session id | id of the session in which camera was enabled |
-| *string memory* | port | port in which client can bind to retrieve live streaming video |
-| *string memory* | url | url in which client can bind to retrieve live streaming video |
-| *string memory* | href | combination of url and port params |
+| *uint256* | session id | Id of the session in which camera was enabled |
+| *string memory* | port | Port in which client can bind to retrieve live streaming video |
+| *string memory* | url | Url in which client can bind to retrieve live streaming video |
+| *string memory* | href | Combination of url and port params |
 
 *Example of client contract function declaration*
 ```solidity
@@ -126,7 +126,7 @@ function __success(uint256 _sessionId, string _port, string _url, string _href) 
 
 | Type | Stands for | Description |
 |-|-|-|
-| *uint256* | session id | id of the session in which QR code was scanned |
+| *uint256* | session id | Id of the session in which QR code was scanned |
 | *string memory* | QR code data | scanned QR code data |
 
 *Example of client contract function declaration*
@@ -140,7 +140,7 @@ function __scanned(uint256 _sessionId, string _data) public {
 
 | Type | Stands for | Description |
 |-|-|-|
-| *uint256* | session id | id of the session |
+| *uint256* | session id | Id of the session |
 
 *Example of client contract function declaration*
 ```solidity
@@ -176,7 +176,7 @@ function stopQRScanning(
 
 | Type | Name | Description |
 |-|-|-|
-| *uint256* | _sessionId | id of the session |
+| *uint256* | _sessionId | Id of the session |
 
 *Example of client contract function declaration*
 ```solidity
@@ -189,7 +189,7 @@ function __success(uint256 _sessionId) public {
 
 | Type | Name | Description |
 |-|-|-|
-| *uint256* | _sessionId | id of the session |
+| *uint256* | _sessionId | Id of the session |
 
 *Example of client contract function declaration*
 ```solidity
@@ -197,6 +197,7 @@ function __fail(uint256 _sessionId) public {
     //handling goes here
 }
 ```
+
 
 ---
 
@@ -216,6 +217,7 @@ function getFeePercent() external view returns (uint256);
 |-|-|-|
 | *uint256* | _fee | VaultLogic fee percent for CashInChannel |
 
+---
 
 ## *function* openCashInChannel
 
@@ -290,6 +292,8 @@ function __update(uint256 _sessionId, uint256 _cashInId, uint256 _amount) public
 }
 ```
 
+---
+
 ## *function* closeCashInChannel
 
 *Close CashIn channel*
@@ -349,6 +353,8 @@ function __fail(uint256 _sessionId, uint256 _cashInId) public {
 }
 ```
 
+---
+
 ## *function* balanceOf
 
 *Get balance of the channel*
@@ -375,5 +381,3 @@ function balanceOf(
 | Type | Name | Description |
 |-|-|-|
 | *uint256* | _balance | balance of the CashIn channel |
-
-# Kiosk-api
