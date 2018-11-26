@@ -22,6 +22,7 @@ function getFeePercent() external view returns (uint256);
 |-|-|-|
 | *uint256* | _fee | VaultLogic fee percent for CashOutChannel |
 
+---
 
 ## *function* openCashOutChannel
 
@@ -86,6 +87,8 @@ function _success(string _requestId, string _kioskId, uint256 _toWithdraw, uint2
 }
 ```
 
+---
+
 ## *function* validateCashOutChannel
 
 *Validate CashOut channel*
@@ -141,6 +144,8 @@ function _fail(uint256 _sessionId, uint256 _cashOutId) public {
 }
 ```
 
+---
+
 ## *function* closeCashOutChannel
 
 *Close CashOut channel*
@@ -195,6 +200,8 @@ function _fail(uint256 _sessionId, uint256 _cashOutId) public {
     //handling
 }
 ```
+
+---
 
 ## *function* rollbackCashOutChannel
 
