@@ -53,6 +53,8 @@ function _fail(uint256 _commandId) public {
 }
 ```
 
+---
+
 ## *function* printReceipt
 
 *Print receipt*
@@ -74,11 +76,11 @@ function printReceipt(
 
 | Type | Name | Description |
 |-|-|-|
-| *uint256* | session id | Id of the session in which receipt must be printed |
-| *string* | receipt id | Id of the receipt |
-| *string* | data | Information which mast be printed on receipt |
-| *bytes32[]* | param names | Array of parameters names from application |
-| *bytes32[]* | param values | Array of values from application |
+| *uint256* | session id | id of the session in which receipt must be printed |
+| *string* | receipt id | id of the receipt |
+| *string* | data | information which mast be printed on receipt |
+| *bytes32[]* | param names | array of parameters names from application |
+| *bytes32[]* | param values | array of values from application |
 | *function(uint256) external* | _success | success printing receipt callback function |
 | *function(uint256) external* | _fail | fail to print receipt callback function |
 
