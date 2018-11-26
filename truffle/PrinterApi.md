@@ -1,6 +1,6 @@
 * [PrinterApi](#printer-api)
-  * [getKiosk](#*function*-createreceipt)
-  * [getKiosk](#*function*-printreceipt)
+  * [createReceipt](#*function*-createreceipt)
+  * [printReceipt](#*function*-printreceipt)
 
 # Printer-api
 
