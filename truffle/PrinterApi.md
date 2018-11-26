@@ -1,6 +1,6 @@
 * [PrinterApi](#printer-api)
-  * [createReceipt](#*function*-createreceipt)
-  * [printReceipt](#*function*-printreceipt)
+  * [createReceipt](#function-createreceipt)
+  * [printReceipt](#function-printreceipt)
 
 # Printer-api
 
