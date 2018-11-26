@@ -1,5 +1,5 @@
 * [KioskApi](#kiosk-api)
-  * [getKiosk](#*function*-getkiosk)
+  * [getKiosk](#function-getkiosk)
 
 # Kiosk-api
 

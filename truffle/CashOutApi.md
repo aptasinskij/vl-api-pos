@@ -1,9 +1,9 @@
 * [CashOutApi](#cashout-api)
   * [getFeePercent](#function-getfeepercent)
-  * [openCashOutChannel](#*function*-opencashoutchannel)
-  * [validateCashOutChannel](#*function*-validatecashoutchannel)
-  * [closeCashOutChannel](#*function*-closecashoutchannel)
-  * [rollbackCashOutChannel](#*function*-rollbackcashoutchannel)
+  * [openCashOutChannel](#function-opencashoutchannel)
+  * [validateCashOutChannel](#function-validatecashoutchannel)
+  * [closeCashOutChannel](#function-closecashoutchannel)
+  * [rollbackCashOutChannel](#function-rollbackcashoutchannel)
 
 ---
 # CashOut-api

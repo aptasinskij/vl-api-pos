@@ -1,5 +1,5 @@
 * [SessionApi](#session-api)
-  * [closeSession](#*function*-closesession)
+  * [closeSession](#function-closesession)
 
 # Session-api
 
