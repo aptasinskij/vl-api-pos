@@ -80,20 +80,20 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity 0.4.24;\n\ninterface CameraApi {\n\n    ///@dev function to trigger QR code scanning with lights\n    ///@param _sessionId - id of the session in which QR must occur\n    ///@param _success - callback function for informing about successful case of enabling camera\n    ///@param _scanned - callback function for informing about actual QR scanned data\n    ///@param _fail - callback function for informing about failed case of enabling camera\n    // @formatter:off\n    function scanQRCodeWithLights(\n        uint256 _sessionId,\n        function(uint256, string memory, string memory, string memory) external _success,\n        function(uint256, string memory) external _scanned,\n        function(uint256) external _fail\n    )\n        external;\n    // @formatter:on\n\n    ///@dev function to trigger QR code scanning without lights\n    ///@param _sessionId - id of the session in which QR must occur\n    ///@param _success - callback function for informing about successful case of enabling camera\n    ///@param _scanned - callback function for informing about actual QR scanned data\n    ///@param _fail - callback function for informing about failed case of enabling camera\n    // @formatter:off\n    function scanQRCodeWithoutLights(\n        uint256 _sessionId,\n        function(uint256, string memory, string memory, string memory) external _success,\n        function(uint256, string memory) external _scanned,\n        function(uint256) external _fail\n    )\n        external;\n    // @formatter:on\n\n    ///@dev function to disable QR scanning\n    ///@param _sessionId - id of the session in which camera must be disabled\n    ///@param _success - callback function to inform about camera successful disabling\n    ///@param _fail - callback function to inform about camera disabling fail\n    // @formatter:off\n    function stopQRScanning(\n        uint256 _sessionId,\n        function(uint256) external _success,\n        function(uint256) external _fail\n    )\n        external;\n    // @formatter:on\n\n}\n",
+  "source": "pragma solidity 0.4.24;\n\ninterface CameraApi {\n\n    /**\n    @notice Scan QR code with lights\n    @dev function to trigger QR code scanning with lights\n    @param _sessionId - id of the session in which QR must occur\n    @param _success - callback function(_commandId, _port, _url, _href) for informing about successful case of enabling camera\n    @param _scanned - callback function(_sessionId, _qr) for informing about actual QR scanned data\n    @param _fail - callback function(_commandId) for informing about failed case of enabling camera\n    @return {\n    }\n    */\n    // @formatter:off\n    function scanQRCodeWithLights(\n        uint256 _sessionId,\n        function(uint256, string memory, string memory, string memory) external _success,\n        function(uint256, string memory) external _scanned,\n        function(uint256) external _fail\n    )\n        external;\n    // @formatter:on\n\n    /**\n    @notice Scan QR code without lights\n    @dev function to trigger QR code scanning without lights\n    @param _sessionId - id of the session in which QR must occur\n    @param _success - callback function(_commandId, _port, _url, _href) for informing about successful case of enabling camera\n    @param _scanned - callback function(_sessionId, _qr) for informing about actual QR scanned data\n    @param _fail - callback function(_commandId) for informing about failed case of enabling camera\n    @return {\n    }\n    */\n    // @formatter:off\n    function scanQRCodeWithoutLights(\n        uint256 _sessionId,\n        function(uint256, string memory, string memory, string memory) external _success,\n        function(uint256, string memory) external _scanned,\n        function(uint256) external _fail\n    )\n        external;\n    // @formatter:on\n\n    /**\n    @notice Stop QR code scanning\n    @dev function to disable QR scanning\n    @param _sessionId - id of the session in which camera must be disabled\n    @param _success - callback function(_sessionId) to inform about camera successful disabling\n    @param _fail - callback function(_sessionId) to inform about camera disabling fail\n    @return {\n    }\n    */\n    // @formatter:off\n    function stopQRScanning(\n        uint256 _sessionId,\n        function(uint256) external _success,\n        function(uint256) external _fail\n    )\n        external;\n    // @formatter:on\n\n}\n",
   "sourcePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/controllers/api/public/CameraApi.sol",
   "ast": {
     "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/controllers/api/public/CameraApi.sol",
     "exportedSymbols": {
       "CameraApi": [
-        2728
+        2744
       ]
     },
-    "id": 2729,
+    "id": 2745,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2648,
+        "id": 2664,
         "literals": [
           "solidity",
           "0.4",
@@ -108,17 +108,17 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2728,
+        "id": 2744,
         "linearizedBaseContracts": [
-          2728
+          2744
         ],
         "name": "CameraApi",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": null,
-            "documentation": "@dev function to trigger QR code scanning with lights\n@param _sessionId - id of the session in which QR must occur\n@param _success - callback function for informing about successful case of enabling camera\n@param _scanned - callback function for informing about actual QR scanned data\n@param _fail - callback function for informing about failed case of enabling camera",
-            "id": 2679,
+            "documentation": "@notice Scan QR code with lights\n@dev function to trigger QR code scanning with lights\n@param _sessionId - id of the session in which QR must occur\n@param _success - callback function(_commandId, _port, _url, _href) for informing about successful case of enabling camera\n@param _scanned - callback function(_sessionId, _qr) for informing about actual QR scanned data\n@param _fail - callback function(_commandId) for informing about failed case of enabling camera\n@return {\n}",
+            "id": 2695,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -126,16 +126,16 @@
             "name": "scanQRCodeWithLights",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2677,
+              "id": 2693,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2650,
+                  "id": 2666,
                   "name": "_sessionId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2679,
-                  "src": "517:18:15",
+                  "scope": 2695,
+                  "src": "635:18:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -143,10 +143,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2649,
+                    "id": 2665,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "517:7:15",
+                    "src": "635:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -157,11 +157,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2662,
+                  "id": 2678,
                   "name": "_success",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2679,
-                  "src": "545:80:15",
+                  "scope": 2695,
+                  "src": "663:80:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -169,20 +169,20 @@
                     "typeString": "function (uint256,string,string,string) external"
                   },
                   "typeName": {
-                    "id": 2661,
+                    "id": 2677,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2659,
+                      "id": 2675,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2652,
+                          "id": 2668,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "554:7:15",
+                          "scope": 2695,
+                          "src": "672:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -190,10 +190,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2651,
+                            "id": 2667,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "554:7:15",
+                            "src": "672:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -204,11 +204,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2654,
+                          "id": 2670,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "563:6:15",
+                          "scope": 2695,
+                          "src": "681:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -216,10 +216,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2653,
+                            "id": 2669,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "563:6:15",
+                            "src": "681:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -230,11 +230,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2656,
+                          "id": 2672,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "578:6:15",
+                          "scope": 2695,
+                          "src": "696:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -242,10 +242,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2655,
+                            "id": 2671,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "578:6:15",
+                            "src": "696:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -256,11 +256,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2658,
+                          "id": 2674,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "593:6:15",
+                          "scope": 2695,
+                          "src": "711:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -268,10 +268,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2657,
+                            "id": 2673,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "593:6:15",
+                            "src": "711:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -281,16 +281,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "553:54:15"
+                      "src": "671:54:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2660,
+                      "id": 2676,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "617:0:15"
+                      "src": "735:0:15"
                     },
-                    "src": "545:80:15",
+                    "src": "663:80:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_string_memory_ptr_$returns$__$",
@@ -303,11 +303,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2670,
+                  "id": 2686,
                   "name": "_scanned",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2679,
-                  "src": "635:50:15",
+                  "scope": 2695,
+                  "src": "753:50:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -315,20 +315,20 @@
                     "typeString": "function (uint256,string) external"
                   },
                   "typeName": {
-                    "id": 2669,
+                    "id": 2685,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2667,
+                      "id": 2683,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2664,
+                          "id": 2680,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "644:7:15",
+                          "scope": 2695,
+                          "src": "762:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -336,10 +336,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2663,
+                            "id": 2679,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "644:7:15",
+                            "src": "762:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -350,11 +350,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2666,
+                          "id": 2682,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "653:6:15",
+                          "scope": 2695,
+                          "src": "771:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -362,10 +362,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2665,
+                            "id": 2681,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "653:6:15",
+                            "src": "771:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -375,16 +375,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "643:24:15"
+                      "src": "761:24:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2668,
+                      "id": 2684,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "677:0:15"
+                      "src": "795:0:15"
                     },
-                    "src": "635:50:15",
+                    "src": "753:50:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_string_memory_ptr_$returns$__$",
@@ -397,11 +397,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2676,
+                  "id": 2692,
                   "name": "_fail",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2679,
-                  "src": "695:32:15",
+                  "scope": 2695,
+                  "src": "813:32:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -409,20 +409,20 @@
                     "typeString": "function (uint256) external"
                   },
                   "typeName": {
-                    "id": 2675,
+                    "id": 2691,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2673,
+                      "id": 2689,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2672,
+                          "id": 2688,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "704:7:15",
+                          "scope": 2695,
+                          "src": "822:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -430,10 +430,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2671,
+                            "id": 2687,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "704:7:15",
+                            "src": "822:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -443,16 +443,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "703:9:15"
+                      "src": "821:9:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2674,
+                      "id": 2690,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "722:0:15"
+                      "src": "840:0:15"
                     },
-                    "src": "695:32:15",
+                    "src": "813:32:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -464,25 +464,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "507:226:15"
+              "src": "625:226:15"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2678,
+              "id": 2694,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "750:0:15"
+              "src": "868:0:15"
             },
-            "scope": 2728,
-            "src": "478:273:15",
+            "scope": 2744,
+            "src": "596:273:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           },
           {
             "body": null,
-            "documentation": "@dev function to trigger QR code scanning without lights\n@param _sessionId - id of the session in which QR must occur\n@param _success - callback function for informing about successful case of enabling camera\n@param _scanned - callback function for informing about actual QR scanned data\n@param _fail - callback function for informing about failed case of enabling camera",
-            "id": 2710,
+            "documentation": "@notice Scan QR code without lights\n@dev function to trigger QR code scanning without lights\n@param _sessionId - id of the session in which QR must occur\n@param _success - callback function(_commandId, _port, _url, _href) for informing about successful case of enabling camera\n@param _scanned - callback function(_sessionId, _qr) for informing about actual QR scanned data\n@param _fail - callback function(_commandId) for informing about failed case of enabling camera\n@return {\n}",
+            "id": 2726,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -490,16 +490,16 @@
             "name": "scanQRCodeWithoutLights",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2708,
+              "id": 2724,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2681,
+                  "id": 2697,
                   "name": "_sessionId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2710,
-                  "src": "1249:18:15",
+                  "scope": 2726,
+                  "src": "1488:18:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -507,10 +507,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2680,
+                    "id": 2696,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1249:7:15",
+                    "src": "1488:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -521,11 +521,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2693,
+                  "id": 2709,
                   "name": "_success",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2710,
-                  "src": "1277:80:15",
+                  "scope": 2726,
+                  "src": "1516:80:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -533,20 +533,20 @@
                     "typeString": "function (uint256,string,string,string) external"
                   },
                   "typeName": {
-                    "id": 2692,
+                    "id": 2708,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2690,
+                      "id": 2706,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2683,
+                          "id": 2699,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1286:7:15",
+                          "scope": 2726,
+                          "src": "1525:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -554,10 +554,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2682,
+                            "id": 2698,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1286:7:15",
+                            "src": "1525:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -568,11 +568,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2685,
+                          "id": 2701,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1295:6:15",
+                          "scope": 2726,
+                          "src": "1534:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -580,10 +580,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2684,
+                            "id": 2700,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1295:6:15",
+                            "src": "1534:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -594,11 +594,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2687,
+                          "id": 2703,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1310:6:15",
+                          "scope": 2726,
+                          "src": "1549:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -606,10 +606,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2686,
+                            "id": 2702,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1310:6:15",
+                            "src": "1549:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -620,11 +620,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2689,
+                          "id": 2705,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1325:6:15",
+                          "scope": 2726,
+                          "src": "1564:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -632,10 +632,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2688,
+                            "id": 2704,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1325:6:15",
+                            "src": "1564:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -645,16 +645,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "1285:54:15"
+                      "src": "1524:54:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2691,
+                      "id": 2707,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "1349:0:15"
+                      "src": "1588:0:15"
                     },
-                    "src": "1277:80:15",
+                    "src": "1516:80:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_string_memory_ptr_$returns$__$",
@@ -667,11 +667,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2701,
+                  "id": 2717,
                   "name": "_scanned",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2710,
-                  "src": "1367:50:15",
+                  "scope": 2726,
+                  "src": "1606:50:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -679,20 +679,20 @@
                     "typeString": "function (uint256,string) external"
                   },
                   "typeName": {
-                    "id": 2700,
+                    "id": 2716,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2698,
+                      "id": 2714,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2695,
+                          "id": 2711,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1376:7:15",
+                          "scope": 2726,
+                          "src": "1615:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -700,10 +700,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2694,
+                            "id": 2710,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1376:7:15",
+                            "src": "1615:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -714,11 +714,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2697,
+                          "id": 2713,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1385:6:15",
+                          "scope": 2726,
+                          "src": "1624:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -726,10 +726,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2696,
+                            "id": 2712,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1385:6:15",
+                            "src": "1624:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -739,16 +739,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "1375:24:15"
+                      "src": "1614:24:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2699,
+                      "id": 2715,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "1409:0:15"
+                      "src": "1648:0:15"
                     },
-                    "src": "1367:50:15",
+                    "src": "1606:50:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_string_memory_ptr_$returns$__$",
@@ -761,11 +761,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2707,
+                  "id": 2723,
                   "name": "_fail",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2710,
-                  "src": "1427:32:15",
+                  "scope": 2726,
+                  "src": "1666:32:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -773,20 +773,20 @@
                     "typeString": "function (uint256) external"
                   },
                   "typeName": {
-                    "id": 2706,
+                    "id": 2722,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2704,
+                      "id": 2720,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2703,
+                          "id": 2719,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1436:7:15",
+                          "scope": 2726,
+                          "src": "1675:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -794,10 +794,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2702,
+                            "id": 2718,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1436:7:15",
+                            "src": "1675:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -807,16 +807,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "1435:9:15"
+                      "src": "1674:9:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2705,
+                      "id": 2721,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "1454:0:15"
+                      "src": "1693:0:15"
                     },
-                    "src": "1427:32:15",
+                    "src": "1666:32:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -828,25 +828,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1239:226:15"
+              "src": "1478:226:15"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2709,
+              "id": 2725,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1482:0:15"
+              "src": "1721:0:15"
             },
-            "scope": 2728,
-            "src": "1207:276:15",
+            "scope": 2744,
+            "src": "1446:276:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           },
           {
             "body": null,
-            "documentation": "@dev function to disable QR scanning\n@param _sessionId - id of the session in which camera must be disabled\n@param _success - callback function to inform about camera successful disabling\n@param _fail - callback function to inform about camera disabling fail",
-            "id": 2727,
+            "documentation": "@notice Stop QR code scanning\n@dev function to disable QR scanning\n@param _sessionId - id of the session in which camera must be disabled\n@param _success - callback function(_sessionId) to inform about camera successful disabling\n@param _fail - callback function(_sessionId) to inform about camera disabling fail\n@return {\n}",
+            "id": 2743,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -854,16 +854,16 @@
             "name": "stopQRScanning",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2725,
+              "id": 2741,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2712,
+                  "id": 2728,
                   "name": "_sessionId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2727,
-                  "src": "1852:18:15",
+                  "scope": 2743,
+                  "src": "2172:18:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -871,10 +871,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2711,
+                    "id": 2727,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1852:7:15",
+                    "src": "2172:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -885,11 +885,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2718,
+                  "id": 2734,
                   "name": "_success",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2727,
-                  "src": "1880:35:15",
+                  "scope": 2743,
+                  "src": "2200:35:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -897,20 +897,20 @@
                     "typeString": "function (uint256) external"
                   },
                   "typeName": {
-                    "id": 2717,
+                    "id": 2733,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2715,
+                      "id": 2731,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2714,
+                          "id": 2730,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2727,
-                          "src": "1889:7:15",
+                          "scope": 2743,
+                          "src": "2209:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -918,10 +918,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2713,
+                            "id": 2729,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1889:7:15",
+                            "src": "2209:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -931,16 +931,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "1888:9:15"
+                      "src": "2208:9:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2716,
+                      "id": 2732,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "1907:0:15"
+                      "src": "2227:0:15"
                     },
-                    "src": "1880:35:15",
+                    "src": "2200:35:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -953,11 +953,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2724,
+                  "id": 2740,
                   "name": "_fail",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2727,
-                  "src": "1925:32:15",
+                  "scope": 2743,
+                  "src": "2245:32:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -965,20 +965,20 @@
                     "typeString": "function (uint256) external"
                   },
                   "typeName": {
-                    "id": 2723,
+                    "id": 2739,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2721,
+                      "id": 2737,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2720,
+                          "id": 2736,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2727,
-                          "src": "1934:7:15",
+                          "scope": 2743,
+                          "src": "2254:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -986,10 +986,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2719,
+                            "id": 2735,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1934:7:15",
+                            "src": "2254:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -999,16 +999,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "1933:9:15"
+                      "src": "2253:9:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2722,
+                      "id": 2738,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "1952:0:15"
+                      "src": "2272:0:15"
                     },
-                    "src": "1925:32:15",
+                    "src": "2245:32:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -1020,40 +1020,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1842:121:15"
+              "src": "2162:121:15"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2726,
+              "id": 2742,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1980:0:15"
+              "src": "2300:0:15"
             },
-            "scope": 2728,
-            "src": "1819:162:15",
+            "scope": 2744,
+            "src": "2139:162:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 2729,
-        "src": "25:1980:15"
+        "scope": 2745,
+        "src": "25:2300:15"
       }
     ],
-    "src": "0:2006:15"
+    "src": "0:2326:15"
   },
   "legacyAST": {
     "absolutePath": "/home/andrew/vault-logic-project/Development/test/vault-logic-api/truffle/contracts/controllers/api/public/CameraApi.sol",
     "exportedSymbols": {
       "CameraApi": [
-        2728
+        2744
       ]
     },
-    "id": 2729,
+    "id": 2745,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2648,
+        "id": 2664,
         "literals": [
           "solidity",
           "0.4",
@@ -1068,17 +1068,17 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2728,
+        "id": 2744,
         "linearizedBaseContracts": [
-          2728
+          2744
         ],
         "name": "CameraApi",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": null,
-            "documentation": "@dev function to trigger QR code scanning with lights\n@param _sessionId - id of the session in which QR must occur\n@param _success - callback function for informing about successful case of enabling camera\n@param _scanned - callback function for informing about actual QR scanned data\n@param _fail - callback function for informing about failed case of enabling camera",
-            "id": 2679,
+            "documentation": "@notice Scan QR code with lights\n@dev function to trigger QR code scanning with lights\n@param _sessionId - id of the session in which QR must occur\n@param _success - callback function(_commandId, _port, _url, _href) for informing about successful case of enabling camera\n@param _scanned - callback function(_sessionId, _qr) for informing about actual QR scanned data\n@param _fail - callback function(_commandId) for informing about failed case of enabling camera\n@return {\n}",
+            "id": 2695,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1086,16 +1086,16 @@
             "name": "scanQRCodeWithLights",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2677,
+              "id": 2693,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2650,
+                  "id": 2666,
                   "name": "_sessionId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2679,
-                  "src": "517:18:15",
+                  "scope": 2695,
+                  "src": "635:18:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1103,10 +1103,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2649,
+                    "id": 2665,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "517:7:15",
+                    "src": "635:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1117,11 +1117,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2662,
+                  "id": 2678,
                   "name": "_success",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2679,
-                  "src": "545:80:15",
+                  "scope": 2695,
+                  "src": "663:80:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1129,20 +1129,20 @@
                     "typeString": "function (uint256,string,string,string) external"
                   },
                   "typeName": {
-                    "id": 2661,
+                    "id": 2677,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2659,
+                      "id": 2675,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2652,
+                          "id": 2668,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "554:7:15",
+                          "scope": 2695,
+                          "src": "672:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -1150,10 +1150,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2651,
+                            "id": 2667,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "554:7:15",
+                            "src": "672:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1164,11 +1164,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2654,
+                          "id": 2670,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "563:6:15",
+                          "scope": 2695,
+                          "src": "681:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -1176,10 +1176,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2653,
+                            "id": 2669,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "563:6:15",
+                            "src": "681:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -1190,11 +1190,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2656,
+                          "id": 2672,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "578:6:15",
+                          "scope": 2695,
+                          "src": "696:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -1202,10 +1202,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2655,
+                            "id": 2671,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "578:6:15",
+                            "src": "696:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -1216,11 +1216,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2658,
+                          "id": 2674,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "593:6:15",
+                          "scope": 2695,
+                          "src": "711:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -1228,10 +1228,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2657,
+                            "id": 2673,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "593:6:15",
+                            "src": "711:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -1241,16 +1241,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "553:54:15"
+                      "src": "671:54:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2660,
+                      "id": 2676,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "617:0:15"
+                      "src": "735:0:15"
                     },
-                    "src": "545:80:15",
+                    "src": "663:80:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_string_memory_ptr_$returns$__$",
@@ -1263,11 +1263,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2670,
+                  "id": 2686,
                   "name": "_scanned",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2679,
-                  "src": "635:50:15",
+                  "scope": 2695,
+                  "src": "753:50:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1275,20 +1275,20 @@
                     "typeString": "function (uint256,string) external"
                   },
                   "typeName": {
-                    "id": 2669,
+                    "id": 2685,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2667,
+                      "id": 2683,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2664,
+                          "id": 2680,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "644:7:15",
+                          "scope": 2695,
+                          "src": "762:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -1296,10 +1296,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2663,
+                            "id": 2679,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "644:7:15",
+                            "src": "762:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1310,11 +1310,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2666,
+                          "id": 2682,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "653:6:15",
+                          "scope": 2695,
+                          "src": "771:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -1322,10 +1322,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2665,
+                            "id": 2681,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "653:6:15",
+                            "src": "771:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -1335,16 +1335,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "643:24:15"
+                      "src": "761:24:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2668,
+                      "id": 2684,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "677:0:15"
+                      "src": "795:0:15"
                     },
-                    "src": "635:50:15",
+                    "src": "753:50:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_string_memory_ptr_$returns$__$",
@@ -1357,11 +1357,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2676,
+                  "id": 2692,
                   "name": "_fail",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2679,
-                  "src": "695:32:15",
+                  "scope": 2695,
+                  "src": "813:32:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1369,20 +1369,20 @@
                     "typeString": "function (uint256) external"
                   },
                   "typeName": {
-                    "id": 2675,
+                    "id": 2691,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2673,
+                      "id": 2689,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2672,
+                          "id": 2688,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2679,
-                          "src": "704:7:15",
+                          "scope": 2695,
+                          "src": "822:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -1390,10 +1390,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2671,
+                            "id": 2687,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "704:7:15",
+                            "src": "822:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1403,16 +1403,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "703:9:15"
+                      "src": "821:9:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2674,
+                      "id": 2690,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "722:0:15"
+                      "src": "840:0:15"
                     },
-                    "src": "695:32:15",
+                    "src": "813:32:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -1424,25 +1424,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "507:226:15"
+              "src": "625:226:15"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2678,
+              "id": 2694,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "750:0:15"
+              "src": "868:0:15"
             },
-            "scope": 2728,
-            "src": "478:273:15",
+            "scope": 2744,
+            "src": "596:273:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           },
           {
             "body": null,
-            "documentation": "@dev function to trigger QR code scanning without lights\n@param _sessionId - id of the session in which QR must occur\n@param _success - callback function for informing about successful case of enabling camera\n@param _scanned - callback function for informing about actual QR scanned data\n@param _fail - callback function for informing about failed case of enabling camera",
-            "id": 2710,
+            "documentation": "@notice Scan QR code without lights\n@dev function to trigger QR code scanning without lights\n@param _sessionId - id of the session in which QR must occur\n@param _success - callback function(_commandId, _port, _url, _href) for informing about successful case of enabling camera\n@param _scanned - callback function(_sessionId, _qr) for informing about actual QR scanned data\n@param _fail - callback function(_commandId) for informing about failed case of enabling camera\n@return {\n}",
+            "id": 2726,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1450,16 +1450,16 @@
             "name": "scanQRCodeWithoutLights",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2708,
+              "id": 2724,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2681,
+                  "id": 2697,
                   "name": "_sessionId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2710,
-                  "src": "1249:18:15",
+                  "scope": 2726,
+                  "src": "1488:18:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1467,10 +1467,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2680,
+                    "id": 2696,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1249:7:15",
+                    "src": "1488:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1481,11 +1481,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2693,
+                  "id": 2709,
                   "name": "_success",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2710,
-                  "src": "1277:80:15",
+                  "scope": 2726,
+                  "src": "1516:80:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1493,20 +1493,20 @@
                     "typeString": "function (uint256,string,string,string) external"
                   },
                   "typeName": {
-                    "id": 2692,
+                    "id": 2708,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2690,
+                      "id": 2706,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2683,
+                          "id": 2699,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1286:7:15",
+                          "scope": 2726,
+                          "src": "1525:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -1514,10 +1514,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2682,
+                            "id": 2698,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1286:7:15",
+                            "src": "1525:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1528,11 +1528,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2685,
+                          "id": 2701,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1295:6:15",
+                          "scope": 2726,
+                          "src": "1534:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -1540,10 +1540,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2684,
+                            "id": 2700,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1295:6:15",
+                            "src": "1534:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -1554,11 +1554,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2687,
+                          "id": 2703,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1310:6:15",
+                          "scope": 2726,
+                          "src": "1549:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -1566,10 +1566,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2686,
+                            "id": 2702,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1310:6:15",
+                            "src": "1549:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -1580,11 +1580,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2689,
+                          "id": 2705,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1325:6:15",
+                          "scope": 2726,
+                          "src": "1564:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -1592,10 +1592,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2688,
+                            "id": 2704,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1325:6:15",
+                            "src": "1564:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -1605,16 +1605,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "1285:54:15"
+                      "src": "1524:54:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2691,
+                      "id": 2707,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "1349:0:15"
+                      "src": "1588:0:15"
                     },
-                    "src": "1277:80:15",
+                    "src": "1516:80:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_string_memory_ptr_$returns$__$",
@@ -1627,11 +1627,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2701,
+                  "id": 2717,
                   "name": "_scanned",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2710,
-                  "src": "1367:50:15",
+                  "scope": 2726,
+                  "src": "1606:50:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1639,20 +1639,20 @@
                     "typeString": "function (uint256,string) external"
                   },
                   "typeName": {
-                    "id": 2700,
+                    "id": 2716,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2698,
+                      "id": 2714,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2695,
+                          "id": 2711,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1376:7:15",
+                          "scope": 2726,
+                          "src": "1615:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -1660,10 +1660,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2694,
+                            "id": 2710,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1376:7:15",
+                            "src": "1615:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1674,11 +1674,11 @@
                         },
                         {
                           "constant": false,
-                          "id": 2697,
+                          "id": 2713,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1385:6:15",
+                          "scope": 2726,
+                          "src": "1624:6:15",
                           "stateVariable": false,
                           "storageLocation": "memory",
                           "typeDescriptions": {
@@ -1686,10 +1686,10 @@
                             "typeString": "string"
                           },
                           "typeName": {
-                            "id": 2696,
+                            "id": 2712,
                             "name": "string",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1385:6:15",
+                            "src": "1624:6:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_storage_ptr",
                               "typeString": "string"
@@ -1699,16 +1699,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "1375:24:15"
+                      "src": "1614:24:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2699,
+                      "id": 2715,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "1409:0:15"
+                      "src": "1648:0:15"
                     },
-                    "src": "1367:50:15",
+                    "src": "1606:50:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_string_memory_ptr_$returns$__$",
@@ -1721,11 +1721,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2707,
+                  "id": 2723,
                   "name": "_fail",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2710,
-                  "src": "1427:32:15",
+                  "scope": 2726,
+                  "src": "1666:32:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1733,20 +1733,20 @@
                     "typeString": "function (uint256) external"
                   },
                   "typeName": {
-                    "id": 2706,
+                    "id": 2722,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2704,
+                      "id": 2720,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2703,
+                          "id": 2719,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2710,
-                          "src": "1436:7:15",
+                          "scope": 2726,
+                          "src": "1675:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -1754,10 +1754,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2702,
+                            "id": 2718,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1436:7:15",
+                            "src": "1675:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1767,16 +1767,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "1435:9:15"
+                      "src": "1674:9:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2705,
+                      "id": 2721,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "1454:0:15"
+                      "src": "1693:0:15"
                     },
-                    "src": "1427:32:15",
+                    "src": "1666:32:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -1788,25 +1788,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1239:226:15"
+              "src": "1478:226:15"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2709,
+              "id": 2725,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1482:0:15"
+              "src": "1721:0:15"
             },
-            "scope": 2728,
-            "src": "1207:276:15",
+            "scope": 2744,
+            "src": "1446:276:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           },
           {
             "body": null,
-            "documentation": "@dev function to disable QR scanning\n@param _sessionId - id of the session in which camera must be disabled\n@param _success - callback function to inform about camera successful disabling\n@param _fail - callback function to inform about camera disabling fail",
-            "id": 2727,
+            "documentation": "@notice Stop QR code scanning\n@dev function to disable QR scanning\n@param _sessionId - id of the session in which camera must be disabled\n@param _success - callback function(_sessionId) to inform about camera successful disabling\n@param _fail - callback function(_sessionId) to inform about camera disabling fail\n@return {\n}",
+            "id": 2743,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1814,16 +1814,16 @@
             "name": "stopQRScanning",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2725,
+              "id": 2741,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2712,
+                  "id": 2728,
                   "name": "_sessionId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2727,
-                  "src": "1852:18:15",
+                  "scope": 2743,
+                  "src": "2172:18:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1831,10 +1831,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2711,
+                    "id": 2727,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1852:7:15",
+                    "src": "2172:7:15",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1845,11 +1845,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2718,
+                  "id": 2734,
                   "name": "_success",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2727,
-                  "src": "1880:35:15",
+                  "scope": 2743,
+                  "src": "2200:35:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1857,20 +1857,20 @@
                     "typeString": "function (uint256) external"
                   },
                   "typeName": {
-                    "id": 2717,
+                    "id": 2733,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2715,
+                      "id": 2731,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2714,
+                          "id": 2730,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2727,
-                          "src": "1889:7:15",
+                          "scope": 2743,
+                          "src": "2209:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -1878,10 +1878,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2713,
+                            "id": 2729,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1889:7:15",
+                            "src": "2209:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1891,16 +1891,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "1888:9:15"
+                      "src": "2208:9:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2716,
+                      "id": 2732,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "1907:0:15"
+                      "src": "2227:0:15"
                     },
-                    "src": "1880:35:15",
+                    "src": "2200:35:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -1913,11 +1913,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 2724,
+                  "id": 2740,
                   "name": "_fail",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2727,
-                  "src": "1925:32:15",
+                  "scope": 2743,
+                  "src": "2245:32:15",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1925,20 +1925,20 @@
                     "typeString": "function (uint256) external"
                   },
                   "typeName": {
-                    "id": 2723,
+                    "id": 2739,
                     "isDeclaredConst": false,
                     "nodeType": "FunctionTypeName",
                     "parameterTypes": {
-                      "id": 2721,
+                      "id": 2737,
                       "nodeType": "ParameterList",
                       "parameters": [
                         {
                           "constant": false,
-                          "id": 2720,
+                          "id": 2736,
                           "name": "",
                           "nodeType": "VariableDeclaration",
-                          "scope": 2727,
-                          "src": "1934:7:15",
+                          "scope": 2743,
+                          "src": "2254:7:15",
                           "stateVariable": false,
                           "storageLocation": "default",
                           "typeDescriptions": {
@@ -1946,10 +1946,10 @@
                             "typeString": "uint256"
                           },
                           "typeName": {
-                            "id": 2719,
+                            "id": 2735,
                             "name": "uint256",
                             "nodeType": "ElementaryTypeName",
-                            "src": "1934:7:15",
+                            "src": "2254:7:15",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1959,16 +1959,16 @@
                           "visibility": "internal"
                         }
                       ],
-                      "src": "1933:9:15"
+                      "src": "2253:9:15"
                     },
                     "payable": false,
                     "returnParameterTypes": {
-                      "id": 2722,
+                      "id": 2738,
                       "nodeType": "ParameterList",
                       "parameters": [],
-                      "src": "1952:0:15"
+                      "src": "2272:0:15"
                     },
-                    "src": "1925:32:15",
+                    "src": "2245:32:15",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -1980,27 +1980,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1842:121:15"
+              "src": "2162:121:15"
             },
             "payable": false,
             "returnParameters": {
-              "id": 2726,
+              "id": 2742,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1980:0:15"
+              "src": "2300:0:15"
             },
-            "scope": 2728,
-            "src": "1819:162:15",
+            "scope": 2744,
+            "src": "2139:162:15",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 2729,
-        "src": "25:1980:15"
+        "scope": 2745,
+        "src": "25:2300:15"
       }
     ],
-    "src": "0:2006:15"
+    "src": "0:2326:15"
   },
   "compiler": {
     "name": "solc",
@@ -2008,5 +2008,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-11-20T09:03:22.118Z"
+  "updatedAt": "2018-11-22T12:49:53.668Z"
 }
