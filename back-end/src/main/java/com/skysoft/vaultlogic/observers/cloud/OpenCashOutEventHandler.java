@@ -42,7 +42,7 @@ public class OpenCashOutEventHandler extends AbstractContractEventObserver<OpenC
 
     @Override
     public void onNext(OpenCashOutEventResponse event) {
-        log.info("[x] OPEN CASH OUT EVENT: XToken: {}", event._commandId);
+        log.info("[x] OPEN CASH OUT EVENT: Command ID: {}", event._commandId);
         contract.successOpen(event._commandId).observable().single().subscribe(
                 tx -> log.info("[x] confirmed success open cash out channel"),
                 er -> log.error("[x] error confirming open cash out channel")

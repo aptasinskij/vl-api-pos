@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.web3j.abi.datatypes.Event;
+import org.web3j.abi.datatypes.generated.Uint256;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
@@ -23,6 +24,7 @@ import java.util.function.Consumer;
 
 import static com.skysoft.vaultlogic.clients.api.model.DispensableAmount.greaterOrEqualTo;
 import static com.skysoft.vaultlogic.contracts.CashOutOracle.VALIDATECASHOUT_EVENT;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
@@ -59,13 +61,11 @@ public class ValidateCashOutEventHandler extends AbstractContractEventObserver<V
     public void onNext(ValidateCashOutEventResponse event) {
         log.info("[x] VALIDATE CASH OUT EVENT: XToken: {}", event._commandId);
         SessionXToken sessionXToken = sessionRepository.findSessionXTokenById(event._sessionId);
-
-        List<Cassette> cassettes = Cassette.fromBillsForDispense(event._bills);
+        List<Cassette> cassettes = Cassette.fromBillsForDispense(event._bills.stream().map(Uint256::getValue).collect(toList()));
         DispensableAmount dispensableAmount = DispensableAmount.from(event._toWithdraw, cassettes);
-
         kioskCashDevices.getDispensableAmount(sessionXToken.getxToken(), dispensableAmount)
                 .filter(greaterOrEqualTo(event._toWithdraw))
-                .onSuccess(confirmSuccessValidate(event._toWithdraw))
+                .onSuccess(confirmSuccessValidate(event._commandId))
                 .onFailure(confirmFailValidate(event._commandId));
     }
 

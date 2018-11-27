@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +23,7 @@ public class DispenseCashTest {
 
     @Test
     public void testSerialization() throws IOException {
-        DispenseCash dispensableAmount = new DispenseCash();
+        DispenseCash dispensableAmount = new DispenseCash(BigDecimal.ZERO, Collections.emptyList());
         dispensableAmount.setAmount(BigDecimal.valueOf(100));
         assertThat(json.write(dispensableAmount)).isEqualToJson("dispenseCash.json");
     }

@@ -18,6 +18,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static com.skysoft.vaultlogic.common.domain.kiosk.Kiosk.kiosk;
@@ -49,8 +50,8 @@ public class GetKioskInfoObserverTest {
 
     DispensableAmount dispensableAmount = new DispensableAmount();
 
-    Cassette firstCassette = new Cassette();
-    Cassette secondCassette = new Cassette();
+    Cassette firstCassette = new Cassette(BigDecimal.ONE, Cassette.Type.cash);
+    Cassette secondCassette = new Cassette(BigDecimal.ONE, Cassette.Type.cash);
 
     GetKioskInfoEventResponse event = new GetKioskInfoEventResponse();
     TransactionReceipt transactionReceipt = new TransactionReceipt();

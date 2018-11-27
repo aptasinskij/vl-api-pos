@@ -2,6 +2,13 @@ pragma solidity 0.4.24;
 
 interface SessionApi {
 
+    /// @notice Close Session
+    /// @dev
+    /// @param _sessionId id of the session to close
+    /// @param _success callback function(_sessionId) for informing about successful case of closing session
+    /// @param _fail callback function(_sessionId) for informing about failed case of closing session
+    /// @return {
+    /// }
     // formatter:off
     function closeSession(
         uint256 _sessionId,
