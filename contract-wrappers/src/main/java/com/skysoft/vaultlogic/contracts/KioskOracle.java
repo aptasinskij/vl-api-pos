@@ -60,7 +60,8 @@ public class KioskOracle extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("89354", "0xda09cadf5c491389d11e3570b2c59d8db583d7dd");
+        _addresses.put("4447", "0x3d49d1ef2ade060a33c6e6aa213513a7ee9a6241");
+        _addresses.put("89354", "0xd93e369b99aed642885d59256997990abb72063f");
     }
 
     protected KioskOracle(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
